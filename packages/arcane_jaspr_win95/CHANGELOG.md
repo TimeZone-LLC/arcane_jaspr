@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.0.1 - 2026-09-23
+
+### Fixed
+
+- The minimize caption glyph sits one face row above the bevel (rows 9-10)
+  instead of touching it, matching the Windows 95 button.
+
 ## 5.0.0 - 2026-09-23
 
 ### Added

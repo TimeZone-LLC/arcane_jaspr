@@ -211,7 +211,7 @@ class Win95Css {
      pixels, while every Win95 caption glyph was a fixed bitmap. Each cap is a
      16x14 raised face (outer top-left white, inner top-left #dfdfdf, inner
      bottom-right #808080, outer bottom-right black) carrying a black glyph:
-     a 6x2 minimize bar at x4-9/y10-11, a 9x9 maximize box with a 2px top edge
+     a 6x2 minimize bar at x4-9/y9-10, a 9x9 maximize box with a 2px top edge
      at x3-11/y2-10, and the stepped 8x7 close cross at x4-11/y3-9.
      --w95-caption-buttons is the full 50x14 row (minimize and maximize
      touching, a 2px gap, then close), --w95-caption-min-max the 32x14 pair,

@@ -48,7 +48,7 @@ const String _closeGlyph =
     'M0 6h2v1H0zM6 6h2v1H6z';
 
 // Glyph placement inside a 16x14 cap.
-const String _minimizeAt = "transform='translate(4 10)'";
+const String _minimizeAt = "transform='translate(4 9)'";
 const String _maximizeAt = "transform='translate(3 2)'";
 const String _closeAt = "transform='translate(4 3)'";
 
@@ -146,7 +146,7 @@ const String win95CaptionCloseDark =
 /// Minimize glyph mask (10x10 cell).
 const String win95ControlMinimizeMask =
     "data:image/svg+xml,$_svgOpen viewBox='0 0 10 10' $_crisp%3E"
-    "%3Cpath fill='%23000000' transform='translate(1 8)' "
+    "%3Cpath fill='%23000000' transform='translate(1 7)' "
     "d='$_minimizeGlyph'/%3E"
     '$_endSvg';
 

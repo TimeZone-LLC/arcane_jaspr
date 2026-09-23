@@ -595,10 +595,11 @@ void main() {
         expect(buttons['33,$y'], isNull);
       }
 
-      // Minimize: a 6x2 bar at x4-9, y10-11.
+      // Minimize: a 6x2 bar at x4-9, y9-10, one face row above the bevel.
+      expect(_row(buttons, 9, 3, 10, '#000000'), '.XXXXXX.');
       expect(_row(buttons, 10, 3, 10, '#000000'), '.XXXXXX.');
-      expect(_row(buttons, 11, 3, 10, '#000000'), '.XXXXXX.');
-      expect(_row(buttons, 9, 3, 10, '#000000'), '........');
+      expect(_row(buttons, 8, 3, 10, '#000000'), '........');
+      expect(_row(buttons, 11, 3, 10, '#000000'), '........');
       // Maximize: a 9x9 box at x3-11, y2-10 with a 2px top edge.
       expect(_row(buttons, 2, 18, 28, '#000000'), '.XXXXXXXXX.');
       expect(_row(buttons, 3, 18, 28, '#000000'), '.XXXXXXXXX.');
