@@ -3,6 +3,8 @@ import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/props/flexi_cards_props.dart';
 
+import 'package:arcane_jaspr_shadcn/src/renderers/card.dart';
+
 /// ShadCN FlexiCards renderer (stateful version with hover tracking).
 ///
 /// Uses CSS Grid with `grid-template-rows` for smooth height animations.
@@ -210,6 +212,7 @@ class _ShadcnFlexiCardsState extends State<ShadcnFlexiCards> {
       }
     }
 
+    final bool interactive = item.onTap != null || item.href != null;
     final Map<String, String> cardStyles = {
       // Only use flex if not using locked width
       if (!useLockedWidth) 'flex': '$flexValue',
@@ -219,9 +222,15 @@ class _ShadcnFlexiCardsState extends State<ShadcnFlexiCards> {
       'display': 'flex',
       'flex-direction': 'column',
       'padding': '1.5rem',
-      'background-color': 'var(--card)',
+      'background-color': interactive
+          ? shadcnInteractiveCardBackground
+          : 'var(--card)',
+      'color': 'var(--card-foreground)',
       'border': '1px solid var(--border)',
       'border-radius': 'var(--radius-md)',
+      'box-shadow': interactive
+          ? shadcnInteractiveCardShadow
+          : 'var(--shadow-sm)',
       'transform': transform,
       'transform-origin': 'center center',
       'transition':
@@ -231,7 +240,7 @@ class _ShadcnFlexiCardsState extends State<ShadcnFlexiCards> {
           'border-color ${duration}ms cubic-bezier(0.4, 0, 0.2, 1), '
           'box-shadow ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)',
       'overflow': 'hidden',
-      if (item.onTap != null || item.href != null) 'cursor': 'pointer',
+      if (interactive) 'cursor': 'pointer',
     };
 
     // Wrap in link if href provided
@@ -240,9 +249,7 @@ class _ShadcnFlexiCardsState extends State<ShadcnFlexiCards> {
         classes: 'arcane-flexi-card${isHovered ? ' hovered' : ''}',
         attributes: const <String, String>{'data-arcane-surface': 'flexi-card'},
         href: item.href!,
-        styles: dom.Styles(
-          raw: {...cardStyles, 'text-decoration': 'none', 'color': 'inherit'},
-        ),
+        styles: dom.Styles(raw: {...cardStyles, 'text-decoration': 'none'}),
         events: {
           'mouseenter': (_) => _onCardHover(index),
           'mouseleave': (_) => _onCardLeave(),
@@ -315,8 +322,10 @@ class ShadcnFlexiCardsSimple extends StatelessComponent {
           'flex-direction': 'column',
           'padding': '1.5rem',
           'background-color': 'var(--card)',
+          'color': 'var(--card-foreground)',
           'border': '1px solid var(--border)',
           'border-radius': 'var(--radius-md)',
+          'box-shadow': 'var(--shadow-sm)',
         },
       ),
       [

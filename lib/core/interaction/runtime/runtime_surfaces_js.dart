@@ -31,22 +31,83 @@ function trapFocus(surface, e) {
   const focusable = getFocusable(surface);
   if (focusable.length === 0) {
     e.preventDefault();
+    if (!surface.hasAttribute('tabindex')) surface.setAttribute('tabindex', '-1');
     surface.focus();
     return;
   }
   const first = focusable[0];
   const last = focusable[focusable.length - 1];
   if (e.shiftKey) {
-    if (document.activeElement === first || !surface.contains(document.activeElement)) {
+    if (document.activeElement === first || focusable.indexOf(document.activeElement) < 0) {
       e.preventDefault();
       last.focus();
     }
   } else {
-    if (document.activeElement === last) {
+    if (document.activeElement === last || focusable.indexOf(document.activeElement) < 0) {
       e.preventDefault();
       first.focus();
     }
   }
+}
+
+function syncSurfaceStack() {
+  const previousTop = ARCANE.stack[ARCANE.stack.length - 1];
+  ARCANE.stack = ARCANE.stack.filter(function(entry) {
+    if (entry.el.isConnected && surfaceIsOpen(entry.el)) return true;
+    if (entry.el._arcaneAnchorReposition) {
+      window.removeEventListener('resize', entry.el._arcaneAnchorReposition);
+      window.removeEventListener('scroll', entry.el._arcaneAnchorReposition, true);
+      entry.el._arcaneAnchorReposition = null;
+    }
+    return false;
+  });
+
+  const opens = document.querySelectorAll('[data-arcane-surface][data-arcane-state="open"]');
+  for (let i = 0; i < opens.length; i++) {
+    const el = opens[i];
+    if (surfaceIsOpen(el) && !ARCANE.stack.some(function(entry) { return entry.el === el; })) {
+      openSurface(surfaceType(el), surfaceId(el));
+    }
+  }
+
+  const hasOverlay = ARCANE.stack.some(function(entry) {
+    return entry.type === 'dialog' || entry.type === 'sheet' || entry.type === 'drawer';
+  });
+  document.body.classList.toggle('arcane-overlay-open', hasOverlay);
+  if (hasOverlay) document.body.setAttribute('data-arcane-overlay-open', 'true');
+  else document.body.removeAttribute('data-arcane-overlay-open');
+
+  if (previousTop && !ARCANE.stack.some(function(entry) { return entry.el === previousTop.el; })) {
+    const el = previousTop.el;
+    const target = el._arcanePrevFocus;
+    const top = ARCANE.stack[ARCANE.stack.length - 1];
+    if (el.getAttribute('data-arcane-restore-focus') !== 'false' &&
+        target && target.isConnected && (!top || top.el.contains(target))) {
+      target.focus({ preventScroll: true });
+    }
+    el._arcanePrevFocus = null;
+  }
+}
+
+function observeSurfaces() {
+  if (ARCANE._surfaceObserver) return;
+  ARCANE._surfaceObserver = new MutationObserver(function(records) {
+    const changed = records.some(function(record) {
+      if (record.type === 'attributes') return record.target.hasAttribute('data-arcane-surface');
+      const nodes = Array.from(record.addedNodes).concat(Array.from(record.removedNodes));
+      return nodes.some(function(node) {
+        return node.nodeType === 1 && (node.hasAttribute('data-arcane-surface') ||
+          node.querySelector('[data-arcane-surface]'));
+      });
+    });
+    if (changed) syncSurfaceStack();
+  });
+  ARCANE._surfaceObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['data-arcane-state']
+  });
 }
 
 function applyAnchor(surfaceEl) {
@@ -125,7 +186,7 @@ function openSurface(type, id, opts) {
   opts = opts || {};
   const el = querySurface(type, id);
   if (!el) return false;
-  if (surfaceIsOpen(el)) return true;
+  if (surfaceIsOpen(el) && ARCANE.stack.some(function(entry) { return entry.el === el; })) return true;
 
   const groupName = surfaceGroup(el);
   const exclusive = el.getAttribute('data-arcane-exclusive') === 'true';
@@ -179,14 +240,20 @@ function openSurface(type, id, opts) {
   }
 
   nextFrame(function() {
+    if (!el.isConnected || !surfaceIsOpen(el) ||
+        ARCANE.stack[ARCANE.stack.length - 1]?.el !== el) return;
     el.classList.add('arcane-surface-open');
     el.classList.remove('arcane-surface-closing');
 
     const focusTarget = el.querySelector('[data-arcane-autofocus]') ||
       getFocusable(el)[0];
     if (focusTarget) {
+      if (!focusTarget.hasAttribute('tabindex') && focusTarget.tabIndex < 0) {
+        focusTarget.setAttribute('tabindex', '-1');
+      }
       try { focusTarget.focus({ preventScroll: false }); } catch (e) { focusTarget.focus(); }
-    } else if (el.tabIndex >= 0) {
+    } else {
+      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
       el.focus();
     }
   });
@@ -256,6 +323,7 @@ function closeSurface(type, id, opts) {
   const prevFocus = el._arcanePrevFocus;
 
   const finalize = function() {
+    if (surfaceIsOpen(el)) return;
     el.setAttribute('hidden', '');
     el.classList.remove('arcane-surface-closing');
     const inlineStyle = el._arcaneAnchorInlineStyle;

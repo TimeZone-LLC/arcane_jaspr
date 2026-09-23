@@ -1,9 +1,9 @@
 
     <div class="arcane-disclosure-group" style="display: flex; flex-direction: column; gap: 0.5rem">
       <details class="arcane-disclosure arcane-disclosure-default_" style="background-color: transparent; border: none; border-radius: var(--radius); overflow: hidden">
-        <summary class="arcane-disclosure-summary" style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: 0.5rem 1rem; background-color: var(--muted); cursor: pointer; transition: all var(--transition); list-style: none; -webkit-user-select: none; user-select: none">
+        <summary class="arcane-disclosure-summary" style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: 0.5rem 1rem; background-color: var(--muted); cursor: pointer; outline: none; transition: background-color var(--transition), color var(--transition); list-style: none; -webkit-user-select: none; user-select: none">
           <span class="arcane-disclosure-summary-content" style="flex: 1; min-width: 0"><span class="arcane-text">content</span></span>
-          <span class="arcane-disclosure-chevron" style="color: var(--muted-foreground); font-size: var(--font-size-sm); transition: transform var(--transition)">▼</span>
+          <span class="arcane-disclosure-chevron" style="display: flex; flex-shrink: 0; color: var(--muted-foreground); pointer-events: none; transition: transform 200ms ease"><i style="font-family: 'lucide', sans-serif; font-style: normal; font-weight: normal; font-size: 16.0px; line-height: 1; display: inline-block; width: 16.0px; height: 16.0px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale"></i></span>
         </summary>
         <div class="arcane-disclosure-content" style="padding: 1rem; border-top: 1px solid var(--border)"><span class="arcane-text">content</span></div>
       </details>

@@ -13,25 +13,11 @@ class ShadcnSelect<T> extends StatelessComponent {
 
   const ShadcnSelect(this.props, {super.key});
 
-  Map<String, String> get _sizeConfig => switch (props.size) {
-    ComponentSize.sm => {
-      'height': '32px',
-      'padding': '4px 8px',
-      'fontSize': '13px',
-      'iconSize': '12px',
-    },
-    ComponentSize.md => {
-      'height': '40px',
-      'padding': '8px 12px',
-      'fontSize': '14px',
-      'iconSize': '14px',
-    },
-    ComponentSize.lg => {
-      'height': '48px',
-      'padding': '12px 16px',
-      'fontSize': '16px',
-      'iconSize': '16px',
-    },
+  /// SelectTrigger `data-[size=sm]:h-8`, default `h-9`; large is `h-10`.
+  String get _triggerHeight => switch (props.size) {
+    ComponentSize.sm => '2rem',
+    ComponentSize.md => '2.25rem',
+    ComponentSize.lg => '2.5rem',
   };
 
   bool get _hasSelection {
@@ -73,7 +59,6 @@ class ShadcnSelect<T> extends StatelessComponent {
 
   @override
   Component build(BuildContext context) {
-    final Map<String, String> size = _sizeConfig;
     final bool hasError = props.error != null;
     final String displayText = _getDisplayText();
     final String dropdownMaxHeight = props.maxDropdownHeight ?? '300px';
@@ -110,7 +95,7 @@ class ShadcnSelect<T> extends StatelessComponent {
         raw: <String, String>{
           'display': 'flex',
           'flex-direction': 'column',
-          'gap': 'var(--space-1)',
+          'gap': 'var(--space-2)',
           'position': 'relative',
           'width': '100%',
           'min-width': '0',
@@ -123,8 +108,9 @@ class ShadcnSelect<T> extends StatelessComponent {
             classes: 'arcane-select-label',
             styles: const dom.Styles(
               raw: <String, String>{
-                'font-size': 'var(--font-size-sm)',
-                'font-weight': 'var(--font-weight-medium)',
+                'font-size': '0.875rem',
+                'font-weight': '500',
+                'line-height': '1',
                 'color': 'var(--foreground)',
                 'display': 'flex',
                 'align-items': 'center',
@@ -164,23 +150,29 @@ class ShadcnSelect<T> extends StatelessComponent {
               'align-items': 'center',
               'justify-content': 'space-between',
               'gap': 'var(--space-2)',
-              'padding': size['padding']!,
-              'min-height': size['height']!,
+              'height': _triggerHeight,
+              'padding': '0.25rem 0.75rem',
               'width': '100%',
               'min-width': '0',
-              'background-color': 'var(--background)',
+              'background-color': 'var(--shadcn-input-background, transparent)',
               'border': hasError
-                  ? '1px solid var(--destructive)'
-                  : '1px solid var(--shadcn-control-border)',
-              'border-radius': 'var(--radius-sm)',
+                  ? '1px solid var(--shadcn-control-border-color, var(--destructive))'
+                  : '1px solid var(--shadcn-control-border-color, var(--shadcn-control-border))',
+              'border-radius': 'var(--radius-md)',
+              'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
               'color': 'var(--foreground)',
-              'font-size': size['fontSize']!,
+              'font-size': '0.875rem',
+              'line-height': '1.25rem',
+              'white-space': 'nowrap',
               'text-align': 'left',
+              'outline': 'none',
               'cursor': props.disabled || props.loading
                   ? 'not-allowed'
                   : 'pointer',
               'opacity': props.disabled ? '0.5' : '1',
-              'transition': 'border-color var(--transition)',
+              'transition':
+                  'color var(--transition), background-color var(--transition), '
+                  'border-color var(--transition), box-shadow var(--transition)',
               ...?props.decoration?.universalStyles(),
               ...?props.styles?.toMap(),
             },
@@ -258,14 +250,21 @@ class ShadcnSelect<T> extends StatelessComponent {
                 <Component>[ArcaneIcon.x(size: IconSize.xs)],
               ),
 
-            // Arrow - ShadCN SelectIcon
+            // Arrow - ShadCN SelectIcon: ChevronDown size-4 opacity-50
             if (!props.loading)
               dom.span(
                 classes: 'arcane-select-chevron',
+                attributes: const <String, String>{'aria-hidden': 'true'},
                 styles: const dom.Styles(
-                  raw: <String, String>{'color': 'var(--muted-foreground)'},
+                  raw: <String, String>{
+                    'display': 'flex',
+                    'flex-shrink': '0',
+                    'color': 'var(--muted-foreground)',
+                    'opacity': '0.5',
+                    'pointer-events': 'none',
+                  },
                 ),
-                <Component>[ArcaneIcon.chevronsUpDown(size: IconSize.sm)],
+                <Component>[ArcaneIcon.chevronDown(size: IconSize.sm)],
               ),
           ],
         ),
@@ -306,12 +305,13 @@ class ShadcnSelect<T> extends StatelessComponent {
           styles: dom.Styles(
             raw: <String, String>{
               'background-color': 'var(--popover)',
+              'color': 'var(--popover-foreground)',
               'border': '1px solid var(--border)',
-              'border-radius': 'var(--radius-sm)',
-              'box-shadow':
-                  '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+              'border-radius': 'var(--radius-md)',
+              'box-shadow': 'var(--shadcn-surface-shadow)',
               'max-height': dropdownMaxHeight,
-              'min-width': '200px',
+              'min-width': '8rem',
+              'overflow-x': 'hidden',
               'overflow-y': 'auto',
               'z-index': '50',
             },
@@ -343,8 +343,8 @@ class ShadcnSelect<T> extends StatelessComponent {
                       raw: <String, String>{
                         'width': '100%',
                         'padding': '4px 8px',
-                        'border': '1px solid var(--border)',
-                        'border-radius': 'var(--radius-xs)',
+                        'border': '1px solid var(--input)',
+                        'border-radius': 'var(--radius-sm)',
                         'background': 'transparent',
                         'color': 'var(--foreground)',
                         'font-size': 'var(--font-size-sm)',
@@ -387,7 +387,7 @@ class ShadcnSelect<T> extends StatelessComponent {
               dom.div(
                 classes: 'arcane-select-options',
                 styles: const dom.Styles(
-                  raw: <String, String>{'padding': '4px'},
+                  raw: <String, String>{'padding': '0.25rem'},
                 ),
                 <Component>[
                   dom.div(
@@ -436,7 +436,7 @@ class ShadcnSelect<T> extends StatelessComponent {
           dom.span(
             styles: const dom.Styles(
               raw: <String, String>{
-                'font-size': 'var(--font-size-xs)',
+                'font-size': '0.875rem',
                 'color': 'var(--muted-foreground)',
               },
             ),
@@ -448,7 +448,7 @@ class ShadcnSelect<T> extends StatelessComponent {
           dom.span(
             styles: const dom.Styles(
               raw: <String, String>{
-                'font-size': 'var(--font-size-xs)',
+                'font-size': '0.875rem',
                 'color': 'var(--destructive)',
               },
             ),
@@ -522,19 +522,19 @@ class ShadcnSelect<T> extends StatelessComponent {
           'gap': 'var(--space-2)',
           'width': '100%',
           'min-width': '0',
-          'padding': '8px 12px',
-          'background-color': isSelected ? 'var(--accent)' : 'transparent',
-          'color': isSelected
-              ? 'var(--accent-foreground)'
-              : 'var(--foreground)',
+          'padding': '0.375rem 0.5rem',
+          'background-color': 'var(--shadcn-item-background, transparent)',
+          'color': 'var(--shadcn-item-foreground, inherit)',
           'border': 'none',
-          'border-radius': 'var(--radius-xs)',
+          'border-radius': 'var(--shadcn-item-radius)',
+          'outline': 'none',
           'cursor': (isDisabled || maxReached) ? 'not-allowed' : 'pointer',
           'opacity': (isDisabled || maxReached) ? '0.5' : '1',
           'transition':
               'background-color var(--transition), color var(--transition)',
           'text-align': 'left',
-          'font-size': 'var(--font-size-sm)',
+          'font-size': '0.875rem',
+          'line-height': '1.25rem',
         },
       ),
       events: props.onSelect != null && !isDisabled && !maxReached
@@ -550,10 +550,12 @@ class ShadcnSelect<T> extends StatelessComponent {
               raw: <String, String>{
                 'width': '16px',
                 'height': '16px',
+                'box-sizing': 'border-box',
                 'border': isSelected
-                    ? '2px solid var(--primary)'
-                    : '2px solid var(--border)',
+                    ? '1px solid var(--primary)'
+                    : '1px solid var(--input)',
                 'border-radius': 'var(--radius-xs)',
+                'box-shadow': 'var(--shadow-xs)',
                 'display': 'flex',
                 'align-items': 'center',
                 'justify-content': 'center',

@@ -1,6 +1,7 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
+import 'package:arcane_jaspr/component/view/icon.dart';
 import 'package:arcane_jaspr/core/props/disclosure_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/disclosure_render_base.dart';
 
@@ -46,24 +47,29 @@ class ShadcnDisclosure extends DisclosureRenderBase {
       'padding': '0.5rem 1rem',
       'background-color': summaryBg,
       'cursor': 'pointer',
-      'transition': 'all var(--transition)',
+      'outline': 'none',
+      'transition':
+          'background-color var(--transition), color var(--transition)',
       'list-style': 'none',
       '-webkit-user-select': 'none',
       'user-select': 'none',
     };
   }
 
+  /// Lucide ChevronDown; the surfaces stylesheet rotates it on `[open]`.
   @override
-  Component buildChevron() => const dom.span(
+  Component buildChevron() => dom.span(
     classes: 'arcane-disclosure-chevron',
-    styles: dom.Styles(
+    styles: const dom.Styles(
       raw: <String, String>{
+        'display': 'flex',
+        'flex-shrink': '0',
         'color': 'var(--muted-foreground)',
-        'font-size': 'var(--font-size-sm)',
-        'transition': 'transform var(--transition)',
+        'pointer-events': 'none',
+        'transition': 'transform 200ms ease',
       },
     ),
-    <Component>[Component.text('\u25BC')],
+    <Component>[ArcaneIcon.chevronDown(size: IconSize.sm)],
   );
 
   @override

@@ -175,6 +175,13 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
   }
 
   Component buildAction(MenuItemAction item, String surfaceId) {
+    final String restingColor = item.disabled
+        ? 'var(--muted-foreground)'
+        : item.destructive
+        ? 'var(--destructive)'
+        : itemColor;
+    // Colors route through theme-neutral variables so a theme stylesheet can
+    // flip them on hover, focus and state; inline literals would block it.
     final dom.Styles itemStyles = dom.Styles(
       raw: <String, String>{
         'position': 'relative',
@@ -183,17 +190,13 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
         'gap': itemGap,
         'padding': itemPadding,
         'font-size': 'var(--font-size-sm)',
-        'color': item.disabled
-            ? 'var(--muted-foreground)'
-            : item.destructive
-            ? 'var(--destructive)'
-            : itemColor,
+        'color': 'var(--arcane-menu-item-foreground, $restingColor)',
         'text-decoration': 'none',
         'border-radius': itemBorderRadius,
         'cursor': item.disabled ? 'not-allowed' : 'pointer',
         'transition':
             'color $transitionToken, background-color $transitionToken',
-        'background-color': 'transparent',
+        'background-color': 'var(--arcane-menu-item-background, transparent)',
         'border': 'none',
         'width': '100%',
         'text-align': 'left',
@@ -257,6 +260,7 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
       'role': 'menuitem',
       'data-state': 'unchecked',
       'data-disabled': '${item.disabled}',
+      if (item.destructive) 'data-variant': 'destructive',
       if (item.disabled) 'data-arcane-disabled': 'true',
     };
     final Map<String, String> actionAttrs = item.disabled

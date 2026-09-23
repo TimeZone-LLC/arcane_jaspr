@@ -15,6 +15,8 @@ class ShadcnChart extends ChartRenderBase {
     'border': '1px solid var(--border)',
     'border-radius': 'var(--radius-md)',
     'background': 'var(--card)',
+    'color': 'var(--card-foreground)',
+    'box-shadow': 'var(--shadow-sm)',
   };
 
   @override
@@ -48,8 +50,8 @@ class ShadcnChart extends ChartRenderBase {
   Map<String, String> get trackStyles => const <String, String>{
     'height': '0.5rem',
     'flex': '1',
-    'border-radius': 'var(--radius-xs)',
-    'background': 'color-mix(in srgb, var(--foreground) 12%, transparent)',
+    'border-radius': 'var(--radius-md)',
+    'background': 'var(--muted)',
     'overflow': 'hidden',
   };
 
@@ -58,6 +60,7 @@ class ShadcnChart extends ChartRenderBase {
     'height': '100%',
     'width': width,
     'background': props.color,
+    'border-radius': 'inherit',
   };
 
   @override

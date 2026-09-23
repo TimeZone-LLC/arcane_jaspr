@@ -4,7 +4,11 @@ import 'package:arcane_jaspr/core/rendering/base/button_render_base.dart';
 
 import 'package:arcane_jaspr_shadcn/src/renderers/decoration_styles.dart';
 
-/// Compact buttons with theme-owned color and interaction states.
+/// ShadCN v4 buttons: 36px default height, `rounded-md`, `shadow-xs`.
+///
+/// Colours, borders and hover fills live in the theme CSS so hover and
+/// instance overrides can win; the inline box-shadow reads
+/// `--shadcn-control-shadow` so the focus-visible ring can replace it.
 class ShadcnButton extends ButtonRenderBase {
   const ShadcnButton(super.props, {super.key});
 
@@ -20,11 +24,11 @@ class ShadcnButton extends ButtonRenderBase {
     'display': 'inline-flex',
     'align-items': 'center',
     'justify-content': 'center',
-    'gap': 'var(--space-2)',
+    'gap': '0.5rem',
     'white-space': 'nowrap',
-    'border-radius': 'var(--radius-sm)',
-    'font-size': 'var(--font-size-sm)',
-    'font-weight': 'var(--font-weight-medium)',
+    'border-radius': 'var(--radius-md)',
+    'font-size': '0.875rem',
+    'font-weight': '500',
     'line-height': '1.25rem',
     'transition':
         'color var(--transition), background-color var(--transition), border-color var(--transition), box-shadow var(--transition)',
@@ -38,32 +42,41 @@ class ShadcnButton extends ButtonRenderBase {
   @override
   Map<String, String> variantStyles(ButtonVariant variant) => <String, String>{
     'text-decoration': variant == ButtonVariant.link ? 'underline' : 'none',
+    'box-shadow': switch (variant) {
+      ButtonVariant.ghost ||
+      ButtonVariant.link => 'var(--shadcn-control-shadow, none)',
+      _ => 'var(--shadcn-control-shadow, var(--shadow-xs))',
+    },
   };
 
   @override
   Map<String, String> sizeStyles(ButtonSize size) => switch (size) {
     ButtonSize.sm => <String, String>{
-      'height': '2.25rem',
+      'height': '2rem',
       'padding': '0 0.75rem',
+      'gap': '0.375rem',
     },
     ButtonSize.md => <String, String>{
-      'height': '2.5rem',
+      'height': '2.25rem',
       'padding': '0.5rem 1rem',
     },
-    ButtonSize.lg => <String, String>{'height': '2.75rem', 'padding': '0 2rem'},
+    ButtonSize.lg => <String, String>{
+      'height': '2.5rem',
+      'padding': '0 1.5rem',
+    },
     ButtonSize.iconSm => <String, String>{
+      'height': '2rem',
+      'width': '2rem',
+      'padding': '0',
+    },
+    ButtonSize.iconMd => <String, String>{
       'height': '2.25rem',
       'width': '2.25rem',
       'padding': '0',
     },
-    ButtonSize.iconMd => <String, String>{
+    ButtonSize.iconLg => <String, String>{
       'height': '2.5rem',
       'width': '2.5rem',
-      'padding': '0',
-    },
-    ButtonSize.iconLg => <String, String>{
-      'height': '2.75rem',
-      'width': '2.75rem',
       'padding': '0',
     },
   };

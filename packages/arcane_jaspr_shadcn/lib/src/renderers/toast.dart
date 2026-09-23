@@ -6,8 +6,12 @@ import 'package:arcane_jaspr/core/theme_provider.dart';
 
 /// ShadCN Toast renderer.
 ///
-/// Outputs toast HTML matching the ShadCN/ui Sonner design language.
-/// Reference: https://ui.shadcn.com/docs/components/toast
+/// Outputs the Sonner toast shadcn/ui v4 ships: a 356px popover surface with
+/// `p-4 gap-1.5 rounded-md border shadow-lg` and 13px text, a 16px status
+/// icon, a medium-weight title over a muted description, and a 20px framed
+/// dismiss control. There is no progress strip.
+///
+/// Reference: https://ui.shadcn.com/docs/components/sonner
 class ShadcnToast extends StatelessComponent {
   final ToastProps props;
 
@@ -19,12 +23,12 @@ class ShadcnToast extends StatelessComponent {
     }
 
     final Component iconWidget = switch (props.variant) {
-      ToastVariant.success => ArcaneIcon.circleCheck(size: IconSize.md),
-      ToastVariant.error => ArcaneIcon.circleX(size: IconSize.md),
-      ToastVariant.warning => ArcaneIcon.triangleAlert(size: IconSize.md),
-      ToastVariant.info => ArcaneIcon.info(size: IconSize.md),
+      ToastVariant.success => ArcaneIcon.circleCheck(size: IconSize.sm),
+      ToastVariant.error => ArcaneIcon.circleX(size: IconSize.sm),
+      ToastVariant.warning => ArcaneIcon.triangleAlert(size: IconSize.sm),
+      ToastVariant.info => ArcaneIcon.info(size: IconSize.sm),
       ToastVariant.loading => context.renderers.loadingSpinner(
-        const LoadingSpinnerProps(size: '20px'),
+        const LoadingSpinnerProps(size: '16px'),
       ),
     };
 
@@ -40,27 +44,16 @@ class ShadcnToast extends StatelessComponent {
       ToastVariant.error => 'var(--destructive)',
       ToastVariant.warning => 'var(--warning)',
       ToastVariant.info => 'var(--info)',
-      ToastVariant.loading => 'var(--primary)',
-    };
-  }
-
-  String _getProgressColor() {
-    return switch (props.variant) {
-      ToastVariant.success => 'var(--success)',
-      ToastVariant.error => 'var(--destructive)',
-      ToastVariant.warning => 'var(--warning)',
-      ToastVariant.info => 'var(--info)',
-      ToastVariant.loading => 'var(--primary)',
+      ToastVariant.loading => 'var(--muted-foreground)',
     };
   }
 
   @override
   Component build(BuildContext context) {
-    // ShadCN Toast: group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all
     return dom.div(
       classes: 'arcane-toast arcane-toast-${props.variant.name}',
       id: props.id != null ? 'toast-${props.id}' : null,
-      attributes: {
+      attributes: <String, String>{
         'role': 'alert',
         'aria-live': props.variant == ToastVariant.error
             ? 'assertive'
@@ -73,191 +66,171 @@ class ShadcnToast extends StatelessComponent {
         'data-state': props.isExiting ? 'closed' : 'open',
       },
       styles: dom.Styles(
-        raw: {
+        raw: <String, String>{
+          'position': 'relative',
           'display': 'flex',
           'align-items': 'flex-start',
-          // ShadCN: space-x-4
-          'gap': '16px',
-          // ShadCN: p-6 pr-8
-          'padding': '24px',
-          'padding-right': '32px',
-          // ShadCN: bg-background
-          'background-color': 'var(--background)',
-          'color': 'var(--foreground)',
-          // ShadCN: border
+          'gap': '0.375rem',
+          'box-sizing': 'border-box',
+          'width': '356px',
+          'max-width': 'calc(100vw - 2rem)',
+          'padding': '1rem',
+          'background-color': 'var(--popover)',
+          'color': 'var(--popover-foreground)',
           'border': '1px solid var(--border)',
-          // ShadCN: rounded-md (6px)
-          'border-radius': 'var(--radius-sm)',
-          // ShadCN: shadow-lg
-          'box-shadow':
-              '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-          'min-width': '320px',
-          'max-width': '420px',
-          // ShadCN: pointer-events-auto
+          'border-radius': 'var(--radius-md)',
+          'box-shadow': 'var(--shadow-lg)',
+          'font-size': '0.8125rem',
+          'line-height': '1.5',
           'pointer-events': 'auto',
-          'position': 'relative',
-          // ShadCN: overflow-hidden
-          'overflow': 'hidden',
-          // ShadCN: transition-all
-          'transition': 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+          'transition': 'transform 400ms ease, opacity 400ms ease',
           'animation': props.isExiting
               ? 'arcane-toast-exit 200ms cubic-bezier(0.4, 0, 1, 1) forwards'
               : 'arcane-toast-enter 300ms cubic-bezier(0, 0, 0.2, 1) forwards',
         },
       ),
-      events: {
+      events: <String, EventCallback>{
         if (props.onMouseEnter != null)
           'mouseenter': (_) => props.onMouseEnter!(),
         if (props.onMouseLeave != null)
           'mouseleave': (_) => props.onMouseLeave!(),
       },
-      [
-        // Icon
+      <Component>[
         dom.div(
           classes: 'arcane-toast-icon',
           styles: const dom.Styles(
-            raw: {
+            raw: <String, String>{
               'display': 'flex',
               'align-items': 'center',
               'justify-content': 'center',
-              'width': '20px',
-              'height': '20px',
+              'width': '1rem',
+              'height': '1rem',
               'flex-shrink': '0',
-              'margin-top': '2px',
+              'margin-top': '0.125rem',
+              'margin-right': '0.25rem',
             },
           ),
           <Component>[_buildIcon(context)],
         ),
-
-        // Content
         dom.div(
           classes: 'arcane-toast-content',
           styles: const dom.Styles(
-            raw: {
+            raw: <String, String>{
               'flex': '1',
               'min-width': '0',
               'display': 'flex',
               'flex-direction': 'column',
-              'gap': '2px',
+              'gap': '0.125rem',
             },
           ),
-          [
+          <Component>[
             if (props.title != null)
               dom.span(
                 classes: 'arcane-toast-title',
                 styles: const dom.Styles(
-                  raw: {
-                    'font-weight': 'var(--font-weight-semibold)',
-                    'font-size': 'var(--font-size-sm)',
-                    'color': 'var(--foreground)',
-                    'line-height': '1.4',
+                  raw: <String, String>{
+                    'font-weight': '500',
+                    'color': 'inherit',
                   },
                 ),
-                [Component.text(props.title!)],
+                <Component>[Component.text(props.title!)],
               ),
             dom.span(
               classes: 'arcane-toast-message',
               styles: dom.Styles(
-                raw: {
-                  'font-size': 'var(--font-size-sm)',
+                raw: <String, String>{
                   'color': props.title != null
                       ? 'var(--muted-foreground)'
-                      : 'var(--foreground)',
-                  'line-height': '1.5',
+                      : 'inherit',
+                  if (props.title == null) 'font-weight': '500',
                 },
               ),
-              [Component.text(props.message)],
+              <Component>[Component.text(props.message)],
             ),
             if (props.description != null)
               dom.span(
                 classes: 'arcane-toast-description',
                 styles: const dom.Styles(
-                  raw: {
-                    'font-size': 'var(--font-size-xs)',
+                  raw: <String, String>{
                     'color': 'var(--muted-foreground)',
-                    'line-height': '1.5',
-                    'margin-top': '4px',
+                    'line-height': '1.4',
                   },
                 ),
-                [Component.text(props.description!)],
+                <Component>[Component.text(props.description!)],
               ),
             if (props.action != null)
-              dom.div(styles: const dom.Styles(raw: {'margin-top': '8px'}), [
-                dom.button(
-                  classes: 'arcane-toast-action',
-                  attributes: {'type': 'button'},
-                  styles: dom.Styles(
-                    raw: {
-                      'display': 'inline-flex',
-                      'align-items': 'center',
-                      'padding': '4px 8px',
-                      'font-size': 'var(--font-size-xs)',
-                      'font-weight': 'var(--font-weight-medium)',
-                      'color': props.action!.destructive
-                          ? 'var(--destructive)'
-                          : 'var(--primary)',
-                      'background': 'transparent',
-                      'border': '1px solid var(--border)',
-                      'border-radius': 'var(--radius-xs)',
-                      'cursor': 'pointer',
-                      'transition': 'opacity var(--transition)',
-                    },
-                  ),
-                  events: {'click': (_) => props.action!.onPressed()},
-                  [Component.text(props.action!.label)],
+              dom.div(
+                styles: const dom.Styles(
+                  raw: <String, String>{'margin-top': '0.5rem'},
                 ),
-              ]),
+                <Component>[
+                  dom.button(
+                    classes: 'arcane-toast-action',
+                    attributes: const <String, String>{'type': 'button'},
+                    styles: dom.Styles(
+                      raw: <String, String>{
+                        'display': 'inline-flex',
+                        'align-items': 'center',
+                        'height': '1.5rem',
+                        'padding': '0 0.5rem',
+                        'font-size': '0.75rem',
+                        'font-weight': '500',
+                        'color': props.action!.destructive
+                            ? 'var(--destructive-foreground)'
+                            : 'var(--popover)',
+                        'background-color': props.action!.destructive
+                            ? 'var(--destructive)'
+                            : 'var(--popover-foreground)',
+                        'border': '0',
+                        'border-radius': 'var(--radius-xs)',
+                        'box-shadow': 'var(--shadcn-control-shadow, none)',
+                        'cursor': 'pointer',
+                        'outline': 'none',
+                        'transition':
+                            'opacity var(--transition), box-shadow var(--transition)',
+                      },
+                    ),
+                    events: <String, EventCallback>{
+                      'click': (_) => props.action!.onPressed(),
+                    },
+                    <Component>[Component.text(props.action!.label)],
+                  ),
+                ],
+              ),
           ],
         ),
-
-        // Close button
         if (props.dismissible && props.onDismiss != null)
           dom.button(
             classes: 'arcane-toast-close',
-            attributes: {
+            attributes: <String, String>{
               'type': 'button',
               'aria-label': 'Dismiss',
               'data-state': props.isExiting ? 'closed' : 'open',
             },
             styles: const dom.Styles(
-              raw: {
+              raw: <String, String>{
                 'display': 'flex',
                 'align-items': 'center',
                 'justify-content': 'center',
-                'width': '24px',
-                'height': '24px',
+                'width': '20px',
+                'height': '20px',
                 'padding': '0',
-                'border': 'none',
-                'background': 'transparent',
-                'color': 'var(--muted-foreground)',
-                'cursor': 'pointer',
-                'border-radius': 'var(--radius-xs)',
-                'transition': 'opacity var(--transition)',
                 'flex-shrink': '0',
-                'opacity': '0.7',
+                'border': '1px solid var(--border)',
+                'border-radius': 'var(--radius-sm)',
+                'background-color':
+                    'var(--shadcn-item-background, var(--popover))',
+                'color':
+                    'var(--shadcn-item-foreground, var(--popover-foreground))',
+                'box-shadow': 'var(--shadcn-control-shadow, none)',
+                'cursor': 'pointer',
+                'outline': 'none',
+                'transition':
+                    'background-color var(--transition), color var(--transition), box-shadow var(--transition)',
               },
             ),
-            events: {'click': (_) => props.onDismiss!()},
-            [ArcaneIcon.x(size: IconSize.sm)],
-          ),
-
-        // Progress bar
-        if (props.duration > 0 && !props.isHovered && !props.isExiting)
-          dom.div(
-            classes: 'arcane-toast-progress',
-            styles: dom.Styles(
-              raw: {
-                'position': 'absolute',
-                'bottom': '0',
-                'left': '0',
-                'height': '2px',
-                'background': _getProgressColor(),
-                'border-radius': '0 0 0 0.5rem',
-                'animation':
-                    'arcane-toast-progress ${props.duration}ms linear forwards',
-              },
-            ),
-            [],
+            events: <String, EventCallback>{'click': (_) => props.onDismiss!()},
+            <Component>[ArcaneIcon.x(size: IconSize.xs)],
           ),
       ],
     );
@@ -327,8 +300,8 @@ class ShadcnToastContainer extends StatelessComponent {
       styles: dom.Styles(
         raw: {
           'position': 'fixed',
-          // ShadCN: z-[100]
-          'z-index': '100',
+          // Above sheets (1100) so feedback stays visible over overlays.
+          'z-index': '1200',
           'display': 'flex',
           'gap': '${props.gap}px',
           'pointer-events': 'none',

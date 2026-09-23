@@ -1,13 +1,11 @@
 
-    <div class="arcane-accordion faq-container" style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%">
-      <details>
-        <summary style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; cursor: pointer; list-style: none; -webkit-user-select: none; user-select: none">
-          <div style="flex-grow: 1; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--foreground); line-height: 1.5">Q</div>
-          <div class="faq-chevron" style="display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; color: var(--muted-foreground); flex-shrink: 0; transition: transform 0.2s ease"><span style="font-size: 0.625rem; line-height: 1">▼</span></div>
+    <div class="arcane-accordion faq-container" style="display: flex; flex-direction: column; width: 100%">
+      <details class="arcane-accordion-item" style="border-radius: 0">
+        <summary class="arcane-accordion-trigger" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-radius: var(--radius-md); font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; text-align: left; color: var(--foreground); cursor: pointer; list-style: none; outline: none; box-shadow: var(--shadcn-control-shadow, none); -webkit-user-select: none; user-select: none">
+          <span class="arcane-accordion-title" style="flex: 1; min-width: 0">Q</span>
+          <span class="arcane-accordion-chevron" style="display: flex; flex-shrink: 0; margin-top: 0.125rem; color: var(--muted-foreground); pointer-events: none; transition: transform 200ms ease"><i style="font-family: 'lucide', sans-serif; font-style: normal; font-weight: normal; font-size: 16.0px; line-height: 1; display: inline-block; width: 16.0px; height: 16.0px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale"></i></span>
         </summary>
-        <div style="padding: 0 1.25rem 1rem 1.25rem; border-top: 1px solid rgba(255, 255, 255, 0.06)">
-          <div style="padding-top: 1rem; font-size: var(--font-size-sm); color: var(--muted-foreground); line-height: 1.625"></div>
-        </div>
+        <div class="arcane-accordion-content" style="padding-bottom: 1rem; font-size: 0.875rem; line-height: 1.25rem"></div>
       </details>
     </div>
   

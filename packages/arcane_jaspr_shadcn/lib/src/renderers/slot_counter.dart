@@ -139,7 +139,7 @@ class _ShadcnSlotCounterState extends State<ShadcnSlotCounter> {
       case SlotCounterColor.primary:
         return 'var(--foreground)';
       case SlotCounterColor.accent:
-        return 'var(--accent)';
+        return 'var(--primary)';
       case SlotCounterColor.muted:
         return 'var(--muted-foreground)';
       case SlotCounterColor.success:

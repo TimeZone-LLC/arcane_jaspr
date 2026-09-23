@@ -62,6 +62,10 @@ abstract class DialogRenderBase extends StatelessComponent {
       attributes: <String, String>{...surfAttrs, 'data-arcane-scrim': ''},
       styles: dom.Styles(raw: overlayStyles),
       events: <String, EventCallback>{
+        if (props.onClose != null)
+          'arcane:close': (event) {
+            if (event.target == event.currentTarget) props.onClose!();
+          },
         if (props.barrierDismissible && props.onClose != null)
           'click': (event) {
             if (event.target == event.currentTarget) {
@@ -75,6 +79,7 @@ abstract class DialogRenderBase extends StatelessComponent {
           attributes: <String, String>{
             'role': 'dialog',
             'aria-modal': 'true',
+            'tabindex': '-1',
             'data-arcane-autofocus': '',
             if (props.title != null)
               'aria-labelledby': '$themePrefix-dialog-title-$surfaceId',

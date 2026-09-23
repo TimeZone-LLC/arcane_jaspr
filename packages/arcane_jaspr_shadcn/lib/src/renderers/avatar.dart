@@ -6,7 +6,9 @@ import 'package:arcane_jaspr/core/rendering/base/avatar_render_base.dart';
 
 /// ShadCN Avatar renderer.
 ///
-/// Outputs the exact HTML structure and CSS from ui.shadcn.com.
+/// The root does not clip: the image and fallback carry the root radius
+/// themselves (`border-radius: inherit`) so the status dot can sit on the
+/// corner without being cut off.
 /// Reference: https://ui.shadcn.com/docs/components/avatar
 class ShadcnAvatar extends AvatarRenderBase {
   const ShadcnAvatar(super.props, {super.key});
@@ -17,34 +19,35 @@ class ShadcnAvatar extends AvatarRenderBase {
   @override
   String get statusClass => 'arcane-avatar-status';
 
-  // ShadCN Avatar sizes (default h-10 w-10 = 40px): (dimension, fontSize, statusSize)
+  // ShadCN v4 Avatar sizes (default size-8 = 32px):
+  // (dimension, fontSize, statusSize)
   (String, String, String) _sizes(AvatarSize size) => switch (size) {
-    AvatarSize.xs => ('24px', '10px', '8px'),
-    AvatarSize.sm => ('32px', '12px', '10px'),
-    AvatarSize.md => ('40px', '14px', '12px'), // ShadCN default
-    AvatarSize.lg => ('56px', '18px', '14px'),
-    AvatarSize.xl => ('80px', '24px', '18px'),
+    AvatarSize.xs => ('20px', '0.625rem', '6px'),
+    AvatarSize.sm => ('24px', '0.75rem', '8px'),
+    AvatarSize.md => ('32px', '0.875rem', '10px'),
+    AvatarSize.lg => ('40px', '1rem', '12px'),
+    AvatarSize.xl => ('48px', '1.125rem', '14px'),
   };
 
   // Shape-specific border radius
   String _borderRadius(AvatarShape shape) => switch (shape) {
     AvatarShape.circle => '50%',
-    AvatarShape.rounded => '0.5rem', // rounded-md
-    AvatarShape.square => '0', // rounded-none
+    AvatarShape.rounded => 'var(--radius-md)',
+    AvatarShape.square => '0',
   };
 
-  // ShadCN: relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full
+  // ShadCN: relative flex size-8 shrink-0 rounded-full. Clipping moves to the
+  // image/fallback so the status dot stays whole.
   @override
   Map<String, String> rootStyles(AvatarProps props) {
-    final (dimension, _, _) = _sizes(props.size);
-    final borderRadius = _borderRadius(props.shape);
+    final (String dimension, _, _) = _sizes(props.size);
+    final String borderRadius = _borderRadius(props.shape);
     return <String, String>{
       'position': 'relative',
       'display': 'inline-flex',
       'align-items': 'center',
       'justify-content': 'center',
       'flex-shrink': '0',
-      'overflow': 'hidden',
       'width': dimension,
       'height': dimension,
       'border-radius': borderRadius,
@@ -55,53 +58,57 @@ class ShadcnAvatar extends AvatarRenderBase {
 
   @override
   Map<String, String> statusStyles(AvatarProps props) {
-    final (_, _, statusSize) = _sizes(props.size);
+    final (_, _, String statusSize) = _sizes(props.size);
     return <String, String>{
       'position': 'absolute',
       'bottom': '0',
       'right': '0',
       'width': statusSize,
       'height': statusSize,
+      'box-sizing': 'content-box',
       'border-radius': '50%',
-      'background-color': props.statusColor ?? 'var(--success, #22c55e)',
+      'background-color': props.statusColor ?? 'var(--success)',
       'border': '2px solid var(--background)',
     };
   }
 
   @override
   Component buildBody(AvatarProps props) {
-    final (_, fontSize, _) = _sizes(props.size);
-    final borderRadius = _borderRadius(props.shape);
+    final (_, String fontSize, _) = _sizes(props.size);
 
     // Image or fallback
     if (props.imageUrl != null) {
-      // ShadCN AvatarImage: aspect-square h-full w-full
+      // ShadCN AvatarImage: aspect-square size-full, clipped to the root
+      // radius.
       return dom.img(
         classes: 'arcane-avatar-image',
         src: props.imageUrl!,
         alt: props.initials ?? 'Avatar',
         styles: const dom.Styles(
-          raw: {
+          raw: <String, String>{
             'aspect-ratio': '1',
             'height': '100%',
             'width': '100%',
             'object-fit': 'cover',
+            'border-radius': 'inherit',
           },
         ),
       );
     }
 
-    // ShadCN AvatarFallback: flex h-full w-full items-center justify-center rounded-full bg-muted
+    // ShadCN AvatarFallback: flex size-full items-center justify-center
+    // rounded-full bg-muted
     return dom.div(
       classes: 'arcane-avatar-fallback',
       styles: dom.Styles(
-        raw: {
+        raw: <String, String>{
           'display': 'flex',
           'height': '100%',
           'width': '100%',
           'align-items': 'center',
           'justify-content': 'center',
-          'border-radius': borderRadius,
+          'overflow': 'hidden',
+          'border-radius': 'inherit',
           'background-color': 'var(--muted)',
           'color': 'var(--muted-foreground)',
           'font-weight': 'var(--font-weight-medium)',

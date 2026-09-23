@@ -1,6 +1,7 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
+import 'package:arcane_jaspr/core/props/separator_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/separator_render_base.dart';
 
 /// ShadCN Separator renderer.
@@ -12,8 +13,19 @@ import 'package:arcane_jaspr/core/rendering/base/separator_render_base.dart';
 class ShadcnSeparator extends SeparatorRenderBase {
   const ShadcnSeparator(super.props, {super.key});
 
+  // ShadCN Separator: shrink-0 bg-border h-px w-full, no built-in margin.
+  // Callers own spacing through the layout gap or an explicit margin.
   @override
-  String get resolveMargin => '${props.margin ?? 16}px';
+  String get resolveMargin => props.margin == null ? '0' : '${props.margin}px';
+
+  // The subtle variant draws a softened border line; `--muted` is a surface
+  // fill and disappears against light backgrounds.
+  @override
+  Map<String, String> backgroundStyle(String color) => super.backgroundStyle(
+    props.color == null && props.variant == SeparatorVariant.subtle
+        ? 'var(--shadcn-subtle-line)'
+        : color,
+  );
 
   @override
   String get verticalClasses => 'arcane-separator arcane-separator-vertical';
@@ -60,6 +72,7 @@ class ShadcnSeparator extends SeparatorRenderBase {
         raw: <String, String>{
           'margin': '$margin 0',
           'border': 'none',
+          'flex-shrink': '0',
           'height': thickness,
           ...backgroundStyle(color),
           ...?props.decoration?.universalStyles(),

@@ -6,7 +6,12 @@ import 'package:arcane_jaspr/core/rendering/base/command_render_base.dart';
 
 /// ShadCN Command renderer.
 ///
-/// Outputs command palette HTML matching the ShadCN/ui cmdk design language.
+/// Outputs the v4 CommandDialog: a `sm:max-w-lg` dialog with no padding, a
+/// 3rem search row, a 300px list, `text-xs font-medium` group headings and
+/// `rounded-sm px-2 py-1.5 text-sm` items whose background and foreground
+/// route through `--shadcn-item-*` (the runtime marks the keyboard-active row
+/// with `data-arcane-state="active"`).
+///
 /// Reference: https://ui.shadcn.com/docs/components/command
 class ShadcnCommand extends CommandRenderBase {
   const ShadcnCommand(super.props, {super.key});
@@ -24,128 +29,147 @@ class ShadcnCommand extends CommandRenderBase {
 
   @override
   Map<String, String> get overlayStyles => const <String, String>{
-        'position': 'fixed',
-        'inset': '0',
-        'z-index': '50',
-        'display': 'flex',
-        'align-items': 'flex-start',
-        'justify-content': 'center',
-        'padding-top': '20vh',
-        'background-color': 'rgba(0, 0, 0, 0.5)',
-        'animation': 'arcane-fade-in var(--transition-slow)',
-      };
+    'position': 'fixed',
+    'inset': '0',
+    'z-index': '50',
+    'display': 'flex',
+    'align-items': 'flex-start',
+    'justify-content': 'center',
+    'padding': '20vh 1rem 1rem',
+    'background-color': 'var(--overlay)',
+    'animation': 'arcane-fade-in var(--transition-slow)',
+  };
 
   @override
   String get dialogClasses => 'arcane-command-dialog';
 
   @override
   Map<String, String> get dialogStyles => const <String, String>{
-        'width': '100%',
-        'max-width': '640px',
-        'background-color': 'var(--popover)',
-        'color': 'var(--popover-foreground)',
-        'border': '1px solid var(--border)',
-        'border-radius': 'var(--radius-md)',
-        'box-shadow':
-            '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-        'overflow': 'hidden',
-        'animation': 'arcane-scale-in var(--transition-slow)',
-      };
+    'display': 'flex',
+    'flex-direction': 'column',
+    'width': '100%',
+    'max-width': '32rem',
+    'padding': '0',
+    'background-color': 'var(--popover)',
+    'color': 'var(--popover-foreground)',
+    'border': '1px solid var(--border)',
+    'border-radius': 'var(--radius-md)',
+    'box-shadow': 'var(--shadow-lg)',
+    'overflow': 'hidden',
+    'animation': 'arcane-scale-in var(--transition-slow)',
+  };
 
+  /// The row is square (radius 0) inside the clipped dialog, so its bottom
+  /// rule is a divider rather than an edge accent on a rounded box.
   @override
   Map<String, String> get searchRowStyles => const <String, String>{
-        'display': 'flex',
-        'align-items': 'center',
-        'gap': 'var(--space-2)',
-        'padding': '12px 16px',
-        'border-bottom': '1px solid var(--border)',
-      };
+    'display': 'flex',
+    'align-items': 'center',
+    'gap': '0.5rem',
+    'height': '3rem',
+    'padding': '0 0.75rem',
+    'border-radius': '0',
+    'border-bottom': '1px solid var(--border)',
+  };
 
   @override
   Map<String, String> get searchIconStyles => const <String, String>{
-        'color': 'var(--muted-foreground)',
-        'display': 'flex',
-        'align-items': 'center',
-      };
+    'display': 'flex',
+    'align-items': 'center',
+    'flex-shrink': '0',
+    'opacity': '0.5',
+  };
 
   @override
   String get inputClass => 'arcane-command-input';
 
   @override
   String get inputStyleSuffix =>
-      'font-size:var(--font-size-sm);color:var(--foreground);outline:none;';
+      'height:3rem;padding:0.75rem 0;font-size:0.875rem;'
+      'color:var(--foreground);outline:none;';
 
   @override
   String get listClasses => 'arcane-command-list';
 
   @override
   Map<String, String> get listStyles => const <String, String>{
-        'max-height': '400px',
-        'overflow-y': 'auto',
-        'padding': '8px',
-      };
+    'max-height': '300px',
+    'overflow-x': 'hidden',
+    'overflow-y': 'auto',
+    'padding': '0.25rem',
+  };
 
   @override
   String get groupHeadingClass => 'arcane-command-group-heading';
 
   @override
   Map<String, String> get groupHeadingStyles => const <String, String>{
-        'padding': '8px 12px',
-        'font-size': 'var(--font-size-xs)',
-        'font-weight': 'var(--font-weight-semibold)',
-        'color': 'var(--muted-foreground)',
-        'text-transform': 'uppercase',
-        'letter-spacing': '0.05em',
-      };
+    'padding': '0.375rem 0.5rem',
+    'font-size': '0.75rem',
+    'line-height': '1rem',
+    'font-weight': '500',
+    'color': 'var(--muted-foreground)',
+  };
 
+  /// A square divider row under the rounded dialog's clip, like the search
+  /// row above the list.
   @override
   Map<String, String> get footerStyles => const <String, String>{
-        'display': 'flex',
-        'align-items': 'center',
-        'gap': '16px',
-        'padding': '8px 12px',
-        'border-top': '1px solid var(--border)',
-        'font-size': 'var(--font-size-xs)',
-        'color': 'var(--muted-foreground)',
-      };
+    'display': 'flex',
+    'align-items': 'center',
+    'gap': '1rem',
+    'padding': '0.5rem 0.75rem',
+    'border-radius': '0',
+    'border-top': '1px solid var(--border)',
+    'font-size': '0.75rem',
+    'color': 'var(--muted-foreground)',
+  };
 
   @override
   String get itemBaseClass => 'arcane-command-item';
 
   @override
   Map<String, String> itemStyles(CommandItemProps item) => <String, String>{
-        'display': 'flex',
-        'align-items': 'center',
-        'gap': 'var(--space-2)',
-        'padding': '8px 12px',
-        'border-radius': 'var(--radius-xs)',
-        'cursor': item.disabled ? 'not-allowed' : 'pointer',
-        'transition': 'background-color var(--transition)',
-        if (item.disabled) 'opacity': '0.5',
-      };
+    'position': 'relative',
+    'display': 'flex',
+    'align-items': 'center',
+    'gap': '0.5rem',
+    'padding': '0.375rem 0.5rem',
+    'border-radius': 'var(--shadcn-item-radius)',
+    'font-size': '0.875rem',
+    'line-height': '1.25rem',
+    'background-color': 'var(--shadcn-item-background, transparent)',
+    'color': 'var(--shadcn-item-foreground, inherit)',
+    'cursor': 'default',
+    'user-select': 'none',
+    'outline': 'none',
+    'transition': 'background-color var(--transition), color var(--transition)',
+    if (item.disabled) 'pointer-events': 'none',
+    if (item.disabled) 'opacity': '0.5',
+  };
 
+  /// v4 CommandShortcut: `ml-auto text-xs tracking-widest
+  /// text-muted-foreground`.
   @override
   Component buildShortcut(String shortcut) => dom.span(
-        styles: const dom.Styles(
-          raw: <String, String>{
-            'font-size': 'var(--font-size-xs)',
-            'color': 'var(--muted-foreground)',
-            'padding': '2px 4px',
-            'background-color': 'var(--muted)',
-            'border-radius': 'var(--radius-xs)',
-            'font-family':
-                'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-          },
-        ),
-        [Component.text(shortcut)],
-      );
+    classes: 'arcane-command-shortcut',
+    styles: const dom.Styles(
+      raw: <String, String>{
+        'margin-left': 'auto',
+        'font-size': '0.75rem',
+        'letter-spacing': '0.1em',
+        'color': 'var(--muted-foreground)',
+      },
+    ),
+    <Component>[Component.text(shortcut)],
+  );
 
   @override
   List<Component> buildKeyHints() => <Component>[
-        _buildKeyHint('Enter', 'Select'),
-        _buildKeyHint('Up/Down', 'Navigate'),
-        _buildKeyHint('esc', 'Close'),
-      ];
+    _buildKeyHint('Enter', 'Select'),
+    _buildKeyHint('Up/Down', 'Navigate'),
+    _buildKeyHint('esc', 'Close'),
+  ];
 
   Component _buildKeyHint(String key, String label) {
     return dom.div(
@@ -153,23 +177,29 @@ class ShadcnCommand extends CommandRenderBase {
         raw: <String, String>{
           'display': 'flex',
           'align-items': 'center',
-          'gap': 'var(--space-1)',
+          'gap': '0.25rem',
         },
       ),
-      [
+      <Component>[
         dom.span(
           styles: const dom.Styles(
             raw: <String, String>{
-              'padding': '2px 6px',
+              'padding': '0 0.25rem',
+              'min-width': '1.25rem',
+              'height': '1.25rem',
+              'display': 'inline-flex',
+              'align-items': 'center',
+              'justify-content': 'center',
               'background-color': 'var(--muted)',
+              'color': 'var(--muted-foreground)',
               'border-radius': 'var(--radius-xs)',
-              'font-family':
-                  'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+              'font-family': 'var(--font-mono)',
+              'font-size': '0.75rem',
             },
           ),
-          [Component.text(key)],
+          <Component>[Component.text(key)],
         ),
-        dom.span([Component.text(label)]),
+        dom.span(<Component>[Component.text(label)]),
       ],
     );
   }

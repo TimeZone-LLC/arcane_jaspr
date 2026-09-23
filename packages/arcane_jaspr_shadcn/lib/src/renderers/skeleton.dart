@@ -14,14 +14,20 @@ class ShadcnSkeleton extends SkeletonRenderBase {
   (String, String, String?, String?) defaultGeometry(SkeletonShape shape) =>
       switch (shape) {
         SkeletonShape.circle => ('2.5rem', '2.5rem', null, '50%'),
-        SkeletonShape.text => ('100%', '1rem', null, '0.25rem'),
-        SkeletonShape.rectangle => ('100%', '1.25rem', null, '0.375rem'),
+        SkeletonShape.text => ('100%', '1rem', null, 'var(--radius-sm)'),
+        SkeletonShape.rectangle => (
+          '100%',
+          '1.25rem',
+          null,
+          'var(--radius-sm)',
+        ),
       };
 
-  // ShadCN Skeleton: animate-pulse rounded-md bg-muted
+  // ShadCN Skeleton: bg-accent animate-pulse rounded-md, on the base
+  // stylesheet's `arcane-pulse` opacity keyframes.
   @override
   Map<String, String> surfaceStyles(SkeletonProps props) => <String, String>{
-    'background-color': 'var(--muted)',
+    'background-color': 'var(--accent)',
     if (props.animate)
       'animation': 'arcane-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
   };

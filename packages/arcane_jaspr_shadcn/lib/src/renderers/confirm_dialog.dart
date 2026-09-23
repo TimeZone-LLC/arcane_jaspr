@@ -17,8 +17,9 @@ class ShadcnConfirmDialog extends ConfirmDialogRenderBase {
   @override
   Component buildButton(ButtonProps props) => ShadcnButton(props);
 
+  /// v4 AlertDialogContent: `sm:max-w-lg`.
   @override
-  double get maxWidth => 400;
+  double get maxWidth => 512;
 
   @override
   String get contentClass => 'arcane-confirm-dialog-content';
@@ -32,12 +33,12 @@ class ShadcnConfirmDialog extends ConfirmDialogRenderBase {
   @override
   Component buildIcon(Component icon, bool destructive) => dom.div(
     styles: dom.Styles(
-      raw: {
+      raw: <String, String>{
         'font-size': '3rem',
-        'color': destructive ? 'var(--destructive)' : 'var(--accent)',
+        'color': destructive ? 'var(--destructive)' : 'var(--foreground)',
       },
     ),
-    [icon],
+    <Component>[icon],
   );
 }
 
@@ -51,8 +52,9 @@ class ShadcnAlertDialog extends AlertDialogRenderBase {
   @override
   Component buildButton(ButtonProps props) => ShadcnButton(props);
 
+  /// v4 AlertDialogContent: `sm:max-w-lg`.
   @override
-  double get maxWidth => 400;
+  double get maxWidth => 512;
 
   @override
   String get contentGap => 'var(--space-4)';
@@ -63,8 +65,8 @@ class ShadcnAlertDialog extends AlertDialogRenderBase {
   @override
   Component buildIcon(Component icon) => dom.div(
     styles: const dom.Styles(
-      raw: {'font-size': '3rem', 'color': 'var(--accent)'},
+      raw: <String, String>{'font-size': '3rem', 'color': 'var(--foreground)'},
     ),
-    [icon],
+    <Component>[icon],
   );
 }

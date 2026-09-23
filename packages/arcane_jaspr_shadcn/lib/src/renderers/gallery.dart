@@ -4,7 +4,7 @@ import 'package:arcane_jaspr/core/rendering/base/gallery_render_base.dart';
 /// Shadcn gallery renderer.
 ///
 /// Mirrors the shadcn card idiom (`ShadcnCard`): a clean bordered surface on
-/// `--card` with the `--shadow-xs` ambient shadow and the theme `--radius`.
+/// `--card` with the `--shadow-sm` card shadow and the `--radius-md` tier.
 class ShadcnGallery extends GalleryRenderBase {
   const ShadcnGallery(super.props, {super.key});
 
@@ -21,7 +21,7 @@ class ShadcnGallery extends GalleryRenderBase {
         'background': 'var(--card)',
         'color': 'var(--card-foreground)',
         'border': '1px solid var(--border)',
-        'border-radius': 'var(--radius, 0.5rem)',
-        'box-shadow': 'var(--shadow-xs)',
+        'border-radius': 'var(--radius-md)',
+        'box-shadow': 'var(--shadow-sm)',
       };
 }

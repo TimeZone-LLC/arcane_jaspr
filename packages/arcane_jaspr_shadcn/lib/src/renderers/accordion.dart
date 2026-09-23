@@ -1,12 +1,18 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
+import 'package:arcane_jaspr/component/view/icon.dart';
 import 'package:arcane_jaspr/core/props/accordion_props.dart';
 
 /// ShadCN Accordion renderer.
 ///
 /// Uses native HTML details/summary elements for reliable expand/collapse
 /// behavior that works in SSR environments without JavaScript hydration issues.
+///
+/// Mirrors v4: items are square rows divided by a `border-b` (the last row
+/// drops it), the trigger is `py-4 text-sm font-medium` with a Lucide
+/// ChevronDown that the surfaces stylesheet rotates on `[open]`, and the
+/// content is `pb-4 text-sm`.
 ///
 /// Reference: https://ui.shadcn.com/docs/components/accordion
 class ShadcnAccordion extends StatelessComponent {
@@ -19,105 +25,106 @@ class ShadcnAccordion extends StatelessComponent {
     return dom.div(
       classes: 'arcane-accordion faq-container',
       styles: dom.Styles(
-        raw: {
+        raw: <String, String>{
           'display': 'flex',
           'flex-direction': 'column',
-          'gap': '0.75rem',
           'width': '100%',
-          if (props.bordered) 'border': '1px solid var(--border)',
-          if (props.bordered) 'border-radius': 'var(--radius-md)',
-          if (props.bordered) 'overflow': 'hidden',
+          if (props.bordered) ...<String, String>{
+            'border': '1px solid var(--border)',
+            'border-radius': 'var(--radius-md)',
+            'padding': '0 1rem',
+            'overflow': 'hidden',
+          },
+          ...?props.decoration?.universalStyles(),
+          ...?props.styles?.toMap(),
         },
       ),
-      [
+      <Component>[
         for (int i = 0; i < props.items.length; i++)
-          _buildItem(props.items[i], i, props.openItems.contains(i)),
+          _buildItem(
+            props.items[i],
+            props.openItems.contains(i),
+            isLast: i == props.items.length - 1,
+          ),
       ],
     );
   }
 
-  Component _buildItem(AccordionItemProps item, int index, bool defaultOpen) {
+  Component _buildItem(
+    AccordionItemProps item,
+    bool defaultOpen, {
+    required bool isLast,
+  }) {
     return Component.element(
       tag: 'details',
-      attributes: {if (defaultOpen) 'open': ''},
-      children: [
-        // Summary (clickable header)
+      classes: 'arcane-accordion-item',
+      attributes: <String, String>{if (defaultOpen) 'open': ''},
+      // A square row, so the divider is not an edge accent on a rounded box.
+      styles: dom.Styles(
+        raw: <String, String>{
+          'border-radius': '0',
+          if (!isLast) 'border-bottom': '1px solid var(--border)',
+        },
+      ),
+      children: <Component>[
         Component.element(
           tag: 'summary',
+          classes: 'arcane-accordion-trigger',
           styles: const dom.Styles(
-            raw: {
+            raw: <String, String>{
               'display': 'flex',
-              'align-items': 'center',
+              'align-items': 'flex-start',
               'justify-content': 'space-between',
               'gap': '1rem',
-              'padding': '1rem 1.25rem',
+              'padding': '1rem 0',
+              'border-radius': 'var(--radius-md)',
+              'font-size': '0.875rem',
+              'line-height': '1.25rem',
+              'font-weight': '500',
+              'text-align': 'left',
+              'color': 'var(--foreground)',
               'cursor': 'pointer',
               'list-style': 'none',
+              'outline': 'none',
+              'box-shadow': 'var(--shadcn-control-shadow, none)',
               '-webkit-user-select': 'none',
               'user-select': 'none',
             },
           ),
-          children: [
-            // Title text
-            dom.div(
+          children: <Component>[
+            dom.span(
+              classes: 'arcane-accordion-title',
               styles: const dom.Styles(
-                raw: {
-                  'flex-grow': '1',
-                  'font-size': 'var(--font-size-sm)',
-                  'font-weight': 'var(--font-weight-medium)',
-                  'color': 'var(--foreground)',
-                  'line-height': '1.5',
-                },
+                raw: <String, String>{'flex': '1', 'min-width': '0'},
               ),
-              [Component.text(item.title)],
+              <Component>[Component.text(item.title)],
             ),
-            // Chevron
-            const dom.div(
-              classes: 'faq-chevron',
-              styles: dom.Styles(
-                raw: {
+            dom.span(
+              classes: 'arcane-accordion-chevron',
+              styles: const dom.Styles(
+                raw: <String, String>{
                   'display': 'flex',
-                  'align-items': 'center',
-                  'justify-content': 'center',
-                  'width': '16px',
-                  'height': '16px',
-                  'color': 'var(--muted-foreground)',
                   'flex-shrink': '0',
-                  'transition': 'transform 0.2s ease',
+                  'margin-top': '0.125rem',
+                  'color': 'var(--muted-foreground)',
+                  'pointer-events': 'none',
+                  'transition': 'transform 200ms ease',
                 },
               ),
-              [
-                dom.span(
-                  styles: dom.Styles(
-                    raw: {'font-size': '0.625rem', 'line-height': '1'},
-                  ),
-                  [Component.text('\u25BC')],
-                ),
-              ],
+              <Component>[ArcaneIcon.chevronDown(size: IconSize.sm)],
             ),
           ],
         ),
-        // Content (shown when open)
         dom.div(
+          classes: 'arcane-accordion-content',
           styles: const dom.Styles(
-            raw: {
-              'padding': '0 1.25rem 1rem 1.25rem',
-              'border-top': '1px solid rgba(255, 255, 255, 0.06)',
+            raw: <String, String>{
+              'padding-bottom': '1rem',
+              'font-size': '0.875rem',
+              'line-height': '1.25rem',
             },
           ),
-          [
-            dom.div(
-              styles: const dom.Styles(
-                raw: {
-                  'padding-top': '1rem',
-                  'font-size': 'var(--font-size-sm)',
-                  'color': 'var(--muted-foreground)',
-                  'line-height': '1.625',
-                },
-              ),
-              [item.customContent ?? Component.text(item.content)],
-            ),
-          ],
+          <Component>[item.customContent ?? Component.text(item.content)],
         ),
       ],
     );

@@ -6,10 +6,14 @@ import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/toggle_switch_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/toggle_switch_render_base.dart';
 
-/// ShadCN Toggle Switch renderer.
+/// ShadCN v4 switch renderer.
 ///
-/// Outputs the exact HTML structure and CSS from ui.shadcn.com.
 /// Reference: https://ui.shadcn.com/docs/components/switch
+///
+/// Track `h-[1.15rem] w-8 border border-transparent shadow-xs bg-input
+/// data-[state=checked]:bg-primary dark:bg-input/80`; thumb `size-4
+/// bg-background translate-x-[calc(100%-2px)]` when checked. Both use the
+/// 8px `--radius-md` cap instead of a pill.
 class ShadcnToggleSwitch extends ToggleSwitchRenderBase {
   const ShadcnToggleSwitch(super.props, {super.key});
 
@@ -18,35 +22,23 @@ class ShadcnToggleSwitch extends ToggleSwitchRenderBase {
     ToggleSwitchProps props,
     Map<String, String> itemAttrs,
   ) {
-    // ShadCN size-specific dimensions
-    // Default: w-11 h-6 (44px x 24px), thumb h-5 w-5 (20px)
-    final (
-      double width,
-      double height,
-      double thumbSize,
-      double thumbOffset,
-    ) = switch (props.size) {
-      ComponentSize.sm => (36.0, 20.0, 16.0, 2.0), // w-9 h-5, thumb h-4
-      ComponentSize.md => (
-        44.0,
-        24.0,
-        20.0,
-        2.0,
-      ), // w-11 h-6, thumb h-5 (shadcn)
-      ComponentSize.lg => (56.0, 28.0, 24.0, 2.0), // w-14 h-7, thumb h-6
+    // The track is two thumbs wide plus its 1px borders, so the checked
+    // offset is always `calc(100% - 2px)` of the thumb.
+    final int thumbSize = switch (props.size) {
+      ComponentSize.sm => 14,
+      ComponentSize.md => 16,
+      ComponentSize.lg => 20,
     };
+    final int trackWidth = thumbSize * 2;
+    final int trackHeight = thumbSize + 2;
 
-    // ShadCN: translate-x-0 (off) / translate-x-5 (on)
-    final double thumbTranslate = width - thumbSize - thumbOffset * 2 - 2;
-
-    // Get color variant colors - inactive uses muted with border for better visibility
-    final (String activeColor, String inactiveColor) = switch (props.color) {
-      ColorVariant.primary => ('var(--primary)', 'var(--muted)'),
-      ColorVariant.secondary => ('var(--secondary)', 'var(--muted)'),
-      ColorVariant.destructive => ('var(--destructive)', 'var(--muted)'),
-      ColorVariant.success => ('var(--success, #22c55e)', 'var(--muted)'),
-      ColorVariant.warning => ('var(--warning, #f59e0b)', 'var(--muted)'),
-      ColorVariant.info => ('var(--info, #3b82f6)', 'var(--muted)'),
+    final String activeColor = switch (props.color) {
+      ColorVariant.primary => 'var(--primary)',
+      ColorVariant.secondary => 'var(--secondary)',
+      ColorVariant.destructive => 'var(--destructive)',
+      ColorVariant.success => 'var(--success, #22c55e)',
+      ColorVariant.warning => 'var(--warning, #f59e0b)',
+      ColorVariant.info => 'var(--info, #3b82f6)',
     };
 
     return dom.button(
@@ -70,25 +62,20 @@ class ShadcnToggleSwitch extends ToggleSwitchRenderBase {
           'display': 'inline-flex',
           'align-items': 'center',
           'flex-shrink': '0',
-          'width': '${width}px',
-          'height': '${height}px',
-          'padding': '${thumbOffset}px',
-          'border':
-              '1px solid var(--shadcn-switch-border, var(--shadcn-control-border))',
-          'border-radius': 'var(--radius-sm)',
-          // ShadCN: bg-input (off) / bg-primary (on)
+          'width': '${trackWidth}px',
+          'height': '${trackHeight}px',
+          'padding': '0',
+          'border': '1px solid var(--shadcn-control-border-color, transparent)',
+          'border-radius': 'var(--radius-md)',
           '--shadcn-switch-active': activeColor,
-          '--shadcn-switch-off': inactiveColor,
-          '--shadcn-switch-travel': '${thumbTranslate}px',
           'background-color':
-              'var(--shadcn-switch-background, var(--shadcn-switch-off))',
+              'var(--shadcn-switch-background, var(--shadcn-switch-track, var(--input)))',
+          'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
           'cursor': props.disabled ? 'not-allowed' : 'pointer',
-          // ShadCN: disabled:opacity-50 disabled:cursor-not-allowed
           'opacity': props.disabled ? '0.5' : '1',
           'pointer-events': props.disabled ? 'none' : 'auto',
-          // ShadCN: transition-colors
           'transition':
-              'background-color var(--transition), border-color var(--transition)',
+              'background-color var(--transition), border-color var(--transition), box-shadow var(--transition)',
           'outline': 'none',
           'box-sizing': 'border-box',
           ...?props.decoration?.universalStyles(),
@@ -104,10 +91,6 @@ class ShadcnToggleSwitch extends ToggleSwitchRenderBase {
         },
       },
       <Component>[
-        // Thumb - ShadCN styling
-        // ShadCN: pointer-events-none block h-5 w-5 rounded-full
-        // bg-background shadow-lg ring-0 transition-transform
-        // data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0
         dom.span(
           classes: 'arcane-toggle-thumb',
           attributes: <String, String>{
@@ -119,15 +102,12 @@ class ShadcnToggleSwitch extends ToggleSwitchRenderBase {
               'display': 'block',
               'width': '${thumbSize}px',
               'height': '${thumbSize}px',
-              'border-radius': '50%',
-              // ShadCN: bg-background
-              'background-color': 'var(--background)',
-              // ShadCN: shadow-lg
-              'box-shadow':
-                  '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-              // ShadCN: transition-transform
+              'border-radius': 'var(--radius-md)',
+              'background-color':
+                  'var(--shadcn-switch-thumb, var(--background))',
               'transform': 'translateX(var(--shadcn-switch-offset, 0px))',
-              'transition': 'transform var(--transition)',
+              'transition':
+                  'transform var(--transition), background-color var(--transition)',
               'pointer-events': 'none',
               'flex-shrink': '0',
             },

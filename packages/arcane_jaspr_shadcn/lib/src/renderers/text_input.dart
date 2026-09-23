@@ -1,20 +1,16 @@
 import 'package:arcane_jaspr/core/props/text_input_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/text_input_render_base.dart';
 
-/// ShadCN Text Input renderer.
+/// ShadCN v4 text input renderer.
 ///
-/// Outputs the exact HTML structure and CSS from ui.shadcn.com.
 /// Reference: https://ui.shadcn.com/docs/components/input
 ///
-/// ShadCN Input:
-/// - flex h-10 w-full rounded-md border border-input bg-background
-/// - px-3 py-2 text-base
-/// - ring-offset-background
-/// - file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground
-/// - placeholder:text-muted-foreground
-/// - focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-/// - disabled:cursor-not-allowed disabled:opacity-50
-/// - md:text-sm
+/// `h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3
+/// py-1 text-base md:text-sm shadow-xs dark:bg-input/30
+/// transition-[color,box-shadow]`. Focus and invalid states flip the
+/// `--shadcn-control-*` variables the inline styles read. The resting border
+/// is `--shadcn-control-border` (`--input` mixed toward the foreground to
+/// 3:1) rather than bare `border-input`.
 class ShadcnTextInput extends TextInputRenderBase {
   const ShadcnTextInput(super.props, {super.key});
 
@@ -22,22 +18,23 @@ class ShadcnTextInput extends TextInputRenderBase {
   String get classPrefix => 'arcane';
 
   @override
-  String get wrapperGap => 'var(--space-2)'; // ShadCN: space-y-2
+  String get wrapperGap => 'var(--space-2)';
 
   @override
   bool get borderlessInputReflectsState => true;
 
-  // ShadCN sizes: default h-10 (40px), px-3, py-2, text-base/md:text-sm
   @override
   (String, String, String, String) sizeValues(ComponentSize size) =>
       switch (size) {
-        ComponentSize.sm => ('32px', '0.5rem', '0.25rem', '0.75rem'),
-        ComponentSize.md => ('40px', '0.75rem', '0.5rem', '0.875rem'),
-        ComponentSize.lg => ('48px', '1rem', '0.75rem', '1rem'),
+        ComponentSize.sm => ('2rem', '0.625rem', '0.25rem', '0.875rem'),
+        ComponentSize.md => ('2.25rem', '0.75rem', '0.25rem', '0.875rem'),
+        ComponentSize.lg => ('2.5rem', '0.75rem', '0.25rem', '0.875rem'),
       };
 
-  // ShadCN: flex h-10 w-full rounded-md border border-input bg-background
-  //         px-3 py-2 text-base ring-offset-background
+  static String _border(bool hasError) => hasError
+      ? '1px solid var(--shadcn-control-border-color, var(--destructive))'
+      : '1px solid var(--shadcn-control-border-color, var(--shadcn-control-border))';
+
   @override
   Map<String, String> inputStyles({
     required bool hasError,
@@ -50,11 +47,11 @@ class ShadcnTextInput extends TextInputRenderBase {
     'display': 'flex',
     'height': height,
     'width': '100%',
-    'border-radius': 'var(--radius-sm)',
-    'border': hasError
-        ? '1px solid var(--destructive)'
-        : '1px solid var(--shadcn-control-border)',
-    'background-color': 'var(--background)',
+    'min-width': '0',
+    'border-radius': 'var(--radius-md)',
+    'border': _border(hasError),
+    'background-color': 'var(--shadcn-input-background, transparent)',
+    'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
     'padding': '$paddingY $paddingX',
     'font-size': fontSize,
     'font-family': 'inherit',
@@ -64,21 +61,25 @@ class ShadcnTextInput extends TextInputRenderBase {
     if (isDisabled) 'cursor': 'not-allowed',
     if (isDisabled) 'opacity': '0.5',
     'transition':
-        'border-color var(--transition), box-shadow var(--transition)',
+        'color var(--transition), border-color var(--transition), box-shadow var(--transition)',
   };
 
   @override
   Map<String, String> containerStyles(bool hasError) => <String, String>{
     'display': 'flex',
     'align-items': 'center',
-    'border-radius': 'var(--radius-sm)',
-    'border': hasError
-        ? '1px solid var(--destructive)'
-        : '1px solid var(--shadcn-control-border)',
-    'background-color': 'var(--background)',
+    'min-width': '0',
+    'border-radius': 'var(--radius-md)',
+    'border': _border(hasError),
+    'background-color': 'var(--shadcn-input-background, transparent)',
+    'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
     'overflow': 'hidden',
+    'transition':
+        'border-color var(--transition), box-shadow var(--transition)',
   };
 
+  // The shell owns the 1px perimeter, so the inner field is 2px shorter and
+  // the composed control keeps the same outer height as a bare input.
   @override
   Map<String, String> borderlessInputStyles({
     required bool isDisabled,
@@ -88,7 +89,8 @@ class ShadcnTextInput extends TextInputRenderBase {
     required String fontSize,
   }) => <String, String>{
     'flex': '1',
-    'height': height,
+    'min-width': '0',
+    'height': 'calc($height - 2px)',
     'border': 'none',
     'background': 'transparent',
     'padding': '$paddingY $paddingX',

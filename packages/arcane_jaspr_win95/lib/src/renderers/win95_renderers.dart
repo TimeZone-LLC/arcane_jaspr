@@ -71,12 +71,16 @@ import 'promo/promo.dart';
 
 /// Win95 component renderers.
 ///
-/// Implements all components according to the Win95 design language:
-/// - OLED-first dark mode with pure black backgrounds
-/// - Restrained accent emphasis
-/// - 1.25x spacing compared to ShadCN
-/// - Larger border radius (14px default)
-/// - Premium dark, high-contrast aesthetic
+/// Implements all components according to the Windows 95 design language:
+/// - Silver control faces with hard 1px layered bevels (raised, pressed,
+///   sunken and window frame), never blurred shadows
+/// - Square corners everywhere; the radio is a 12x12 bitmap circle
+/// - Solid navy title bars and selection, drawn pixel-art glyphs and cursors
+/// - No motion: every state change lands in a single repaint
+/// - A dimmed "dark silver" scheme that re-points the same bevel tokens
+///
+/// Most renderers emit semantic `win95-*` classes with neutral inline styles
+/// and leave the look to the Win95 stylesheet.
 class Win95Renderers extends ComponentRenderers with TextAreaRendererContract {
   const Win95Renderers();
 

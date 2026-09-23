@@ -1,7 +1,7 @@
 import 'package:arcane_jaspr/core/decoration/arcane_decoration.dart';
 import 'package:arcane_jaspr/core/rendering/base/testimonial_card_render_base.dart';
 
-import 'decoration_styles.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/card.dart';
 
 /// ShadCN testimonial-card renderer.
 class ShadcnTestimonialCard extends TestimonialCardRenderBase {
@@ -12,7 +12,7 @@ class ShadcnTestimonialCard extends TestimonialCardRenderBase {
 
   @override
   Map<String, String> decorationStyles(ArcaneDecoration? decoration) =>
-      shadcnDecorationStyles(decoration);
+      shadcnCardSurfaceStyles(decoration, interactive: false);
 }
 
 /// ShadCN simple rating-stars renderer.

@@ -1,4 +1,9 @@
 /// Menubar interactivity scripts.
+///
+/// Binds the markup the ShadCN menubar renderer emits: `.arcane-menubar-menu`
+/// wrappers, each holding an `.arcane-menubar-trigger` and an
+/// `.arcane-menubar-content` panel (closed panels carry `hidden`). Open state
+/// is mirrored onto `data-state`/`aria-expanded` so stylesheets can style it.
 class MenubarScripts {
   MenubarScripts._();
 
@@ -8,58 +13,91 @@ class MenubarScripts {
       if (menubar.dataset.arcaneInteractive === 'true') return;
       menubar.dataset.arcaneInteractive = 'true';
 
-      var items = menubar.querySelectorAll('.arcane-menubar-item');
-      var activeItem = null;
+      var menus = menubar.querySelectorAll('.arcane-menubar-menu');
+      var activeMenu = null;
 
-      items.forEach(function(item) {
-        var trigger = item.querySelector('.arcane-menubar-trigger');
-        var dropdown = item.querySelector('.arcane-menubar-dropdown');
+      function setMenuOpen(menu, open) {
+        var state = open ? 'open' : 'closed';
+        var trigger = menu.querySelector('.arcane-menubar-trigger');
+        var content = menu.querySelector('.arcane-menubar-content');
+        menu.setAttribute('data-state', state);
+        menu.classList.toggle('open', open);
+        if (trigger) {
+          trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+          trigger.setAttribute('data-state', state);
+        }
+        if (content) {
+          content.setAttribute('data-state', state);
+          content.hidden = !open;
+          if (!open) {
+            content.querySelectorAll('.arcane-menubar-item.submenu-trigger').forEach(function(sub) {
+              sub.setAttribute('aria-expanded', 'false');
+            });
+          }
+        }
+      }
 
-        if (!trigger || !dropdown) return;
+      function closeAll() {
+        menus.forEach(function(menu) { setMenuOpen(menu, false); });
+        activeMenu = null;
+      }
+
+      function openMenu(menu) {
+        closeAll();
+        setMenuOpen(menu, true);
+        activeMenu = menu;
+      }
+
+      menus.forEach(function(menu) {
+        var trigger = menu.querySelector('.arcane-menubar-trigger');
+        var content = menu.querySelector('.arcane-menubar-content');
+        if (!trigger || !content) return;
 
         trigger.addEventListener('click', function(e) {
           e.stopPropagation();
-
-          if (activeItem === item) {
-            dropdown.style.display = 'none';
-            activeItem = null;
+          if (activeMenu === menu) {
+            closeAll();
           } else {
-            items.forEach(function(other) {
-              var d = other.querySelector('.arcane-menubar-dropdown');
-              if (d) d.style.display = 'none';
-            });
-
-            dropdown.style.display = 'block';
-            activeItem = item;
+            openMenu(menu);
           }
         });
 
-        item.addEventListener('mouseenter', function() {
-          if (activeItem && activeItem !== item) {
-            var oldDropdown = activeItem.querySelector('.arcane-menubar-dropdown');
-            if (oldDropdown) oldDropdown.style.display = 'none';
-
-            dropdown.style.display = 'block';
-            activeItem = item;
-          }
+        menu.addEventListener('mouseenter', function() {
+          if (activeMenu && activeMenu !== menu) openMenu(menu);
         });
 
-        dropdown.querySelectorAll('.arcane-menubar-menu-item:not(.disabled)').forEach(function(menuItem) {
-          menuItem.addEventListener('click', function() {
-            dropdown.style.display = 'none';
-            activeItem = null;
+        content.querySelectorAll('.arcane-menubar-item.submenu-trigger').forEach(function(sub) {
+          sub.addEventListener('click', function(e) {
+            if (e.target.closest('.arcane-menubar-submenu')) return;
+            e.stopPropagation();
+            var expanded = sub.getAttribute('aria-expanded') === 'true';
+            sub.setAttribute('aria-expanded', expanded ? 'false' : 'true');
           });
+          sub.addEventListener('keydown', function(e) {
+            if (e.target !== sub) return;
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+              e.preventDefault();
+              sub.setAttribute('aria-expanded', 'true');
+            } else if (e.key === 'ArrowLeft') {
+              sub.setAttribute('aria-expanded', 'false');
+            }
+          });
+        });
+
+        content.querySelectorAll('.arcane-menubar-item:not(.disabled):not(.submenu-trigger)').forEach(function(item) {
+          item.addEventListener('click', function() { closeAll(); });
         });
       });
 
       document.addEventListener('click', function(e) {
-        if (!menubar.contains(e.target)) {
-          items.forEach(function(item) {
-            var d = item.querySelector('.arcane-menubar-dropdown');
-            if (d) d.style.display = 'none';
-          });
-          activeItem = null;
-        }
+        if (activeMenu && !menubar.contains(e.target)) closeAll();
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape' || !activeMenu) return;
+        var trigger = activeMenu.querySelector('.arcane-menubar-trigger');
+        closeAll();
+        if (trigger) trigger.focus();
       });
     });
   }

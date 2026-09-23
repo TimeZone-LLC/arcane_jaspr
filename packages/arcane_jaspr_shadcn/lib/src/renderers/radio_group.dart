@@ -9,10 +9,11 @@ import 'package:arcane_jaspr/core/rendering/base/radio_group_render_base.dart';
 /// Outputs the exact HTML structure and CSS from ui.shadcn.com.
 /// Reference: https://ui.shadcn.com/docs/components/radio-group
 ///
-/// ShadCN Radio Group:
-/// - Radio: h-4 w-4 (16px), rounded-full, border border-primary
-/// - Selected: inner dot h-2.5 w-2.5 (10px), bg-primary
-/// - Focus: ring-2 ring-ring ring-offset-2
+/// ShadCN v4 Radio Group:
+/// - Item: size-4 rounded-full shadow-xs dark:bg-input/30, bordered with the
+///   3:1 `--shadcn-control-border` instead of bare `border-input`
+/// - Selected: indicator dot size-2 fill-primary
+/// - Focus: border-ring ring-[3px] ring-ring/50
 /// - Disabled: opacity-50, cursor-not-allowed
 class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
   const ShadcnRadioGroup(super.props, {super.key});
@@ -45,9 +46,10 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
       id: '${groupName}_label',
       styles: const dom.Styles(
         raw: {
-          // ShadCN: text-sm font-medium
-          'font-size': 'var(--font-size-sm)',
-          'font-weight': 'var(--font-weight-medium)',
+          // ShadCN: text-sm font-medium leading-none
+          'font-size': '0.875rem',
+          'font-weight': '500',
+          'line-height': '1',
           'color': 'var(--foreground)',
         },
       ),
@@ -66,18 +68,28 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
   String get optionsClasses => 'arcane-radio-group-options';
 
   @override
-  Map<String, String> get optionsStyles => <String, String>{
-    'display': props.layout == RadioGroupLayout.grid ? 'grid' : 'flex',
-    'flex-direction': props.layout == RadioGroupLayout.horizontal
-        ? 'row'
-        : 'column',
-    'flex-wrap': props.layout == RadioGroupLayout.horizontal
-        ? 'wrap'
-        : 'nowrap',
-    'gap': props.gap,
-    if (props.layout == RadioGroupLayout.grid)
-      'grid-template-columns': 'repeat(${props.gridColumns}, minmax(0, 1fr))',
-  };
+  Map<String, String> get optionsStyles =>
+      props.variant == RadioGroupVariant.buttons
+      // Segmented control: one row with shared edges (see the theme CSS).
+      ? const <String, String>{
+          'display': 'flex',
+          'flex-direction': 'row',
+          'flex-wrap': 'nowrap',
+          'gap': '0',
+        }
+      : <String, String>{
+          'display': props.layout == RadioGroupLayout.grid ? 'grid' : 'flex',
+          'flex-direction': props.layout == RadioGroupLayout.horizontal
+              ? 'row'
+              : 'column',
+          'flex-wrap': props.layout == RadioGroupLayout.horizontal
+              ? 'wrap'
+              : 'nowrap',
+          'gap': props.gap,
+          if (props.layout == RadioGroupLayout.grid)
+            'grid-template-columns':
+                'repeat(${props.gridColumns}, minmax(0, 1fr))',
+        };
 
   @override
   List<Component> buildMessage() {
@@ -127,6 +139,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
       attributes: <String, String>{'data-disabled': '$isDisabled'},
       styles: dom.Styles(
         raw: {
+          'position': 'relative',
           'display': 'flex',
           'align-items': option.description != null ? 'flex-start' : 'center',
           'gap': 'var(--space-2)',
@@ -168,8 +181,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
           },
         ),
 
-        // Custom radio circle - ShadCN styling
-        // h-4 w-4 (16px), rounded-full, border border-primary
+        // Custom radio circle - ShadCN size-4 rounded-full border-input
         dom.div(
           classes: 'arcane-radio-circle',
           attributes: {
@@ -181,33 +193,31 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
               'display': 'flex',
               'align-items': 'center',
               'justify-content': 'center',
-              // ShadCN: h-4 w-4 (16px)
               'width': '16px',
               'height': '16px',
+              'box-sizing': 'border-box',
               'border-radius': '50%',
-              // ShadCN: border border-primary
               'border': hasError
-                  ? '1px solid var(--destructive)'
-                  : '1px solid var(--primary)',
-              'background': 'transparent',
+                  ? '1px solid var(--shadcn-control-border-color, var(--destructive))'
+                  : '1px solid var(--shadcn-control-border-color, var(--shadcn-radio-border, var(--shadcn-control-border)))',
+              'background': 'var(--shadcn-input-background, transparent)',
+              'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
               'flex-shrink': '0',
-              // ShadCN: transition-colors
               'transition':
-                  'color var(--transition), background-color var(--transition), border-color var(--transition)',
+                  'color var(--transition), box-shadow var(--transition), border-color var(--transition)',
             },
           ),
           [
-            // Inner dot when selected - ShadCN: h-2.5 w-2.5 (10px), bg-primary
+            // Inner dot when selected - ShadCN: size-2 (8px) fill-primary
             const dom.div(
               attributes: <String, String>{
                 'data-arcane-intrinsic-shape': 'radio-dot',
               },
               styles: dom.Styles(
                 raw: {
-                  // ShadCN: h-2.5 w-2.5 (10px)
                   'opacity': 'var(--shadcn-radio-dot-opacity, 0)',
-                  'width': '10px',
-                  'height': '10px',
+                  'width': '8px',
+                  'height': '8px',
                   'border-radius': '50%',
                   // ShadCN: bg-primary
                   'background': 'var(--primary)',
@@ -237,9 +247,9 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
                 dom.span(
                   styles: const dom.Styles(
                     raw: {
-                      // ShadCN: text-sm font-medium
-                      'font-size': 'var(--font-size-sm)',
-                      'font-weight': 'var(--font-weight-medium)',
+                      // ShadCN: text-sm font-medium leading-none
+                      'font-size': '0.875rem',
+                      'font-weight': '500',
                       'color': 'var(--foreground)',
                       'line-height': '1',
                     },
@@ -282,6 +292,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
       attributes: <String, String>{'data-disabled': '$isDisabled'},
       styles: dom.Styles(
         raw: {
+          'position': 'relative',
           'display': 'flex',
           'flex-direction': 'column',
           'gap': 'var(--space-1)',
@@ -289,9 +300,9 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
           'border-radius': 'var(--radius-md)',
           '--shadcn-radio-idle-border': hasError
               ? 'var(--destructive)'
-              : 'var(--shadcn-control-border)',
+              : 'var(--input)',
           'border':
-              '2px solid var(--shadcn-radio-border, var(--shadcn-radio-idle-border))',
+              '1px solid var(--shadcn-radio-border, var(--shadcn-radio-idle-border))',
           'background': 'var(--shadcn-radio-card-background, var(--card))',
           'cursor': isDisabled ? 'not-allowed' : 'pointer',
           'opacity': isDisabled ? '0.5' : '1',
@@ -341,7 +352,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
           [
             if (option.icon != null)
               dom.div(
-                styles: dom.Styles(
+                styles: const dom.Styles(
                   raw: {
                     'color': 'var(--shadcn-radio-ink, var(--muted-foreground))',
                   },
@@ -349,8 +360,8 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
                 [option.icon!],
               ),
             // Selection indicator
-            dom.div(
-              attributes: const <String, String>{
+            const dom.div(
+              attributes: <String, String>{
                 'data-arcane-intrinsic-shape': 'radio',
               },
               styles: dom.Styles(
@@ -362,6 +373,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
                   'border':
                       'var(--shadcn-radio-indicator-width, 1px) solid var(--shadcn-radio-border, var(--shadcn-control-border))',
                   'background': 'var(--background)',
+                  'box-shadow': 'var(--shadow-xs)',
                 },
               ),
               [],
@@ -371,10 +383,10 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
 
         // Label
         dom.span(
-          styles: dom.Styles(
+          styles: const dom.Styles(
             raw: {
-              'font-size': 'var(--font-size-sm)',
-              'font-weight': 'var(--font-weight-medium)',
+              'font-size': '0.875rem',
+              'font-weight': '500',
               'color': 'var(--shadcn-radio-ink, var(--foreground))',
             },
           ),
@@ -411,27 +423,31 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
       attributes: <String, String>{'data-disabled': '$isDisabled'},
       styles: dom.Styles(
         raw: {
+          // Segment corners and the 1px edge overlap come from the theme CSS
+          // (:first-child / :last-child), so no per-item radius or margin.
+          'position': 'relative',
           'display': 'inline-flex',
           'align-items': 'center',
           'justify-content': 'center',
-          'gap': 'var(--space-1)',
-          'padding': '0.5rem 1rem',
+          'gap': '0.5rem',
+          'height': '2.25rem',
+          'padding': '0 1rem',
+          'box-sizing': 'border-box',
           '--shadcn-radio-idle-border': hasError
               ? 'var(--destructive)'
-              : 'var(--shadcn-control-border)',
+              : 'var(--input)',
           'border':
               '1px solid var(--shadcn-radio-border, var(--shadcn-radio-idle-border))',
-          'background': 'var(--shadcn-radio-button-background, var(--card))',
+          'background':
+              'var(--shadcn-radio-button-background, var(--background))',
           'color': 'var(--shadcn-radio-button-ink, var(--foreground))',
-          'font-size': 'var(--font-size-sm)',
-          'font-weight': 'var(--font-weight-medium)',
+          'font-size': '0.875rem',
+          'font-weight': '500',
+          'white-space': 'nowrap',
           'cursor': isDisabled ? 'not-allowed' : 'pointer',
           'opacity': isDisabled ? '0.5' : '1',
           'transition':
-              'color var(--transition), background-color var(--transition), border-color var(--transition)',
-          // Button group - no rounded corners in middle
-          'border-radius': '0',
-          'margin-left': '-1px',
+              'color var(--transition), background-color var(--transition), border-color var(--transition), box-shadow var(--transition)',
         },
       ),
       children: [

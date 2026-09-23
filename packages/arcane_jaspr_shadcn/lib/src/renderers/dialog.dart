@@ -5,6 +5,30 @@ import 'package:arcane_jaspr/component/view/icon.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/dialog_props.dart';
 
+/// Inline chrome for the dialog, sheet and drawer close control (v4
+/// `absolute top-4 right-4 rounded-xs opacity-70`). Opacity and the focus
+/// ring route through variables so the surfaces stylesheet can flip them on
+/// hover and `:focus-visible`.
+const Map<String, String> shadcnOverlayCloseStyles = <String, String>{
+  'position': 'absolute',
+  'top': '1rem',
+  'right': '1rem',
+  'display': 'inline-flex',
+  'align-items': 'center',
+  'justify-content': 'center',
+  'width': '1rem',
+  'height': '1rem',
+  'padding': '0',
+  'border': 'none',
+  'border-radius': 'var(--radius-xs)',
+  'background': 'transparent',
+  'color': 'var(--foreground)',
+  'opacity': 'var(--shadcn-dialog-close-opacity, 0.7)',
+  'box-shadow': 'var(--shadcn-control-shadow, none)',
+  'cursor': 'pointer',
+  'transition': 'opacity var(--transition), box-shadow var(--transition)',
+};
+
 class ShadcnDialog extends StatelessComponent {
   final DialogProps props;
 
@@ -35,12 +59,17 @@ class ShadcnDialog extends StatelessComponent {
           'display': 'flex',
           'align-items': 'center',
           'justify-content': 'center',
-          'padding': '24px',
-          'background-color': 'rgba(0, 0, 0, 0.8)',
+          // Leaves the v4 `max-w-[calc(100%-2rem)]` gutter around the panel.
+          'padding': '1rem',
+          'background-color': 'var(--overlay)',
           'animation': 'arcane-fade-in var(--transition-slow)',
         },
       ),
       events: <String, EventCallback>{
+        if (props.onClose != null)
+          'arcane:close': (event) {
+            if (event.target == event.currentTarget) props.onClose!();
+          },
         if (props.onClose != null && props.barrierDismissible)
           'click': (event) {
             if (event.target == event.currentTarget) {
@@ -54,6 +83,7 @@ class ShadcnDialog extends StatelessComponent {
           attributes: <String, String>{
             'role': 'dialog',
             'aria-modal': 'true',
+            'tabindex': '-1',
             if (props.title != null)
               'aria-labelledby': 'dialog-title-$surfaceId',
             'data-arcane-autofocus': '',
@@ -61,17 +91,21 @@ class ShadcnDialog extends StatelessComponent {
           styles: dom.Styles(
             raw: <String, String>{
               'position': 'relative',
+              'display': 'flex',
+              'flex-direction': 'column',
+              'gap': '1rem',
+              'width': '100%',
+              'max-width': '${props.maxWidth}px',
+              'max-height': 'calc(100vh - 2rem)',
+              'padding': '1.5rem',
               'background-color': 'var(--background)',
               'color': 'var(--foreground)',
               'border-radius': 'var(--radius-md)',
               'border': '1px solid var(--border)',
               'box-shadow': 'var(--shadow-lg)',
-              'max-width': '${props.maxWidth}px',
-              'width': '100%',
-              'max-height': 'calc(100vh - 48px)',
-              'display': 'flex',
-              'flex-direction': 'column',
               'overflow': 'hidden',
+              // The runtime focuses the panel itself; it is not a control.
+              'outline': 'none',
               'animation': 'arcane-scale-in var(--transition-slow)',
               ...?props.decoration?.universalStyles(),
               ...?props.styles?.toMap(),
@@ -81,80 +115,45 @@ class ShadcnDialog extends StatelessComponent {
             'click': (event) => event.stopPropagation(),
           },
           <Component>[
-            if (props.title != null || props.showCloseButton)
+            if (props.title != null)
               dom.div(
                 classes: 'arcane-dialog-header',
-                styles: const dom.Styles(
+                styles: dom.Styles(
                   raw: <String, String>{
                     'display': 'flex',
-                    'align-items': 'flex-start',
-                    'justify-content': 'space-between',
-                    'padding': '24px',
-                    'padding-bottom': '0',
+                    'flex-direction': 'column',
+                    'gap': '0.5rem',
+                    'text-align': 'left',
                     'flex-shrink': '0',
+                    if (props.showCloseButton) 'padding-right': '1.5rem',
                   },
                 ),
                 <Component>[
-                  if (props.title != null)
-                    dom.span(
-                      id: 'dialog-title-$surfaceId',
-                      styles: const dom.Styles(
-                        raw: <String, String>{
-                          'font-size': 'var(--font-size-lg)',
-                          'font-weight': 'var(--font-weight-semibold)',
-                          'line-height': '1',
-                          'letter-spacing': '-0.025em',
-                          'color': 'var(--foreground)',
-                        },
-                      ),
-                      <Component>[Component.text(props.title!)],
-                    )
-                  else
-                    const dom.div(<Component>[]),
-                  if (props.showCloseButton)
-                    dom.button(
-                      classes: 'arcane-dialog-close',
-                      attributes: <String, String>{
-                        'type': 'button',
-                        'aria-label': 'Close dialog',
-                        ...dismissAttrs(),
+                  dom.span(
+                    id: 'dialog-title-$surfaceId',
+                    classes: 'arcane-dialog-title',
+                    styles: const dom.Styles(
+                      raw: <String, String>{
+                        'font-size': '1.125rem',
+                        'line-height': '1',
+                        'font-weight': '600',
+                        'color': 'var(--foreground)',
                       },
-                      styles: const dom.Styles(
-                        raw: <String, String>{
-                          'position': 'absolute',
-                          'right': '16px',
-                          'top': '16px',
-                          'display': 'inline-flex',
-                          'align-items': 'center',
-                          'justify-content': 'center',
-                          'width': '24px',
-                          'height': '24px',
-                          'border-radius': 'var(--radius-xs)',
-                          'background': 'transparent',
-                          'border': 'none',
-                          'opacity': '0.7',
-                          'color': 'var(--foreground)',
-                          'cursor': 'pointer',
-                          'transition': 'opacity var(--transition)',
-                          'font-size': 'var(--font-size-base)',
-                          'padding': '0',
-                        },
-                      ),
-                      events: <String, EventCallback>{
-                        if (props.onClose != null)
-                          'click': (event) => props.onClose!(),
-                      },
-                      <Component>[ArcaneIcon.x(size: IconSize.sm)],
                     ),
+                    <Component>[Component.text(props.title!)],
+                  ),
                 ],
               ),
             dom.div(
               classes: 'arcane-dialog-body',
               styles: const dom.Styles(
                 raw: <String, String>{
-                  'padding': '24px',
-                  'overflow-y': 'auto',
                   'flex': '1',
+                  'min-height': '0',
+                  'overflow-y': 'auto',
+                  // Room for child focus rings inside the scroll clip.
+                  'padding': '0.25rem',
+                  'margin': '-0.25rem',
                 },
               ),
               props.content,
@@ -166,13 +165,28 @@ class ShadcnDialog extends StatelessComponent {
                   raw: <String, String>{
                     'display': 'flex',
                     'flex-direction': 'row',
+                    'flex-wrap': 'wrap',
                     'justify-content': 'flex-end',
-                    'gap': 'var(--space-2)',
-                    'padding': '0 24px 24px 24px',
+                    'gap': '0.5rem',
                     'flex-shrink': '0',
                   },
                 ),
                 props.actions!,
+              ),
+            if (props.showCloseButton)
+              dom.button(
+                classes: 'arcane-dialog-close',
+                attributes: <String, String>{
+                  'type': 'button',
+                  'aria-label': 'Close dialog',
+                  ...dismissAttrs(),
+                },
+                styles: const dom.Styles(raw: shadcnOverlayCloseStyles),
+                events: <String, EventCallback>{
+                  if (props.onClose != null)
+                    'click': (event) => props.onClose!(),
+                },
+                <Component>[ArcaneIcon.x(size: IconSize.sm)],
               ),
           ],
         ),
@@ -219,32 +233,28 @@ class ShadcnSheet extends StatelessComponent {
     }
   }
 
-  String get _borderRadius => switch (props.position) {
-    SheetPosition.bottom => 'var(--radius-md) var(--radius-md) 0 0',
-    SheetPosition.top => '0 0 var(--radius-md) var(--radius-md)',
-    SheetPosition.right => 'var(--radius-md) 0 0 var(--radius-md)',
-    SheetPosition.left => '0 var(--radius-md) var(--radius-md) 0',
-  };
-
   @override
   Component build(BuildContext context) {
     final String surfaceId = props.id ?? _autoId();
     final String? sizeVal = _sizeValue;
 
+    // v4 SheetContent: a square panel with a complete 1px frame. The side a
+    // sheet docks to is clipped by the viewport, so no edge is emphasised.
     final Map<String, String> sheetStyles = <String, String>{
       'position': 'fixed',
       'z-index': '50',
-      'background-color': 'var(--background)',
-      'color': 'var(--foreground)',
-      'box-shadow': 'var(--shadow-lg)',
       'display': 'flex',
       'flex-direction': 'column',
-      'overflow': 'hidden',
-      'transition': 'transform 300ms cubic-bezier(0.32, 0.72, 0, 1)',
-      'border-radius': props.size == SheetSizeVariant.full
-          ? '0'
-          : _borderRadius,
+      'gap': '1rem',
+      'padding': '1.5rem',
+      'background-color': 'var(--background)',
+      'color': 'var(--foreground)',
       'border': '1px solid var(--border)',
+      'border-radius': '0',
+      'box-shadow': 'var(--shadow-lg)',
+      'overflow': 'hidden',
+      'outline': 'none',
+      'transition': 'transform 300ms cubic-bezier(0.32, 0.72, 0, 1)',
     };
 
     switch (props.position) {
@@ -254,8 +264,8 @@ class ShadcnSheet extends StatelessComponent {
           'right': '0',
           'bottom': '0',
           'height': '100%',
-          'width': sizeVal ?? '400px',
-          'max-width': '100vw',
+          'width': sizeVal ?? '75%',
+          'max-width': sizeVal == null ? '24rem' : '100vw',
           'animation': 'arcane-slide-left var(--transition-slower)',
         });
         break;
@@ -265,8 +275,8 @@ class ShadcnSheet extends StatelessComponent {
           'left': '0',
           'bottom': '0',
           'height': '100%',
-          'width': sizeVal ?? '400px',
-          'max-width': '100vw',
+          'width': sizeVal ?? '75%',
+          'max-width': sizeVal == null ? '24rem' : '100vw',
           'animation': 'arcane-slide-right var(--transition-slower)',
         });
         break;
@@ -275,7 +285,8 @@ class ShadcnSheet extends StatelessComponent {
           'left': props.maxWidth != null ? '50%' : '0',
           'right': props.maxWidth != null ? 'auto' : '0',
           'bottom': '0',
-          if (props.maxWidth != null) 'transform': 'translateX(-50%)',
+          // `translate` composes with the slide keyframes' `transform`.
+          if (props.maxWidth != null) 'translate': '-50% 0',
           'height': ?sizeVal,
           'max-height': '90vh',
           'width': props.maxWidth ?? '100%',
@@ -333,7 +344,7 @@ class ShadcnSheet extends StatelessComponent {
               raw: <String, String>{
                 'position': 'absolute',
                 'inset': '0',
-                'background-color': 'rgba(0, 0, 0, 0.8)',
+                'background-color': 'var(--overlay)',
                 'animation': 'arcane-fade-in var(--transition-slow)',
               },
             ),
@@ -362,116 +373,63 @@ class ShadcnSheet extends StatelessComponent {
                   raw: <String, String>{
                     'display': 'flex',
                     'justify-content': 'center',
-                    'padding': '8px 0',
+                    'flex-shrink': '0',
                   },
                 ),
                 <Component>[
                   dom.div(
                     styles: dom.Styles(
                       raw: <String, String>{
-                        'width': '36px',
-                        'height': '4px',
-                        'background': 'var(--muted-foreground)',
+                        'width': '100px',
+                        'height': '0.5rem',
+                        'background-color': 'var(--muted)',
                         'border-radius': 'var(--radius-xs)',
-                        'opacity': '0.4',
                       },
                     ),
                     <Component>[],
                   ),
                 ],
               ),
-            if (props.header != null ||
-                props.title != null ||
-                props.showCloseButton)
+            if (props.header != null || props.title != null)
               dom.div(
                 classes: 'arcane-sheet-header',
-                styles: const dom.Styles(
+                styles: dom.Styles(
                   raw: <String, String>{
                     'display': 'flex',
-                    'align-items': 'flex-start',
-                    'justify-content': 'space-between',
-                    'gap': '16px',
-                    'padding': '24px',
-                    'padding-top': '12px',
+                    'flex-direction': 'column',
+                    'gap': '0.375rem',
                     'flex-shrink': '0',
+                    if (props.showCloseButton) 'padding-right': '1.5rem',
                   },
                 ),
                 <Component>[
                   if (props.header != null)
-                    dom.div(
-                      styles: const dom.Styles(
-                        raw: <String, String>{'flex': '1'},
-                      ),
-                      <Component>[props.header!],
-                    )
-                  else if (props.title != null)
-                    dom.div(
+                    props.header!
+                  else ...<Component>[
+                    dom.span(
+                      classes: 'arcane-sheet-title',
                       styles: const dom.Styles(
                         raw: <String, String>{
-                          'flex': '1',
-                          'display': 'flex',
-                          'flex-direction': 'column',
-                          'gap': 'var(--space-1)',
+                          'font-size': '1rem',
+                          'font-weight': '600',
+                          'line-height': '1.5rem',
+                          'color': 'var(--foreground)',
                         },
                       ),
-                      <Component>[
-                        dom.span(
-                          styles: const dom.Styles(
-                            raw: <String, String>{
-                              'font-size': 'var(--font-size-lg)',
-                              'font-weight': 'var(--font-weight-semibold)',
-                              'color': 'var(--foreground)',
-                            },
-                          ),
-                          <Component>[Component.text(props.title!)],
-                        ),
-                        if (props.description != null)
-                          dom.span(
-                            styles: const dom.Styles(
-                              raw: <String, String>{
-                                'font-size': 'var(--font-size-sm)',
-                                'color': 'var(--muted-foreground)',
-                              },
-                            ),
-                            <Component>[Component.text(props.description!)],
-                          ),
-                      ],
-                    )
-                  else
-                    const dom.div(<Component>[]),
-                  if (props.showCloseButton)
-                    dom.button(
-                      classes: 'arcane-sheet-close',
-                      attributes: <String, String>{
-                        'type': 'button',
-                        'aria-label': 'Close sheet',
-                        ...dismissAttrs(),
-                      },
-                      styles: const dom.Styles(
-                        raw: <String, String>{
-                          'width': '32px',
-                          'height': '32px',
-                          'display': 'flex',
-                          'align-items': 'center',
-                          'justify-content': 'center',
-                          'padding': '0',
-                          'border': 'none',
-                          'background': 'transparent',
-                          'color': 'var(--muted-foreground)',
-                          'cursor': 'pointer',
-                          'border-radius': 'var(--radius-sm)',
-                          'font-size': 'var(--font-size-xl)',
-                          'transition':
-                              'color var(--transition), background var(--transition)',
-                          'flex-shrink': '0',
-                        },
-                      ),
-                      events: <String, EventCallback>{
-                        if (props.onClose != null)
-                          'click': (_) => props.onClose!(),
-                      },
-                      <Component>[ArcaneIcon.x(size: IconSize.sm)],
+                      <Component>[Component.text(props.title!)],
                     ),
+                    if (props.description != null)
+                      dom.span(
+                        classes: 'arcane-sheet-description',
+                        styles: const dom.Styles(
+                          raw: <String, String>{
+                            'font-size': '0.875rem',
+                            'color': 'var(--muted-foreground)',
+                          },
+                        ),
+                        <Component>[Component.text(props.description!)],
+                      ),
+                  ],
                 ],
               ),
             dom.div(
@@ -479,8 +437,11 @@ class ShadcnSheet extends StatelessComponent {
               styles: const dom.Styles(
                 raw: <String, String>{
                   'flex': '1',
+                  'min-height': '0',
                   'overflow': 'auto',
-                  'padding': '0 24px 24px',
+                  // Room for child focus rings inside the scroll clip.
+                  'padding': '0.25rem',
+                  'margin': '-0.25rem',
                 },
               ),
               <Component>[props.child],
@@ -490,12 +451,28 @@ class ShadcnSheet extends StatelessComponent {
                 classes: 'arcane-sheet-footer',
                 styles: const dom.Styles(
                   raw: <String, String>{
-                    'padding': '24px',
-                    'border-top': '1px solid var(--border)',
+                    'display': 'flex',
+                    'flex-direction': 'column',
+                    'gap': '0.5rem',
+                    'margin-top': 'auto',
                     'flex-shrink': '0',
                   },
                 ),
                 <Component>[props.footer!],
+              ),
+            if (props.showCloseButton)
+              dom.button(
+                classes: 'arcane-sheet-close',
+                attributes: <String, String>{
+                  'type': 'button',
+                  'aria-label': 'Close sheet',
+                  ...dismissAttrs(),
+                },
+                styles: const dom.Styles(raw: shadcnOverlayCloseStyles),
+                events: <String, EventCallback>{
+                  if (props.onClose != null) 'click': (_) => props.onClose!(),
+                },
+                <Component>[ArcaneIcon.x(size: IconSize.sm)],
               ),
           ],
         ),

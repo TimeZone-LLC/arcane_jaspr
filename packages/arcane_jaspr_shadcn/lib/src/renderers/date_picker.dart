@@ -12,9 +12,9 @@ class ShadcnDatePicker extends DatePickerRenderBase {
 
   @override
   (String, String) sizeStyles(DatePickerSizeVariant size) => switch (size) {
-    DatePickerSizeVariant.sm => ('36px', '13px'),
-    DatePickerSizeVariant.md => ('40px', '14px'),
-    DatePickerSizeVariant.lg => ('44px', '14px'),
+    DatePickerSizeVariant.sm => ('32px', '13px'),
+    DatePickerSizeVariant.md => ('36px', '14px'),
+    DatePickerSizeVariant.lg => ('40px', '14px'),
   };
 
   @override
@@ -64,13 +64,17 @@ class ShadcnDatePicker extends DatePickerRenderBase {
     'width': '100%',
     'height': height,
     'padding': '0 12px',
-    'background-color': 'var(--background)',
-    'border': '1px solid ${hasError ? 'var(--destructive)' : 'var(--input)'}',
-    'border-radius': 'var(--radius-sm)',
+    'background-color': 'var(--shadcn-item-background, var(--background))',
+    'border':
+        '1px solid var(--shadcn-control-border-color, ${hasError ? 'var(--destructive)' : 'var(--input)'})',
+    'border-radius': 'var(--radius-md)',
+    'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
     'font-size': fontSize,
-    'color': hasValue ? 'var(--foreground)' : 'var(--muted-foreground)',
+    'color':
+        'var(--shadcn-item-foreground, ${hasValue ? 'var(--foreground)' : 'var(--muted-foreground)'})',
     'cursor': props.disabled ? 'not-allowed' : 'pointer',
     'transition':
+        'background-color var(--transition), color var(--transition), '
         'border-color var(--transition), box-shadow var(--transition)',
     'text-align': 'left',
     if (props.disabled) 'opacity': '0.5',
@@ -112,7 +116,8 @@ class ShadcnDatePicker extends DatePickerRenderBase {
     'left': '0',
     'margin-top': '4px',
     'z-index': '50',
-    'box-shadow': 'var(--shadow-lg)',
+    'border-radius': 'var(--radius-md)',
+    'box-shadow': 'var(--shadcn-surface-shadow)',
   };
 
   @override

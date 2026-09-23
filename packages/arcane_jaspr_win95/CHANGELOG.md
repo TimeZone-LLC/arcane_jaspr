@@ -2,6 +2,21 @@
 
 ## x.x.x
 
+### Added
+
+- Caption button sprites `--w95-caption-buttons` (minimize, maximize and
+  close at 50x14), `--w95-caption-min-max` (32x14) and `--w95-caption-close`
+  (16x14): bevelled 16x14 caps with stepped pixel glyphs, re-pointed by the
+  dark scheme. Gallery window captions and the command palette caption bar
+  show the caption buttons again.
+- `--w95-window-frame`, the top-level window bevel (light and white top-left,
+  shadow and black bottom-right), distinct from the push-button bevel.
+- Etched group boxes for `fieldset` and `.win95-fieldset`; `ArcaneFormSection`
+  renders its title as the legend inside the frame.
+- Pixel-art tokens `--w95-radio-ring`, `--w95-radio-mask`, `--w95-scroll-up`,
+  `--w95-scroll-down`, `--w95-scroll-left`, `--w95-scroll-right` and
+  `--w95-slider-thumb`, with dark variants.
+
 ### Changed
 
 - Use native radio inputs across standard, card, and button variants, with
@@ -11,6 +26,20 @@
   scheme. Pair accent and semantic colors with readable foregrounds.
 - Match Flutter sizing in Row, Column, and SizedBox: maximum axes fill available
   space, and infinite dimensions fill their own axis without losing finite sizes.
+- Dialogs, drawers, sheets, menus, popovers, select and picker dropdowns, the
+  mega menu, the command palette, the scaffold window and gallery tiles use
+  `--w95-window-frame`; buttons keep the push-button bevel.
+- `--w95-dark` is `#000000` and light disabled text is `#808080` over the
+  existing white emboss.
+- Radio buttons are the 12x12 four-shade bitmap with a 4x4 dot; check box wells
+  are 13px around the 7x7 tick; scroll arrows are stepped 7x4 bitmaps and a
+  pressed arrow flattens to a 1px frame with the glyph nudged one pixel.
+- The progress trough uses the 1px sunken bevel; the slider drops its value
+  fill and pairs a 4px sunken channel with an 11x21 pointed thumb.
+- Menubar titles highlight only while their menu is open.
+- `--w95-ctl-min`, `--w95-ctl-max` and `--w95-ctl-close` share the caption
+  sprite pixel geometry, and the page-level scrollbar resolves through
+  `--w95-*` tokens declared on `<html>`.
 
 ### Fixed
 
@@ -25,6 +54,18 @@
 - Preserve control boundaries, native radio marks, and focus in forced colors.
 - Correct documentation that described dark silver as High Contrast Black and
   advertised the removed `Win95Chrome.everything` value.
+- The dialog, drawer and sheet close glyph is the stepped 8x7 bitmap cross
+  instead of an anti-aliased stroke, and its pressed state moves by one whole
+  pixel.
+- The active tab paints its 1px white and black edges above the inner bevel.
+- The command palette caption bar sits inside the palette window instead of
+  against the full-screen overlay.
+- Renderer documentation described an OLED design language.
+
+### Removed
+
+- Dark-scheme copies of the scrollbar arrow rules; the dark block re-points the
+  arrow tokens instead.
 
 ## 4.0.0 - 2026-08-31
 
@@ -51,17 +92,12 @@
   than the `□` and `✕` beside it, and clipped outright in some font
   fallbacks). All three glyphs are now authored in one 10x10 cell as SVG
   artwork. New `--w95-ctl-min` / `--w95-ctl-max` / `--w95-ctl-close`
-  (single glyph) and `--w95-ctl-row` / `--w95-ctl-row-ink` (all three at a
-  15px pitch) tokens, with the minimize bar placed deliberately in the
-  lower-middle of the cell. Applied to every control row (command dialog,
-  chrome-`everything` cards, gallery-tile captions, scaffold header, KB
-  article panel) and to the landing terminal-mock's three cap buttons, so
-  size, weight and vertical placement are identical across all three
-  controls and no longer depend on which font the browser resolves. The
-  masked forms are tinted with `currentColor`, so they keep following
+  single-glyph mask tokens, applied to the dialog, drawer and sheet close
+  buttons and to the landing terminal-mock's three cap buttons, so size,
+  weight and vertical placement no longer depend on which font the browser
+  resolves. The masks are tinted with `currentColor`, so they follow
   `--w95-title-text` / `--w95-face-text` including the `--w95-*-in` host
-  overrides; the raised silver control strip paints its own background and
-  uses the baked-ink variant, which the dark block re-points to white.
+  overrides.
 - Dark mode `--ring` now honours the `--w95-selection-in` runtime override
   hook like the light block already did, so a host-app accent re-tint also
   recolors dark focus rings.

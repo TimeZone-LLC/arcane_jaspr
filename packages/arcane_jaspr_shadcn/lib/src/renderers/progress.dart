@@ -19,77 +19,81 @@ class ShadcnProgress extends StatelessComponent {
 
   @override
   Component build(BuildContext context) {
-    // Clamp value between 0 and 1
-    final clampedValue = props.value.clamp(0.0, 1.0);
-    final percentage = (clampedValue * 100).round();
+    final double clampedValue = props.value.clamp(0.0, 1.0).toDouble();
+    final int percentage = (clampedValue * 100).round();
 
-    // Size-specific height
-    final height = switch (props.size) {
-      ComponentSize.sm => '0.25rem', // 4px
-      ComponentSize.md =>
-        '0.5rem', // 8px - ShadCN default is h-4 but that's too tall
-      ComponentSize.lg => '0.75rem', // 12px
+    // ShadCN Progress is h-2 (8px); sm/lg step one tier either side.
+    final String height = switch (props.size) {
+      ComponentSize.sm => '0.25rem',
+      ComponentSize.md => '0.5rem',
+      ComponentSize.lg => '0.75rem',
     };
 
-    // Variant-specific indicator color
-    final indicatorColor =
+    final String indicatorColor =
         props.indicatorColor ??
         switch (props.variant) {
           ProgressVariant.primary => 'var(--primary)',
-          ProgressVariant.success => 'var(--success, #22c55e)',
-          ProgressVariant.warning => 'var(--warning, #f59e0b)',
+          ProgressVariant.success => 'var(--success)',
+          ProgressVariant.warning => 'var(--warning)',
           ProgressVariant.error => 'var(--destructive)',
-          ProgressVariant.info => 'var(--info, #3b82f6)',
+          ProgressVariant.info => 'var(--info)',
         };
 
-    final trackColor = props.trackColor ?? 'var(--secondary)';
+    // ShadCN Progress track: bg-primary/20, tinted by the indicator colour.
+    final String trackColor =
+        props.trackColor ??
+        'color-mix(in srgb, $indicatorColor 20%, transparent)';
 
-    // ShadCN Progress: relative h-4 w-full overflow-hidden rounded-full bg-secondary
+    // ShadCN Progress: relative h-2 w-full overflow-hidden rounded-full
+    // bg-primary/20 (radius capped at the 8px tier; still a pill at h-2).
     return dom.div(
       classes: 'arcane-progress',
-      attributes: {
+      attributes: <String, String>{
         'role': 'progressbar',
         'aria-valuemin': '0',
         'aria-valuemax': '100',
-        'aria-valuenow': '$percentage',
+        if (!props.indeterminate) 'aria-valuenow': '$percentage',
+        if (props.indeterminate) 'aria-busy': 'true',
         'data-arcane-intrinsic-shape': 'progress-track',
       },
       styles: dom.Styles(
-        raw: {
+        raw: <String, String>{
           'position': 'relative',
           'width': '100%',
           'height': height,
           'overflow': 'hidden',
-          'border-radius': 'var(--radius-xs)',
+          'border-radius': 'var(--radius-md)',
           'background-color': trackColor,
           ...?props.decoration?.universalStyles(),
           ...?props.styles?.toMap(),
         },
       ),
-      [
-        // ShadCN Progress indicator: h-full w-full flex-1 bg-primary transition-all
+      <Component>[
+        // ShadCN Progress indicator: h-full w-full flex-1 bg-primary
+        // transition-all, positioned with translateX(-(100 - value)%).
         dom.div(
           classes:
-              'arcane-progress-indicator ${props.indeterminate ? 'indeterminate' : ''}',
+              'arcane-progress-indicator${props.indeterminate ? ' indeterminate' : ''}',
           attributes: const <String, String>{
             'data-arcane-intrinsic-shape': 'progress-fill',
           },
           styles: dom.Styles(
-            raw: {
+            raw: <String, String>{
               'height': '100%',
               'background-color': indicatorColor,
-              'border-radius': 'var(--radius-xs)',
-              'transition': 'width var(--transition-slow)',
-              if (props.indeterminate) ...{
+              'border-radius': 'inherit',
+              if (props.indeterminate) ...<String, String>{
                 'width': '50%',
                 'animation':
                     'arcane-progress-indeterminate 1.5s ease-in-out infinite',
-              } else ...{
-                'width': '$percentage%',
+              } else ...<String, String>{
+                'width': '100%',
+                'transform': 'translateX(-${100 - percentage}%)',
+                'transition': 'transform var(--transition-slow)',
               },
             },
           ),
-          [],
+          const <Component>[],
         ),
       ],
     );

@@ -30,9 +30,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `onChanged`. Text input submission uses `onSubmitted`.
 - ShadCN, Neon, and Windows95 now have consistent control sizing, readable state
   colors, complete radio variants, and state styles that respond to runtime changes.
+- `DropdownMenuRenderBase` action items route their background and text colour
+  through `--arcane-menu-item-background` / `--arcane-menu-item-foreground`
+  and mark destructive items with `data-variant="destructive"`, so every
+  theme's stylesheet can style item states.
+- Windows 95 restores bevelled caption buttons on gallery windows and the
+  command palette, adds the window-frame bevel and etched group boxes, and
+  draws radios, scroll arrows, the slider thumb and the close glyph as pixel
+  bitmaps. ShadCN follows the shadcn/ui v4 recipes for controls, overlays,
+  navigation and display components within the 8px radius policy.
 
 ### Fixed
 
+- Dialogs mounted after page startup trap keyboard focus, close with Escape,
+  and restore focus when removed. Runtime dismissal calls the dialog's `onClose`.
+- Closed command palettes no longer intercept keyboard events intended for
+  runtime-managed dialogs.
 - Generated field IDs link labels and help/error text across renderer packages.
   Prefix and suffix inputs use the same attribute and event path as plain inputs.
 - Disabled button links no longer navigate or dispatch runtime actions.
@@ -45,6 +58,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   waits until input-method composition finishes.
 - All renderers preserve finite dimensions beside an expanding `SizedBox` axis.
   Flex main-axis sizing now has the same behavior across themes.
+- The legacy menubar script targeted class names the renderer never emitted; it
+  now binds the emitted classes, toggles `hidden`, mirrors
+  `data-state`/`aria-expanded`, switches menus on hover while open, toggles
+  submenus from click and keyboard, and closes on outside click and Escape.
 
 ### Removed
 

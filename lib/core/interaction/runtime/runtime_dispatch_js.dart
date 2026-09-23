@@ -566,17 +566,8 @@ function hydrateInitialState() {
     surfaces[i].setAttribute('hidden', '');
     surfaces[i].setAttribute('aria-hidden', 'true');
   }
-  const opens = document.querySelectorAll('[data-arcane-surface][data-arcane-state="open"]');
-  for (let i = 0; i < opens.length; i++) {
-    const el = opens[i];
-    el.removeAttribute('hidden');
-    el.setAttribute('aria-hidden', 'false');
-    ARCANE.stack.push({
-      type: el.getAttribute('data-arcane-surface'),
-      id: el.getAttribute('data-arcane-id'),
-      el: el
-    });
-  }
+  syncSurfaceStack();
+  observeSurfaces();
 }
 
 function arcaneInit() {

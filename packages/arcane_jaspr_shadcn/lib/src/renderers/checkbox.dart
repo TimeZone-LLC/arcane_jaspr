@@ -52,27 +52,22 @@ class ShadcnCheckbox extends CheckboxRenderBase {
 
   @override
   Component buildBox(CheckboxProps props, Map<String, String> itemAttrs) {
-    // ShadCN size dimensions: default h-4 w-4 (16px), rounded-sm (4px)
-    final String boxSize = switch (props.size) {
-      ComponentSize.sm => '14px', // h-3.5
-      ComponentSize.md => '16px', // h-4 (shadcn default)
-      ComponentSize.lg => '20px', // h-5
+    // ShadCN v4: size-4 rounded-[4px] shadow-xs, check glyph size-3.5. The
+    // border is the 3:1 `--shadcn-control-border`, not bare `border-input`.
+    final (String boxSize, String glyphSize) = switch (props.size) {
+      ComponentSize.sm => ('14px', '12px'),
+      ComponentSize.md => ('16px', '14px'),
+      ComponentSize.lg => ('20px', '16px'),
     };
 
-    // Color variant: border is always the color value (like radio).
-    final (String checkedBg, String borderColor) = switch (props.color) {
-      ColorVariant.primary => ('var(--primary)', 'var(--primary)'),
-      ColorVariant.secondary => ('var(--secondary)', 'var(--secondary)'),
-      ColorVariant.destructive => ('var(--destructive)', 'var(--destructive)'),
-      ColorVariant.success => (
-        'var(--success, #22c55e)',
-        'var(--success, #22c55e)',
-      ),
-      ColorVariant.warning => (
-        'var(--warning, #f59e0b)',
-        'var(--warning, #f59e0b)',
-      ),
-      ColorVariant.info => ('var(--info, #3b82f6)', 'var(--info, #3b82f6)'),
+    // Checked fill and border share the colour variant.
+    final String checkedFill = switch (props.color) {
+      ColorVariant.primary => 'var(--primary)',
+      ColorVariant.secondary => 'var(--secondary)',
+      ColorVariant.destructive => 'var(--destructive)',
+      ColorVariant.success => 'var(--success, #22c55e)',
+      ColorVariant.warning => 'var(--warning, #f59e0b)',
+      ColorVariant.info => 'var(--info, #3b82f6)',
     };
 
     // Checkmark foreground color.
@@ -92,20 +87,24 @@ class ShadcnCheckbox extends CheckboxRenderBase {
         raw: <String, String>{
           'width': boxSize,
           'height': boxSize,
-          // ShadCN: rounded-sm (4px / 0.125rem)
-          'border-radius': '0.125rem',
-          // ShadCN: data-[state=checked]:bg-primary
-          '--shadcn-checkbox-fill': checkedBg,
-          'background-color': 'var(--shadcn-checkbox-background, transparent)',
-          // ShadCN: border border-primary
-          'border': '1px solid $borderColor',
+          'box-sizing': 'border-box',
+          'border-radius': 'var(--radius-xs)',
+          // data-[state=checked]:bg-primary border-primary, set by the
+          // theme CSS from the runtime-maintained data-arcane-state.
+          '--shadcn-checkbox-fill': checkedFill,
+          'background-color':
+              'var(--shadcn-checkbox-background, var(--shadcn-input-background, transparent))',
+          'border':
+              '1px solid var(--shadcn-control-border-color, var(--shadcn-checkbox-border, var(--shadcn-control-border)))',
+          'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
+          'outline': 'none',
           'display': 'flex',
           'align-items': 'center',
           'justify-content': 'center',
           'flex-shrink': '0',
-          // ShadCN: transition-colors
           'transition':
-              'color var(--transition), background-color var(--transition), border-color var(--transition)',
+              'box-shadow var(--transition), '
+              'background-color var(--transition), border-color var(--transition)',
           ...?props.decoration?.universalStyles(),
           ...?props.styles?.toMap(),
         },
@@ -116,10 +115,12 @@ class ShadcnCheckbox extends CheckboxRenderBase {
           attributes: const <String, String>{'aria-hidden': 'true'},
           styles: dom.Styles(
             raw: <String, String>{
-              // ShadCN: text-primary-foreground when checked
               'color': checkColor,
               'display': 'var(--shadcn-checkbox-indicator, none)',
+              'align-items': 'center',
+              'justify-content': 'center',
               'line-height': '1',
+              '--shadcn-checkbox-glyph': glyphSize,
             },
           ),
           <Component>[ArcaneIcon.check(size: IconSize.xs)],

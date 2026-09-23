@@ -23,10 +23,24 @@ class ShadcnStatusBadge extends StatusBadgeRenderBase {
     ComponentSize.lg => '8px',
   };
 
-  String _statusPadding(StatusBadgeProps props) => switch (props.size) {
-    ComponentSize.sm => '0.25rem 0.5rem',
-    ComponentSize.md => '0.25rem 0.75rem',
-    ComponentSize.lg => '0.375rem 1rem',
+  // ShadCN Badge: rounded-md px-2 py-0.5 text-xs font-medium (radius capped
+  // to the 6px tier by the design-language policy).
+  String _badgePadding(StatusBadgeProps props) => switch (props.size) {
+    ComponentSize.sm => '0 0.375rem',
+    ComponentSize.md => '0.125rem 0.5rem',
+    ComponentSize.lg => '0.25rem 0.625rem',
+  };
+
+  String _badgeFontSize(StatusBadgeProps props) => switch (props.size) {
+    ComponentSize.sm => '0.6875rem',
+    ComponentSize.md => '0.75rem',
+    ComponentSize.lg => '0.875rem',
+  };
+
+  String _badgeLineHeight(StatusBadgeProps props) => switch (props.size) {
+    ComponentSize.sm => '1rem',
+    ComponentSize.md => '1rem',
+    ComponentSize.lg => '1.25rem',
   };
 
   @override
@@ -34,8 +48,9 @@ class ShadcnStatusBadge extends StatusBadgeRenderBase {
     StatusBadgeProps props,
     String effectiveLabelColor,
   ) => <String, String>{
-    'font-size': statusFontSize(props),
+    'font-size': _badgeFontSize(props),
     'font-weight': '500',
+    'line-height': _badgeLineHeight(props),
     'color': effectiveLabelColor,
     'white-space': 'nowrap',
   };
@@ -44,31 +59,25 @@ class ShadcnStatusBadge extends StatusBadgeRenderBase {
   String statusLabelColor(StatusBadgeProps props) =>
       props.labelColor ?? statusColor(props);
 
-  String _cardPadding(StatusBadgeProps props) => switch (props.size) {
-    ComponentSize.sm => '0.125rem 0.5rem',
-    ComponentSize.md => '0.125rem 0.625rem',
-    ComponentSize.lg => '0.25rem 0.75rem',
-  };
-
-  String _cardFontSize(StatusBadgeProps props) => switch (props.size) {
-    ComponentSize.sm => '0.75rem',
-    ComponentSize.md => '0.75rem',
-    ComponentSize.lg => '0.875rem',
-  };
-
   @override
   Map<String, String> cardBaseStyles(StatusBadgeProps props) =>
       <String, String>{
         'display': 'inline-flex',
         'align-items': 'center',
-        'gap': '0.375rem',
-        'border-radius': '4px',
-        'font-size': _cardFontSize(props),
-        'font-weight': '600',
-        'line-height': '1',
+        'justify-content': 'center',
+        'gap': '0.25rem',
+        'width': 'fit-content',
+        'flex-shrink': '0',
+        'overflow': 'hidden',
+        'border-radius': 'var(--radius-sm)',
+        'font-size': _badgeFontSize(props),
+        'font-weight': '500',
+        'line-height': _badgeLineHeight(props),
         'white-space': 'nowrap',
-        'transition': 'color 150ms, background-color 150ms, border-color 150ms',
-        'padding': _cardPadding(props),
+        'transition':
+            'color var(--transition), background-color var(--transition), '
+            'border-color var(--transition), box-shadow var(--transition)',
+        'padding': _badgePadding(props),
       };
 
   (String bgColor, String fgColor, String? border) _cardColors(
@@ -147,11 +156,14 @@ class ShadcnStatusBadge extends StatusBadgeRenderBase {
     return <String, String>{
       'display': 'inline-flex',
       'align-items': 'center',
-      'gap': 'var(--space-2)',
-      'padding': _statusPadding(props),
+      'gap': '0.375rem',
+      'width': 'fit-content',
+      'flex-shrink': '0',
+      'padding': _badgePadding(props),
       'background': effectiveBackground,
       'border': '1px solid $effectiveBorder',
-      'border-radius': '4px',
+      'border-radius': 'var(--radius-sm)',
+      'white-space': 'nowrap',
     };
   }
 

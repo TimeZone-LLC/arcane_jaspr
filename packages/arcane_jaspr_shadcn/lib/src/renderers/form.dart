@@ -1,9 +1,15 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
+import 'package:arcane_jaspr/core/props/button_props.dart';
 import 'package:arcane_jaspr/core/props/field_wrapper_props.dart';
 
+import 'package:arcane_jaspr_shadcn/src/renderers/button.dart';
+
 /// ShadCN Form renderer (stateful for form handling).
+///
+/// The action row reuses [ShadcnButton] so cancel/submit share the button
+/// sizing, hover and focus contract (outline + primary).
 class ShadcnForm extends StatefulComponent {
   final FormProps props;
 
@@ -16,72 +22,48 @@ class ShadcnForm extends StatefulComponent {
 class _ShadcnFormState extends State<ShadcnForm> {
   @override
   Component build(BuildContext context) {
+    final FormProps props = component.props;
     return dom.form(
       classes: 'arcane-form',
       styles: dom.Styles(
-        raw: {
+        raw: <String, String>{
           'display': 'flex',
           'flex-direction': 'column',
-          'gap': '${component.props.spacing}px',
+          'gap': '${props.spacing}px',
         },
       ),
-      events: {
+      events: <String, EventCallback>{
         'submit': (event) {
           event.preventDefault();
-          component.props.onSubmit?.call();
+          props.onSubmit?.call();
         },
       },
-      [
-        ...component.props.children,
-        if (component.props.showActions)
+      <Component>[
+        ...props.children,
+        if (props.showActions)
           dom.div(
             classes: 'arcane-form-actions',
             styles: const dom.Styles(
-              raw: {
+              raw: <String, String>{
                 'display': 'flex',
                 'justify-content': 'flex-end',
-                'gap': 'var(--space-2)',
+                'gap': '0.5rem',
                 'margin-top': '1.5rem',
                 'padding-top': '1.5rem',
                 'border-top': '1px solid var(--border)',
               },
             ),
-            [
-              if (component.props.onCancel != null)
-                dom.button(
-                  attributes: const {'type': 'button'},
-                  styles: const dom.Styles(
-                    raw: {
-                      'padding': '10px 20px',
-                      'border': '1px solid var(--border)',
-                      'border-radius': 'var(--radius)',
-                      'background-color': 'transparent',
-                      'color': 'var(--foreground)',
-                      'font-size': 'var(--font-size-sm)',
-                      'font-weight': 'var(--font-weight-medium)',
-                      'cursor': 'pointer',
-                      'transition': 'all var(--transition)',
-                    },
+            <Component>[
+              if (props.onCancel != null)
+                ShadcnButton(
+                  ButtonProps(
+                    label: props.cancelText,
+                    variant: ButtonVariant.outline,
+                    onPressed: props.onCancel,
                   ),
-                  events: {'click': (_) => component.props.onCancel?.call()},
-                  [Component.text(component.props.cancelText!)],
                 ),
-              dom.button(
-                attributes: const {'type': 'submit'},
-                styles: const dom.Styles(
-                  raw: {
-                    'padding': '10px 20px',
-                    'border': 'none',
-                    'border-radius': 'var(--radius)',
-                    'background-color': 'var(--accent)',
-                    'color': 'var(--accent-foreground)',
-                    'font-size': 'var(--font-size-sm)',
-                    'font-weight': 'var(--font-weight-medium)',
-                    'cursor': 'pointer',
-                    'transition': 'all var(--transition)',
-                  },
-                ),
-                [Component.text(component.props.submitText!)],
+              ShadcnButton(
+                ButtonProps(label: props.submitText, type: ButtonType.submit),
               ),
             ],
           ),

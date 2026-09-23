@@ -1,8 +1,12 @@
 import 'package:arcane_jaspr/core/props/otp_input_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/otp_input_render_base.dart';
 
-/// ShadCN-style OTP input component
+/// ShadCN-style OTP input component.
 /// Reference: https://ui.shadcn.com/docs/components/input-otp
+///
+/// Slots follow the v4 input recipe (`h-9 w-9 border-input text-sm
+/// shadow-xs rounded-md`) as separate boxes, since joined slots would need
+/// one-sided borders on rounded corners.
 class ShadcnOtpInput extends OtpInputRenderBase {
   const ShadcnOtpInput(super.props, {super.key});
 
@@ -24,8 +28,9 @@ class ShadcnOtpInput extends OtpInputRenderBase {
 
   @override
   Map<String, String> get labelStyles => const <String, String>{
-    'font-size': 'var(--font-size-sm)',
-    'font-weight': 'var(--font-weight-medium)',
+    'font-size': '0.875rem',
+    'font-weight': '500',
+    'line-height': '1',
     'color': 'var(--foreground)',
   };
 
@@ -42,8 +47,8 @@ class ShadcnOtpInput extends OtpInputRenderBase {
   @override
   Map<String, String> get separatorStyles => const <String, String>{
     'color': 'var(--muted-foreground)',
-    'font-size': '18px',
-    'margin': '0 4px',
+    'font-size': '0.875rem',
+    'margin': '0 0.25rem',
   };
 
   @override
@@ -51,9 +56,9 @@ class ShadcnOtpInput extends OtpInputRenderBase {
 
   @override
   (String, String) sizeStyles(OtpInputSizeVariant size) => switch (size) {
-    OtpInputSizeVariant.sm => ('40px', '16px'),
-    OtpInputSizeVariant.md => ('48px', '18px'),
-    OtpInputSizeVariant.lg => ('56px', '20px'),
+    OtpInputSizeVariant.sm => ('2rem', '0.875rem'),
+    OtpInputSizeVariant.md => ('2.25rem', '0.875rem'),
+    OtpInputSizeVariant.lg => ('2.5rem', '1rem'),
   };
 
   @override
@@ -73,6 +78,7 @@ class ShadcnOtpInput extends OtpInputRenderBase {
     'value': digitValue(i, digits),
     'data-state': isFilled(i, digits) ? 'filled' : 'empty',
     'data-disabled': '${props.disabled}',
+    if (hasError) 'aria-invalid': 'true',
   };
 
   @override
@@ -86,12 +92,17 @@ class ShadcnOtpInput extends OtpInputRenderBase {
     'width': size,
     'height': size,
     'font-size': fontSize,
+    'box-sizing': 'border-box',
+    'padding': '0',
     'text-align': 'center',
-    'font-weight': 'var(--font-weight-semibold)',
+    'font-weight': '500',
     'color': 'var(--foreground)',
-    'background-color': 'var(--background)',
-    'border': '2px solid ${hasError ? 'var(--destructive)' : 'var(--input)'}',
-    'border-radius': 'var(--radius-sm)',
+    'background-color': 'var(--shadcn-input-background, transparent)',
+    'border':
+        '1px solid var(--shadcn-control-border-color, ${hasError ? 'var(--destructive)' : 'var(--shadcn-control-border)'})',
+    'border-radius': 'var(--radius-md)',
+    'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
+    'outline': 'none',
     'transition':
         'border-color var(--transition), box-shadow var(--transition)',
     'caret-color': 'transparent',

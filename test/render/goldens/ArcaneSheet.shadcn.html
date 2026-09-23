@@ -1,17 +1,14 @@
 
     <div class="arcane-sheet" style="position: fixed; inset: 0; z-index: 1100; pointer-events: auto" data-arcane-surface="sheet" data-arcane-id="arcane-sheet-1" data-arcane-state="closed" hidden data-position="bottom">
-      <div class="arcane-sheet-backdrop" style="position: absolute; inset: 0; background-color: rgba(0, 0, 0, 0.8); animation: arcane-fade-in var(--transition-slow)" data-arcane-scrim></div>
-      <div class="arcane-sheet-panel arcane-sheet-bottom" style="position: fixed; z-index: 50; background-color: var(--background); color: var(--foreground); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden; transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1); border-radius: var(--radius-md) var(--radius-md) 0 0; border: 1px solid var(--border); left: 0; right: 0; bottom: 0; max-height: 90vh; width: 100%; animation: arcane-slide-up var(--transition-slower)" role="dialog" aria-modal="true" data-arcane-autofocus>
-        <div class="arcane-sheet-drag-handle" style="display: flex; justify-content: center; padding: 8px 0">
-          <div style="width: 36px; height: 4px; background: var(--muted-foreground); border-radius: var(--radius-xs); opacity: 0.4"></div>
+      <div class="arcane-sheet-backdrop" style="position: absolute; inset: 0; background-color: var(--overlay); animation: arcane-fade-in var(--transition-slow)" data-arcane-scrim></div>
+      <div class="arcane-sheet-panel arcane-sheet-bottom" style="position: fixed; z-index: 50; display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem; background-color: var(--background); color: var(--foreground); border: 1px solid var(--border); border-radius: 0; box-shadow: var(--shadow-lg); overflow: hidden; outline: none; transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1); left: 0; right: 0; bottom: 0; max-height: 90vh; width: 100%; animation: arcane-slide-up var(--transition-slower)" role="dialog" aria-modal="true" data-arcane-autofocus>
+        <div class="arcane-sheet-drag-handle" style="display: flex; justify-content: center; flex-shrink: 0">
+          <div style="width: 100px; height: 0.5rem; background-color: var(--muted); border-radius: var(--radius-xs)"></div>
         </div>
-        <div class="arcane-sheet-header" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 24px; padding-top: 12px; flex-shrink: 0">
-          <div></div>
-          <button class="arcane-sheet-close" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; padding: 0; border: none; background: transparent; color: var(--muted-foreground); cursor: pointer; border-radius: var(--radius-sm); font-size: var(--font-size-xl); transition: color var(--transition), background var(--transition); flex-shrink: 0" type="button" aria-label="Close sheet" data-arcane-action="surface.dismiss">
-            <i style="font-family: 'lucide', sans-serif; font-style: normal; font-weight: normal; font-size: 16.0px; line-height: 1; display: inline-block; width: 16.0px; height: 16.0px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale"></i>
-          </button>
-        </div>
-        <div class="arcane-sheet-content" style="flex: 1; overflow: auto; padding: 0 24px 24px"><span class="arcane-text">content</span></div>
+        <div class="arcane-sheet-content" style="flex: 1; min-height: 0; overflow: auto; padding: 0.25rem; margin: -0.25rem"><span class="arcane-text">content</span></div>
+        <button class="arcane-sheet-close" style="position: absolute; top: 1rem; right: 1rem; display: inline-flex; align-items: center; justify-content: center; width: 1rem; height: 1rem; padding: 0; border: none; border-radius: var(--radius-xs); background: transparent; color: var(--foreground); opacity: var(--shadcn-dialog-close-opacity, 0.7); box-shadow: var(--shadcn-control-shadow, none); cursor: pointer; transition: opacity var(--transition), box-shadow var(--transition)" type="button" aria-label="Close sheet" data-arcane-action="surface.dismiss">
+          <i style="font-family: 'lucide', sans-serif; font-style: normal; font-weight: normal; font-size: 16.0px; line-height: 1; display: inline-block; width: 16.0px; height: 16.0px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale"></i>
+        </button>
       </div>
     </div>
   

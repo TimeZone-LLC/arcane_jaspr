@@ -1,7 +1,14 @@
 import 'package:arcane_jaspr/core/props/kbd_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/kbd_render_base.dart';
 
-/// ShadCN-styled keyboard shortcut display component
+/// ShadCN keyboard key.
+///
+/// ShadCN Kbd: bg-muted text-muted-foreground inline-flex h-5 min-w-5
+/// items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs
+/// font-medium. ShadCN has no 3D key, so the default `raised` style and `flat`
+/// both render that flat muted key; `outline` swaps the fill for a hairline.
+///
+/// Reference: https://ui.shadcn.com/docs/components/kbd
 class ShadcnKbd extends KbdRenderBase {
   const ShadcnKbd(super.props, {super.key});
 
@@ -9,56 +16,51 @@ class ShadcnKbd extends KbdRenderBase {
   String? get kbdClasses => null;
 
   @override
-  String get keysWrapperGap => 'var(--space-1)';
+  String get keysWrapperGap => '0.25rem';
 
-  (String padding, String fontSize, String minWidth) get _sizeStyles =>
-      switch (props.size) {
-        ComponentSize.sm => ('2px 5px', '0.75rem', '20px'),
-        ComponentSize.md => ('4px 8px', '0.875rem', '24px'),
-        ComponentSize.lg => ('6px 12px', '1rem', '32px'),
-      };
+  // (height/min-width, horizontal padding, font-size)
+  (String, String, String) get _sizeStyles => switch (props.size) {
+    ComponentSize.sm => ('1rem', '0.1875rem', '0.625rem'),
+    ComponentSize.md => ('1.25rem', '0.25rem', '0.75rem'),
+    ComponentSize.lg => ('1.5rem', '0.375rem', '0.875rem'),
+  };
 
   @override
   Map<String, String> get styleMap {
-    final (padding, fontSize, minWidth) = _sizeStyles;
+    final (String box, String inline, String fontSize) = _sizeStyles;
 
-    final baseStyles = {
+    final Map<String, String> base = <String, String>{
       'display': 'inline-flex',
       'align-items': 'center',
       'justify-content': 'center',
-      'min-width': minWidth,
-      'padding': padding,
+      'gap': '0.25rem',
+      'width': 'fit-content',
+      'height': box,
+      'min-width': box,
+      'padding': '0 $inline',
+      'box-sizing': 'border-box',
+      'border-radius': 'var(--radius-xs)',
+      'font-family': 'var(--font-sans)',
       'font-size': fontSize,
-      'font-family':
-          'var(--font-mono, ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace)',
-      'font-weight': 'var(--font-weight-medium)',
+      'font-weight': '500',
       'line-height': '1',
       'white-space': 'nowrap',
       'user-select': 'none',
+      'pointer-events': 'none',
+      'box-shadow': 'none',
     };
 
     return switch (props.variant) {
-      KbdStyle.raised => {
-        ...baseStyles,
-        'background': 'var(--card)',
-        'border': '1px solid var(--border)',
-        'border-radius': 'var(--arcane-radius-xs, 0.25rem)',
-        'box-shadow':
-            '0 2px 0 var(--border), inset 0 1px 0 rgba(var(--foreground-rgb), 0.1)',
-        'color': 'var(--foreground)',
-      },
-      KbdStyle.flat => {
-        ...baseStyles,
+      KbdStyle.raised || KbdStyle.flat => <String, String>{
+        ...base,
         'background': 'var(--muted)',
-        'border': 'none',
-        'border-radius': 'var(--arcane-radius-xs, 0.25rem)',
-        'color': 'var(--foreground)',
+        'border': '0',
+        'color': 'var(--muted-foreground)',
       },
-      KbdStyle.outline => {
-        ...baseStyles,
+      KbdStyle.outline => <String, String>{
+        ...base,
         'background': 'transparent',
         'border': '1px solid var(--border)',
-        'border-radius': 'var(--arcane-radius-xs, 0.25rem)',
         'color': 'var(--muted-foreground)',
       },
     };

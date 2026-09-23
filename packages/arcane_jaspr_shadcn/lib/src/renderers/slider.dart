@@ -10,8 +10,8 @@ class ShadcnSlider extends SliderRenderBase {
 
   String get _fillColor => switch (props.variant) {
     SliderVariant.primary => 'var(--primary)',
-    SliderVariant.success => 'var(--success, #22c55e)',
-    SliderVariant.warning => 'var(--warning, #f59e0b)',
+    SliderVariant.success => 'var(--success)',
+    SliderVariant.warning => 'var(--warning)',
     SliderVariant.error => 'var(--destructive)',
   };
 
@@ -33,11 +33,13 @@ class ShadcnSlider extends SliderRenderBase {
   @override
   Map<String, String> thumbStateAttrs() => const <String, String>{};
 
+  // (trackHeight, thumbSize, hitAreaHeight). ShadCN v4 default: h-1.5 track,
+  // size-4 thumb.
   @override
   (String, String, String) sizeMetrics(ComponentSize size) => switch (size) {
-    ComponentSize.sm => ('6px', '16px', '24px'),
-    ComponentSize.md => ('8px', '20px', '32px'), // ShadCN default h-2 (8px)
-    ComponentSize.lg => ('10px', '24px', '40px'),
+    ComponentSize.sm => ('4px', '14px', '20px'),
+    ComponentSize.md => ('6px', '16px', '24px'),
+    ComponentSize.lg => ('8px', '20px', '32px'),
   };
 
   @override
@@ -67,8 +69,8 @@ class ShadcnSlider extends SliderRenderBase {
     'left': '0',
     'right': '0',
     'height': trackHeight,
-    'background-color': 'var(--secondary)',
-    'border-radius': 'var(--radius-xs)',
+    'background-color': 'var(--muted)',
+    'border-radius': 'var(--radius-md)',
     'overflow': 'hidden',
   };
 
@@ -115,17 +117,20 @@ class ShadcnSlider extends SliderRenderBase {
     required String thumbSize,
     required int thumbSizeNum,
   }) => <String, String>{
+    // Centred with a transform so the runtime, which writes a bare `left: x%`
+    // while dragging, keeps the thumb aligned with the value.
     'position': 'absolute',
-    'left': 'calc($leftPct% - ${thumbSizeNum / 2}px)',
+    'left': '$leftPct%',
     'top': '50%',
-    'transform': 'translateY(-50%)',
+    'transform': 'translate(-50%, -50%)',
     'width': thumbSize,
     'height': thumbSize,
+    'box-sizing': 'border-box',
     'background-color': 'var(--background)',
-    'border': '2px solid $_fillColor',
+    'border': '1px solid $_fillColor',
     'border-radius': '50%',
-    'transition':
-        'left 0.1s ease-out, color var(--transition), transform var(--transition), box-shadow var(--transition)',
+    'box-shadow': 'var(--shadcn-slider-thumb-shadow, var(--shadow-sm))',
+    'transition': 'left 0.1s ease-out, box-shadow var(--transition)',
     'z-index': '2',
     'cursor': props.disabled ? 'not-allowed' : 'grab',
   };

@@ -68,10 +68,60 @@ String _document(
       '$bodyHtml</div></body></html>';
 }
 
+/// Window chrome the shared cases leave untitled: a gallery window (caption
+/// bar with its caption buttons) and a titled form section (etched group box
+/// holding the bitmap radios, check box and slider).
+final List<(String, Widget)> _chromeCases = <(String, Widget)>[
+  (
+    'ArcaneGallery',
+    const ArcaneGallery(
+      ariaLabel: 'Example gallery',
+      tiles: <ArcaneGalleryTile>[
+        ArcaneGalleryTile(
+          media: ArcaneGalleryMedia(
+            aspectRatio: 1.5,
+            src: 'example.jpg',
+            alt: 'Example artwork',
+          ),
+          title: 'Static at Sundown',
+          meta: 'Photographer',
+          footer: Text('Ready'),
+        ),
+      ],
+    ),
+  ),
+  (
+    'ArcaneFormSection (titled)',
+    const ArcaneFormSection(
+      title: 'Connection',
+      description: 'How this device reaches the network.',
+      children: <Widget>[
+        ArcaneRadioGroup<String>(
+          id: 'radio-group-chrome',
+          name: 'radio-group-chrome',
+          value: 'wired',
+          options: <RadioOption<String>>[
+            RadioOption<String>(value: 'wired', label: 'Wired'),
+            RadioOption<String>(value: 'wireless', label: 'Wireless'),
+            RadioOption<String>(
+              value: 'modem',
+              label: 'Dial-up modem',
+              disabled: true,
+            ),
+          ],
+        ),
+        ArcaneCheckbox(checked: true, label: 'Reconnect at logon'),
+        ArcaneSlider(id: 'slider-chrome', value: 40),
+      ],
+    ),
+  ),
+];
+
 void main() {
   final List<(String, Widget)> cases = <(String, Widget)>[
     ...componentCases(),
     ...formFieldCases(),
+    ..._chromeCases,
   ].where((c) => !_isOverlay(c.$1)).toList();
 
   Widget grid() => dom.div(<Widget>[

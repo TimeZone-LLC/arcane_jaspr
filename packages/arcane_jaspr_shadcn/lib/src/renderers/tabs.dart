@@ -3,16 +3,57 @@ import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/props/tabs_props.dart';
 
+/// v4 TabsList: `bg-muted text-muted-foreground inline-flex h-9 w-fit
+/// items-center justify-center rounded-lg p-[3px]`.
+Map<String, String> _listStyles({required bool fill}) => <String, String>{
+  'display': 'inline-flex',
+  'height': '2.25rem',
+  'width': fill ? '100%' : 'fit-content',
+  'align-items': 'center',
+  'justify-content': 'center',
+  'gap': '0.25rem',
+  'padding': '3px',
+  'border-radius': 'var(--radius-md)',
+  'background-color': 'var(--muted)',
+  'color': 'var(--muted-foreground)',
+};
+
+/// v4 TabsTrigger: `inline-flex h-[calc(100%-1px)] items-center
+/// justify-center gap-1.5 rounded-md border border-transparent px-2 py-1
+/// text-sm font-medium`. Background, foreground, border colour and shadow
+/// route through variables so the surfaces stylesheet can paint the active,
+/// hover and `:focus-visible` states.
+Map<String, String> _triggerStyles({
+  required bool fill,
+  required bool disabled,
+}) => <String, String>{
+  'display': 'inline-flex',
+  'align-items': 'center',
+  'justify-content': 'center',
+  'gap': '0.375rem',
+  'height': 'calc(100% - 1px)',
+  'white-space': 'nowrap',
+  'padding': '0.25rem 0.5rem',
+  'border': '1px solid var(--shadcn-control-border-color, transparent)',
+  'border-radius': 'var(--radius-sm)',
+  'font-size': '0.875rem',
+  'line-height': '1.25rem',
+  'font-weight': '500',
+  'background-color': 'var(--shadcn-item-background, transparent)',
+  'color': 'var(--shadcn-item-foreground, var(--foreground))',
+  'box-shadow': 'var(--shadcn-control-shadow, none)',
+  'outline': 'none',
+  'cursor': 'pointer',
+  'transition':
+      'color var(--transition), background-color var(--transition), box-shadow var(--transition), border-color var(--transition)',
+  if (disabled) 'pointer-events': 'none',
+  if (disabled) 'opacity': '0.5',
+  if (fill) 'flex': '1',
+};
+
 /// ShadCN Tabs renderer.
 ///
-/// Outputs the exact HTML structure and CSS from ui.shadcn.com.
 /// Reference: https://ui.shadcn.com/docs/components/tabs
-///
-/// ShadCN Tabs:
-/// - TabsList: inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground
-/// - TabsTrigger: inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium
-///   - Active: bg-background text-foreground shadow-sm
-/// - TabsContent: mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2
 class ShadcnTabs extends StatelessComponent {
   final TabsProps props;
 
@@ -23,49 +64,36 @@ class ShadcnTabs extends StatelessComponent {
     return dom.div(
       classes: 'arcane-tabs',
       styles: const dom.Styles(
-        raw: {'display': 'flex', 'flex-direction': 'column', 'width': '100%'},
+        raw: <String, String>{
+          'display': 'flex',
+          'flex-direction': 'column',
+          'width': '100%',
+        },
       ),
-      [
-        // Tab list - ShadCN: inline-flex h-10 items-center justify-center rounded-md bg-muted p-1
+      <Component>[
         dom.div(
           classes: 'arcane-tabs-list',
-          attributes: {'role': 'tablist'},
+          attributes: const <String, String>{'role': 'tablist'},
           styles: dom.Styles(
-            raw: {
-              'display': 'inline-flex',
-              // ShadCN: h-10
-              'height': '40px',
-              'align-items': 'center',
-              'justify-content': 'center',
-              // ShadCN: rounded-md
-              'border-radius': 'var(--radius-sm)',
-              // ShadCN: bg-muted
-              'background-color': 'var(--muted)',
-              // ShadCN: p-1
-              'padding': '4px',
-              // ShadCN: text-muted-foreground
-              'color': 'var(--muted-foreground)',
-              if (props.fill) 'width': '100%',
+            raw: <String, String>{
+              ..._listStyles(fill: props.fill),
               ...?props.decoration?.universalStyles(),
               ...?props.styles?.toMap(),
             },
           ),
-          [
-            for (var i = 0; i < props.tabs.length; i++)
+          <Component>[
+            for (int i = 0; i < props.tabs.length; i++)
               _buildTab(i, props.tabs[i]),
           ],
         ),
-        // Tab panel - ShadCN: mt-2
+        // v4 Tabs: flex flex-col gap-2
         dom.div(
           classes: 'arcane-tabs-panel',
-          attributes: {'role': 'tabpanel'},
+          attributes: const <String, String>{'role': 'tabpanel'},
           styles: const dom.Styles(
-            raw: {
-              // ShadCN: mt-2
-              'margin-top': '8px',
-            },
+            raw: <String, String>{'margin-top': '0.5rem'},
           ),
-          [
+          <Component>[
             if (props.selectedIndex < props.tabs.length)
               props.tabs[props.selectedIndex].content,
           ],
@@ -80,8 +108,8 @@ class ShadcnTabs extends StatelessComponent {
 
     return dom.button(
       classes:
-          'arcane-tab ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}',
-      attributes: {
+          'arcane-tab${isSelected ? ' selected' : ''}${isDisabled ? ' disabled' : ''}',
+      attributes: <String, String>{
         'type': 'button',
         'role': 'tab',
         'aria-selected': '$isSelected',
@@ -90,61 +118,33 @@ class ShadcnTabs extends StatelessComponent {
         'data-disabled': '$isDisabled',
       },
       styles: dom.Styles(
-        raw: {
-          // ShadCN: inline-flex items-center justify-center
-          'display': 'inline-flex',
-          'align-items': 'center',
-          'justify-content': 'center',
-          'gap': 'var(--space-2)',
-          // ShadCN: whitespace-nowrap
-          'white-space': 'nowrap',
-          // ShadCN: rounded-sm (4px)
-          'border-radius': 'var(--radius-xs)',
-          // ShadCN: px-3 py-1.5
-          'padding': '6px 12px',
-          // ShadCN: text-sm font-medium
-          'font-size': 'var(--font-size-sm)',
-          'font-weight': 'var(--font-weight-medium)',
-          'border': 'none',
-          // ShadCN: data-[state=active]:bg-background data-[state=active]:text-foreground
-          'background-color': isSelected ? 'var(--background)' : 'transparent',
-          'color': isSelected ? 'var(--foreground)' : 'var(--muted-foreground)',
-          // ShadCN: data-[state=active]:shadow-sm
-          'box-shadow': isSelected ? '0 1px 2px 0 rgb(0 0 0 / 0.05)' : 'none',
-          // ShadCN: transition-all
-          'transition': 'all var(--transition)',
-          // ShadCN: disabled:pointer-events-none disabled:opacity-50
-          'cursor': isDisabled ? 'not-allowed' : 'pointer',
-          'pointer-events': isDisabled ? 'none' : 'auto',
-          'opacity': isDisabled ? '0.5' : '1',
-          if (props.fill) 'flex': '1',
-        },
+        raw: _triggerStyles(fill: props.fill, disabled: isDisabled),
       ),
-      events: {
+      events: <String, EventCallback>{
         'click': (event) {
           if (!isDisabled && props.onChanged != null) {
             props.onChanged!(index);
           }
         },
       },
-      [
+      <Component>[
         if (tab.icon != null) tab.icon!,
         Component.text(tab.label),
         if (tab.badge != null)
           dom.span(
             classes: 'arcane-tab-badge',
             styles: const dom.Styles(
-              raw: {
+              raw: <String, String>{
                 'background-color': 'var(--primary)',
                 'color': 'var(--primary-foreground)',
                 'font-size': '0.6875rem',
-                'padding': '2px 6px',
+                'padding': '0 0.375rem',
                 'border-radius': 'var(--radius-xs)',
-                'font-weight': 'var(--font-weight-medium)',
-                'margin-left': '4px',
+                'font-weight': '500',
+                'line-height': '1rem',
               },
             ),
-            [Component.text(tab.badge!)],
+            <Component>[Component.text(tab.badge!)],
           ),
       ],
     );
@@ -161,22 +161,17 @@ class ShadcnTabBar extends StatelessComponent {
   Component build(BuildContext context) {
     return dom.div(
       classes: 'arcane-tab-bar',
-      attributes: {'role': 'tablist'},
+      attributes: const <String, String>{'role': 'tablist'},
       styles: dom.Styles(
-        raw: {
-          // ShadCN: inline-flex h-10 items-center justify-center rounded-md bg-muted p-1
-          'display': 'inline-flex',
-          'height': '40px',
-          'align-items': 'center',
-          'justify-content': 'center',
-          'border-radius': 'var(--radius-sm)',
-          'background-color': 'var(--muted)',
-          'padding': '4px',
-          'color': 'var(--muted-foreground)',
-          if (props.fill) 'width': '100%',
+        raw: <String, String>{
+          ..._listStyles(fill: props.fill),
+          ...?props.decoration?.universalStyles(),
+          ...?props.styles?.toMap(),
         },
       ),
-      [for (var i = 0; i < props.tabs.length; i++) _buildTab(i, props.tabs[i])],
+      <Component>[
+        for (int i = 0; i < props.tabs.length; i++) _buildTab(i, props.tabs[i]),
+      ],
     );
   }
 
@@ -184,40 +179,20 @@ class ShadcnTabBar extends StatelessComponent {
     final bool isSelected = index == props.selectedIndex;
 
     return dom.button(
-      classes: 'arcane-tab-bar-item ${isSelected ? 'selected' : ''}',
-      attributes: {
+      classes: 'arcane-tab-bar-item${isSelected ? ' selected' : ''}',
+      attributes: <String, String>{
         'type': 'button',
+        'role': 'tab',
+        'aria-selected': '$isSelected',
         'data-state': isSelected ? 'active' : 'inactive',
       },
       styles: dom.Styles(
-        raw: {
-          // ShadCN: inline-flex items-center justify-center whitespace-nowrap
-          'display': 'inline-flex',
-          'align-items': 'center',
-          'justify-content': 'center',
-          'gap': 'var(--space-2)',
-          'white-space': 'nowrap',
-          // ShadCN: rounded-sm (4px)
-          'border-radius': 'var(--radius-xs)',
-          // ShadCN: px-3 py-1.5
-          'padding': '6px 12px',
-          // ShadCN: text-sm font-medium
-          'font-size': 'var(--font-size-sm)',
-          'font-weight': 'var(--font-weight-medium)',
-          'border': 'none',
-          // ShadCN: data-[state=active]:bg-background data-[state=active]:text-foreground
-          'background-color': isSelected ? 'var(--background)' : 'transparent',
-          'color': isSelected ? 'var(--foreground)' : 'var(--muted-foreground)',
-          // ShadCN: data-[state=active]:shadow-sm
-          'box-shadow': isSelected ? '0 1px 2px 0 rgb(0 0 0 / 0.05)' : 'none',
-          // ShadCN: transition-all
-          'transition': 'all var(--transition)',
-          'cursor': 'pointer',
-          if (props.fill) 'flex': '1',
-        },
+        raw: _triggerStyles(fill: props.fill, disabled: false),
       ),
-      events: {'click': (event) => props.onChanged(index)},
-      [if (tab.icon != null) tab.icon!, Component.text(tab.label)],
+      events: <String, EventCallback>{
+        'click': (event) => props.onChanged(index),
+      },
+      <Component>[if (tab.icon != null) tab.icon!, Component.text(tab.label)],
     );
   }
 }

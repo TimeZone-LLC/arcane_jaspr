@@ -236,7 +236,14 @@ void main() {
         expect(css, contains('.arcane-textarea:focus-visible'));
         expect(css, contains('.arcane-textarea:disabled'));
         expect(css, contains(".arcane-textarea[data-readonly='true']"));
-        expect(css, contains(".arcane-textarea[data-error='true']"));
+        expect(
+          css,
+          matches(
+            RegExp(
+              r"\.arcane-textarea[^{]*:is\(\[aria-invalid='true'\], \[data-error='true'\]\)",
+            ),
+          ),
+        );
         expect(css, contains('color: var(--muted-foreground)'));
         expect(css, contains('caret-color: var(--muted-foreground)'));
         expect(css, contains('border-color: var(--destructive)'));

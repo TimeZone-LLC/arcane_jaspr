@@ -4,7 +4,9 @@ import 'package:jaspr/dom.dart' as dom;
 import 'package:arcane_jaspr/core/props/field_wrapper_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/field_wrapper_render_base.dart';
 
-/// ShadCN Field Wrapper renderer.
+/// ShadCN Field Wrapper renderer (FormItem: `grid gap-2`; FormLabel
+/// `text-sm font-medium leading-none`; FormDescription and FormMessage
+/// `text-sm`).
 class ShadcnFieldWrapper extends FieldWrapperRenderBase {
   const ShadcnFieldWrapper(super.props, {super.key});
 
@@ -15,7 +17,7 @@ class ShadcnFieldWrapper extends FieldWrapperRenderBase {
   Map<String, String> get wrapperStyles => const <String, String>{
     'display': 'flex',
     'flex-direction': 'column',
-    'gap': 'var(--space-1)',
+    'gap': '0.5rem',
     'width': '100%',
     'min-width': '0',
   };
@@ -53,8 +55,9 @@ class ShadcnFieldWrapper extends FieldWrapperRenderBase {
             classes: 'arcane-field-label',
             styles: dom.Styles(
               raw: {
-                'font-size': 'var(--font-size-sm)',
-                'font-weight': 'var(--font-weight-medium)',
+                'font-size': '0.875rem',
+                'font-weight': '500',
+                'line-height': '1',
                 'color': hasError ? 'var(--destructive)' : 'var(--foreground)',
               },
             ),
@@ -86,9 +89,9 @@ class ShadcnFieldWrapper extends FieldWrapperRenderBase {
       classes: 'arcane-field-description',
       styles: const dom.Styles(
         raw: {
-          'font-size': 'var(--font-size-xs)',
+          'font-size': '0.875rem',
           'color': 'var(--muted-foreground)',
-          'line-height': '1.625',
+          'line-height': '1.25rem',
         },
       ),
       [Component.text(props.description!)],
@@ -118,7 +121,8 @@ class ShadcnFieldWrapper extends FieldWrapperRenderBase {
           'display': 'flex',
           'align-items': 'center',
           'gap': 'var(--space-1)',
-          'font-size': 'var(--font-size-xs)',
+          'font-size': '0.875rem',
+          'line-height': '1.25rem',
           'color': 'var(--destructive)',
         },
       ),

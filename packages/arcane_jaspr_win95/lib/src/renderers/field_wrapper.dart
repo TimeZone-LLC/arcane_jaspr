@@ -43,11 +43,29 @@ class Win95FieldWrapper extends FieldWrapperRenderBase {
 }
 
 /// Win95 FormSection renderer.
+///
+/// Renders a Win95 group box: the title is the fieldset's first-child
+/// `<legend>`, so the browser seats it in the etched frame's top edge, and
+/// only the description stays in the header block below it.
 class Win95FormSection extends FormSectionRenderBase {
   const Win95FormSection(super.props, {super.key});
 
   @override
   String get headerClass => 'win95-form-section-header';
+
+  @override
+  Component build(BuildContext context) => buildRoot(<Component>[
+    if (props.title != null) buildTitle(props),
+    if (props.description != null)
+      dom.div(
+        classes: headerClass,
+        styles: const dom.Styles(
+          raw: <String, String>{'margin-bottom': '0.5rem'},
+        ),
+        <Component>[buildDescription(props)],
+      ),
+    ...props.children,
+  ]);
 
   @override
   Component buildRoot(List<Component> children) =>

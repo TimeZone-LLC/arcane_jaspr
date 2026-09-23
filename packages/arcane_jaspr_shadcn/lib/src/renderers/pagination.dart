@@ -4,137 +4,137 @@ import 'package:jaspr/dom.dart' as dom;
 import 'package:arcane_jaspr/component/view/icon.dart';
 import 'package:arcane_jaspr/core/props/pagination_props.dart';
 
-/// ShadCN-style pagination component
+/// Arrow runs at either end of `previousText`/`nextText` (the defaults are
+/// `<-` and `->`); the renderer draws a Lucide chevron instead, so they are
+/// stripped from the label.
+final RegExp _arrowGlyphs = RegExp(r'^[\s<>\-←→‹›«»]+|[\s<>\-←→‹›«»]+$');
+
+/// ShadCN-style pagination component.
+///
+/// v4 PaginationLink is a ghost button (`size-9 rounded-md text-sm`) whose
+/// active page switches to the outline variant (`border bg-background
+/// shadow-xs`). Background, foreground, border colour and shadow route
+/// through variables so the surfaces stylesheet can paint hover and
+/// `:focus-visible`. Previous/next carry Lucide chevrons and the ellipsis is
+/// the Lucide MoreHorizontal glyph.
+///
 /// Reference: https://ui.shadcn.com/docs/components/pagination
 class ShadcnPagination extends StatelessComponent {
   final PaginationProps props;
 
   const ShadcnPagination(this.props, {super.key});
 
-  (String padding, String fontSize, String minWidth, String height)
-  get _sizeStyles => switch (props.size) {
-    PaginationSizeVariant.sm => ('0 8px', '14px', '32px', '32px'),
-    PaginationSizeVariant.md => ('0 12px', '14px', '40px', '40px'),
-    PaginationSizeVariant.lg => ('0 16px', '16px', '48px', '48px'),
+  /// (horizontal padding, box size) per size step: v4 `h-8`, `h-9`, `h-10`.
+  (String padding, String size) get _sizeStyles => switch (props.size) {
+    PaginationSizeVariant.sm => ('0 0.625rem', '2rem'),
+    PaginationSizeVariant.md => ('0 0.75rem', '2.25rem'),
+    PaginationSizeVariant.lg => ('0 1rem', '2.5rem'),
   };
+
+  static String _stripArrows(String text) => text.replaceAll(_arrowGlyphs, '');
 
   @override
   Component build(BuildContext context) {
-    final (padding, fontSize, minWidth, height) = _sizeStyles;
+    final (String padding, String size) = _sizeStyles;
 
     if (props.variant == PaginationStyleVariant.simple) {
-      return _buildSimplePagination(padding, fontSize);
+      return _buildSimplePagination(padding);
     }
 
-    // ShadCN Pagination
     return dom.nav(
       classes: 'arcane-pagination',
-      attributes: {'aria-label': 'Pagination', 'role': 'navigation'},
+      attributes: const <String, String>{
+        'aria-label': 'Pagination',
+        'role': 'navigation',
+      },
       styles: const dom.Styles(
-        raw: {'display': 'flex', 'width': '100%', 'justify-content': 'center'},
+        raw: <String, String>{
+          'display': 'flex',
+          'width': '100%',
+          'justify-content': 'center',
+        },
       ),
-      [
-        // ShadCN PaginationContent
+      <Component>[
         dom.ul(
           classes: 'arcane-pagination-content',
           styles: const dom.Styles(
-            raw: {
+            raw: <String, String>{
               'display': 'flex',
               'flex-direction': 'row',
               'align-items': 'center',
-              'gap': 'var(--space-1)',
+              'gap': '0.25rem',
               'list-style': 'none',
               'margin': '0',
               'padding': '0',
             },
           ),
-          [
-            // First page button
+          <Component>[
             if (props.showFirstLast && props.totalPages > 3)
-              dom.li([
+              dom.li(<Component>[
                 _buildButton(
-                  content: ArcaneIcon.chevronsLeft(size: IconSize.sm),
+                  content: <Component>[
+                    ArcaneIcon.chevronsLeft(size: IconSize.sm),
+                  ],
+                  label: 'Go to first page',
                   page: 1,
                   disabled: props.currentPage == 1,
                   padding: padding,
-                  fontSize: fontSize,
-                  minWidth: minWidth,
-                  height: height,
+                  size: size,
                 ),
               ]),
-
-            // Previous button
             if (props.showPrevNext)
-              dom.li([
-                _buildButton(
-                  content: Component.text(props.previousText),
-                  page: props.currentPage - 1,
+              dom.li(<Component>[
+                _buildPrevNext(
+                  isNext: false,
                   disabled: props.currentPage == 1,
-                  padding: padding,
-                  fontSize: fontSize,
-                  minWidth: minWidth,
-                  height: height,
-                  isPrevNext: true,
+                  size: size,
                 ),
               ]),
-
-            // Page numbers
-            for (final page in props.pageNumbers)
-              dom.li([
+            for (final int? page in props.pageNumbers)
+              dom.li(<Component>[
                 if (page == null)
-                  // ShadCN PaginationEllipsis
                   dom.span(
                     classes: 'arcane-pagination-ellipsis',
+                    attributes: const <String, String>{'aria-hidden': 'true'},
                     styles: dom.Styles(
-                      raw: {
+                      raw: <String, String>{
                         'display': 'flex',
                         'align-items': 'center',
                         'justify-content': 'center',
-                        'height': height,
-                        'width': minWidth,
-                        'color': 'var(--muted-foreground)',
+                        'width': size,
+                        'height': size,
                       },
                     ),
-                    [const Component.text('\u{2026}')], // Ellipsis
+                    <Component>[ArcaneIcon.moreHorizontal(size: IconSize.sm)],
                   )
                 else
                   _buildButton(
-                    content: Component.text(page.toString()),
+                    content: <Component>[Component.text(page.toString())],
                     page: page,
                     isActive: page == props.currentPage,
                     padding: padding,
-                    fontSize: fontSize,
-                    minWidth: minWidth,
-                    height: height,
+                    size: size,
                   ),
               ]),
-
-            // Next button
             if (props.showPrevNext)
-              dom.li([
-                _buildButton(
-                  content: Component.text(props.nextText),
-                  page: props.currentPage + 1,
+              dom.li(<Component>[
+                _buildPrevNext(
+                  isNext: true,
                   disabled: props.currentPage == props.totalPages,
-                  padding: padding,
-                  fontSize: fontSize,
-                  minWidth: minWidth,
-                  height: height,
-                  isPrevNext: true,
+                  size: size,
                 ),
               ]),
-
-            // Last page button
             if (props.showFirstLast && props.totalPages > 3)
-              dom.li([
+              dom.li(<Component>[
                 _buildButton(
-                  content: ArcaneIcon.chevronsRight(size: IconSize.sm),
+                  content: <Component>[
+                    ArcaneIcon.chevronsRight(size: IconSize.sm),
+                  ],
+                  label: 'Go to last page',
                   page: props.totalPages,
                   disabled: props.currentPage == props.totalPages,
                   padding: padding,
-                  fontSize: fontSize,
-                  minWidth: minWidth,
-                  height: height,
+                  size: size,
                 ),
               ]),
           ],
@@ -143,155 +143,177 @@ class ShadcnPagination extends StatelessComponent {
     );
   }
 
-  Component _buildSimplePagination(String padding, String fontSize) {
+  /// v4 PaginationPrevious/Next: `gap-1 px-2.5` with a chevron beside the
+  /// label; a label that is only an arrow glyph collapses to the chevron.
+  Component _buildPrevNext({
+    required bool isNext,
+    required bool disabled,
+    required String size,
+  }) {
+    final String text = _stripArrows(
+      isNext ? props.nextText : props.previousText,
+    );
+    final Component chevron = isNext
+        ? ArcaneIcon.chevronRight(size: IconSize.sm)
+        : ArcaneIcon.chevronLeft(size: IconSize.sm);
+    return _buildButton(
+      content: <Component>[
+        if (!isNext) chevron,
+        if (text.isNotEmpty) dom.span(<Component>[Component.text(text)]),
+        if (isNext) chevron,
+      ],
+      label: isNext ? 'Go to next page' : 'Go to previous page',
+      page: isNext ? props.currentPage + 1 : props.currentPage - 1,
+      disabled: disabled,
+      padding: text.isEmpty ? '0' : '0 0.625rem',
+      size: size,
+      gap: '0.25rem',
+    );
+  }
+
+  Component _buildSimplePagination(String padding) {
+    final bool atStart = props.currentPage == 1;
+    final bool atEnd = props.currentPage == props.totalPages;
+
+    Map<String, String> simpleButton(bool disabled) => <String, String>{
+      'padding': padding,
+      'font-size': '0.875rem',
+      'background': 'transparent',
+      'border': 'none',
+      'color': 'var(--primary)',
+      'cursor': 'pointer',
+      if (disabled) 'pointer-events': 'none',
+      if (disabled) 'opacity': '0.5',
+    };
+
     return dom.nav(
-      attributes: {'aria-label': 'Pagination'},
+      attributes: const <String, String>{'aria-label': 'Pagination'},
       styles: const dom.Styles(
-        raw: {
+        raw: <String, String>{
           'display': 'flex',
           'align-items': 'center',
           'justify-content': 'space-between',
-          'gap': '16px',
+          'gap': '1rem',
         },
       ),
-      [
-        // Previous
+      <Component>[
         dom.button(
-          styles: dom.Styles(
-            raw: {
-              'padding': padding,
-              'font-size': fontSize,
-              'background': 'transparent',
-              'border': 'none',
-              'color': props.currentPage == 1
-                  ? 'var(--muted)'
-                  : 'var(--primary)',
-              'cursor': props.currentPage == 1 ? 'not-allowed' : 'pointer',
-              'opacity': props.currentPage == 1 ? '0.5' : '1',
-            },
-          ),
-          events: props.currentPage == 1
+          attributes: <String, String>{
+            'type': 'button',
+            if (atStart) 'disabled': 'true',
+          },
+          styles: dom.Styles(raw: simpleButton(atStart)),
+          events: atStart
               ? null
-              : {
+              : <String, EventCallback>{
                   'click': (_) =>
                       props.onPageChange?.call(props.currentPage - 1),
                 },
-          [Component.text(props.previousText)],
+          <Component>[Component.text(props.previousText)],
         ),
-
-        // Page count
         if (props.showPageCount)
           dom.span(
-            styles: dom.Styles(
-              raw: {'font-size': fontSize, 'color': 'var(--muted-foreground)'},
+            styles: const dom.Styles(
+              raw: <String, String>{
+                'font-size': '0.875rem',
+                'color': 'var(--muted-foreground)',
+              },
             ),
-            [
+            <Component>[
               Component.text(
                 'Page ${props.currentPage} of ${props.totalPages}',
               ),
             ],
           ),
-
-        // Next
         dom.button(
-          styles: dom.Styles(
-            raw: {
-              'padding': padding,
-              'font-size': fontSize,
-              'background': 'transparent',
-              'border': 'none',
-              'color': props.currentPage == props.totalPages
-                  ? 'var(--muted)'
-                  : 'var(--primary)',
-              'cursor': props.currentPage == props.totalPages
-                  ? 'not-allowed'
-                  : 'pointer',
-              'opacity': props.currentPage == props.totalPages ? '0.5' : '1',
-            },
-          ),
-          events: props.currentPage == props.totalPages
+          attributes: <String, String>{
+            'type': 'button',
+            if (atEnd) 'disabled': 'true',
+          },
+          styles: dom.Styles(raw: simpleButton(atEnd)),
+          events: atEnd
               ? null
-              : {
+              : <String, EventCallback>{
                   'click': (_) =>
                       props.onPageChange?.call(props.currentPage + 1),
                 },
-          [Component.text(props.nextText)],
+          <Component>[Component.text(props.nextText)],
         ),
       ],
     );
   }
 
   Component _buildButton({
-    required Component content,
+    required List<Component> content,
     required int page,
+    required String padding,
+    required String size,
+    String? label,
+    String? gap,
     bool isActive = false,
     bool disabled = false,
-    required String padding,
-    required String fontSize,
-    required String minWidth,
-    required String height,
-    bool isPrevNext = false,
   }) {
-    final Map<String, String> buttonStyles = switch (props.variant) {
-      PaginationStyleVariant.outline => {
-        'background-color': isActive ? 'var(--background)' : 'transparent',
-        'border': isActive ? '1px solid var(--input)' : '1px solid transparent',
-        'color': 'var(--foreground)',
-      },
-      PaginationStyleVariant.filled => {
-        'background-color': isActive ? 'var(--accent)' : 'transparent',
-        'border': '1px solid transparent',
-        'color': isActive ? 'var(--accent-foreground)' : 'var(--foreground)',
-      },
-      PaginationStyleVariant.ghost => {
-        'background-color': isActive ? 'var(--accent)' : 'transparent',
-        'border': '1px solid transparent',
-        'color': isActive ? 'var(--accent-foreground)' : 'var(--foreground)',
-      },
-      PaginationStyleVariant.simple => {
-        'background-color': 'transparent',
-        'border': '1px solid transparent',
-        'color': 'var(--primary)',
-      },
-    };
+    final bool outlined =
+        isActive && props.variant == PaginationStyleVariant.outline;
+    final bool filled =
+        isActive &&
+        (props.variant == PaginationStyleVariant.filled ||
+            props.variant == PaginationStyleVariant.ghost);
 
     return dom.button(
       classes:
-          'arcane-pagination-link ${isActive ? 'active' : ''} ${disabled ? 'disabled' : ''}',
-      attributes: {
+          'arcane-pagination-link${isActive ? ' active' : ''}${disabled ? ' disabled' : ''}',
+      attributes: <String, String>{
         'type': 'button',
+        'aria-label': ?label,
         if (disabled) 'disabled': 'true',
         if (isActive) 'aria-current': 'page',
         'data-state': isActive ? 'active' : 'inactive',
         'data-disabled': '$disabled',
       },
       styles: dom.Styles(
-        raw: {
+        raw: <String, String>{
           'display': 'inline-flex',
           'align-items': 'center',
           'justify-content': 'center',
+          'gap': ?gap,
+          'box-sizing': 'border-box',
           'white-space': 'nowrap',
-          'border-radius': 'var(--radius-sm)',
-          'font-size': fontSize,
-          'font-weight': 'var(--font-weight-medium)',
-          'height': height,
-          'min-width': minWidth,
+          'height': size,
+          'min-width': size,
           'padding': padding,
-          if (isPrevNext) 'gap': 'var(--space-1)',
+          'border':
+              '1px solid var(--shadcn-control-border-color, ${outlined ? 'var(--input)' : 'transparent'})',
+          'border-radius': 'var(--radius-md)',
+          'background-color':
+              'var(--shadcn-item-background, ${outlined
+                  ? 'var(--background)'
+                  : filled
+                  ? 'var(--accent)'
+                  : 'transparent'})',
+          'color':
+              'var(--shadcn-item-foreground, ${filled ? 'var(--accent-foreground)' : 'var(--foreground)'})',
+          'box-shadow':
+              'var(--shadcn-control-shadow, ${outlined ? 'var(--shadow-xs)' : 'none'})',
+          'font-size': '0.875rem',
+          'line-height': '1.25rem',
+          'font-weight': '500',
+          'outline': 'none',
+          'cursor': 'pointer',
           'transition':
-              'color var(--transition), background-color var(--transition)',
-          'cursor': disabled ? 'not-allowed' : 'pointer',
-          'pointer-events': disabled ? 'none' : 'auto',
-          'opacity': disabled ? '0.5' : '1',
-          ...buttonStyles,
+              'color var(--transition), background-color var(--transition), box-shadow var(--transition)',
+          if (disabled) 'pointer-events': 'none',
+          if (disabled) 'opacity': '0.5',
           ...?props.decoration?.universalStyles(),
           ...?props.styles?.toMap(),
         },
       ),
       events: disabled
           ? null
-          : {'click': (_) => props.onPageChange?.call(page)},
-      [content],
+          : <String, EventCallback>{
+              'click': (_) => props.onPageChange?.call(page),
+            },
+      content,
     );
   }
 }

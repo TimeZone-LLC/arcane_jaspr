@@ -15,11 +15,11 @@ class ShadcnTimePicker extends TimePickerRenderBase {
       'fontSize': '0.875rem',
     },
     ComponentSize.md => const <String, String>{
-      'height': '40px',
+      'height': '36px',
       'fontSize': '0.875rem',
     },
     ComponentSize.lg => const <String, String>{
-      'height': '48px',
+      'height': '40px',
       'fontSize': '1rem',
     },
   };
@@ -70,13 +70,18 @@ class ShadcnTimePicker extends TimePickerRenderBase {
     'width': '100%',
     'height': height,
     'padding': '0 0.75rem',
-    'background': 'var(--background)',
-    'border': '1px solid ${hasError ? 'var(--destructive)' : 'var(--input)'}',
-    'border-radius': 'var(--radius)',
+    'background': 'var(--shadcn-item-background, var(--background))',
+    'border':
+        '1px solid var(--shadcn-control-border-color, ${hasError ? 'var(--destructive)' : 'var(--input)'})',
+    'border-radius': 'var(--radius-md)',
+    'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
     'font-size': fontSize,
-    'color': hasValue ? 'var(--foreground)' : 'var(--muted-foreground)',
+    'color':
+        'var(--shadcn-item-foreground, ${hasValue ? 'var(--foreground)' : 'var(--muted-foreground)'})',
     'cursor': props.disabled ? 'not-allowed' : 'pointer',
-    'transition': 'all var(--transition)',
+    'transition':
+        'background-color var(--transition), color var(--transition), '
+        'border-color var(--transition), box-shadow var(--transition)',
     'text-align': 'left',
     if (props.disabled) 'opacity': '0.5',
   };
@@ -108,8 +113,8 @@ class ShadcnTimePicker extends TimePickerRenderBase {
     'z-index': '50',
     'background': 'var(--popover)',
     'border': '1px solid var(--border)',
-    'border-radius': 'var(--radius)',
-    'box-shadow': 'var(--shadow-lg)',
+    'border-radius': 'var(--radius-md)',
+    'box-shadow': 'var(--shadcn-surface-shadow)',
     'padding': '1rem',
     'min-width': '280px',
   };
@@ -153,9 +158,13 @@ class ShadcnTimePicker extends TimePickerRenderBase {
       <String, String>{
         'padding': '0.25rem 1rem',
         'border': 'none',
-        'border-radius': 'var(--radius)',
-        'background': selected ? 'var(--primary)' : 'transparent',
-        'color': selected ? 'var(--primary-foreground)' : 'var(--foreground)',
+        'border-radius': 'var(--radius-sm)',
+        'background': selected
+            ? 'var(--primary)'
+            : 'var(--shadcn-item-background, transparent)',
+        'color': selected
+            ? 'var(--primary-foreground)'
+            : 'var(--shadcn-item-foreground, var(--foreground))',
         'cursor': 'pointer',
         'font-size': 'var(--font-size-sm)',
         'text-align': 'center',
@@ -168,9 +177,13 @@ class ShadcnTimePicker extends TimePickerRenderBase {
       <String, String>{
         'padding': '0.5rem 1rem',
         'border': 'none',
-        'border-radius': 'var(--radius)',
-        'background': selected ? 'var(--primary)' : 'transparent',
-        'color': selected ? 'var(--primary-foreground)' : 'var(--foreground)',
+        'border-radius': 'var(--radius-sm)',
+        'background': selected
+            ? 'var(--primary)'
+            : 'var(--shadcn-item-background, transparent)',
+        'color': selected
+            ? 'var(--primary-foreground)'
+            : 'var(--shadcn-item-foreground, var(--foreground))',
         'cursor': 'pointer',
         'font-size': 'var(--font-size-sm)',
         'transition': 'all var(--transition)',
@@ -199,7 +212,7 @@ class ShadcnTimePicker extends TimePickerRenderBase {
             ? const <String, String>{
                 'padding': '0.5rem 1rem',
                 'border': 'none',
-                'border-radius': 'var(--radius)',
+                'border-radius': 'var(--radius-md)',
                 'background': 'var(--primary)',
                 'color': 'var(--primary-foreground)',
                 'cursor': 'pointer',
@@ -208,7 +221,7 @@ class ShadcnTimePicker extends TimePickerRenderBase {
             : const <String, String>{
                 'padding': '0.5rem 1rem',
                 'border': '1px solid var(--border)',
-                'border-radius': 'var(--radius)',
+                'border-radius': 'var(--radius-md)',
                 'background': 'transparent',
                 'color': 'var(--foreground)',
                 'cursor': 'pointer',

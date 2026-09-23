@@ -9,6 +9,7 @@ import 'package:arcane_jaspr/util/content/prose_styles.dart'
 import 'package:arcane_jaspr_win95/src/win95_cursor_assets.dart';
 import 'package:arcane_jaspr_win95/src/win95_loader_assets.dart';
 import 'package:arcane_jaspr_win95/src/win95_loader_palette.dart';
+import 'package:arcane_jaspr_win95/src/win95_pixel_assets.dart';
 import 'package:arcane_jaspr_win95/src/win95_theme.dart';
 
 /// Component CSS for the Windows 95 theme.
@@ -24,8 +25,8 @@ import 'package:arcane_jaspr_win95/src/win95_theme.dart';
 /// Every rule is scoped to `#arcane-root.arcane-theme-win95` so it can never
 /// affect the shadcn, neon, or neubrutalism themes. The 3D shading is exposed as
 /// `--w95-*` custom properties (composed into `--w95-raised` / `--w95-pressed` /
-/// `--w95-sunken` box-shadow recipes) which the dark silver block
-/// simply re-points, so every bevel inverts for free.
+/// `--w95-sunken` / `--w95-window-frame` box-shadow recipes) which the dark
+/// silver block simply re-points, so every bevel inverts for free.
 class Win95Css {
   const Win95Css._();
 
@@ -108,7 +109,9 @@ class Win95Css {
   --info: $lightLink;
   --info-foreground: #ffffff;
   --w95-link: $lightLink;
-  --w95-disabled-text: #666666;
+  /* COLOR_GRAYTEXT. Every greyed label also carries the white emboss (see the
+     engraved-label rules), which is what keeps it legible on the face. */
+  --w95-disabled-text: #808080;
   --navbar: #c0c0c0;
   --code-background: #ffffff;
   --radius: 0;
@@ -136,7 +139,7 @@ class Win95Css {
   --w95-hilite: #ffffff;   /* outer top-left highlight */
   --w95-light: #dfdfdf;    /* inner top-left */
   --w95-shadow: #808080;   /* inner bottom-right */
-  --w95-dark: #0a0a0a;     /* outer bottom-right */
+  --w95-dark: #000000;     /* outer bottom-right */
   --w95-field: #ffffff;
   --w95-field-text: #000000;
   --w95-field-placeholder: #666666;
@@ -185,6 +188,16 @@ class Win95Css {
     inset 1px 1px 0 var(--w95-shadow),
     inset -2px -2px 0 var(--w95-light),
     inset 2px 2px 0 var(--w95-dark);
+  /* Windows, menus and popups: the frame DrawEdge gives a top-level window
+     swaps the two top-left shades of the push button, so its outer ring is
+     #dfdfdf and its inner ring white (bottom-right stays #808080 inside
+     black). First-listed shadows paint on top, so the outer 1px ring is
+     declared before the inner one exactly as in --w95-raised. */
+  --w95-window-frame:
+    inset -1px -1px 0 var(--w95-dark),
+    inset 1px 1px 0 var(--w95-light),
+    inset -2px -2px 0 var(--w95-shadow),
+    inset 2px 2px 0 var(--w95-hilite);
   --w95-raised-thin:
     inset -1px -1px 0 var(--w95-shadow),
     inset 1px 1px 0 var(--w95-hilite);
@@ -192,20 +205,30 @@ class Win95Css {
     inset -1px -1px 0 var(--w95-hilite),
     inset 1px 1px 0 var(--w95-shadow);
 
-  /* --- Window-control glyphs: minimize / maximize / close ---
-     Drawn as geometry, never as text. A literal "_" sits ON the font's
-     baseline, so it sinks to (or past) the bottom edge of its button and its
-     weight changes with every font fallback — the exact bug these replace.
-     Every glyph is authored in the same 10x10 cell so all three read at one
-     size and weight, and the minimize bar is placed deliberately at y5-y7 —
-     the lower-middle of the cell (the maximize box and close cross span
-     y1-y9), below their optical centre but well clear of the bottom edge.
-     Row cells sit at a 15px pitch (0 / 15 / 30) in a 40x10 viewBox.
-     The shape-only forms are tinted by painting `currentColor` through them
-     as a mask, so they follow --w95-title-text / --w95-face-text. */
-  --w95-ctl-min: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath fill='%23000000' d='M1 5h8v2H1z'/%3E%3C/svg%3E");
-  --w95-ctl-max: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath fill='%23000000' d='M1 1h8v2H1zM1 3h1v6H1zM8 3h1v6H8zM2 8h6v1H2z'/%3E%3C/svg%3E");
-  --w95-ctl-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath fill='none' stroke='%23000000' stroke-width='1.5' d='M1.6 1.6L8.4 8.4M8.4 1.6L1.6 8.4'/%3E%3C/svg%3E");
+  /* --- Caption buttons: minimize / maximize / close ---
+     Drawn as pixel art, never as text or vector strokes. A literal "_" sits
+     ON the font's baseline and an anti-aliased stroke smears across two
+     pixels, while every Win95 caption glyph was a fixed bitmap. Each cap is a
+     16x14 raised face (outer top-left white, inner top-left #dfdfdf, inner
+     bottom-right #808080, outer bottom-right black) carrying a black glyph:
+     a 6x2 minimize bar at x4-9/y10-11, a 9x9 maximize box with a 2px top edge
+     at x3-11/y2-10, and the stepped 8x7 close cross at x4-11/y3-9.
+     --w95-caption-buttons is the full 50x14 row (minimize and maximize
+     touching, a 2px gap, then close), --w95-caption-min-max the 32x14 pair,
+     and --w95-caption-close the lone cap. Bevel colours cannot follow
+     currentColor, so the dark block re-points all three at dark variants.
+     They are decorative backgrounds for captions with no window manager
+     behind them; a real control (the dialog close) is a button carrying the
+     shape-only --w95-ctl-* masks below, which follow its text colour. */
+  --w95-caption-buttons: url("$win95CaptionButtonsLight");
+  --w95-caption-min-max: url("$win95CaptionMinMaxLight");
+  --w95-caption-close: url("$win95CaptionCloseLight");
+  /* The same three glyphs as masks in a 10x10 cell. Centred in a 16x14 cap
+     the cell sits at offset (3, 2), which puts each glyph on exactly the
+     pixels the sprites above use. */
+  --w95-ctl-min: url("$win95ControlMinimizeMask");
+  --w95-ctl-max: url("$win95ControlMaximizeMask");
+  --w95-ctl-close: url("$win95ControlCloseMask");
 
   /* The checkbox tick, drawn for the same reason the window controls are: a
      font glyph (U+2714 or a literal "x") changes weight, width and baseline
@@ -215,6 +238,18 @@ class Win95Css {
      authored one pixel per path run in a 7x7 cell and painted as a mask so it
      follows --w95-field-text. */
   --w95-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Cpath fill='%23000000' d='M0 3h1v2H0zM1 4h1v2H1zM2 5h1v2H2zM3 4h1v2H3zM4 3h1v2H4zM5 2h1v2H5zM6 1h1v2H6z'/%3E%3C/svg%3E");
+
+  /* --- Control bitmaps (see win95_pixel_assets.dart) ---
+     The radio ring and its circular mask, the 7x4 stepped scroll arrows, and
+     the pointed trackbar thumb. Bevel and glyph colours are baked, so the
+     dark block re-points each coloured token; the mask is shape-only. */
+  --w95-radio-ring: url("$win95RadioRingLight");
+  --w95-radio-mask: url("$win95RadioMask");
+  --w95-scroll-up: url("$win95ScrollUpLight");
+  --w95-scroll-down: url("$win95ScrollDownLight");
+  --w95-scroll-left: url("$win95ScrollLeftLight");
+  --w95-scroll-right: url("$win95ScrollRightLight");
+  --w95-slider-thumb: url("$win95SliderThumbLight");
 
   /* --- Cursors: the stock Win95 bitmap set ---
      Win95 drew its cursors as hand-authored 1x bitmaps, and the set contained
@@ -312,6 +347,15 @@ class Win95Css {
   --w95-title-inactive-text: #8e8e8e;
   --w95-selection: var(--w95-selection-in, $selection);
   --w95-selection-text: var(--w95-selection-text-in, #ffffff);
+  --w95-caption-buttons: url("$win95CaptionButtonsDark");
+  --w95-caption-min-max: url("$win95CaptionMinMaxDark");
+  --w95-caption-close: url("$win95CaptionCloseDark");
+  --w95-radio-ring: url("$win95RadioRingDark");
+  --w95-scroll-up: url("$win95ScrollUpDark");
+  --w95-scroll-down: url("$win95ScrollDownDark");
+  --w95-scroll-left: url("$win95ScrollLeftDark");
+  --w95-scroll-right: url("$win95ScrollRightDark");
+  --w95-slider-thumb: url("$win95SliderThumbDark");
 }
 
 #arcane-root.arcane-theme-win95 ::selection {
@@ -531,13 +575,16 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .win95-popover,
 #arcane-root.arcane-theme-win95 .win95-select-dropdown {
   padding: 2px;
-  box-shadow: var(--w95-raised);
+  box-shadow: var(--w95-window-frame);
 }
 
 /* ---------- Window chrome: navy title bars (configurable) ---------- */
 
-/* The command palette is a semantic titled window. */
+/* The command palette is a semantic titled window. It is the containing block
+   for its own caption: the render base gives it no position, so without this
+   the absolutely positioned bar resolved against the full-screen overlay. */
 #arcane-root.arcane-theme-win95 .win95-command-dialog {
+  position: relative;
   padding-top: calc(2px + 22px);
 }
 #arcane-root.arcane-theme-win95:not(.win95-chrome-minimal) .win95-command-dialog::before {
@@ -549,15 +596,28 @@ class Win95Css {
   height: 18px;
   background: var(--w95-title-bar);
 }
+/* Caption buttons in the bar's top-right corner, 2px in from its edges. The
+   caption carries no text: the palette's search field is its only label. */
+#arcane-root.arcane-theme-win95:not(.win95-chrome-minimal) .win95-command-dialog::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 50px;
+  height: 14px;
+  background: var(--w95-caption-buttons) no-repeat center / 50px 14px;
+  pointer-events: none;
+}
 
 /* ---------- Gallery: titled windows on the teal desktop ---------- */
 /*
    The showcase surface. The gallery paints the classic Win95 teal DESKTOP; each
-   tile is a fully-chromed application WINDOW: a raised silver bevel (the shared
-   --w95-raised recipe), a solid navy title bar (the shared --w95-title-bar
-   fill) carrying the artwork's REAL, accessible title text plus the
-   decorative _ [] X controls, the media as the window's client area, and an
-   optional raised status strip footer. Sharp corners, hard 1px bevels only.
+   tile is a fully-chromed application WINDOW: the silver window frame (the
+   shared --w95-window-frame recipe), a solid navy title bar (the shared
+   --w95-title-bar fill) carrying the artwork's REAL, accessible title text
+   plus the decorative caption buttons (--w95-caption-buttons), the media as
+   the window's client area, and an optional raised status strip footer.
+   Sharp corners, hard 1px bevels only.
    The render base emits the media FIRST, so the header is lifted above it with
    order:-1 rather than duplicating the DOM. */
 
@@ -566,7 +626,7 @@ class Win95Css {
   padding: 0.75rem;
 }
 
-/* Each tile is a raised silver window frame (reuses the card bevel recipe). */
+/* Each tile is a silver window in the shared window frame. */
 #arcane-root.arcane-theme-win95 .win95-gallery-tile {
   position: relative;
   gap: 2px;
@@ -574,7 +634,7 @@ class Win95Css {
   background: var(--w95-face);
   color: var(--w95-face-text);
   border: 1px solid var(--w95-dark);
-  box-shadow: var(--w95-raised);
+  box-shadow: var(--w95-window-frame);
   border-radius: 0;
   transition: none;
 }
@@ -596,11 +656,31 @@ class Win95Css {
   justify-content: center;
   gap: 1px;
   min-height: 18px;
-  padding: 2px 6px;
+  padding: 2px 58px 2px 6px;
   background: var(--w95-title-bar);
   color: var(--w95-title-text);
   cursor: var(--w95-cursor-arrow);
   user-select: none;
+}
+
+/* Decorative caption buttons, 2px in from the caption's right edge and centred
+   on its height: a caption holding a title and a meta line runs taller than
+   the 18px minimum, and auto margins keep the 14px row centred on it (2px in
+   from the top and bottom of an 18px bar) instead of pinned to its top edge.
+   The 58px right padding keeps a long title clear of the 50px row plus a gap.
+   They stay the same on an inactive window: Windows 95 recoloured only the
+   caption fill and text on deactivation, never the buttons. */
+#arcane-root.arcane-theme-win95 .win95-gallery-tile-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 2px;
+  margin: auto 0;
+  width: 50px;
+  height: 14px;
+  background: var(--w95-caption-buttons) no-repeat center / 50px 14px;
+  pointer-events: none;
 }
 
 /* Inactive window caption: solid gray face, silver text — the Windows Standard
@@ -928,10 +1008,12 @@ class Win95Css {
 
 /* ---------- Checkbox / radio / toggle ---------- */
 
+/* The Win95 check box is a 13x13 sunken well: a 2px bevel around a 9x9 field
+   that centres the 7x7 tick with a whole pixel on every side. */
 #arcane-root.arcane-theme-win95 .win95-checkbox-box {
   position: relative;
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 13px;
+  height: 13px;
   border: none;
   border-radius: 0;
   background: var(--w95-field);
@@ -1108,12 +1190,14 @@ class Win95Css {
 /* ---------- Progress (segmented sunken meter) ----------
    The trough's client area is the silver control face inside a sunken bevel,
    not the white edit-field colour: the gutters between the navy blocks read
-   #c0c0c0 in every Win95 copy/install dialog. */
+   #c0c0c0 in every Win95 copy/install dialog. The bevel is the thin 1px one
+   (#808080 top-left, white bottom-right), not the 2px edit-well recipe, and
+   the 2px padding leaves a 1px face gutter inside it. */
 
 #arcane-root.arcane-theme-win95 .win95-progress,
 #arcane-root.arcane-theme-win95 .win95-progress-track {
   background: var(--w95-face);
-  box-shadow: var(--w95-sunken);
+  box-shadow: var(--w95-sunken-thin);
   border-radius: 0;
   overflow: hidden;
   padding: 2px;
@@ -1157,6 +1241,31 @@ class Win95Css {
   box-shadow: none;
   padding: 0;
 }
+/* ---------- Group box (etched frame) ----------
+   A Win95 group box is an ETCHED rectangle: a #808080 line with a white line
+   one pixel inside it on the top and left edges, and one pixel outside it on
+   the bottom and right. The border is the grey line; the inset shadow draws
+   the inner white and the outer shadow the trailing white, so the frame keeps
+   the fieldset's native legend gap. The caption sits on the dialog face with
+   two pixels of face either side, which is what breaks the etched line. */
+#arcane-root.arcane-theme-win95 fieldset,
+#arcane-root.arcane-theme-win95 .win95-fieldset {
+  margin: 0 1px 1px 0;
+  padding: 6px 10px 10px;
+  border: 1px solid var(--w95-shadow);
+  border-radius: 0;
+  box-shadow: inset 1px 1px 0 var(--w95-hilite), 1px 1px 0 var(--w95-hilite);
+  color: var(--w95-face-text);
+  min-width: 0;
+}
+#arcane-root.arcane-theme-win95 fieldset > legend,
+#arcane-root.arcane-theme-win95 .win95-fieldset > legend {
+  padding: 0 2px;
+  background: var(--w95-face);
+  color: var(--w95-face-text);
+  font-weight: 400;
+}
+
 /* ---------- Misc components ---------- */
 
 #arcane-root.arcane-theme-win95 .win95-avatar {
@@ -1305,7 +1414,7 @@ class Win95Css {
   padding: 2px !important;
   background: var(--w95-face) !important;
   color: var(--w95-face-text) !important;
-  box-shadow: var(--w95-raised);
+  box-shadow: var(--w95-window-frame);
   font-size: 16.5px;
 }
 
@@ -2310,8 +2419,8 @@ class Win95Css {
   line-height: 1 !important;
 }
 /* One drawn glyph per button (see --w95-ctl-min / -max / -close) painted with
-   the button's own face text colour, so the minimize bar sits in the deliberate
-   lower-middle of the cap instead of on a font's baseline. */
+   the button's own face text colour, so each glyph lands on the same pixels as
+   the caption sprites instead of on a font's baseline. */
 #arcane-root.arcane-theme-win95 .kb-landing-terminal-dot:nth-child(-n + 3)::after {
   content: "";
   width: 10px;
@@ -2346,7 +2455,8 @@ class Win95Css {
    border-radius in the theme scope (arcane_lexicon content cards,
    buttons, chips and any unstyled component were rounded soft
    boxes) and give the lexicon content surfaces proper 3D bevels.
-   Radio buttons are re-asserted round below (the one exception).
+   Radio buttons are a 12x12 bitmap (--w95-radio-ring), not a rounded box;
+   only status dots are re-asserted round below.
    ============================================================ */
 #arcane-root.arcane-theme-win95 *,
 #arcane-root.arcane-theme-win95 *::before,
@@ -3051,7 +3161,7 @@ class Win95Css {
   cursor: var(--w95-cursor-arrow) !important;
 }
 
-/* Dropdown: floating raised silver panel hosting the calendar */
+/* Dropdown: floating silver popup in the window frame hosting the calendar */
 #arcane-root.arcane-theme-win95 .win95-date-picker-dropdown {
   /* The core emits no JS positioner for this popup, so the base leaves it at a
      placeholder position:fixed;top:4px;left:4px (viewport corner, under content).
@@ -3068,7 +3178,7 @@ class Win95Css {
   color: var(--w95-face-text) !important;
   border: none !important;
   border-radius: 0 !important;
-  box-shadow: var(--w95-raised) !important;
+  box-shadow: var(--w95-window-frame) !important;
 }
 /* Preferred: CSS anchor positioning pins the popup below the trigger with
    position:fixed, so it escapes clipping ancestors (e.g. the docs demo box) and
@@ -3122,7 +3232,7 @@ class Win95Css {
   color: var(--w95-face-text) !important;
   border: none !important;
   border-radius: 0 !important;
-  box-shadow: var(--w95-raised) !important;
+  box-shadow: var(--w95-window-frame) !important;
 }
 
 /* Columns row */
@@ -3220,47 +3330,43 @@ class Win95Css {
   cursor: var(--w95-cursor-arrow) !important;
 }
 
-/* Thin SUNKEN horizontal groove, vertically centered by the flex
-   container. The navy fill lives inside and is clipped to it. */
+/* The trackbar channel: a 4px groove that is nothing but the 2px sunken
+   bevel top and bottom, vertically centred by the flex container. */
 #arcane-root.arcane-theme-win95 .win95-slider-track {
   position: relative !important;
   width: 100% !important;
-  height: 6px !important;
+  height: 4px !important;
   box-sizing: border-box !important;
-  background: var(--w95-field) !important;
-  box-shadow: var(--w95-sunken-thin) !important;
+  background: var(--w95-face) !important;
+  box-shadow: var(--w95-sunken) !important;
   border: none !important;
   border-radius: 0 !important;
   overflow: hidden !important;
 }
 
-/* Navy fill up to the value. Width (single) / left+right+width
-   (range) come from the runtime JS as inline styles — do NOT
-   force them here. left:0 seeds the single-value anchor. */
+/* The Win95 trackbar never filled its channel up to the value: the thumb's
+   position is the only readout, so the runtime's fill element stays hidden. */
 #arcane-root.arcane-theme-win95 .win95-slider-track-fill {
-  position: absolute !important;
-  top: 0 !important;
-  height: 100% !important;
-  left: 0;
-  background: var(--w95-selection) !important;
-  border: none !important;
-  border-radius: 0 !important;
+  display: none !important;
 }
 
-/* RAISED silver rectangular grip. `left` (the value position) is
-   set inline by the JS — declared without !important so JS wins;
-   left:0 seeds the pre-interaction position. translate(-50%,-50%)
-   center-tracks the value and vertically centers the grip. */
+/* The pointed trackbar thumb (--w95-slider-thumb, 11x21). `left` (the value
+   position) is set inline by the JS — declared without !important so JS wins;
+   left:0 seeds the pre-interaction position. The offsets are whole pixels so
+   the bitmap never lands on a half pixel: 5px puts the centre column on the
+   value, and 10px hangs the thumb from the channel's centre line (top: 50% of
+   the hit area, where the flex container centres the track) so the 4px
+   channel crosses the thumb's body at rows 8-11 and the point hangs below. */
 #arcane-root.arcane-theme-win95 .win95-slider-thumb {
   position: absolute !important;
   top: 50% !important;
   left: 0;
-  width: 12px !important;
-  height: 20px !important;
+  width: 11px !important;
+  height: 21px !important;
   box-sizing: border-box !important;
-  transform: translate(-50%, -50%) !important;
-  background: var(--w95-face) !important;
-  box-shadow: var(--w95-raised) !important;
+  transform: translate(-5px, -10px) !important;
+  background: var(--w95-slider-thumb) no-repeat 0 0 / 11px 21px !important;
+  box-shadow: none !important;
   border: none !important;
   border-radius: 0 !important;
   z-index: 2 !important;
@@ -3550,13 +3656,13 @@ class Win95Css {
 }
 
 /* ---------- Custom select dropdown surface ----------
-   Raised silver floating menu, sharp corners. */
+   Silver floating menu in the window frame, sharp corners. */
 #arcane-root.arcane-theme-win95 .win95-select-dropdown {
   background: var(--w95-face) !important;
   color: var(--w95-face-text) !important;
   border: 0 !important;
   border-radius: 0 !important;
-  box-shadow: var(--w95-raised) !important;
+  box-shadow: var(--w95-window-frame) !important;
   padding: 2px !important;
 }
 
@@ -3679,7 +3785,7 @@ class Win95Css {
   color: var(--w95-face-text) !important;
   border: 0 !important;
   border-radius: 0 !important;
-  box-shadow: var(--w95-raised) !important;
+  box-shadow: var(--w95-window-frame) !important;
   padding: 2px !important;
 }
 #arcane-root.arcane-theme-win95 .arcane-combobox-option {
@@ -4127,16 +4233,19 @@ class Win95Css {
 }
 
 /* Active tab: brought forward, taller, NO bottom bevel so it fuses into
-   the panel below. Top+left raised highlight, right dark edge only. */
+   the panel below. Top+left raised highlight, right dark edge only. The
+   first-listed shadow paints on top, so each 1px outer edge is declared
+   before the 2px inner one; the reverse order buried the white and black
+   edges under the wider light and shadow bands. */
 #arcane-root.arcane-theme-win95 .win95-tabs-trigger.active {
   z-index: 3 !important;
   margin-bottom: 0 !important;
   padding: 0.42rem 0.95rem 0.44rem !important;
   box-shadow:
-    inset 2px 2px 0 var(--w95-light),
     inset 1px 1px 0 var(--w95-hilite),
-    inset -2px 0 0 var(--w95-shadow),
-    inset -1px 0 0 var(--w95-dark) !important;
+    inset 2px 2px 0 var(--w95-light),
+    inset -1px 0 0 var(--w95-dark),
+    inset -2px 0 0 var(--w95-shadow) !important;
 }
 
 /* Content panel rises 2px under the tab row; the active tab overlaps it. */
@@ -4420,38 +4529,30 @@ class Win95Css {
   background-size: 16px 16px !important;
 }
 #arcane-root.arcane-theme-win95 ::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23000000' d='M8 5 L11 10 L5 10 Z'/></svg>") !important;
+  background-image: var(--w95-scroll-up) !important;
 }
 #arcane-root.arcane-theme-win95 ::-webkit-scrollbar-button:vertical:increment {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23000000' d='M5 6 L11 6 L8 11 Z'/></svg>") !important;
+  background-image: var(--w95-scroll-down) !important;
 }
 #arcane-root.arcane-theme-win95 ::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23000000' d='M5 8 L10 5 L10 11 Z'/></svg>") !important;
+  background-image: var(--w95-scroll-left) !important;
 }
 #arcane-root.arcane-theme-win95 ::-webkit-scrollbar-button:horizontal:increment {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23000000' d='M6 5 L11 8 L6 11 Z'/></svg>") !important;
+  background-image: var(--w95-scroll-right) !important;
 }
+/* A pressed scroll arrow did not invert its bevel like a push button: it went
+   FLAT, a single #808080 line on all four sides, and the glyph stepped one
+   pixel down-right. The arrow art is the full 16x16 cell, so the step is a
+   whole-pixel background offset. */
 #arcane-root.arcane-theme-win95 ::-webkit-scrollbar-button:active {
-  box-shadow: var(--w95-pressed) !important;
-  background-position: calc(50% + 1px) calc(50% + 1px) !important;
+  box-shadow: inset 0 0 0 1px var(--w95-shadow) !important;
+  background-position: 1px 1px !important;
 }
 #arcane-root.arcane-theme-win95 ::-webkit-scrollbar-button:vertical:start:increment,
 #arcane-root.arcane-theme-win95 ::-webkit-scrollbar-button:vertical:end:decrement,
 #arcane-root.arcane-theme-win95 ::-webkit-scrollbar-button:horizontal:start:increment,
 #arcane-root.arcane-theme-win95 ::-webkit-scrollbar-button:horizontal:end:decrement {
   display: none !important;
-}
-#arcane-root.arcane-theme-win95.dark ::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23ffffff' d='M8 5 L11 10 L5 10 Z'/></svg>") !important;
-}
-#arcane-root.arcane-theme-win95.dark ::-webkit-scrollbar-button:vertical:increment {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23ffffff' d='M5 6 L11 6 L8 11 Z'/></svg>") !important;
-}
-#arcane-root.arcane-theme-win95.dark ::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23ffffff' d='M5 8 L10 5 L10 11 Z'/></svg>") !important;
-}
-#arcane-root.arcane-theme-win95.dark ::-webkit-scrollbar-button:horizontal:increment {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23ffffff' d='M6 5 L11 8 L6 11 Z'/></svg>") !important;
 }
 #arcane-root.arcane-theme-win95 ::-webkit-scrollbar-corner {
   background: var(--w95-face) !important;
@@ -4632,13 +4733,13 @@ class Win95Css {
   background: rgba(0, 0, 0, 0.45) !important;
 }
 
-/* Opaque raised silver panel. data-position is on the overlay, so the
-   panel edge anchoring is handled by the render base; we only supply the
-   surface + bevel + a small window-frame gutter. */
+/* Opaque silver window. data-position is on the overlay, so the panel edge
+   anchoring is handled by the render base; we only supply the surface, the
+   window frame and a small gutter inside it. */
 #arcane-root.arcane-theme-win95 .win95-drawer {
   background: var(--w95-face) !important;
   color: var(--w95-face-text) !important;
-  box-shadow: var(--w95-raised) !important;
+  box-shadow: var(--w95-window-frame) !important;
   border: none !important;
   border-radius: 0 !important;
   padding: 3px !important;
@@ -4695,7 +4796,7 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .win95-sheet {
   background: var(--w95-face) !important;
   color: var(--w95-face-text) !important;
-  box-shadow: var(--w95-raised) !important;
+  box-shadow: var(--w95-window-frame) !important;
   border: none !important;
   border-radius: 0 !important;
   padding: 3px !important;
@@ -4796,7 +4897,7 @@ class Win95Css {
   color: var(--w95-face-text) !important;
   border: none !important;
   border-radius: 0 !important;
-  box-shadow: var(--w95-raised) !important;
+  box-shadow: var(--w95-window-frame) !important;
   font-family: var(--font-sans) !important;
   /* The shared modal script scales the window to 0.95 on close and back to 1
      on open. With transitions dead that would simply snap to a shrunken window
@@ -4805,7 +4906,7 @@ class Win95Css {
   transform: none !important;
 }
 
-/* Solid navy title bar inset 3px inside the raised silver frame. */
+/* Solid navy title bar inset 3px inside the silver window frame. */
 #arcane-root.arcane-theme-win95 .win95-dialog-title {
   flex: 0 0 auto !important;
   display: flex !important;
@@ -4828,8 +4929,8 @@ class Win95Css {
 }
 
 /* Caption button on the right of the title bar. A Win95 caption control is a
-   16x14 raised control face carrying a drawn black glyph — the same geometry
-   the decorative captions in this sheet already use — so the live one is built
+   16x14 raised control face carrying the stepped 8x7 bitmap cross — the same
+   pixels as the close cap in --w95-caption-buttons — so the live one is built
    the same way instead of at 22x18 with a thin bevel and a text character.
    font-size: 0 collapses the U+2715 the shared render base emits (no theme can
    remove that text node), and the mask paints --w95-ctl-close in its place, so
@@ -4873,12 +4974,15 @@ class Win95Css {
   mask-size: 10px 10px;
 }
 /* Pressed: the bevel inverts and the glyph steps one pixel down-right. The
-   padding does the nudge because the button is border-box at a fixed 16x14. */
+   padding does the nudge because the button is border-box at a fixed 16x14:
+   2px top/left leaves an even 14x12 content box, so the centred 10x10 cell
+   lands at (4, 3) — one whole pixel from its resting (3, 2). A 1px pad left
+   an odd box and centred the cell on a half pixel, which blurred the glyph. */
 #arcane-root.arcane-theme-win95 .win95-dialog-close:active,
 #arcane-root.arcane-theme-win95 .win95-drawer-close:active,
 #arcane-root.arcane-theme-win95 .win95-sheet-close:active {
   box-shadow: var(--w95-pressed) !important;
-  padding: 1px 0 0 1px !important;
+  padding: 2px 0 0 2px !important;
 }
 #arcane-root.arcane-theme-win95 .win95-dialog-close {
   position: absolute !important;
@@ -4916,8 +5020,8 @@ class Win95Css {
 
 /* ---------- Command palette window ---------- */
 
-/* Opaque raised silver window; the navy title bar is drawn by the
-   existing .win95-command-dialog::before / ::after pseudo-elements. */
+/* Opaque silver window; the navy caption bar and its buttons are the
+   .win95-command-dialog::before / ::after pseudo-elements above. */
 #arcane-root.arcane-theme-win95 .win95-command-dialog {
   width: min(560px, calc(100vw - 2rem)) !important;
   max-width: 560px !important;
@@ -4930,7 +5034,7 @@ class Win95Css {
   color: var(--w95-face-text) !important;
   border: none !important;
   border-radius: 0 !important;
-  box-shadow: var(--w95-raised) !important;
+  box-shadow: var(--w95-window-frame) !important;
 }
 
 /* Search row (icon + input). */
@@ -5028,7 +5132,7 @@ class Win95Css {
    so here we only supply the Win95 look.
    ============================================================ */
 
-/* ---------- Opaque raised silver popup surface ---------- */
+/* ---------- Opaque silver popup surface in the window frame ---------- */
 /* Covers: popover, context-menu, dropdown-menu, all submenus,
    menubar dropdown content + submenu, Floating rich popover. */
 #arcane-root.arcane-theme-win95 .win95-popover,
@@ -5043,7 +5147,7 @@ class Win95Css {
   color: var(--w95-face-text) !important;
   border: none !important;
   border-radius: 0 !important;
-  box-shadow: var(--w95-raised) !important;
+  box-shadow: var(--w95-window-frame) !important;
   padding: 2px !important;
   min-width: 160px !important;
   font-size: 1.219rem !important;
@@ -5182,8 +5286,9 @@ class Win95Css {
   transition: none !important;
 }
 
-/* Menubar trigger highlights navy on hover and while its menu is open. */
-#arcane-root.arcane-theme-win95 .win95-menubar-trigger:hover,
+/* Menubar trigger highlights navy only while its menu is open. A Win95 menu
+   bar showed nothing on hover until a menu had been opened with a click or
+   Alt; from then on the open title tracks the pointer through the scripts. */
 #arcane-root.arcane-theme-win95 .win95-menubar-trigger[aria-expanded="true"],
 #arcane-root.arcane-theme-win95 .win95-menubar-menu.open .win95-menubar-trigger {
   background: var(--w95-selection) !important;
@@ -5543,13 +5648,42 @@ class Win95Css {
 /* ============================================================
    PAGE-LEVEL (document) SCROLLBAR. The document scroll lives on
    <html>, OUTSIDE #arcane-root, so the scoped scrollbar rules
-   above cannot reach it and the --w95-* vars don't inherit up.
-   Re-declare with literal colours, self-scoped via :has() so it
-   only styles the page scrollbar when a Win95 root is present.
+   above cannot reach it and the root's --w95-* tokens do not
+   inherit up. <html> therefore declares the handful of tokens its
+   scrollbar spends, self-scoped via :has() so they only exist
+   while a Win95 root is present, and the dark copy re-points them
+   exactly as the root's dark block does.
    ============================================================ */
 html:has(#arcane-root.arcane-theme-win95) {
   scrollbar-width: auto !important;
   scrollbar-color: auto !important;
+  --w95-face: #c0c0c0;
+  --w95-hilite: #ffffff;
+  --w95-light: #dfdfdf;
+  --w95-shadow: #808080;
+  --w95-dark: #000000;
+  --w95-field: #ffffff;
+  --w95-raised:
+    inset -1px -1px 0 var(--w95-dark),
+    inset 1px 1px 0 var(--w95-hilite),
+    inset -2px -2px 0 var(--w95-shadow),
+    inset 2px 2px 0 var(--w95-light);
+  --w95-scroll-up: url("$win95ScrollUpLight");
+  --w95-scroll-down: url("$win95ScrollDownLight");
+  --w95-scroll-left: url("$win95ScrollLeftLight");
+  --w95-scroll-right: url("$win95ScrollRightLight");
+}
+html.dark:has(#arcane-root.arcane-theme-win95) {
+  --w95-face: #3a3a3a;
+  --w95-hilite: #8e8e8e;
+  --w95-light: #646464;
+  --w95-shadow: #1c1c1c;
+  --w95-dark: #000000;
+  --w95-field: #242424;
+  --w95-scroll-up: url("$win95ScrollUpDark");
+  --w95-scroll-down: url("$win95ScrollDownDark");
+  --w95-scroll-left: url("$win95ScrollLeftDark");
+  --w95-scroll-right: url("$win95ScrollRightDark");
 }
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar {
   width: 16px;
@@ -5564,16 +5698,16 @@ html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   border-radius: 0 !important;
 }
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-track {
-  background-color: #ffffff;
+  background-color: var(--w95-field);
   background-image:
-    linear-gradient(45deg, #c0c0c0 25%, transparent 25%, transparent 75%, #c0c0c0 75%),
-    linear-gradient(45deg, #c0c0c0 25%, transparent 25%, transparent 75%, #c0c0c0 75%);
+    linear-gradient(45deg, var(--w95-face) 25%, transparent 25%, transparent 75%, var(--w95-face) 75%),
+    linear-gradient(45deg, var(--w95-face) 25%, transparent 25%, transparent 75%, var(--w95-face) 75%);
   background-size: 2px 2px;
   background-position: 0 0, 1px 1px;
 }
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-thumb {
-  background: #c0c0c0;
-  box-shadow: inset -1px -1px 0 #0a0a0a, inset 1px 1px 0 #ffffff, inset -2px -2px 0 #808080, inset 2px 2px 0 #dfdfdf;
+  background: var(--w95-face);
+  box-shadow: var(--w95-raised);
   min-height: 20px;
   min-width: 20px;
 }
@@ -5581,26 +5715,27 @@ html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button {
   display: block;
   width: 16px;
   height: 16px;
-  background-color: #c0c0c0;
-  box-shadow: inset -1px -1px 0 #0a0a0a, inset 1px 1px 0 #ffffff, inset -2px -2px 0 #808080, inset 2px 2px 0 #dfdfdf;
+  background-color: var(--w95-face);
+  box-shadow: var(--w95-raised);
   background-repeat: no-repeat;
-  background-position: center center;
+  background-position: 0 0;
   background-size: 16px 16px;
 }
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23000000' d='M8 5 L11 10 L5 10 Z'/></svg>");
+  background-image: var(--w95-scroll-up);
 }
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:vertical:increment {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23000000' d='M5 6 L11 6 L8 11 Z'/></svg>");
+  background-image: var(--w95-scroll-down);
 }
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23000000' d='M5 8 L10 5 L10 11 Z'/></svg>");
+  background-image: var(--w95-scroll-left);
 }
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:horizontal:increment {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23000000' d='M6 5 L11 8 L6 11 Z'/></svg>");
+  background-image: var(--w95-scroll-right);
 }
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:active {
-  box-shadow: inset -1px -1px 0 #ffffff, inset 1px 1px 0 #0a0a0a, inset -2px -2px 0 #dfdfdf, inset 2px 2px 0 #808080;
+  box-shadow: inset 0 0 0 1px var(--w95-shadow);
+  background-position: 1px 1px;
 }
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:vertical:start:increment,
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:vertical:end:decrement,
@@ -5609,35 +5744,7 @@ html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:horizontal:e
   display: none;
 }
 html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
-  background: #c0c0c0;
-}
-/* Dark (dark-silver) page scrollbar. */
-html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-track {
-  background-color: #262626;
-  background-image: none;
-}
-html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-thumb {
-  background: #3a3a3a;
-  box-shadow: inset -1px -1px 0 #000000, inset 1px 1px 0 #727272, inset -2px -2px 0 #1c1c1c, inset 2px 2px 0 #565656;
-}
-html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button {
-  background-color: #3a3a3a;
-  box-shadow: inset -1px -1px 0 #000000, inset 1px 1px 0 #727272, inset -2px -2px 0 #1c1c1c, inset 2px 2px 0 #565656;
-}
-html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23ffffff' d='M8 5 L11 10 L5 10 Z'/></svg>");
-}
-html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:vertical:increment {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23ffffff' d='M5 6 L11 6 L8 11 Z'/></svg>");
-}
-html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23ffffff' d='M5 8 L10 5 L10 11 Z'/></svg>");
-}
-html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-button:horizontal:increment {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path fill='%23ffffff' d='M6 5 L11 8 L6 11 Z'/></svg>");
-}
-html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
-  background: #3a3a3a;
+  background: var(--w95-face);
 }
 
 /* ================= Component refinement pass (audit fixes) ================= */
@@ -5843,7 +5950,7 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
 /* ===== refine:toggles ===== */
 /* Checkbox: the box holds the drawn tick (--w95-check) as its ::after and
    nothing else, so no text may leak into it — a host that slots its own child
-   in must not push the well out of its 15px square. */
+   in must not push the well out of its 13px square. */
 #arcane-root.arcane-theme-win95 .win95-checkbox-box {
   font-size: 0 !important;
 }
@@ -5922,20 +6029,33 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   font-family: var(--font-sans);
   cursor: var(--w95-cursor-arrow);
 }
+/* The Win95 radio is a 12x12 bitmap, not a bevelled circle: an outer arc
+   (#808080 top-left, white bottom-right) around an inner arc (black top-left,
+   #dfdfdf bottom-right). The ring is the --w95-radio-ring sprite over the
+   control's own field colour, and --w95-radio-mask clips the square box to
+   the bitmap circle so nothing paints in its corners. */
 #arcane-root.arcane-theme-win95 .win95-radio-control {
   appearance: none;
-  flex: 0 0 15px;
-  width: 15px;
-  height: 15px;
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 50% !important;
-  background: var(--w95-field);
-  box-shadow: var(--w95-sunken);
+  border-radius: 0 !important;
+  box-shadow: none;
+  background: var(--w95-radio-ring) 0 0 / 12px 12px no-repeat, var(--w95-field);
+  -webkit-mask: var(--w95-radio-mask) 0 0 / 12px 12px no-repeat;
+  mask: var(--w95-radio-mask) 0 0 / 12px 12px no-repeat;
 }
+/* The 4x4 dot with its corners clipped, drawn as a 2x4 and a 4x2 block in the
+   field text colour so it follows the scheme. */
 #arcane-root.arcane-theme-win95 .win95-radio-control:checked {
-  background-image: radial-gradient(circle, var(--w95-field-text) 0 3px, transparent 3px);
+  background:
+    linear-gradient(var(--w95-field-text), var(--w95-field-text)) 5px 4px / 2px 4px no-repeat,
+    linear-gradient(var(--w95-field-text), var(--w95-field-text)) 4px 5px / 4px 2px no-repeat,
+    var(--w95-radio-ring) 0 0 / 12px 12px no-repeat,
+    var(--w95-field);
 }
 #arcane-root.arcane-theme-win95 .win95-radio-caption {
   display: flex;
@@ -6122,13 +6242,13 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
    1px --border hairline and a 25px/10px blurred double shadow. The radius and
    its entrance keyframe are handled by the two blanket resets, but an inline
    box-shadow needs an !important rule to beat it, so the panel is restated as
-   a raised silver menu. Its inline `transform: translateX(-50%)` is centring,
-   not motion, and is left alone. */
+   a silver menu in the window frame. Its inline `transform: translateX(-50%)`
+   is centring, not motion, and is left alone. */
 #arcane-root.arcane-theme-win95 .arcane-mega-menu-panel {
   background-color: var(--w95-face) !important;
   color: var(--w95-face-text) !important;
   border: none !important;
-  box-shadow: var(--w95-raised) !important;
+  box-shadow: var(--w95-window-frame) !important;
   padding: 2px !important;
 }
 
@@ -6164,7 +6284,7 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
    Focus rectangles that land where Windows 95 drew them: around the LABEL.
    The single global :focus-visible rule insets the dotted rect 3px, which is
    right for a push button but wrong for a checkbox — the render base puts the
-   tabindex on the 15px check well, so the rect became a ~9px dotted square
+   tabindex on the 13px check well, so the rect became a ~7px dotted square
    inside the well itself instead of a rectangle around the caption.
    ============================================================ */
 /* Only suppress the well's own rect when there IS a caption block to move it
@@ -6176,9 +6296,9 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   outline: 1px dotted var(--w95-face-text) !important;
   outline-offset: 1px !important;
 }
-/* A standard radio is a single <label> holding the circle (::before) and the
-   caption text, so the rect goes around the option rather than inside it — a
-   -3px inset would cut through the 15px circle. */
+/* A standard radio is a single <label> holding the circle and the caption
+   text, so the rect goes around the option rather than inside it — a -3px
+   inset would cut through the 12px bitmap circle. */
 #arcane-root.arcane-theme-win95 .win95-radio-option:focus-visible {
   outline: 1px dotted var(--w95-face-text) !important;
   outline-offset: 1px !important;
@@ -6212,6 +6332,8 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   }
   #arcane-root.arcane-theme-win95 .win95-radio-control {
     appearance: auto;
+    -webkit-mask: none;
+    mask: none;
   }
   #arcane-root.arcane-theme-win95 .win95-select-trigger > span:last-child::after {
     border-top-color: ButtonText !important;

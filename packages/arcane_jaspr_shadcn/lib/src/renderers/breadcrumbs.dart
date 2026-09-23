@@ -1,72 +1,81 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
+import 'package:arcane_jaspr/component/view/icon.dart';
 import 'package:arcane_jaspr/core/props/breadcrumbs_props.dart';
 
-/// ShadCN-style breadcrumbs component
+/// ShadCN-style breadcrumbs component.
+///
+/// v4 BreadcrumbList: `text-muted-foreground flex flex-wrap items-center
+/// gap-1.5 text-sm break-words sm:gap-2.5`; separators are a Lucide
+/// ChevronRight at `size-3.5`; links shift to `text-foreground` on hover; the
+/// current page is `text-foreground font-normal`.
+///
 /// Reference: https://ui.shadcn.com/docs/components/breadcrumb
 class ShadcnBreadcrumbs extends StatelessComponent {
   final BreadcrumbsProps props;
 
   const ShadcnBreadcrumbs(this.props, {super.key});
 
-  String get _separatorText => switch (props.separator) {
-    BreadcrumbSeparatorStyle.slash => '/',
-    BreadcrumbSeparatorStyle.chevron =>
-      '\u{203A}', // Single right-pointing angle quotation mark
-    BreadcrumbSeparatorStyle.arrow => '\u{2192}', // Right arrow
-    BreadcrumbSeparatorStyle.dot => '\u{2022}', // Bullet
+  String get _fontSize => switch (props.size) {
+    BreadcrumbSizeVariant.sm => '0.75rem',
+    BreadcrumbSizeVariant.md => '0.875rem',
+    BreadcrumbSizeVariant.lg => '1rem',
   };
 
-  (String fontSize, String gap, String padding) get _sizeStyles =>
-      switch (props.size) {
-        BreadcrumbSizeVariant.sm => ('12px', '4px', '2px 4px'),
-        BreadcrumbSizeVariant.md => ('14px', '8px', '4px 8px'),
-        BreadcrumbSizeVariant.lg => ('16px', '16px', '6px 12px'),
-      };
+  Component get _separator => switch (props.separator) {
+    BreadcrumbSeparatorStyle.chevron => ArcaneIcon.chevronRight(
+      size: IconSize.sm,
+    ),
+    BreadcrumbSeparatorStyle.slash => const Component.text('/'),
+    BreadcrumbSeparatorStyle.arrow => const Component.text('\u{2192}'),
+    BreadcrumbSeparatorStyle.dot => const Component.text('\u{2022}'),
+  };
 
   @override
   Component build(BuildContext context) {
-    final (fontSize, gap, _) = _sizeStyles;
-
-    // ShadCN Breadcrumb
     return dom.nav(
       classes: 'arcane-breadcrumb',
-      attributes: {'aria-label': 'Breadcrumb'},
-      styles: const dom.Styles(
-        raw: {'display': 'flex', 'align-items': 'center'},
+      attributes: const <String, String>{'aria-label': 'Breadcrumb'},
+      styles: dom.Styles(
+        raw: <String, String>{
+          'display': 'flex',
+          'align-items': 'center',
+          ...?props.decoration?.universalStyles(),
+          ...?props.styles?.toMap(),
+        },
       ),
-      [
-        // ShadCN BreadcrumbList
+      <Component>[
         dom.ol(
           classes: 'arcane-breadcrumb-list',
           styles: dom.Styles(
-            raw: {
+            raw: <String, String>{
               'display': 'flex',
               'flex-wrap': 'wrap',
               'align-items': 'center',
-              'gap': '6px',
+              // Widened to 0.625rem at the `sm` breakpoint by the stylesheet.
+              'gap': 'var(--shadcn-breadcrumb-gap, 0.375rem)',
               'list-style': 'none',
               'margin': '0',
               'padding': '0',
-              'font-size': fontSize,
+              'font-size': _fontSize,
+              'line-height': '1.25rem',
               'color': 'var(--muted-foreground)',
               'word-break': 'break-word',
             },
           ),
-          [
-            for (var i = 0; i < props.items.length; i++) ...[
-              // ShadCN BreadcrumbItem
+          <Component>[
+            for (int i = 0; i < props.items.length; i++) ...<Component>[
               dom.li(
                 classes: 'arcane-breadcrumb-item',
                 styles: const dom.Styles(
-                  raw: {
+                  raw: <String, String>{
                     'display': 'inline-flex',
                     'align-items': 'center',
-                    'gap': '6px',
+                    'gap': '0.375rem',
                   },
                 ),
-                [
+                <Component>[
                   _buildBreadcrumbItem(
                     props.items[i],
                     i,
@@ -74,20 +83,21 @@ class ShadcnBreadcrumbs extends StatelessComponent {
                   ),
                 ],
               ),
-              // ShadCN BreadcrumbSeparator
               if (i < props.items.length - 1)
                 dom.li(
                   classes: 'arcane-breadcrumb-separator',
-                  attributes: {'role': 'presentation', 'aria-hidden': 'true'},
+                  attributes: const <String, String>{
+                    'role': 'presentation',
+                    'aria-hidden': 'true',
+                  },
                   styles: const dom.Styles(
-                    raw: {
+                    raw: <String, String>{
                       'display': 'flex',
                       'align-items': 'center',
-                      'color': 'var(--muted-foreground)',
                       'user-select': 'none',
                     },
                   ),
-                  [props.customSeparator ?? Component.text(_separatorText)],
+                  <Component>[props.customSeparator ?? _separator],
                 ),
             ],
           ],
@@ -101,21 +111,18 @@ class ShadcnBreadcrumbs extends StatelessComponent {
     int index,
     bool isLast,
   ) {
-    final content = dom.span(
+    final Component content = dom.span(
       styles: const dom.Styles(
-        raw: {
+        raw: <String, String>{
           'display': 'inline-flex',
           'align-items': 'center',
-          'gap': 'var(--space-1)',
+          'gap': '0.375rem',
         },
       ),
-      [
+      <Component>[
         if (item.icon != null) item.icon!,
         if (props.showHomeIcon && index == 0 && item.icon == null)
-          const dom.span(
-            styles: dom.Styles(raw: {'font-size': '1.1em'}),
-            [Component.text('\u{2302}')], // Home symbol
-          ),
+          ArcaneIcon.house(size: IconSize.sm),
         Component.text(item.label),
       ],
     );
@@ -124,36 +131,42 @@ class ShadcnBreadcrumbs extends StatelessComponent {
       // ShadCN BreadcrumbPage
       return dom.span(
         classes: 'arcane-breadcrumb-page',
-        attributes: {'aria-current': 'page'},
+        attributes: <String, String>{
+          if (isLast) 'aria-current': 'page',
+          if (isLast) 'aria-disabled': 'true',
+        },
         styles: const dom.Styles(
-          raw: {
+          raw: <String, String>{
             'color': 'var(--foreground)',
-            'font-weight': 'var(--font-weight-normal)',
+            'font-weight': '400',
           },
         ),
-        [content],
+        <Component>[content],
       );
     }
 
-    // ShadCN BreadcrumbLink
+    // ShadCN BreadcrumbLink: hover:text-foreground transition-colors
     return dom.a(
       classes: 'arcane-breadcrumb-link',
       href: item.href!,
       styles: const dom.Styles(
-        raw: {
-          'color': 'var(--muted-foreground)',
+        raw: <String, String>{
+          'color': 'var(--shadcn-item-foreground, inherit)',
           'text-decoration': 'none',
-          'transition': 'color var(--transition)',
+          'border-radius': 'var(--radius-xs)',
+          'outline': 'none',
+          'box-shadow': 'var(--shadcn-control-shadow, none)',
+          'transition': 'color var(--transition), box-shadow var(--transition)',
         },
       ),
       events: props.onItemClick != null
-          ? {
+          ? <String, EventCallback>{
               'click': (event) {
                 props.onItemClick!(item, index);
               },
             }
           : null,
-      [content],
+      <Component>[content],
     );
   }
 }

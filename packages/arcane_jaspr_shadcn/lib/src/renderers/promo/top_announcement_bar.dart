@@ -63,7 +63,7 @@ class ShadcnTopAnnouncementBar extends StatelessComponent {
             },
           ),
           events: {'click': (_) => props.onDismiss!()},
-          [Component.text('\u00d7')],
+          const <Component>[Component.text('\u00d7')],
         ),
     ],
   );

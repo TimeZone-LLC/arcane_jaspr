@@ -238,6 +238,7 @@ class CommandPaletteScripts {
     // Document-level keyboard handler (works for dynamically rendered overlays)
     document.addEventListener('keydown', function(e) {
       var overlay = document.querySelector('.arcane-command-overlay, .neon-command-overlay');
+      if (overlay && overlay.hasAttribute('data-arcane-surface')) return;
       if (!overlay || overlay.style.display === 'none') {
         // Only handle Ctrl+K when no overlay is open
         if ((e.metaKey || e.ctrlKey) && e.key === 'k') {

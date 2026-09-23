@@ -4,6 +4,8 @@ import 'package:arcane_jaspr/component/view/map/map_style.dart'
     show arcaneMapCss;
 import 'package:arcane_jaspr/util/content/prose_styles.dart';
 
+import 'package:arcane_jaspr_shadcn/src/shadcn_css_display.dart';
+import 'package:arcane_jaspr_shadcn/src/shadcn_css_surfaces.dart';
 import 'package:arcane_jaspr_shadcn/src/shadcn_theme.dart';
 
 class ShadcnCss {
@@ -303,7 +305,6 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
   border: 1px solid var(--shadcn-hairline);
   border-radius: var(--radius-md);
   background: var(--shadcn-panel-highlight);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent);
 }
 
 #arcane-root.arcane-theme-shadcn .sidebar-nav {
@@ -673,115 +674,272 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 
   const ShadcnCss._();
 
-  static String componentCss(ShadcnTheme theme) {
-    final String neutralOverrides = theme == ShadcnTheme.midnight
-        ? '''
+  /// Light-mode neutral surfaces per base colour, matching the shadcn v4
+  /// neutral/zinc/stone/slate ladders. Muted foregrounds are one step darker
+  /// than shadcn's so they clear 4.5:1 on the muted surface.
+  static const Map<ShadcnTheme, Map<String, String>> _lightSurfaces =
+      <ShadcnTheme, Map<String, String>>{
+        ShadcnTheme.midnight: <String, String>{
+          '--card': '#ffffff',
+          '--card-foreground': '#09090b',
+          '--popover': '#ffffff',
+          '--popover-foreground': '#09090b',
+          '--secondary': '#f5f5f5',
+          '--secondary-foreground': '#171717',
+          '--muted': '#f5f5f5',
+          '--muted-foreground': '#6e6e6e',
+          '--accent': '#f5f5f5',
+          '--accent-foreground': '#171717',
+          '--border': '#e5e5e5',
+          '--input': '#e5e5e5',
+          '--ring': '#a3a3a3',
+        },
+        ShadcnTheme.charcoal: <String, String>{
+          '--card': '#ffffff',
+          '--popover': '#ffffff',
+          '--secondary': '#f4f4f5',
+          '--secondary-foreground': '#18181b',
+          '--muted': '#f4f4f5',
+          '--muted-foreground': '#6b6b74',
+          '--accent': '#f4f4f5',
+          '--accent-foreground': '#18181b',
+          '--border': '#e4e4e7',
+          '--input': '#e4e4e7',
+          '--ring': '#9f9fa9',
+        },
+        ShadcnTheme.cream: <String, String>{
+          '--card': '#ffffff',
+          '--popover': '#ffffff',
+          '--secondary': '#f5f5f4',
+          '--secondary-foreground': '#1c1917',
+          '--muted': '#f5f5f4',
+          '--muted-foreground': '#736b65',
+          '--accent': '#f5f5f4',
+          '--accent-foreground': '#1c1917',
+          '--border': '#e7e5e4',
+          '--input': '#e7e5e4',
+          '--ring': '#a6a09b',
+        },
+        ShadcnTheme.slate: <String, String>{
+          '--card': '#ffffff',
+          '--popover': '#ffffff',
+          '--secondary': '#f1f5f9',
+          '--secondary-foreground': '#0f172a',
+          '--muted': '#f1f5f9',
+          '--muted-foreground': '#5d6e87',
+          '--accent': '#f1f5f9',
+          '--accent-foreground': '#0f172a',
+          '--border': '#e2e8f0',
+          '--input': '#e2e8f0',
+          '--ring': '#90a1b9',
+        },
+      };
+
+  /// Dark-mode neutral corrections. Midnight takes the full shadcn neutral
+  /// scale; the softer palettes keep their seeded background and surfaces and
+  /// adopt v4's translucent borders and mid-grey ring.
+  static const Map<ShadcnTheme, Map<String, String>> _darkSurfaces =
+      <ShadcnTheme, Map<String, String>>{
+        ShadcnTheme.midnight: <String, String>{
+          '--background': '#0a0a0a',
+          '--foreground': '#f7f4ec',
+          '--card': '#171717',
+          '--card-foreground': '#f7f4ec',
+          '--card-hover': '#1f1f1f',
+          '--popover': '#171717',
+          '--popover-foreground': '#f7f4ec',
+          '--secondary': '#262626',
+          '--secondary-foreground': '#f7f4ec',
+          '--muted': '#262626',
+          '--muted-foreground': '#a3a3a3',
+          '--accent': '#262626',
+          '--accent-foreground': '#f7f4ec',
+          '--border': 'rgba(255, 255, 255, 0.1)',
+          '--input': 'rgba(255, 255, 255, 0.15)',
+          '--ring': '#737373',
+        },
+        ShadcnTheme.charcoal: <String, String>{
+          '--border': 'rgba(255, 255, 255, 0.1)',
+          '--input': 'rgba(255, 255, 255, 0.15)',
+          '--ring': '#71717b',
+        },
+        ShadcnTheme.cream: <String, String>{
+          '--border': 'rgba(255, 255, 255, 0.1)',
+          '--input': 'rgba(255, 255, 255, 0.15)',
+          '--ring': '#79716b',
+        },
+        ShadcnTheme.slate: <String, String>{
+          '--border': 'rgba(255, 255, 255, 0.1)',
+          '--input': 'rgba(255, 255, 255, 0.15)',
+          '--ring': '#62748e',
+        },
+      };
+
+  static String _declarations(Map<String, String> tokens) => tokens.entries
+      .map(
+        (MapEntry<String, String> token) => '  ${token.key}: ${token.value};',
+      )
+      .join('\n');
+
+  static String _neutralSurfaces(ShadcnTheme theme) {
+    final Map<String, String>? light = _lightSurfaces[theme];
+    final Map<String, String>? dark = _darkSurfaces[theme];
+    if (light == null || dark == null) return '';
+    return '''
 #arcane-root.arcane-theme-shadcn {
-  --card: #ffffff;
-  --card-foreground: #09090b;
-  --popover: #ffffff;
-  --popover-foreground: #09090b;
-  --muted: #f4f4f5;
-  --muted-foreground: #696970;
-  --accent: #f4f4f5;
-  --accent-foreground: #18181b;
-  --border: #e4e4e7;
-  --input: #e4e4e7;
+${_declarations(light)}
 }
 
 html.dark #arcane-root.arcane-theme-shadcn,
 #arcane-root.dark.arcane-theme-shadcn {
-  --background: #050505;
-  --foreground: #F7F4EC;
-  --card: #111111;
-  --card-foreground: #F7F4EC;
-  --card-hover: #1A1A1A;
-  --popover: #1A1A1A;
-  --popover-foreground: #F7F4EC;
-  --muted: #111111;
-  --muted-foreground: #A8A39A;
-  --accent: #1A1A1A;
-  --accent-foreground: #F7F4EC;
-  --border: #2C2C2C;
-  --input: #232323;
+${_declarations(dark)}
 }
-'''
-        : '';
+''';
+  }
 
+  static String componentCss(ShadcnTheme theme) {
     return '''
-$neutralOverrides
+${_neutralSurfaces(theme)}
 
+/* Shared v4 contract. Renderers inline `var(--shadcn-control-shadow, ...)`,
+   `var(--shadcn-control-border-color, ...)` and
+   `var(--shadcn-item-background, transparent)` so the state rules below win
+   over inline styles by flipping variables instead of properties. Scrims use
+   the generated 50% `--overlay`. */
 #arcane-root.arcane-theme-shadcn {
-  --shadcn-control-border: color-mix(in srgb, var(--foreground) 48%, var(--background));
+  /* Resting border for text entry, checkbox and radio controls: v4's --input
+     mixed toward the foreground until it clears 3:1 (WCAG 1.4.11) on the page
+     and card surfaces. Buttons, toggles and the switch keep --input because
+     their label or shape identifies them. */
+  --shadcn-control-border: color-mix(in srgb, var(--input) 60%, var(--foreground));
+  --shadcn-focus-ring: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
+  --shadcn-focus-border: var(--ring);
+  --shadcn-surface-shadow: var(--shadow-md);
+  --shadcn-item-radius: var(--radius-sm);
+  --shadcn-invalid-ring: 0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent);
+  --shadcn-input-background: transparent;
+  --shadcn-switch-track: var(--input);
+  --shadcn-switch-thumb-off: var(--background);
+  --shadcn-switch-thumb-on: var(--background);
 }
 
-#arcane-root.arcane-theme-shadcn .arcane-button {
+html.dark #arcane-root.arcane-theme-shadcn,
+#arcane-root.dark.arcane-theme-shadcn {
+  --shadcn-control-border: color-mix(in srgb, var(--input) 72%, var(--foreground));
+  --shadcn-invalid-ring: 0 0 0 3px color-mix(in oklab, var(--destructive) 40%, transparent);
+  --shadcn-input-background: color-mix(in srgb, var(--input) 30%, transparent);
+  --shadcn-switch-track: color-mix(in srgb, var(--input) 80%, transparent);
+  --shadcn-switch-thumb-off: var(--foreground);
+  --shadcn-switch-thumb-on: var(--primary-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button) {
   background-color: var(--shadcn-button-background);
   color: var(--shadcn-button-foreground);
   border: 1px solid transparent;
 }
 
-#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='primary'] {
+#arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button)[data-variant='primary'] {
   --shadcn-button-background: var(--primary);
   --shadcn-button-foreground: var(--primary-foreground);
+  --shadcn-button-hover: color-mix(in srgb, var(--primary) 90%, transparent);
 }
 
-#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='secondary'] {
+#arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button)[data-variant='secondary'] {
   --shadcn-button-background: var(--secondary);
   --shadcn-button-foreground: var(--secondary-foreground);
+  --shadcn-button-hover: color-mix(in srgb, var(--secondary) 80%, transparent);
 }
 
-#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='outline'] {
+#arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button)[data-variant='outline'] {
   --shadcn-button-background: var(--background);
   --shadcn-button-foreground: var(--foreground);
-  border-color: var(--shadcn-control-border);
+  --shadcn-button-hover: var(--accent);
+  --shadcn-button-hover-foreground: var(--accent-foreground);
+  border-color: var(--shadcn-control-border-color, var(--input));
 }
 
-#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='ghost'] {
+#arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button)[data-variant='ghost'] {
   --shadcn-button-background: transparent;
   --shadcn-button-foreground: var(--foreground);
+  --shadcn-button-hover: var(--accent);
+  --shadcn-button-hover-foreground: var(--accent-foreground);
 }
 
 #arcane-root.arcane-theme-shadcn .arcane-button[data-variant='link'] {
   --shadcn-button-background: transparent;
   --shadcn-button-foreground: var(--primary);
+  --shadcn-button-hover: transparent;
   text-underline-offset: 4px;
 }
 
-#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='destructive'] {
+#arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button)[data-variant='destructive'] {
   --shadcn-button-background: var(--destructive);
   --shadcn-button-foreground: var(--destructive-foreground);
+  --shadcn-button-hover: color-mix(in srgb, var(--destructive) 90%, transparent);
+  --shadcn-focus-ring: var(--shadcn-invalid-ring);
 }
 
 #arcane-root.arcane-theme-shadcn .arcane-button[data-variant='success'] {
   --shadcn-button-background: var(--success);
   --shadcn-button-foreground: var(--success-foreground);
+  --shadcn-button-hover: color-mix(in srgb, var(--success) 90%, transparent);
 }
 
 #arcane-root.arcane-theme-shadcn .arcane-button[data-variant='warning'] {
   --shadcn-button-background: var(--warning);
   --shadcn-button-foreground: var(--warning-foreground);
+  --shadcn-button-hover: color-mix(in srgb, var(--warning) 90%, transparent);
 }
 
 #arcane-root.arcane-theme-shadcn .arcane-button[data-variant='info'] {
   --shadcn-button-background: var(--info);
   --shadcn-button-foreground: var(--info-foreground);
+  --shadcn-button-hover: color-mix(in srgb, var(--info) 90%, transparent);
 }
 
-#arcane-root.arcane-theme-shadcn .arcane-button:hover:not([data-disabled='true']) {
-  background-color: color-mix(in srgb, var(--shadcn-button-background) 88%, var(--shadcn-button-foreground));
-  color: var(--shadcn-button-foreground);
+html.dark #arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button)[data-variant='outline'],
+#arcane-root.dark.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button)[data-variant='outline'] {
+  --shadcn-button-background: color-mix(in srgb, var(--input) 30%, transparent);
+  --shadcn-button-hover: color-mix(in srgb, var(--input) 50%, transparent);
+  --shadcn-button-hover-foreground: var(--foreground);
+}
+
+html.dark #arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button)[data-variant='ghost'],
+#arcane-root.dark.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button)[data-variant='ghost'] {
+  --shadcn-button-hover: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+/* One hover treatment: the base stylesheet's brightness filter would darken
+   the colour-mixed hover fill a second time. */
+#arcane-root.arcane-theme-shadcn .arcane-button:hover,
+#arcane-root.arcane-theme-shadcn .arcane-button:active {
+  filter: none;
 }
 
 #arcane-root.arcane-theme-shadcn
-  .arcane-button:is([data-variant='outline'], [data-variant='ghost']):hover:not([data-disabled='true']) {
-  background-color: var(--accent);
-  color: var(--accent-foreground);
+  :is(.arcane-button, .arcane-cycle-button):hover:not([data-disabled='true']):not(:disabled) {
+  background-color: var(--shadcn-button-hover, var(--shadcn-button-background));
+  color: var(--shadcn-button-hover-foreground, var(--shadcn-button-foreground));
 }
 
 #arcane-root.arcane-theme-shadcn .arcane-button[data-variant='link']:hover:not([data-disabled='true']) {
-  background-color: transparent;
   text-decoration-thickness: 2px;
+}
+
+#arcane-root.arcane-theme-shadcn
+  :is(.arcane-button, .arcane-cycle-button):is([data-variant='ghost'], [data-variant='link']):focus-visible {
+  --shadcn-control-shadow: var(--shadcn-focus-ring);
+}
+
+#arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button) svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+#arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-button) svg:not([width]) {
+  width: 1rem;
+  height: 1rem;
 }
 
 .arcane-button,
@@ -814,13 +972,6 @@ $neutralOverrides
     transform var(--transition);
 }
 
-.arcane-text-input:hover:not(:disabled),
-.arcane-select:hover:not(:disabled):not(.disabled),
-.arcane-select-option:hover:not(:disabled):not(.disabled),
-.arcane-dropdown-item:hover:not(.disabled),
-.arcane-context-menu-item:hover:not(.disabled),
-.arcane-tab:hover:not(.disabled),
-.arcane-tab-bar-item:hover:not(.disabled),
 .arcane-menubar-trigger:hover,
 .arcane-dialog-close:hover,
 .arcane-sheet-close:hover,
@@ -833,13 +984,16 @@ $neutralOverrides
   color: var(--accent-foreground);
 }
 
+/* v4 focus: the ring token plus a ring-coloured border. Controls that inline
+   `var(--shadcn-control-shadow, ...)` pick the variables up; the rest take the
+   box-shadow declared here. */
 .arcane-button:focus-visible,
+.arcane-cycle-button:focus-visible,
+.arcane-toggle-button:focus-visible,
+.arcane-toggle-group-item:focus-visible,
 .arcane-text-input:focus-visible,
 .arcane-textarea:focus-visible,
 .arcane-select:focus-visible,
-.arcane-select-option:focus-visible,
-.arcane-dropdown-item:focus-visible,
-.arcane-context-menu-item:focus-visible,
 .arcane-tab:focus-visible,
 .arcane-tab-bar-item:focus-visible,
 .arcane-menubar-trigger:focus-visible,
@@ -855,7 +1009,35 @@ $neutralOverrides
 .arcane-calendar-day:focus-visible,
 .arcane-calendar-nav-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+  --shadcn-control-shadow: var(--shadow-xs), var(--shadcn-focus-ring);
+  --shadcn-control-border-color: var(--shadcn-focus-border);
+  box-shadow: var(--shadcn-control-shadow);
+}
+
+/* Invalid controls swap the border and the ring to the destructive pair. */
+#arcane-root.arcane-theme-shadcn :is(.arcane-text-input, .arcane-text-input-container, .arcane-textarea, .arcane-select, .arcane-otp-digit, .arcane-checkbox):is([aria-invalid='true'], [data-error='true']) {
+  --shadcn-control-border-color: var(--destructive);
+  --shadcn-focus-border: var(--destructive);
+  --shadcn-focus-ring: var(--shadcn-invalid-ring);
+}
+
+/* The core field-shell rules flatten focus to a border colour with
+   !important; ShadCN restores the v4 ring on the shell and on the native
+   select control. */
+#arcane-root.arcane-theme-shadcn
+  .arcane-text-input-container[data-arcane-field-shell="true"]:focus-within {
+  border-color: var(--shadcn-focus-border) !important;
+  box-shadow: var(--shadow-xs), var(--shadcn-focus-ring) !important;
+}
+
+#arcane-root.arcane-theme-shadcn select.arcane-select {
+  box-shadow: var(--shadcn-control-shadow, var(--shadow-xs));
+}
+
+#arcane-root.arcane-theme-shadcn
+  select.arcane-select[data-arcane-field-control="true"][data-arcane-field-control="true"]:focus-visible {
+  border-color: var(--shadcn-focus-border) !important;
+  box-shadow: var(--shadow-xs), var(--shadcn-focus-ring) !important;
 }
 
 .arcane-button:disabled,
@@ -897,40 +1079,77 @@ $neutralOverrides
   opacity: 0.5;
 }
 
-/* Open/active *triggers* take the accent highlight. The dropdown *panel*
-   (.arcane-dropdown-menu) is deliberately absent: it is a popover surface, and
-   painting it with --accent would drop it off the --popover token pair the rest
-   of the floating surfaces share. */
-.arcane-select[data-open='true'],
-.arcane-menubar-trigger[data-state='open'],
-.arcane-date-picker-trigger[data-state='open'],
-.arcane-tab[data-state='active'],
-.arcane-tab-bar-item[data-state='active'],
-.arcane-select-option[data-state='checked'],
-.arcane-dropdown-item[data-state='checked'],
-.arcane-context-menu-item[data-state='checked'],
-.arcane-menubar-item[data-state='checked'] {
+/* Open triggers: the select keeps its focus border while the listbox is open;
+   the menubar trigger takes the accent pair. Tabs and menu rows are styled in
+   shadcnSurfacesCss. Checked menu items show only their indicator, never a
+   persistent fill. */
+#arcane-root.arcane-theme-shadcn .arcane-select[aria-expanded='true'],
+#arcane-root.arcane-theme-shadcn .arcane-date-picker-trigger:is([data-state='open'], [aria-expanded='true']) {
+  --shadcn-control-border-color: var(--shadcn-focus-border);
+  border-color: var(--shadcn-focus-border);
+}
+
+.arcane-menubar-trigger:is([data-state='open'], [aria-expanded='true']) {
+  --shadcn-item-background: var(--accent);
+  --shadcn-item-foreground: var(--accent-foreground);
   background-color: var(--accent);
   color: var(--accent-foreground);
 }
 
-.arcane-select[data-open='true'],
-.arcane-date-picker-trigger[data-state='open'],
-.arcane-calendar-day[data-state='selected'] {
-  border-color: var(--ring);
+html.dark #arcane-root.arcane-theme-shadcn .arcane-select:hover:not(:disabled),
+#arcane-root.dark.arcane-theme-shadcn .arcane-select:hover:not(:disabled) {
+  --shadcn-input-background: color-mix(in srgb, var(--input) 50%, transparent);
+}
+
+#arcane-root.arcane-theme-shadcn
+  .arcane-select-option:is(:hover, :focus-visible, [aria-selected='true'], [data-arcane-state='active']):not(:disabled):not(.disabled) {
+  --shadcn-item-background: var(--accent);
+  --shadcn-item-foreground: var(--accent-foreground);
+}
+
+/* Hover applies to "off" items only, so a hovered "on" item keeps its accent
+   fill instead of dropping to the muted pair. */
+#arcane-root.arcane-theme-shadcn
+  :is(.arcane-toggle-group-item, .arcane-toggle-button):hover:not(:disabled):not([data-arcane-disabled='true']):not([data-arcane-state='selected']):not([data-arcane-state='on']) {
+  --shadcn-item-background: var(--muted);
+  --shadcn-item-foreground: var(--muted-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn
+  :is(.arcane-toggle-group-item[data-variant='outline'], .arcane-toggle-button):hover:not(:disabled):not([data-arcane-disabled='true']):not([data-arcane-state='selected']):not([data-arcane-state='on']) {
+  --shadcn-item-background: var(--accent);
+  --shadcn-item-foreground: var(--accent-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn
+  :is(.arcane-toggle-group-item, .arcane-toggle-button):is([data-arcane-state='selected'], [data-arcane-state='on']) {
+  --shadcn-item-background: var(--accent);
+  --shadcn-item-foreground: var(--accent-foreground);
 }
 
 #arcane-root.arcane-theme-shadcn .arcane-checkbox[data-arcane-state='selected'] {
   --shadcn-checkbox-background: var(--shadcn-checkbox-fill);
+  --shadcn-checkbox-border: var(--shadcn-checkbox-fill);
   --shadcn-checkbox-indicator: inline-flex;
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-checkbox-indicator i {
+  width: var(--shadcn-checkbox-glyph, 0.875rem) !important;
+  height: var(--shadcn-checkbox-glyph, 0.875rem) !important;
+  font-size: var(--shadcn-checkbox-glyph, 0.875rem) !important;
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-toggle-switch {
+  --shadcn-switch-thumb: var(--shadcn-switch-thumb-off);
 }
 
 #arcane-root.arcane-theme-shadcn .arcane-toggle-switch[data-arcane-state='selected'] {
   --shadcn-switch-background: var(--shadcn-switch-active);
-  --shadcn-switch-border: transparent;
-  --shadcn-switch-offset: var(--shadcn-switch-travel);
+  --shadcn-switch-offset: calc(100% - 2px);
+  --shadcn-switch-thumb: var(--shadcn-switch-thumb-on);
 }
 
+.arcane-text-input::placeholder,
 .arcane-textarea::placeholder {
   color: var(--muted-foreground);
   opacity: 1;
@@ -943,16 +1162,12 @@ $neutralOverrides
   cursor: default;
 }
 
-.arcane-text-input[data-error='true'],
-.arcane-select[data-error='true'],
-.arcane-otp-digit.error,
-.arcane-textarea[data-error='true'] {
-  border-color: var(--destructive);
+#arcane-root.arcane-theme-shadcn .arcane-radio-item:has(input:checked) {
+  --shadcn-radio-dot-opacity: 1;
 }
 
 #arcane-root.arcane-theme-shadcn
-  :is(.arcane-radio-item, .arcane-radio-card, .arcane-radio-button):has(input:checked) {
-  --shadcn-radio-dot-opacity: 1;
+  :is(.arcane-radio-card, .arcane-radio-button):has(input:checked) {
   --shadcn-radio-border: var(--primary);
   --shadcn-radio-ink: var(--primary);
   --shadcn-radio-indicator-width: 5px;
@@ -963,8 +1178,40 @@ $neutralOverrides
 
 #arcane-root.arcane-theme-shadcn
   :is(.arcane-radio-card, .arcane-radio-button):has(input:focus-visible) {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--shadcn-focus-ring);
+}
+
+/* Segmented radio buttons share their edges: only the outer corners round,
+   and each following segment overlaps the previous border by 1px. */
+#arcane-root.arcane-theme-shadcn .arcane-radio-button {
+  border-radius: 0;
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-radio-button + .arcane-radio-button {
+  margin-left: -1px;
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-radio-button:first-child {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-radio-button:last-child {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-radio-button:only-child {
+  border-radius: var(--radius-md);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-radio-button:is(:has(input:checked), :has(input:focus-visible)) {
+  z-index: 1;
+}
+
+#arcane-root.arcane-theme-shadcn
+  .arcane-radio-button:hover:not(:has(input:checked)):not([data-disabled='true']) {
+  --shadcn-radio-button-background: var(--accent);
+  --shadcn-radio-button-ink: var(--accent-foreground);
 }
 
 @media (forced-colors: active) {
@@ -1195,6 +1442,10 @@ $arcaneSidebarComponentStyles
 $arcaneMapCss
 
 $arcaneTocTreeLinesCss
+
+$shadcnSurfacesCss
+
+$shadcnDisplayCss
 
 $_lexiconCss
 ''';
