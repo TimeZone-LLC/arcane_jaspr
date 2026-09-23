@@ -4,7 +4,7 @@ description: >-
   Opt-in: this package pulls in arcane_lexicon (a server-side, dart:io docs
   package), so it is kept OUT of the theme packages to keep them web-safe for
   client apps. Docs sites depend on this package directly.
-version: 4.0.0
+version: 5.0.0
 homepage: https://arcanearts.github.io/arcane_jaspr/
 documentation: https://arcanearts.github.io/arcane_jaspr/
 repository: https://github.com/ArcaneArts/arcane_jaspr
@@ -13,8 +13,8 @@ environment:
   sdk: '>=3.10.0 <4.0.0'
 
 dependencies:
-  arcane_jaspr: ^4.0.0
-  arcane_lexicon: ^2.0.0
+  arcane_jaspr: ^5.0.0
+  arcane_lexicon: ^3.0.0
 
 dev_dependencies:
   lints: ^6.1.0
