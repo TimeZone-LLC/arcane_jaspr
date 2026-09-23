@@ -57,14 +57,14 @@ class _DataTableState<T> extends State<DataTable<T>> {
   @override
   void initState() {
     super.initState();
-    _selectedItems = component.selectedItems ?? <T>{};
+    _selectedItems = widget.selectedItems ?? <T>{};
   }
 
   @override
-  void didUpdateComponent(DataTable<T> oldComponent) {
-    super.didUpdateComponent(oldComponent);
-    if (component.selectedItems != null) {
-      _selectedItems = component.selectedItems!;
+  void didUpdateWidget(DataTable<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedItems != null) {
+      _selectedItems = widget.selectedItems!;
     }
   }
 
@@ -76,23 +76,23 @@ class _DataTableState<T> extends State<DataTable<T>> {
         _selectedItems.add(item);
       }
     });
-    component.onSelectionChanged?.call(Set<T>.from(_selectedItems));
+    widget.onSelectionChanged?.call(Set<T>.from(_selectedItems));
   }
 
   void _toggleSelectAll() {
     setState(() {
-      if (_selectedItems.length == component.items.length) {
+      if (_selectedItems.length == widget.items.length) {
         _selectedItems.clear();
       } else {
-        _selectedItems = Set<T>.from(component.items);
+        _selectedItems = Set<T>.from(widget.items);
       }
     });
-    component.onSelectionChanged?.call(Set<T>.from(_selectedItems));
+    widget.onSelectionChanged?.call(Set<T>.from(_selectedItems));
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<DataColumnProps<T>> columnProps = component.columns
+    final List<DataColumnProps<T>> columnProps = widget.columns
         .map(
           (DataColumn<T> column) => DataColumnProps<T>(
             header: column.header,
@@ -106,15 +106,15 @@ class _DataTableState<T> extends State<DataTable<T>> {
 
     return context.renderers.dataTable<T>(
       DataTableProps<T>(
-        items: component.items,
+        items: widget.items,
         columns: columnProps,
-        onRowTap: component.onRowTap,
-        selectable: component.selectable,
+        onRowTap: widget.onRowTap,
+        selectable: widget.selectable,
         selectedItems: _selectedItems,
-        showDividers: component.showDividers,
-        showHeader: component.showHeader,
-        stickyHeader: component.stickyHeader,
-        emptyMessage: component.emptyMessage,
+        showDividers: widget.showDividers,
+        showHeader: widget.showHeader,
+        stickyHeader: widget.stickyHeader,
+        emptyMessage: widget.emptyMessage,
         onToggleSelection: _toggleSelection,
         onToggleSelectAll: _toggleSelectAll,
       ),

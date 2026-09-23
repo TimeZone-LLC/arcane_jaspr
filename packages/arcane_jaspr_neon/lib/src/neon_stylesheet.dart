@@ -1,9 +1,9 @@
 import 'package:arcane_jaspr/stylesheets/stylesheet.dart';
 import 'package:arcane_jaspr/theme/index.dart';
 
-import 'neon_css.dart';
-import 'neon_theme.dart';
-import 'renderers/neon_renderers.dart';
+import 'package:arcane_jaspr_neon/src/neon_css.dart';
+import 'package:arcane_jaspr_neon/src/neon_theme.dart';
+import 'package:arcane_jaspr_neon/src/renderers/neon_renderers.dart';
 
 /// Green and grayscale theme for technical product interfaces.
 ///
@@ -33,7 +33,7 @@ class NeonStylesheet extends ArcaneStylesheet {
     border: 0xFFC9C9C5,
     destructive: 0xFF525252,
     success: theme.color,
-    warning: 0xFF737373,
+    warning: 0xFF666666,
     info: 0xFF404040,
   );
 

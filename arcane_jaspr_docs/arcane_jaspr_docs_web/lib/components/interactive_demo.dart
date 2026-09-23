@@ -95,11 +95,11 @@ class _InteractiveDemoState extends State<InteractiveDemo> {
       intValues: _intValues,
       notify: () => setState(() {}),
     );
-    DemoDefinition? demo = demoRegistry[component.componentType];
+    DemoDefinition? demo = demoRegistry[widget.componentType];
     String exampleCode = demo?.code ?? 'ArcaneComponent(/* configure props */)';
     Widget preview =
         demo?.previewBuilder(demoState) ??
-        _buildMissingPreview(component.componentType);
+        _buildMissingPreview(widget.componentType);
     ArcaneThemeProvider? parentTheme = ArcaneThemeProvider.of(context);
     ArcaneStylesheet stylesheet = resolveDemoStylesheet(
       parentTheme?.stylesheet,
@@ -126,8 +126,8 @@ class _InteractiveDemoState extends State<InteractiveDemo> {
         ], classes: 'arcane-demo-kicker'),
         dom.div(<Widget>[
           dom.span(<Widget>[
-            Text('Component: ${component.componentType}'),
-          ], classes: 'arcane-demo-component-meta'),
+            Text('Component: ${widget.componentType}'),
+          ], classes: 'arcane-demo-widget-meta'),
         ], classes: 'arcane-demo-meta'),
         dom.div(const <Widget>[
           Text('Preview + Code'),

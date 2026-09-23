@@ -2,6 +2,7 @@ import 'package:arcane_jaspr/flutter.dart';
 import 'package:jaspr/jaspr.dart' as jaspr;
 import 'package:jaspr/dom.dart' as dom;
 import '../../core/dom_value.dart';
+import 'package:arcane_jaspr/core/rendering/field_identity.dart';
 
 export '../../core/props/text_input_props.dart'
     show ComponentSize, TextInputVariant, TextInputType;
@@ -30,10 +31,10 @@ class TextInput extends StatelessWidget {
   final String? error;
   final String? helperText;
   final String? label;
-  final void Function(String)? _onChange;
+  final void Function(String)? onChanged;
   final void Function()? onFocus;
   final void Function()? onBlur;
-  final void Function(String)? onSubmit;
+  final void Function(String)? onSubmitted;
   final ArcaneInteraction? onChangeAction;
   final ArcaneInteraction? onSubmitAction;
   final String? formId;
@@ -63,11 +64,10 @@ class TextInput extends StatelessWidget {
     this.error,
     this.helperText,
     this.label,
-    void Function(String)? onChange,
-    void Function(String)? onInput,
+    this.onChanged,
     this.onFocus,
     this.onBlur,
-    this.onSubmit,
+    this.onSubmitted,
     this.onChangeAction,
     this.onSubmitAction,
     this.formId,
@@ -77,7 +77,7 @@ class TextInput extends StatelessWidget {
     this.styles,
     this.decoration,
     super.key,
-  }) : _onChange = onChange ?? onInput;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -98,10 +98,10 @@ class TextInput extends StatelessWidget {
         error: error,
         prefix: prefix,
         suffix: suffix,
-        onChanged: _onChange,
+        onChanged: onChanged,
         onFocus: onFocus,
         onBlur: onBlur,
-        onSubmit: onSubmit,
+        onSubmitted: onSubmitted,
         onChangeAction: onChangeAction,
         onSubmitAction: onSubmitAction,
         formId: formId,
@@ -133,7 +133,7 @@ class TextArea extends StatelessWidget {
   final String? label;
   final String? error;
   final String? helperText;
-  final void Function(String)? _onChange;
+  final void Function(String)? onChanged;
   final bool fullWidth;
 
   /// Literal, theme-permeable style override (always applied, wins over theme).
@@ -160,13 +160,12 @@ class TextArea extends StatelessWidget {
     this.label,
     this.error,
     this.helperText,
-    void Function(String)? onChange,
-    void Function(String)? onInput,
+    this.onChanged,
     this.fullWidth = true,
     this.styles,
     this.decoration,
     super.key,
-  }) : _onChange = onChange ?? onInput;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +187,7 @@ class TextArea extends StatelessWidget {
       label: label,
       error: error,
       helperText: helperText,
-      onChanged: _onChange,
+      onChanged: onChanged,
       fullWidth: fullWidth,
       styles: styles,
       decoration: decoration,
@@ -216,7 +215,7 @@ class ArcaneSelect extends StatelessWidget {
   final String? id;
   final String? label;
   final String? error;
-  final void Function(String)? _onChange;
+  final void Function(String)? onChanged;
   final bool fullWidth;
 
   /// Literal, theme-permeable style override (always applied, wins over theme).
@@ -237,18 +236,19 @@ class ArcaneSelect extends StatelessWidget {
     this.id,
     this.label,
     this.error,
-    void Function(String)? onChange,
-    void Function(String)? onInput,
-    void Function(String)? onSelect,
+    this.onChanged,
     this.fullWidth = false,
     this.styles,
     this.decoration,
     super.key,
-  }) : _onChange = onChange ?? onInput ?? onSelect;
+  });
 
   @override
-  Widget build(BuildContext context) {
-    final hasError = error != null;
+  Widget build(BuildContext context) =>
+      FieldIdentity(id: id, builder: _buildField);
+
+  Widget _buildField(String fieldId) {
+    final bool hasError = error != null;
 
     final Map<String, String> sizeStyles = switch (size) {
       ComponentSize.sm => {
@@ -270,13 +270,15 @@ class ArcaneSelect extends StatelessWidget {
 
     final Widget selectElement = jaspr.Component.element(
       tag: 'select',
-      id: id,
+      id: fieldId,
       classes: 'arcane-select',
       attributes: {
         'name': ?name,
         'data-arcane-field-control': 'true',
         if (disabled) 'disabled': 'true',
         if (required) 'required': 'true',
+        if (hasError) 'aria-invalid': 'true',
+        if (hasError) 'aria-describedby': '$fieldId-error',
       },
       styles: dom.Styles(
         raw: {
@@ -302,16 +304,20 @@ class ArcaneSelect extends StatelessWidget {
         },
       ),
       events: {
-        if (_onChange != null)
+        if (onChanged != null)
           'change': (e) {
-            _onChange(domInputValue(e.target));
+            onChanged!(domInputValue(e.target));
           },
       },
       children: [
         if (placeholder != null)
           jaspr.Component.element(
             tag: 'option',
-            attributes: {'value': '', 'disabled': 'true', 'selected': 'true'},
+            attributes: <String, String>{
+              'value': '',
+              'disabled': 'true',
+              if (value == null || value!.isEmpty) 'selected': 'true',
+            },
             children: [jaspr.Component.text(placeholder!)],
           ),
         for (final opt in options)
@@ -375,7 +381,7 @@ class ArcaneSelect extends StatelessWidget {
           if (label != null)
             jaspr.Component.element(
               tag: 'label',
-              attributes: id != null ? {'for': id!} : null,
+              attributes: <String, String>{'for': fieldId},
               styles: const dom.Styles(
                 raw: {
                   'font-size': '1rem',
@@ -400,6 +406,7 @@ class ArcaneSelect extends StatelessWidget {
           selectShell,
           if (error != null)
             dom.span(
+              id: '$fieldId-error',
               classes: 'arcane-select-error',
               styles: const dom.Styles(
                 raw: {'font-size': '0.875rem', 'color': 'var(--destructive)'},

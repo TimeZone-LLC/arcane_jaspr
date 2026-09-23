@@ -68,7 +68,7 @@ void main() {
       theme: ShadcnTheme.midnight,
     ).componentCss;
     final RegExpMatch? lightBlockMatch = RegExp(
-      r':root, html\.light, \.light \{([^}]*)\}',
+      r'#arcane-root\.arcane-theme-shadcn \{([^}]*)\}',
       dotAll: true,
     ).firstMatch(css);
     expect(lightBlockMatch, isNotNull);
@@ -91,7 +91,7 @@ void main() {
       theme: ShadcnTheme.midnight,
     ).componentCss;
     final RegExpMatch? darkBlockMatch = RegExp(
-      r'html\.dark, \.dark \{([^}]*)\}',
+      r'#arcane-root\.dark\.arcane-theme-shadcn \{([^}]*)\}',
       dotAll: true,
     ).firstMatch(css);
     expect(darkBlockMatch, isNotNull);

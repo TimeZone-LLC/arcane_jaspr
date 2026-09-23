@@ -150,11 +150,11 @@ class _ArcaneVirtualScrollState<T> extends State<ArcaneVirtualScroll<T>> {
   Widget build(BuildContext context) {
     return context.renderers.virtualScroll<T>(
       VirtualScrollProps<T>(
-        items: component.items,
-        itemBuilder: component.itemBuilder,
-        itemHeight: component.itemHeight,
-        height: component.height,
-        overscan: component.overscan,
+        items: widget.items,
+        itemBuilder: widget.itemBuilder,
+        itemHeight: widget.itemHeight,
+        height: widget.height,
+        overscan: widget.overscan,
         scrollTop: _scrollTop,
         onScroll: (scrollTop) => setState(() => _scrollTop = scrollTop),
       ),

@@ -46,7 +46,9 @@ abstract class ToggleSwitchRenderBase extends StatelessComponent {
   @override
   Component build(BuildContext context) {
     final bool inExternalGroup =
-        props.group != null && props.group!.isNotEmpty && props.itemValue != null;
+        props.group != null &&
+        props.group!.isNotEmpty &&
+        props.itemValue != null;
     final String groupId = inExternalGroup ? props.group! : props.id;
     final String optionValue = inExternalGroup ? props.itemValue! : 'on';
     final String groupMode = inExternalGroup ? 'multi' : 'single';
@@ -65,6 +67,9 @@ abstract class ToggleSwitchRenderBase extends StatelessComponent {
           );
 
     final Map<String, String> itemAttrs = mergeAttrs(<Map<String, String>>[
+      <String, String>{
+        if (props.label != null) 'aria-labelledby': '${props.id}-label',
+      },
       groupItemAttrs(
         groupId: groupId,
         value: optionValue,
@@ -72,18 +77,17 @@ abstract class ToggleSwitchRenderBase extends StatelessComponent {
         disabled: props.disabled,
       ),
       if (!props.disabled)
-        interactionAttrs(
-          ArcaneInteraction.toggleValue(groupId, optionValue),
-        ),
+        interactionAttrs(ArcaneInteraction.toggleValue(groupId, optionValue)),
     ]);
 
     final Component switchWidget = buildSwitch(props, itemAttrs);
 
     if (props.label == null) {
-      return switchWidget;
+      return buildWrapper(props, rootAttrs, <Component>[switchWidget]);
     }
 
     final Component labelWidget = dom.span(
+      id: '${props.id}-label',
       classes: labelClasses,
       styles: dom.Styles(raw: labelStyles(props)),
       <Component>[Component.text(props.label!)],

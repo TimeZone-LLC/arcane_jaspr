@@ -25,7 +25,7 @@ class NeonTextArea extends TextAreaRenderBase {
     'caret-color': isReadOnly ? 'var(--muted-foreground)' : 'var(--foreground)',
     'border': hasError
         ? '1px solid var(--destructive)'
-        : '1px solid var(--border)',
+        : '1px solid var(--neon-control-border)',
     'border-radius': 'var(--radius-md)',
     'outline': 'none',
     'transition': 'border-color var(--transition)',

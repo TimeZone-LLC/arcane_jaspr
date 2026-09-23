@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [x.x.x]
+
+### Added
+
+- Flutter-style `State.widget` and `didUpdateWidget`, with tests for updates,
+  keyed replacement, `setState`, and disposal.
+- `Flex`, `Flexible`, `FlexFit`, numeric `Positioned` constraints, and optional
+  children for empty layouts and `SizedBox.expand`/`SizedBox.shrink`.
+- `TextStyle`, `Text.data`, `textAlign`, and `softWrap` for typed text authoring.
+- `IconButton.tooltip` and `semanticLabel` provide native titles and accessible names.
+- [Flutter authoring guide](doc/flutter_authoring.md) and
+  [upgrade notes](doc/upgrade_notes.md) describe supported conventions and direct replacements.
+
+### Changed
+
+- **Breaking:** `Row` and `Column` use `spacing`. `Column` centers its cross axis
+  by default. Existing package and documentation layouts now specify their intended alignment.
+- **Breaking:** `Wrap` uses `alignment`, `runAlignment`, `spacing`, `runSpacing`,
+  and `WrapCrossAlignment`, with zero spacing by default and support for both axes.
+- **Breaking:** `Text.style` accepts `TextStyle`. Literal CSS uses `cssStyle`;
+  `align` becomes `textAlign`, and the text value is available as `data`.
+- **Breaking:** Text fields, text areas, native selects, and OTP controls use
+  `onChanged`. Text input submission uses `onSubmitted`.
+- ShadCN, Neon, and Windows95 now have consistent control sizing, readable state
+  colors, complete radio variants, and state styles that respond to runtime changes.
+
+### Fixed
+
+- Generated field IDs link labels and help/error text across renderer packages.
+  Prefix and suffix inputs use the same attribute and event path as plain inputs.
+- Disabled button links no longer navigate or dispatch runtime actions.
+- Checkbox captions toggle in static pages, and unlabeled switches retain their
+  runtime group. Checked states update their accessible attributes.
+- Controlled checkboxes and switches update once per activation after hydration;
+  checkbox keyboard activation also invokes `onChanged`.
+- Legacy radio scripts leave native runtime groups and their selected styles intact.
+- Native selects mark only the current option selected, and text submission
+  waits until input-method composition finishes.
+- All renderers preserve finite dimensions beside an expanding `SizedBox` axis.
+  Flex main-axis sizing now has the same behavior across themes.
+
+### Removed
+
+- Competing text-input `onChange`/`onInput` callbacks, select `onSelect` aliases,
+  and checkbox/switch `onToggle` aliases. Update callers directly.
+
 ## [4.0.0] - 2026-08-31
 
 ### Added

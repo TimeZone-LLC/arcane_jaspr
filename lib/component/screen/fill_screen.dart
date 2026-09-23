@@ -38,7 +38,7 @@ class FillScreen extends AbstractStatelessScreen {
           ],
         ),
         ?foreground,
-        if (fab != null) Positioned(right: '16px', bottom: '16px', child: fab!),
+        if (fab != null) Positioned(right: 16, bottom: 16, child: fab!),
       ],
     );
 

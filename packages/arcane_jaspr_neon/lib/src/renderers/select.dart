@@ -14,7 +14,7 @@ class NeonSelect<T> extends SelectRenderBase<T> {
   String get requiredAsteriskColor => 'var(--foreground)';
 
   @override
-  String get controlBorderColor => 'var(--border)';
+  String get controlBorderColor => 'var(--neon-control-border)';
 
   @override
   Map<String, String> triggerStyles(
@@ -74,7 +74,7 @@ class NeonSelect<T> extends SelectRenderBase<T> {
     'width': '100%',
     'height': '2.5rem',
     'padding': '0.5rem 0.75rem',
-    'border': '1px solid var(--border)',
+    'border': '1px solid var(--neon-control-border)',
     'border-radius': 'var(--radius-sm)',
     'outline': 'none',
     'background': 'var(--input)',
@@ -95,7 +95,7 @@ class NeonSelect<T> extends SelectRenderBase<T> {
     'width': '100%',
     'border': '0',
     'background': isSelected ? 'rgba(var(--primary-rgb), 0.14)' : 'transparent',
-    'color': isSelected ? 'var(--primary)' : 'var(--foreground)',
+    'color': isSelected ? 'var(--neon-accent-ink)' : 'var(--foreground)',
     'font': 'inherit',
     'text-align': 'left',
     'cursor': isDisabled ? 'not-allowed' : 'pointer',

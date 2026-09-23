@@ -4,6 +4,7 @@ import 'package:jaspr/jaspr.dart';
 import 'package:arcane_jaspr/core/decoration/arcane_decoration.dart';
 import 'package:arcane_jaspr/core/dom_value.dart';
 import 'package:arcane_jaspr/core/props/text_area_props.dart';
+import 'package:arcane_jaspr/core/rendering/field_identity.dart';
 
 /// Shared structural base for themed text-area renderers.
 ///
@@ -53,8 +54,16 @@ abstract class TextAreaRenderBase extends StatelessComponent {
       const <String, String>{};
 
   @override
-  Component build(BuildContext context) {
+  Component build(BuildContext context) =>
+      FieldIdentity(id: props.id, builder: _buildField);
+
+  Component _buildField(String fieldId) {
     final bool hasError = props.error != null;
+    final String? descriptionId = hasError
+        ? '$fieldId-error'
+        : props.helperText != null
+        ? '$fieldId-helper'
+        : null;
     final String resize = switch (props.resize) {
       TextAreaResize.none => 'none',
       TextAreaResize.vertical => 'vertical',
@@ -64,7 +73,7 @@ abstract class TextAreaRenderBase extends StatelessComponent {
 
     final Component textArea = Component.element(
       tag: 'textarea',
-      id: props.id,
+      id: fieldId,
       classes: _classes('arcane-textarea', '$classPrefix-textarea'),
       attributes: <String, String>{
         if (props.name != null) 'name': props.name!,
@@ -75,6 +84,7 @@ abstract class TextAreaRenderBase extends StatelessComponent {
         if (props.required) 'required': 'true',
         if (props.readOnly) 'readonly': 'true',
         if (hasError) 'aria-invalid': 'true',
+        'aria-describedby': ?descriptionId,
         if (hasError) 'data-error': 'true',
         if (props.readOnly) 'data-readonly': 'true',
       },
@@ -141,9 +151,7 @@ abstract class TextAreaRenderBase extends StatelessComponent {
               'arcane-textarea-label',
               '$classPrefix-textarea-label',
             ),
-            attributes: props.id == null
-                ? null
-                : <String, String>{'for': props.id!},
+            attributes: <String, String>{'for': fieldId},
             styles: dom.Styles(raw: labelStyles()),
             children: <Component>[
               Component.text(props.label!),
@@ -162,6 +170,7 @@ abstract class TextAreaRenderBase extends StatelessComponent {
         textArea,
         if (props.error != null)
           dom.span(
+            id: descriptionId,
             classes: _classes(
               'arcane-textarea-error',
               '$classPrefix-textarea-error',
@@ -171,6 +180,7 @@ abstract class TextAreaRenderBase extends StatelessComponent {
           )
         else if (props.helperText != null)
           dom.span(
+            id: descriptionId,
             classes: _classes(
               'arcane-textarea-helper',
               '$classPrefix-textarea-helper',

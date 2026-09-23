@@ -200,10 +200,10 @@ void main() {
     expect(File('lib/core/props/fade_edge_props.dart').existsSync(), isFalse);
     expect(navDropdown, isNot(contains('shadowCustom')));
     expect(navDropdown, isNot(contains('ArcaneIcon.externalLink')));
-    expect(navDropdown, contains("target: component.isExternal ? '_blank'"));
+    expect(navDropdown, contains("target: widget.isExternal ? '_blank'"));
     expect(
       navDropdown,
-      contains("rel: component.isExternal ? 'noopener noreferrer'"),
+      contains("rel: widget.isExternal ? 'noopener noreferrer'"),
     );
     expect(cardWidgets, isNot(contains('linear-gradient')));
     expect(cardWidgets, isNot(contains('final int elevation')));

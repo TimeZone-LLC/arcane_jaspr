@@ -1,5 +1,27 @@
 # Changelog
 
+## x.x.x
+
+### Changed
+
+- Deepened light accent palettes and refreshed semantic colors so primary,
+  success, warning, information, and error text meet 4.5:1 contrast on generated
+  page and card surfaces in both color modes.
+- Moved button colors and hover states into theme CSS while retaining literal
+  instance style overrides, consistent control borders, and underlined links.
+- Scoped midnight palette overrides to the ShadCN root and added visible radio
+  card focus and a forced-colors focus fallback.
+
+### Fixed
+
+- Checkbox indicators and switch colors and thumbs now follow runtime selection
+  changes without requiring a client rebuild.
+- Hydrated switches update once per click or keyboard activation.
+- All radio variants follow native selection without a client rebuild, retain
+  native required state, and keep a stable card perimeter when selection changes.
+- SizedBox preserves finite dimensions beside expanded dimensions; Row and
+  Column consistently honor mainAxisSize, and Wrap supports vertical flow.
+
 ## 4.0.0 - 2026-08-31
 
 ### Changed

@@ -132,7 +132,7 @@ class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
             },
           ),
           [
-            Component.text(component.label),
+            Component.text(widget.label),
             dom.span(
               styles: dom.Styles(
                 raw: {
@@ -168,7 +168,7 @@ class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
               },
             ),
             [
-              for (final section in component.sections)
+              for (final section in widget.sections)
                 dom.div(
                   classes: 'arcane-mega-menu-section',
                   styles: const dom.Styles(raw: {'min-width': '180px'}),
@@ -199,7 +199,7 @@ class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
                     ),
                   ],
                 ),
-              if (component.footer != null)
+              if (widget.footer != null)
                 dom.div(
                   classes: 'arcane-mega-menu-footer',
                   styles: const dom.Styles(
@@ -208,7 +208,7 @@ class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
                       'border-left': '1px solid var(--border)',
                     },
                   ),
-                  [component.footer!],
+                  [widget.footer!],
                 ),
             ],
           ),

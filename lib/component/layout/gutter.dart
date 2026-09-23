@@ -21,8 +21,8 @@ import 'package:jaspr/dom.dart'
         Visibility,
         Radius;
 
-import '../../core/theme_provider.dart';
-import '../../util/style_types/index.dart';
+import 'package:arcane_jaspr/core/theme_provider.dart';
+import 'package:arcane_jaspr/util/style_types/index.dart';
 
 /// A spacing component that provides consistent gaps between elements.
 class Gutter extends StatelessWidget {
@@ -158,12 +158,12 @@ class ArcaneBox extends StatelessWidget {
   }
 }
 
-/// An Stack component for positioning children on top of each other.
+/// Positions children on top of each other.
 class Stack extends StatelessWidget {
   final List<Widget> children;
   final ArcaneStyleData? style;
 
-  const Stack({required this.children, this.style, super.key});
+  const Stack({this.children = const <Widget>[], this.style, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -180,10 +180,12 @@ class Stack extends StatelessWidget {
 /// A positioned child for use within a Stack.
 class Positioned extends StatelessWidget {
   final Widget child;
-  final String? top;
-  final String? right;
-  final String? bottom;
-  final String? left;
+  final double? top;
+  final double? right;
+  final double? bottom;
+  final double? left;
+  final double? width;
+  final double? height;
   final String? inset;
   final ArcaneStyleData? style;
 
@@ -193,33 +195,48 @@ class Positioned extends StatelessWidget {
     this.right,
     this.bottom,
     this.left,
+    this.width,
+    this.height,
     this.inset,
     this.style,
     super.key,
-  });
+  }) : assert(left == null || right == null || width == null),
+       assert(top == null || bottom == null || height == null),
+       assert(width == null || width >= 0),
+       assert(height == null || height >= 0);
 
-  const Positioned.fill({required this.child, this.style, super.key})
-    : top = '0',
-      right = '0',
-      bottom = '0',
-      left = '0',
-      inset = null;
+  const Positioned.fill({
+    required this.child,
+    this.top = 0,
+    this.right = 0,
+    this.bottom = 0,
+    this.left = 0,
+    this.style,
+    super.key,
+  }) : width = null,
+       height = null,
+       inset = null;
 
   @override
   Widget build(BuildContext context) {
-    final baseStyle = ArcaneStyleData(
-      position: Position.absolute,
-      top: top,
-      right: right,
-      bottom: bottom,
-      left: left,
-      inset: inset,
-    );
+    final Map<String, String> styles = <String, String>{
+      'position': 'absolute',
+      if (top != null) 'top': '${top}px',
+      if (right != null) 'right': '${right}px',
+      if (bottom != null) 'bottom': '${bottom}px',
+      if (left != null) 'left': '${left}px',
+      if (width != null)
+        'width': width == double.infinity ? '100%' : '${width}px',
+      if (height != null)
+        'height': height == double.infinity ? '100%' : '${height}px',
+      'inset': ?inset,
+      ...?style?.toMap(),
+    };
 
     return div(
       classes: 'arcane-positioned',
-      styles: baseStyle.merge(style).toStyles(),
-      [child],
+      styles: Styles(raw: styles),
+      <Widget>[child],
     );
   }
 }

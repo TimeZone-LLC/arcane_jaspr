@@ -1,10 +1,11 @@
 import 'package:arcane_jaspr/flutter.dart';
 
-import '../../util/arcane.dart';
+import 'package:arcane_jaspr/util/arcane.dart';
 
 /// Flow layout component properties.
 class FlowProps {
   final List<Widget> children;
+  final Axis direction;
   final MainAxisAlignment mainAxisAlignment;
   final CrossAxisAlignment crossAxisAlignment;
   final WrapAlignment wrapAlignment;
@@ -15,6 +16,7 @@ class FlowProps {
 
   const FlowProps({
     required this.children,
+    this.direction = Axis.horizontal,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.wrapAlignment = WrapAlignment.start,

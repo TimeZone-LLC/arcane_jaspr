@@ -21,7 +21,9 @@ class NeonRow extends StatelessComponent {
           'flex-direction': 'row',
           'align-items': _crossAlign(props.crossAxisAlignment),
           'justify-content': _mainAlign(props.mainAxisAlignment),
-          if (props.mainAxisSize == MainAxisSize.min) 'width': 'fit-content',
+          'width': props.mainAxisSize == MainAxisSize.max
+              ? '100%'
+              : 'fit-content',
           if (props.gap > 0) 'gap': '${props.gap}px',
         },
       ),
@@ -46,7 +48,9 @@ class NeonColumn extends StatelessComponent {
           'flex-direction': 'column',
           'align-items': _crossAlign(props.crossAxisAlignment),
           'justify-content': _mainAlign(props.mainAxisAlignment),
-          if (props.mainAxisSize == MainAxisSize.min) 'height': 'fit-content',
+          'height': props.mainAxisSize == MainAxisSize.max
+              ? '100%'
+              : 'fit-content',
           if (props.gap > 0) 'gap': '${props.gap}px',
         },
       ),
@@ -125,8 +129,14 @@ class NeonSizedBox extends StatelessComponent {
       classes: 'neon-sized-box',
       styles: dom.Styles(
         raw: {
-          if (props.width != null) 'width': '${props.width}px',
-          if (props.height != null) 'height': '${props.height}px',
+          if (props.width != null)
+            'width': props.width == double.infinity
+                ? '100%'
+                : '${props.width}px',
+          if (props.height != null)
+            'height': props.height == double.infinity
+                ? '100%'
+                : '${props.height}px',
           'flex-shrink': '0',
         },
       ),
@@ -149,7 +159,10 @@ class NeonFlow extends StatelessComponent {
         raw: {
           'display': 'flex',
           'flex-wrap': 'wrap',
-          'flex-direction': props.reverse ? 'row-reverse' : 'row',
+          if (props.direction == Axis.vertical) 'height': '100%',
+          'flex-direction': props.direction == Axis.vertical
+              ? (props.reverse ? 'column-reverse' : 'column')
+              : (props.reverse ? 'row-reverse' : 'row'),
           'align-items': _crossAlign(props.crossAxisAlignment),
           'justify-content': _mainAlign(props.mainAxisAlignment),
           'align-content': _wrapAlign(props.wrapAlignment),

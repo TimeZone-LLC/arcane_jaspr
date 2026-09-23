@@ -3,6 +3,9 @@
 Arcane Jaspr gives Jaspr apps a Flutter-first UI surface.
 Use familiar Dart widget structure, keep semantic HTML output, and only drop to HTML or raw Jaspr when you explicitly choose to.
 
+See [Flutter authoring](doc/flutter_authoring.md) for supported conventions and
+[upgrade notes](doc/upgrade_notes.md) for the current breaking changes.
+
 ## Install
 
 ```yaml
@@ -11,10 +14,11 @@ dependencies:
   arcane_jaspr_shadcn: ^4.0.0
   arcane_jaspr_neon: ^4.0.0
   arcane_jaspr_neubrutalism: ^4.0.0
+  arcane_jaspr_win95: ^4.0.0
 ```
 
 `arcane_jaspr` is the core package. Add one or more renderer packages
-(`arcane_jaspr_shadcn`, `arcane_jaspr_neon`, `arcane_jaspr_neubrutalism`) for the
+(`arcane_jaspr_shadcn`, `arcane_jaspr_neon`, `arcane_jaspr_neubrutalism`, `arcane_jaspr_win95`) for the
 themes you want; pick a stylesheet from one of them at runtime.
 
 ## Demo
@@ -89,7 +93,7 @@ class _AppState extends State<App> {
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            gap: 16,
+            spacing: 16,
             children: [
               Text.heading2('Count: $_count'),
               Button.primary(

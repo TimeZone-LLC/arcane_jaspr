@@ -53,8 +53,8 @@ class Search extends StatelessWidget {
       placeholder: placeholder,
       value: value,
       disabled: disabled,
-      onChange: onChanged,
-      onSubmit: onSubmitted,
+      onChanged: onChanged,
+      onSubmitted: onSubmitted,
       prefix: Icon(Icons.search),
       suffix: showClear && (value?.isNotEmpty ?? false)
           ? IconButton(
@@ -70,7 +70,7 @@ class Search extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      gap: 8,
+      spacing: 8,
       children: <Widget>[
         input,
         Card.outlined(

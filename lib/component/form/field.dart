@@ -80,7 +80,7 @@ class _ArcaneFieldState<T> extends State<ArcaneField<T>> {
   @override
   void initState() {
     super.initState();
-    _value = component.provider.defaultValue;
+    _value = widget.provider.defaultValue;
     // Only resolve the async value on the client. During SSR the await
     // continuation in _loadValue would call setState() after the synchronous
     // build phase, tripping jaspr's "setState during build" assertion. On the
@@ -93,9 +93,7 @@ class _ArcaneFieldState<T> extends State<ArcaneField<T>> {
   }
 
   Future<void> _loadValue() async {
-    final T value = await component.provider.getValue(
-      component.meta.effectiveKey,
-    );
+    final T value = await widget.provider.getValue(widget.meta.effectiveKey);
     setState(() {
       _value = value;
       _loading = false;
@@ -106,7 +104,7 @@ class _ArcaneFieldState<T> extends State<ArcaneField<T>> {
     setState(() {
       _value = newValue;
     });
-    component.provider.setValue(component.meta.effectiveKey, newValue);
+    widget.provider.setValue(widget.meta.effectiveKey, newValue);
   }
 
   @override
@@ -117,7 +115,7 @@ class _ArcaneFieldState<T> extends State<ArcaneField<T>> {
       ]);
     }
 
-    return component.builder(context, _value, _handleChange);
+    return widget.builder(context, _value, _handleChange);
   }
 }
 

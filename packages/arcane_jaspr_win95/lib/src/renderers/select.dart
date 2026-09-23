@@ -1,6 +1,6 @@
 import 'package:arcane_jaspr/core/rendering/base/select_render_base.dart';
 
-/// Win95 Select renderer (neutralized skeleton).
+/// Sunken select fields and raised option lists.
 class Win95Select<T> extends SelectRenderBase<T> {
   const Win95Select(super.props, {super.key});
 
@@ -26,8 +26,11 @@ class Win95Select<T> extends SelectRenderBase<T> {
   ) => const <String, String>{};
 
   @override
-  Map<String, String> dropdownStyles(String maxHeight) =>
-      const <String, String>{};
+  Map<String, String> dropdownStyles(String maxHeight) => <String, String>{
+    'max-height': maxHeight,
+    'overflow-y': 'auto',
+    'overscroll-behavior': 'contain',
+  };
 
   @override
   Map<String, String> get searchWrapperStyles => const <String, String>{};
@@ -41,10 +44,19 @@ class Win95Select<T> extends SelectRenderBase<T> {
 
   @override
   Map<String, String> optionCheckboxStyles(bool isSelected) =>
-      const <String, String>{};
+      const <String, String>{
+        'display': 'flex',
+        'align-items': 'center',
+        'justify-content': 'center',
+        'flex': '0 0 15px',
+        'width': '15px',
+        'height': '15px',
+        'background': 'var(--w95-field)',
+        'box-shadow': 'var(--w95-sunken)',
+      };
 
   @override
-  String get optionCheckColor => 'var(--foreground)';
+  String get optionCheckColor => 'var(--w95-field-text)';
 
   @override
   String optionIconColor(bool isSelected) => 'var(--foreground)';

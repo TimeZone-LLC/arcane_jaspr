@@ -12,7 +12,10 @@ Component renderFlow(FlowProps props) {
       raw: {
         'display': 'flex',
         'flex-wrap': 'wrap',
-        'flex-direction': props.reverse ? 'row-reverse' : 'row',
+        if (props.direction == Axis.vertical) 'height': '100%',
+        'flex-direction': props.direction == Axis.vertical
+            ? (props.reverse ? 'column-reverse' : 'column')
+            : (props.reverse ? 'row-reverse' : 'row'),
         'justify-content': props.mainAxisAlignment.css,
         'align-items': props.crossAxisAlignment.css,
         'align-content': props.wrapAlignment.css,
@@ -34,7 +37,9 @@ Component renderRow(RowProps props) {
         'flex-direction': 'row',
         'justify-content': props.mainAxisAlignment.css,
         'align-items': props.crossAxisAlignment.css,
-        if (props.mainAxisSize == MainAxisSize.max) 'width': '100%',
+        'width': props.mainAxisSize == MainAxisSize.max
+            ? '100%'
+            : 'fit-content',
         if (props.gap > 0) 'gap': '${props.gap}px',
       },
     ),
@@ -52,7 +57,9 @@ Component renderColumn(ColumnProps props) {
         'flex-direction': 'column',
         'justify-content': props.mainAxisAlignment.css,
         'align-items': props.crossAxisAlignment.css,
-        if (props.mainAxisSize == MainAxisSize.max) 'height': '100%',
+        'height': props.mainAxisSize == MainAxisSize.max
+            ? '100%'
+            : 'fit-content',
         if (props.gap > 0) 'gap': '${props.gap}px',
       },
     ),
@@ -99,17 +106,16 @@ Component renderExpanded(ExpandedProps props) {
 
 /// Renders a sized box component.
 Component renderSizedBox(SizedBoxProps props) {
-  final bool isExpand =
-      props.width == double.infinity || props.height == double.infinity;
-
   return dom.div(
     classes: 'arcane-sized-box',
     styles: dom.Styles(
       raw: {
-        if (props.width != null && !isExpand) 'width': '${props.width}px',
-        if (props.height != null && !isExpand) 'height': '${props.height}px',
-        if (props.width == double.infinity) 'width': '100%',
-        if (props.height == double.infinity) 'height': '100%',
+        if (props.width != null)
+          'width': props.width == double.infinity ? '100%' : '${props.width}px',
+        if (props.height != null)
+          'height': props.height == double.infinity
+              ? '100%'
+              : '${props.height}px',
         'flex-shrink': '0',
       },
     ),

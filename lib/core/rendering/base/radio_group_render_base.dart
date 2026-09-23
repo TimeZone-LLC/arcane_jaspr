@@ -9,11 +9,9 @@ import 'package:arcane_jaspr/core/props/radio_group_props.dart';
 
 /// Shared structural base for themed radio-group renderers.
 ///
-/// Radio groups diverge substantially per theme: ShadCN renders hidden
-/// `<input type="radio">` elements with a custom circle and wires `role`,
-/// `name` and `aria-labelledby`, while the neon/neubrutalism themes render no
-/// inputs, attach click handlers to the option container and expose
-/// `data-layout`/`data-variant`. This base therefore factors only the parts
+/// Radio groups diverge substantially per theme: ShadCN, Neon and Windows95
+/// use native radio inputs, while Neubrutalism attaches click handlers to
+/// option containers. This base therefore factors only the parts
 /// that are genuinely identical and error-prone — the group/item interaction
 /// attribute wiring, the root container scaffold and the per-option variant
 /// dispatch — and leaves the visual nodes (root classes/attrs/styles, the
@@ -145,7 +143,7 @@ abstract class RadioGroupRenderBase<T> extends StatelessComponent {
   Component build(BuildContext context) {
     final bool hasError = props.error != null;
     final String groupName =
-        props.name ?? '$groupIdPrefix${identityHashCode(this)}';
+        props.name ?? props.id ?? '$groupIdPrefix${identityHashCode(this)}';
     final String groupId = props.id ?? groupName;
     final String? currentGroupValue = props.value?.toString();
 

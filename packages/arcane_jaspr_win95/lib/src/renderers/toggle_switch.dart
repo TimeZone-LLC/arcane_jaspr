@@ -3,9 +3,10 @@ import 'package:jaspr/jaspr.dart';
 
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/toggle_switch_props.dart';
+import 'package:arcane_jaspr/core/dom_value.dart';
 import 'package:arcane_jaspr/core/rendering/base/toggle_switch_render_base.dart';
 
-/// Win95 Toggle Switch renderer (neutralized skeleton).
+/// A native button switch with a raised grip and an associated label.
 class Win95ToggleSwitch extends ToggleSwitchRenderBase {
   const Win95ToggleSwitch(super.props, {super.key});
 
@@ -20,6 +21,8 @@ class Win95ToggleSwitch extends ToggleSwitchRenderBase {
       attributes: mergeAttrs(<Map<String, String>>[
         <String, String>{
           'type': 'button',
+          'id': '${props.id}-control',
+          if (props.label != null) 'aria-label': props.label!,
           'role': 'switch',
           'aria-checked': '${props.value}',
           'data-state': props.value ? 'checked' : 'unchecked',
@@ -37,11 +40,12 @@ class Win95ToggleSwitch extends ToggleSwitchRenderBase {
       events: props.disabled || props.onChanged == null
           ? null
           : <String, EventCallback>{
-              'click': (_) => props.onChanged!(!props.value),
+              'click': (event) {
+                domPreventDefault(event);
+                props.onChanged!(!props.value);
+              },
             },
-      <Component>[
-        const dom.span(classes: 'win95-toggle-thumb', <Component>[]),
-      ],
+      <Component>[const dom.span(classes: 'win95-toggle-thumb', <Component>[])],
     );
   }
 
@@ -60,15 +64,7 @@ class Win95ToggleSwitch extends ToggleSwitchRenderBase {
   ) {
     return dom.label(
       classes: 'win95-toggle-wrapper',
-      attributes: rootAttrs,
-      events: props.disabled || props.onChanged == null
-          ? null
-          : <String, EventCallback>{
-              'click': (e) {
-                if ((e.target as dynamic)?.tagName == 'BUTTON') return;
-                props.onChanged!(!props.value);
-              },
-            },
+      attributes: <String, String>{...rootAttrs, 'for': '${props.id}-control'},
       children,
     );
   }

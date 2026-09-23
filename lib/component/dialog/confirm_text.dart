@@ -31,16 +31,16 @@ class _ConfirmTextState extends State<ConfirmText> {
 
   @override
   Widget build(BuildContext context) => ArcaneDialog(
-    title: component.title,
+    title: widget.title,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      gap: 12,
+      spacing: 12,
       children: <Widget>[
-        if (component.description != null) Text.body(component.description!),
-        Text.body('Type ${component.confirmPhrase} to continue.'),
+        if (widget.description != null) Text.body(widget.description!),
+        Text.body('Type ${widget.confirmPhrase} to continue.'),
         TextInput(
           value: _value,
-          onChange: (String value) {
+          onChanged: (String value) {
             setState(() {
               _value = value;
             });
@@ -49,10 +49,10 @@ class _ConfirmTextState extends State<ConfirmText> {
       ],
     ),
     actions: <Widget>[
-      Button.ghost(onPressed: component.onCancel, label: 'Cancel'),
+      Button.ghost(onPressed: widget.onCancel, label: 'Cancel'),
       Button.destructive(
-        onPressed: _value == component.confirmPhrase
-            ? () => component.onConfirm?.call(_value)
+        onPressed: _value == widget.confirmPhrase
+            ? () => widget.onConfirm?.call(_value)
             : null,
         label: 'Confirm',
       ),

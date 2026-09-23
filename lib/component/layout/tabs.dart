@@ -38,7 +38,7 @@ class _ArcaneTabsState extends State<ArcaneTabs> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = component.initialIndex;
+    _selectedIndex = widget.initialIndex;
   }
 
   void _selectTab(int index) {
@@ -46,13 +46,13 @@ class _ArcaneTabsState extends State<ArcaneTabs> {
       setState(() {
         _selectedIndex = index;
       });
-      component.onChanged?.call(index);
+      widget.onChanged?.call(index);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<TabItemProps> tabProps = component.tabs
+    final List<TabItemProps> tabProps = widget.tabs
         .map(
           (tab) => TabItemProps(
             label: tab.label,
@@ -69,9 +69,9 @@ class _ArcaneTabsState extends State<ArcaneTabs> {
         tabs: tabProps,
         selectedIndex: _selectedIndex,
         onChanged: _selectTab,
-        fill: component.fill,
-        styles: component.styles,
-        decoration: component.decoration,
+        fill: widget.fill,
+        styles: widget.styles,
+        decoration: widget.decoration,
       ),
     );
   }

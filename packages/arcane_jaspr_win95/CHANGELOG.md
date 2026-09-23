@@ -1,5 +1,31 @@
 # Changelog
 
+## x.x.x
+
+### Changed
+
+- Use native radio inputs across standard, card, and button variants, with
+  browser keyboard navigation and form semantics. CSS integrations that target
+  radio option attributes must target the nested `.win95-radio-control` input.
+- Align the dark seed with dark silver surfaces and the selected appearance
+  scheme. Pair accent and semantic colors with readable foregrounds.
+- Match Flutter sizing in Row, Column, and SizedBox: maximum axes fill available
+  space, and infinite dimensions fill their own axis without losing finite sizes.
+
+### Fixed
+
+- Restore radio option descriptions, icons, layout, gap, and grid columns. Button
+  variants use full control faces instead of tiny circular indicators.
+- Keep disabled text separate from bevel shadow colors, preserve disabled
+  select captions on hover, and show keyboard focus on the selection bar.
+- Honor `maxDropdownHeight` with a scrollable option list and keep multi-select
+  checkmarks visible inside their own sunken wells.
+- Route switch label clicks through their native associated control once and
+  follow runtime selection when painting switches and checkbox marks.
+- Preserve control boundaries, native radio marks, and focus in forced colors.
+- Correct documentation that described dark silver as High Contrast Black and
+  advertised the removed `Win95Chrome.everything` value.
+
 ## 4.0.0 - 2026-08-31
 
 ### Added

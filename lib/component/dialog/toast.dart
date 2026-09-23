@@ -96,8 +96,8 @@ class _ArcaneToastState extends State<ArcaneToast> {
 
   void _scheduleDismissTimer() {
     _dismissTimer?.cancel();
-    if (component.duration > 0 && !_isHovered) {
-      _dismissTimer = Timer(Duration(milliseconds: component.duration), () {
+    if (widget.duration > 0 && !_isHovered) {
+      _dismissTimer = Timer(Duration(milliseconds: widget.duration), () {
         if (mounted && !_isHovered) {
           _startExitAnimation();
         }
@@ -111,7 +111,7 @@ class _ArcaneToastState extends State<ArcaneToast> {
 
     _exitTimer = Timer(const Duration(milliseconds: 200), () {
       if (mounted) {
-        component.onClose?.call();
+        widget.onClose?.call();
       }
     });
   }
@@ -135,23 +135,23 @@ class _ArcaneToastState extends State<ArcaneToast> {
   Widget build(BuildContext context) {
     return context.renderers.toast(
       ToastProps(
-        message: component.message,
-        title: component.title,
-        description: component.description,
-        variant: component.variant,
-        position: component.position,
-        duration: component.duration,
-        dismissible: component.dismissible,
-        action: component.action,
-        icon: component.icon,
-        id: component.id,
+        message: widget.message,
+        title: widget.title,
+        description: widget.description,
+        variant: widget.variant,
+        position: widget.position,
+        duration: widget.duration,
+        dismissible: widget.dismissible,
+        action: widget.action,
+        icon: widget.icon,
+        id: widget.id,
         isExiting: _isExiting,
         isHovered: _isHovered,
         onMouseEnter: _onMouseEnter,
         onMouseLeave: _onMouseLeave,
         onDismiss: _onDismissClick,
-        styles: component.styles,
-        decoration: component.decoration,
+        styles: widget.styles,
+        decoration: widget.decoration,
       ),
     );
   }
@@ -180,7 +180,7 @@ class _ToastContainerState extends State<_ToastContainer> {
   @override
   void initState() {
     super.initState();
-    ToastManager.instance.setDefaultPosition(component.position);
+    ToastManager.instance.setDefaultPosition(widget.position);
     ToastManager.instance.addListener(_onToastsChanged);
   }
 
@@ -196,7 +196,7 @@ class _ToastContainerState extends State<_ToastContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final toasts = ToastManager.instance.toasts.take(component.maxVisible);
+    final toasts = ToastManager.instance.toasts.take(widget.maxVisible);
 
     final toastPropsList = toasts
         .map(
@@ -218,10 +218,10 @@ class _ToastContainerState extends State<_ToastContainer> {
 
     return context.renderers.toastContainer(
       ToastContainerProps(
-        position: component.position,
-        maxVisible: component.maxVisible,
-        gap: component.gap,
-        offset: component.offset,
+        position: widget.position,
+        maxVisible: widget.maxVisible,
+        gap: widget.gap,
+        offset: widget.offset,
         toasts: toastPropsList,
       ),
     );

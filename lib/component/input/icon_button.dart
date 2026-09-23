@@ -12,6 +12,8 @@ class IconButton extends StatelessWidget {
   final bool disabled;
   final bool loading;
   final String? href;
+  final String? tooltip;
+  final String? semanticLabel;
 
   const IconButton({
     required this.icon,
@@ -22,6 +24,8 @@ class IconButton extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.href,
+    this.tooltip,
+    this.semanticLabel,
     super.key,
   });
 
@@ -33,6 +37,8 @@ class IconButton extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.href,
+    this.tooltip,
+    this.semanticLabel,
     super.key,
   }) : variant = ButtonVariant.primary;
 
@@ -44,6 +50,8 @@ class IconButton extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.href,
+    this.tooltip,
+    this.semanticLabel,
     super.key,
   }) : variant = ButtonVariant.secondary;
 
@@ -55,6 +63,8 @@ class IconButton extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.href,
+    this.tooltip,
+    this.semanticLabel,
     super.key,
   }) : variant = ButtonVariant.outline;
 
@@ -66,6 +76,8 @@ class IconButton extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.href,
+    this.tooltip,
+    this.semanticLabel,
     super.key,
   }) : variant = ButtonVariant.ghost;
 
@@ -77,6 +89,8 @@ class IconButton extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.href,
+    this.tooltip,
+    this.semanticLabel,
     super.key,
   }) : variant = ButtonVariant.destructive;
 
@@ -90,5 +104,9 @@ class IconButton extends StatelessWidget {
     loading: loading,
     href: href,
     icon: icon,
+    attributes: <String, String>{
+      'title': ?tooltip,
+      if (semanticLabel ?? tooltip case final String label) 'aria-label': label,
+    },
   );
 }

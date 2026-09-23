@@ -19,7 +19,7 @@ class ArcaneNativeSelect extends StatelessWidget {
   final String? label;
   final String? error;
   final bool fullWidth;
-  final void Function(String)? onChange;
+  final void Function(String)? onChanged;
 
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
@@ -39,7 +39,7 @@ class ArcaneNativeSelect extends StatelessWidget {
     this.label,
     this.error,
     this.fullWidth = false,
-    this.onChange,
+    this.onChanged,
     this.styles,
     this.decoration,
     super.key,
@@ -70,7 +70,7 @@ class ArcaneNativeSelect extends StatelessWidget {
         label: label,
         error: error,
         fullWidth: fullWidth,
-        onChange: onChange,
+        onChange: onChanged,
         styles: styles,
         decoration: decoration,
       ),

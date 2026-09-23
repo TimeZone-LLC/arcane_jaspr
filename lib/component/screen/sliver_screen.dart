@@ -25,13 +25,13 @@ class SliverScreen extends AbstractStatefulScreen {
 class _SliverScreenState extends State<SliverScreen> {
   @override
   Widget build(BuildContext context) => FillScreen(
-    sidebar: component.sidebar,
-    header: component.header,
-    footer: component.footer,
-    fab: component.fab,
-    foreground: component.foreground,
-    background: component.background,
-    gutter: component.gutter,
-    child: component.sliver,
+    sidebar: widget.sidebar,
+    header: widget.header,
+    footer: widget.footer,
+    fab: widget.fab,
+    foreground: widget.foreground,
+    background: widget.background,
+    gutter: widget.gutter,
+    child: widget.sliver,
   );
 }

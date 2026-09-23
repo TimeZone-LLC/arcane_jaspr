@@ -32,7 +32,7 @@ class RadioCards<T> extends StatelessWidget {
         onTap: onChanged == null ? null : () => onChanged!(entry),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          gap: 6,
+          spacing: 6,
           children: <Widget>[
             Text.label(labelBuilder(entry)),
             if (descriptionBuilder != null)

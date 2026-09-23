@@ -42,8 +42,7 @@ class ArcaneToggleSwitch extends StatelessWidget {
   const ArcaneToggleSwitch({
     this.id,
     required this.value,
-    void Function(bool)? onChanged,
-    void Function(bool)? onToggle,
+    this.onChanged,
     this.disabled = false,
     this.size = ComponentSize.md,
     this.color = ColorVariant.primary,
@@ -54,13 +53,12 @@ class ArcaneToggleSwitch extends StatelessWidget {
     this.styles,
     this.decoration,
     super.key,
-  }) : onChanged = onChanged ?? onToggle;
+  });
 
   const ArcaneToggleSwitch.primary({
     this.id,
     required this.value,
-    void Function(bool)? onChanged,
-    void Function(bool)? onToggle,
+    this.onChanged,
     this.disabled = false,
     this.size = ComponentSize.md,
     this.label,
@@ -70,14 +68,12 @@ class ArcaneToggleSwitch extends StatelessWidget {
     this.styles,
     this.decoration,
     super.key,
-  }) : onChanged = onChanged ?? onToggle,
-       color = ColorVariant.primary;
+  }) : color = ColorVariant.primary;
 
   const ArcaneToggleSwitch.success({
     this.id,
     required this.value,
-    void Function(bool)? onChanged,
-    void Function(bool)? onToggle,
+    this.onChanged,
     this.disabled = false,
     this.size = ComponentSize.md,
     this.label,
@@ -87,14 +83,12 @@ class ArcaneToggleSwitch extends StatelessWidget {
     this.styles,
     this.decoration,
     super.key,
-  }) : onChanged = onChanged ?? onToggle,
-       color = ColorVariant.success;
+  }) : color = ColorVariant.success;
 
   const ArcaneToggleSwitch.warning({
     this.id,
     required this.value,
-    void Function(bool)? onChanged,
-    void Function(bool)? onToggle,
+    this.onChanged,
     this.disabled = false,
     this.size = ComponentSize.md,
     this.label,
@@ -104,14 +98,12 @@ class ArcaneToggleSwitch extends StatelessWidget {
     this.styles,
     this.decoration,
     super.key,
-  }) : onChanged = onChanged ?? onToggle,
-       color = ColorVariant.warning;
+  }) : color = ColorVariant.warning;
 
   const ArcaneToggleSwitch.destructive({
     this.id,
     required this.value,
-    void Function(bool)? onChanged,
-    void Function(bool)? onToggle,
+    this.onChanged,
     this.disabled = false,
     this.size = ComponentSize.md,
     this.label,
@@ -121,8 +113,7 @@ class ArcaneToggleSwitch extends StatelessWidget {
     this.styles,
     this.decoration,
     super.key,
-  }) : onChanged = onChanged ?? onToggle,
-       color = ColorVariant.destructive;
+  }) : color = ColorVariant.destructive;
 
   static int _autoCounter = 0;
   static String _autoId() {

@@ -1,7 +1,6 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
-import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/radio_group_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/radio_group_render_base.dart';
 
@@ -77,7 +76,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
         : 'nowrap',
     'gap': props.gap,
     if (props.layout == RadioGroupLayout.grid)
-      'grid-template-columns': 'repeat(${props.gridColumns}, 1fr)',
+      'grid-template-columns': 'repeat(${props.gridColumns}, minmax(0, 1fr))',
   };
 
   @override
@@ -125,13 +124,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
     return Component.element(
       tag: 'label',
       classes: 'arcane-radio-item',
-      attributes: mergeAttrs(<Map<String, String>>[
-        <String, String>{
-          'data-state': isSelected ? 'checked' : 'unchecked',
-          'data-disabled': '$isDisabled',
-        },
-        itemAttrs,
-      ]),
+      attributes: <String, String>{'data-disabled': '$isDisabled'},
       styles: dom.Styles(
         raw: {
           'display': 'flex',
@@ -147,12 +140,17 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
         // Radio input (hidden, for accessibility)
         dom.input(
           type: dom.InputType.radio,
+          name: groupName,
+          value: option.value.toString(),
+          checked: isSelected,
+          disabled: isDisabled,
           classes: 'arcane-radio-input',
-          attributes: {
-            'name': groupName,
-            'value': option.value.toString(),
-            if (isSelected) 'checked': 'true',
-            if (isDisabled) 'disabled': 'true',
+          attributes: <String, String>{
+            for (final MapEntry<String, String> attribute in itemAttrs.entries)
+              if (attribute.key != 'data-arcane-action')
+                attribute.key: attribute.value,
+            if (props.required) 'required': '',
+            if (hasError) 'aria-invalid': 'true',
             'data-state': isSelected ? 'checked' : 'unchecked',
             'data-disabled': '$isDisabled',
             'data-arcane-intrinsic-shape': 'radio',
@@ -200,23 +198,23 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
           ),
           [
             // Inner dot when selected - ShadCN: h-2.5 w-2.5 (10px), bg-primary
-            if (isSelected)
-              const dom.div(
-                attributes: <String, String>{
-                  'data-arcane-intrinsic-shape': 'radio-dot',
+            const dom.div(
+              attributes: <String, String>{
+                'data-arcane-intrinsic-shape': 'radio-dot',
+              },
+              styles: dom.Styles(
+                raw: {
+                  // ShadCN: h-2.5 w-2.5 (10px)
+                  'opacity': 'var(--shadcn-radio-dot-opacity, 0)',
+                  'width': '10px',
+                  'height': '10px',
+                  'border-radius': '50%',
+                  // ShadCN: bg-primary
+                  'background': 'var(--primary)',
                 },
-                styles: dom.Styles(
-                  raw: {
-                    // ShadCN: h-2.5 w-2.5 (10px)
-                    'width': '10px',
-                    'height': '10px',
-                    'border-radius': '50%',
-                    // ShadCN: bg-primary
-                    'background': 'var(--primary)',
-                  },
-                ),
-                [],
               ),
+              [],
+            ),
           ],
         ),
 
@@ -281,13 +279,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
     return Component.element(
       tag: 'label',
       classes: 'arcane-radio-card',
-      attributes: mergeAttrs(<Map<String, String>>[
-        <String, String>{
-          'data-state': isSelected ? 'checked' : 'unchecked',
-          'data-disabled': '$isDisabled',
-        },
-        itemAttrs,
-      ]),
+      attributes: <String, String>{'data-disabled': '$isDisabled'},
       styles: dom.Styles(
         raw: {
           'display': 'flex',
@@ -295,12 +287,12 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
           'gap': 'var(--space-1)',
           'padding': '1rem',
           'border-radius': 'var(--radius-md)',
-          'border': isSelected
-              ? '2px solid var(--primary)'
-              : hasError
-              ? '2px solid var(--destructive)'
-              : '1px solid var(--border)',
-          'background': isSelected ? 'var(--accent)' : 'var(--card)',
+          '--shadcn-radio-idle-border': hasError
+              ? 'var(--destructive)'
+              : 'var(--shadcn-control-border)',
+          'border':
+              '2px solid var(--shadcn-radio-border, var(--shadcn-radio-idle-border))',
+          'background': 'var(--shadcn-radio-card-background, var(--card))',
           'cursor': isDisabled ? 'not-allowed' : 'pointer',
           'opacity': isDisabled ? '0.5' : '1',
           'transition':
@@ -311,11 +303,16 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
         // Hidden input
         dom.input(
           type: dom.InputType.radio,
-          attributes: {
-            'name': groupName,
-            'value': option.value.toString(),
-            if (isSelected) 'checked': 'true',
-            if (isDisabled) 'disabled': 'true',
+          name: groupName,
+          value: option.value.toString(),
+          checked: isSelected,
+          disabled: isDisabled,
+          attributes: <String, String>{
+            for (final MapEntry<String, String> attribute in itemAttrs.entries)
+              if (attribute.key != 'data-arcane-action')
+                attribute.key: attribute.value,
+            if (props.required) 'required': '',
+            if (hasError) 'aria-invalid': 'true',
             'data-state': isSelected ? 'checked' : 'unchecked',
             'data-disabled': '$isDisabled',
           },
@@ -346,9 +343,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
               dom.div(
                 styles: dom.Styles(
                   raw: {
-                    'color': isSelected
-                        ? 'var(--primary)'
-                        : 'var(--muted-foreground)',
+                    'color': 'var(--shadcn-radio-ink, var(--muted-foreground))',
                   },
                 ),
                 [option.icon!],
@@ -363,12 +358,10 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
                   'width': '16px',
                   'height': '16px',
                   'border-radius': '50%',
-                  'border': isSelected
-                      ? '5px solid var(--primary)'
-                      : '1px solid var(--border)',
-                  'background': isSelected
-                      ? 'var(--background)'
-                      : 'var(--input)',
+                  'box-sizing': 'border-box',
+                  'border':
+                      'var(--shadcn-radio-indicator-width, 1px) solid var(--shadcn-radio-border, var(--shadcn-control-border))',
+                  'background': 'var(--background)',
                 },
               ),
               [],
@@ -382,7 +375,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
             raw: {
               'font-size': 'var(--font-size-sm)',
               'font-weight': 'var(--font-weight-medium)',
-              'color': isSelected ? 'var(--primary)' : 'var(--foreground)',
+              'color': 'var(--shadcn-radio-ink, var(--foreground))',
             },
           ),
           [Component.text(option.label)],
@@ -415,13 +408,7 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
     return Component.element(
       tag: 'label',
       classes: 'arcane-radio-button',
-      attributes: mergeAttrs(<Map<String, String>>[
-        <String, String>{
-          'data-state': isSelected ? 'checked' : 'unchecked',
-          'data-disabled': '$isDisabled',
-        },
-        itemAttrs,
-      ]),
+      attributes: <String, String>{'data-disabled': '$isDisabled'},
       styles: dom.Styles(
         raw: {
           'display': 'inline-flex',
@@ -429,13 +416,13 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
           'justify-content': 'center',
           'gap': 'var(--space-1)',
           'padding': '0.5rem 1rem',
-          'border': isSelected
-              ? '1px solid var(--primary)'
-              : '1px solid var(--border)',
-          'background': isSelected ? 'var(--primary)' : 'var(--card)',
-          'color': isSelected
-              ? 'var(--primary-foreground)'
-              : 'var(--foreground)',
+          '--shadcn-radio-idle-border': hasError
+              ? 'var(--destructive)'
+              : 'var(--shadcn-control-border)',
+          'border':
+              '1px solid var(--shadcn-radio-border, var(--shadcn-radio-idle-border))',
+          'background': 'var(--shadcn-radio-button-background, var(--card))',
+          'color': 'var(--shadcn-radio-button-ink, var(--foreground))',
           'font-size': 'var(--font-size-sm)',
           'font-weight': 'var(--font-weight-medium)',
           'cursor': isDisabled ? 'not-allowed' : 'pointer',
@@ -450,11 +437,16 @@ class ShadcnRadioGroup<T> extends RadioGroupRenderBase<T> {
       children: [
         dom.input(
           type: dom.InputType.radio,
-          attributes: {
-            'name': groupName,
-            'value': option.value.toString(),
-            if (isSelected) 'checked': 'true',
-            if (isDisabled) 'disabled': 'true',
+          name: groupName,
+          value: option.value.toString(),
+          checked: isSelected,
+          disabled: isDisabled,
+          attributes: <String, String>{
+            for (final MapEntry<String, String> attribute in itemAttrs.entries)
+              if (attribute.key != 'data-arcane-action')
+                attribute.key: attribute.value,
+            if (props.required) 'required': '',
+            if (hasError) 'aria-invalid': 'true',
             'data-state': isSelected ? 'checked' : 'unchecked',
             'data-disabled': '$isDisabled',
           },

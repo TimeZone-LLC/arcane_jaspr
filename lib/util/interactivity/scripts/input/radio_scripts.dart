@@ -5,6 +5,7 @@ class RadioScripts {
   static const String code = r'''
   function bindRadioButtons() {
     document.querySelectorAll('.arcane-radio-group').forEach(function(group) {
+      if (group.hasAttribute('data-arcane-group')) return;
       if (group.dataset.arcaneInteractive === 'true') return;
       group.dataset.arcaneInteractive = 'true';
 

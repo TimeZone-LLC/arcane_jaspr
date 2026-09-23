@@ -45,22 +45,19 @@ class ArcaneApp extends StatefulWidget {
 class _ArcaneAppState extends State<ArcaneApp> {
   @override
   Widget build(BuildContext context) {
-    final bool isDark = component.brightness == Brightness.dark;
-    final ArcaneStylesheet stylesheet = component.stylesheet;
+    final bool isDark = widget.brightness == Brightness.dark;
+    final ArcaneStylesheet stylesheet = widget.stylesheet;
 
     // Build head elements data for injection
     final List<HeadElementData> headElements = [];
 
-    if (component.title != null && component.title!.isNotEmpty) {
-      headElements.add(HeadElementData.title(component.title!));
+    if (widget.title != null && widget.title!.isNotEmpty) {
+      headElements.add(HeadElementData.title(widget.title!));
     }
 
-    if (component.description != null && component.description!.isNotEmpty) {
+    if (widget.description != null && widget.description!.isNotEmpty) {
       headElements.add(
-        HeadElementData.meta(
-          name: 'description',
-          content: component.description!,
-        ),
+        HeadElementData.meta(name: 'description', content: widget.description!),
       );
     }
 
@@ -69,7 +66,7 @@ class _ArcaneAppState extends State<ArcaneApp> {
       headElements.add(HeadElementData.style(baseCss));
     }
 
-    if (component.includeFallbackScripts) {
+    if (widget.includeFallbackScripts) {
       headElements.add(HeadElementData.style(arcaneInteractivityRuntimeCss));
     }
 
@@ -97,21 +94,21 @@ class _ArcaneAppState extends State<ArcaneApp> {
         },
       ),
       [
-        component.home,
-        if (component.includeFallbackScripts) const ArcaneScriptsComponent(),
+        widget.home,
+        if (widget.includeFallbackScripts) const ArcaneScriptsComponent(),
       ],
     );
 
     return ArcaneThemeProvider(
       stylesheet: stylesheet,
-      brightness: component.brightness,
+      brightness: widget.brightness,
       child: jaspr.Component.fragment([
         // Add brightness class to html element for CSS variable scoping
         DocumentHelper.html(attributes: {'class': brightnessClass}),
         // Inject styles into the actual document <head>
         DocumentHelper.head(elements: headElements),
-        if (component.head != null && component.head!.isNotEmpty)
-          jaspr.Document.head(children: component.head!),
+        if (widget.head != null && widget.head!.isNotEmpty)
+          jaspr.Document.head(children: widget.head!),
         rootDiv,
       ]),
     );

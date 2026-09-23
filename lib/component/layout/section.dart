@@ -37,7 +37,7 @@ class Section extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            gap: 4,
+            spacing: 4,
             children: <Widget>[
               ?title,
               if (title == null && titleText != null) Text.heading2(titleText!),
@@ -71,7 +71,7 @@ class Section extends StatelessWidget {
 
     final Widget body = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      gap: gap,
+      spacing: gap,
       children: content,
     );
 

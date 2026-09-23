@@ -43,12 +43,12 @@ class ShadcnCheckbox extends CheckboxRenderBase {
   @override
   Map<String, String> descriptionTextStyles(CheckboxProps props) =>
       <String, String>{
-    // ShadCN: text-sm text-muted-foreground
-    'font-size': 'var(--font-size-sm)', // 14px
-    'color': 'var(--muted-foreground)',
-    'display': 'block',
-    'margin-top': '0.25rem', // 4px
-  };
+        // ShadCN: text-sm text-muted-foreground
+        'font-size': 'var(--font-size-sm)', // 14px
+        'color': 'var(--muted-foreground)',
+        'display': 'block',
+        'margin-top': '0.25rem', // 4px
+      };
 
   @override
   Component buildBox(CheckboxProps props, Map<String, String> itemAttrs) {
@@ -95,7 +95,8 @@ class ShadcnCheckbox extends CheckboxRenderBase {
           // ShadCN: rounded-sm (4px / 0.125rem)
           'border-radius': '0.125rem',
           // ShadCN: data-[state=checked]:bg-primary
-          'background-color': props.checked ? checkedBg : 'transparent',
+          '--shadcn-checkbox-fill': checkedBg,
+          'background-color': 'var(--shadcn-checkbox-background, transparent)',
           // ShadCN: border border-primary
           'border': '1px solid $borderColor',
           'display': 'flex',
@@ -110,17 +111,19 @@ class ShadcnCheckbox extends CheckboxRenderBase {
         },
       ),
       <Component>[
-        if (props.checked)
-          dom.span(
-            styles: dom.Styles(
-              raw: <String, String>{
-                // ShadCN: text-primary-foreground when checked
-                'color': checkColor,
-                'line-height': '1',
-              },
-            ),
-            <Component>[ArcaneIcon.check(size: IconSize.xs)],
+        dom.span(
+          classes: 'arcane-checkbox-indicator',
+          attributes: const <String, String>{'aria-hidden': 'true'},
+          styles: dom.Styles(
+            raw: <String, String>{
+              // ShadCN: text-primary-foreground when checked
+              'color': checkColor,
+              'display': 'var(--shadcn-checkbox-indicator, none)',
+              'line-height': '1',
+            },
           ),
+          <Component>[ArcaneIcon.check(size: IconSize.xs)],
+        ),
       ],
     );
   }

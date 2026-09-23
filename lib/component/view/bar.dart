@@ -58,7 +58,7 @@ class Bar extends StatelessWidget {
           crossAxisAlignment: centerTitle
               ? CrossAxisAlignment.center
               : CrossAxisAlignment.start,
-          gap: 4,
+          spacing: 4,
           children: <Widget>[
             ?header,
             if (header == null && headerText != null) Text.label(headerText!),
@@ -72,7 +72,7 @@ class Bar extends StatelessWidget {
 
     final Widget body = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      gap: 8,
+      spacing: 8,
       children: <Widget>[
         ?barHeader,
         Row(

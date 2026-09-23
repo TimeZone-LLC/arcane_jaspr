@@ -82,7 +82,7 @@ import 'package:arcane_jaspr/arcane_jaspr.dart';
 Card.outlined(
   fillWidth: true,
   child: Column(
-    gap: 16,
+    spacing: 16,
     children: [
       const Text.label('Pro workspace'),
       const Text.heading2('Ship dashboards faster'),

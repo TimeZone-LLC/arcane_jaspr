@@ -56,14 +56,14 @@ class _ArcaneSidebarState extends State<ArcaneSidebar> {
   @override
   void initState() {
     super.initState();
-    _isCollapsed = component.collapsed;
+    _isCollapsed = widget.collapsed;
   }
 
   @override
-  void didUpdateComponent(ArcaneSidebar oldComponent) {
-    super.didUpdateComponent(oldComponent);
-    if (oldComponent.collapsed != component.collapsed) {
-      _isCollapsed = component.collapsed;
+  void didUpdateWidget(ArcaneSidebar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.collapsed != widget.collapsed) {
+      _isCollapsed = widget.collapsed;
     }
   }
 
@@ -71,25 +71,25 @@ class _ArcaneSidebarState extends State<ArcaneSidebar> {
     setState(() {
       _isCollapsed = !_isCollapsed;
     });
-    component.onCollapseChanged?.call(_isCollapsed);
+    widget.onCollapseChanged?.call(_isCollapsed);
   }
 
   @override
   Widget build(BuildContext context) {
     return context.renderers.sidebar(
       SidebarProps(
-        children: component.children,
-        header: component.header,
-        footer: component.footer,
+        children: widget.children,
+        header: widget.header,
+        footer: widget.footer,
         isCollapsed: _isCollapsed,
-        onCollapseChanged: component.onCollapseChanged,
-        width: component.width,
-        collapsedWidth: component.collapsedWidth,
-        showCollapseToggle: component.showCollapseToggle,
-        rightSide: component.rightSide,
+        onCollapseChanged: widget.onCollapseChanged,
+        width: widget.width,
+        collapsedWidth: widget.collapsedWidth,
+        showCollapseToggle: widget.showCollapseToggle,
+        rightSide: widget.rightSide,
         onToggleCollapse: _toggleCollapse,
-        styles: component.styles,
-        decoration: component.decoration,
+        styles: widget.styles,
+        decoration: widget.decoration,
       ),
     );
   }

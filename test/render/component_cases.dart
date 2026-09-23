@@ -31,9 +31,12 @@ List<(String, Widget)> componentCases() => <(String, Widget)>[
   ('TextSpan', const TextSpan('span')),
 
   // ---- Layout ----------------------------------------------------------
-  ('Wrap', Wrap(children: _children)),
+  ('Wrap', Wrap(spacing: 8, runSpacing: 8, children: _children)),
   ('Row', Row(children: _children)),
-  ('Column', Column(children: _children)),
+  (
+    'Column',
+    Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: _children),
+  ),
   ('Spacer', const Spacer()),
   ('Center', Center(child: _child)),
   ('Expanded', Expanded(child: _child)),

@@ -258,7 +258,10 @@ void main() {
         '#arcane-root.arcane-theme-win95 .win95-breadcrumb-link,\n'
         '#arcane-root.arcane-theme-win95 .win95-breadcrumb-button',
       );
-      expect(crumbBase, contains('cursor: var(--w95-cursor-arrow) !important;'));
+      expect(
+        crumbBase,
+        contains('cursor: var(--w95-cursor-arrow) !important;'),
+      );
     });
 
     test('edit wells take the I-beam and busy regions the hourglass', () {
@@ -416,7 +419,7 @@ void main() {
         css,
         '#arcane-root.arcane-theme-win95 .win95-menubar-item[aria-disabled="true"],',
       );
-      expect(engraved, contains('color: var(--w95-shadow) !important;'));
+      expect(engraved, contains('color: var(--w95-disabled-text) !important;'));
       expect(
         engraved,
         contains('text-shadow: 1px 1px 0 var(--w95-hilite) !important;'),

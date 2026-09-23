@@ -495,7 +495,7 @@ ArcaneDatePicker(
   description: 'We only use this for account notices.',
   field: TextInput(
     placeholder: 'name@company.com',
-    onChange: (String value) {},
+    onChanged: (String value) {},
   ),
 )''',
     previewBuilder: _buildFieldDemo,
@@ -520,7 +520,7 @@ TextInput(
   label: 'Email',
   placeholder: 'name@example.com',
   value: email,
-  onChange: setEmail,
+  onChanged: setEmail,
 )''',
     previewBuilder: _buildInputDemo,
   ),
@@ -535,7 +535,7 @@ ArcaneInputGroup(
     TextInput(
       placeholder: 'Search',
       value: search,
-      onChange: setSearch,
+      onChanged: setSearch,
     ),
     Button.primary(label: 'Go', onPressed: () {}),
   ],
@@ -550,7 +550,7 @@ ArcaneInputGroup(
 
 ArcaneOtpInput.sixDigit(
   value: code,
-  onChange: setCode,
+  onChanged: setCode,
 )''',
     previewBuilder: _buildInputOtpDemo,
   ),
@@ -725,7 +725,7 @@ ArcaneSelect(
     ArcaneSelectOption(label: 'Pro', value: 'pro'),
     ArcaneSelectOption(label: 'Enterprise', value: 'enterprise'),
   ],
-  onChange: setPlan,
+  onChanged: setPlan,
 )''',
     previewBuilder: _buildSelectDemo,
   ),
@@ -881,7 +881,7 @@ TextArea(
   placeholder: 'Type your message',
   rows: 4,
   value: message,
-  onChange: setMessage,
+  onChanged: setMessage,
 )''',
     previewBuilder: _buildTextareaDemo,
   ),
@@ -1563,7 +1563,7 @@ Widget _buildFieldDemo(DemoStateController state) {
       description: 'We only use this for account notices.',
       field: TextInput(
         placeholder: 'name@company.com',
-        onChange: (String value) {},
+        onChanged: (String value) {},
       ),
     ),
   );
@@ -1586,7 +1586,7 @@ Widget _buildInputDemo(DemoStateController state) {
       label: 'Email',
       placeholder: 'name@example.com',
       value: email,
-      onChange: (value) => state.setString('input-email', value),
+      onChanged: (value) => state.setString('input-email', value),
     ),
   );
 }
@@ -1599,7 +1599,7 @@ Widget _buildInputGroupDemo(DemoStateController state) {
         TextInput(
           placeholder: 'Search',
           value: search,
-          onChange: (value) => state.setString('input-group-search', value),
+          onChanged: (value) => state.setString('input-group-search', value),
         ),
         Button.primary(label: 'Go', onPressed: () {}),
       ],
@@ -1612,7 +1612,7 @@ Widget _buildInputOtpDemo(DemoStateController state) {
   return _surface(
     ArcaneOtpInput.sixDigit(
       value: otp,
-      onChange: (value) => state.setString('input-otp', value),
+      onChanged: (value) => state.setString('input-otp', value),
     ),
   );
 }
@@ -1763,7 +1763,7 @@ Widget _buildSelectDemo(DemoStateController state) {
         ArcaneSelectOption(label: 'Pro', value: 'pro'),
         ArcaneSelectOption(label: 'Enterprise', value: 'enterprise'),
       ],
-      onChange: (value) => state.setString('select-plan', value),
+      onChanged: (value) => state.setString('select-plan', value),
     ),
   );
 }
@@ -1905,7 +1905,7 @@ Widget _buildTextareaDemo(DemoStateController state) {
       placeholder: 'Type your message',
       rows: 4,
       value: message,
-      onChange: (value) => state.setString('textarea-message', value),
+      onChanged: (value) => state.setString('textarea-message', value),
     ),
   );
 }

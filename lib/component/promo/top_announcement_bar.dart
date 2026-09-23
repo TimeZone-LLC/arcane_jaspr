@@ -32,7 +32,7 @@ class _ArcaneTopAnnouncementBarState extends State<ArcaneTopAnnouncementBar> {
 
   void _handleDismiss() {
     setState(() => _isDismissed = true);
-    component.onDismiss?.call();
+    widget.onDismiss?.call();
   }
 
   @override
@@ -41,10 +41,10 @@ class _ArcaneTopAnnouncementBarState extends State<ArcaneTopAnnouncementBar> {
 
     return context.renderers.topAnnouncementBar(
       TopAnnouncementBarProps(
-        message: component.message,
-        ctaText: component.ctaText,
-        ctaHref: component.ctaHref,
-        onCtaClick: component.onCtaClick,
+        message: widget.message,
+        ctaText: widget.ctaText,
+        ctaHref: widget.ctaHref,
+        onCtaClick: widget.onCtaClick,
         onDismiss: _handleDismiss,
       ),
     );

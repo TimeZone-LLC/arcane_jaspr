@@ -30,17 +30,17 @@ class _DialogDateState extends State<DialogDate> {
   @override
   void initState() {
     super.initState();
-    _value = component.value;
+    _value = widget.value;
   }
 
   @override
   Widget build(BuildContext context) => ArcaneDialog(
-    title: component.title,
+    title: widget.title,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      gap: 12,
+      spacing: 12,
       children: <Widget>[
-        if (component.description != null) Text.body(component.description!),
+        if (widget.description != null) Text.body(widget.description!),
         ArcaneDatePicker(
           value: _value,
           onChanged: (DateTime? value) {
@@ -53,10 +53,7 @@ class _DialogDateState extends State<DialogDate> {
     ),
     actions: <Widget>[
       Button.ghost(onPressed: () {}, label: 'Cancel'),
-      Button.primary(
-        onPressed: () => component.onConfirm(_value),
-        label: 'Done',
-      ),
+      Button.primary(onPressed: () => widget.onConfirm(_value), label: 'Done'),
     ],
   );
 }

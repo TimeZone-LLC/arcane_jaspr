@@ -144,7 +144,7 @@ class _ArcaneNavDropdownState extends State<ArcaneNavDropdown> {
           styles: ArcaneStyleData(
             display: Display.flex,
             alignItems: AlignItems.center,
-            justifyContent: component.alignRight ? null : JustifyContent.center,
+            justifyContent: widget.alignRight ? null : JustifyContent.center,
             gap: Gap.xs,
             padding: PaddingPreset.smMd,
             borderRadius: Radius.sm,
@@ -170,7 +170,7 @@ class _ArcaneNavDropdownState extends State<ArcaneNavDropdown> {
             'keydown': _handleTriggerKeyDown,
           },
           children: [
-            Text(component.label),
+            Text(widget.label),
             ArcaneDiv(
               styles: ArcaneStyleData(
                 transition: Transition.allFast,
@@ -198,21 +198,21 @@ class _ArcaneNavDropdownState extends State<ArcaneNavDropdown> {
             styles: ArcaneStyleData(
               position: Position.absolute,
               top: 'calc(100% + 8px)',
-              left: component.alignRight ? null : '0',
-              right: component.alignRight ? '0' : null,
+              left: widget.alignRight ? null : '0',
+              right: widget.alignRight ? '0' : null,
               backgroundCustom:
                   'var(--arcane-nav-dropdown-background, var(--card))',
               borderCustom:
                   '1px solid color-mix(in srgb, var(--foreground) 10%, transparent)',
               borderRadius: Radius.sm,
-              minWidth: component.width,
+              minWidth: widget.width,
               zIndex: ZIndex.popover,
               animation: AnimationPreset.dropdownFade,
-              transformOrigin: component.alignRight
+              transformOrigin: widget.alignRight
                   ? TransformOrigin.topRight
                   : TransformOrigin.topLeft,
             ),
-            children: [component.content],
+            children: [widget.content],
           ),
         ],
       ],
@@ -306,7 +306,7 @@ class _ArcaneDropdownItemState extends State<ArcaneDropdownItem> {
 
   @override
   Widget build(BuildContext context) {
-    return switch (component.variant) {
+    return switch (widget.variant) {
       ArcaneDropdownItemStyle.simple => _buildSimpleStyle(),
       ArcaneDropdownItemStyle.compact => _buildCompactStyle(),
     };
@@ -315,9 +315,9 @@ class _ArcaneDropdownItemState extends State<ArcaneDropdownItem> {
   /// Simple style - compact minimal design with icon
   Widget _buildSimpleStyle() {
     return ArcaneLink.children(
-      href: component.href,
-      target: component.isExternal ? '_blank' : null,
-      rel: component.isExternal ? 'noopener noreferrer' : null,
+      href: widget.href,
+      target: widget.isExternal ? '_blank' : null,
+      rel: widget.isExternal ? 'noopener noreferrer' : null,
       styles: ArcaneStyleData(
         display: Display.flex,
         alignItems: AlignItems.center,
@@ -347,12 +347,12 @@ class _ArcaneDropdownItemState extends State<ArcaneDropdownItem> {
                 : 'var(--muted-foreground)',
             transition: Transition.allFast,
           ),
-          children: [component.icon],
+          children: [widget.icon],
         ),
         // Label
         ArcaneSpan(
           styles: const ArcaneStyleData(flexGrow: 1),
-          child: Text(component.label),
+          child: Text(widget.label),
         ),
       ],
     );
@@ -361,9 +361,9 @@ class _ArcaneDropdownItemState extends State<ArcaneDropdownItem> {
   /// Compact style - minimal padding and spacing
   Widget _buildCompactStyle() {
     return ArcaneLink.children(
-      href: component.href,
-      target: component.isExternal ? '_blank' : null,
-      rel: component.isExternal ? 'noopener noreferrer' : null,
+      href: widget.href,
+      target: widget.isExternal ? '_blank' : null,
+      rel: widget.isExternal ? 'noopener noreferrer' : null,
       styles: ArcaneStyleData(
         display: Display.flex,
         alignItems: AlignItems.center,
@@ -392,9 +392,9 @@ class _ArcaneDropdownItemState extends State<ArcaneDropdownItem> {
                 : 'var(--muted-foreground)',
             transition: Transition.allFast,
           ),
-          children: [component.icon],
+          children: [widget.icon],
         ),
-        Text(component.label),
+        Text(widget.label),
       ],
     );
   }

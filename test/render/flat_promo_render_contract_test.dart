@@ -21,6 +21,7 @@ void main() {
         ArcaneThemeProvider(
           stylesheet: stylesheet,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               ArcaneTopAnnouncementBar(
                 message: 'Maintenance at 02:00 UTC',

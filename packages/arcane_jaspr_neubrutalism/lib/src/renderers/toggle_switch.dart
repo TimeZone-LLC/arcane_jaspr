@@ -3,6 +3,7 @@ import 'package:jaspr/jaspr.dart';
 
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/toggle_switch_props.dart';
+import 'package:arcane_jaspr/core/dom_value.dart';
 import 'package:arcane_jaspr/core/rendering/base/toggle_switch_render_base.dart';
 
 class NeubrutalismToggleSwitch extends ToggleSwitchRenderBase {
@@ -79,7 +80,10 @@ class NeubrutalismToggleSwitch extends ToggleSwitchRenderBase {
       events: props.disabled || props.onChanged == null
           ? null
           : <String, EventCallback>{
-              'click': (_) => props.onChanged!(!props.value),
+              'click': (event) {
+                domPreventDefault(event);
+                props.onChanged!(!props.value);
+              },
             },
       <Component>[
         dom.span(
@@ -136,14 +140,6 @@ class NeubrutalismToggleSwitch extends ToggleSwitchRenderBase {
           'cursor': props.disabled ? 'not-allowed' : 'pointer',
         },
       ),
-      events: props.disabled || props.onChanged == null
-          ? null
-          : <String, EventCallback>{
-              'click': (e) {
-                if ((e.target as dynamic)?.tagName == 'BUTTON') return;
-                props.onChanged!(!props.value);
-              },
-            },
       children,
     );
   }

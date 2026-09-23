@@ -19,7 +19,7 @@ class Collection extends StatelessWidget {
     crossAxisAlignment: fillWidth
         ? CrossAxisAlignment.stretch
         : CrossAxisAlignment.start,
-    gap: gap,
+    spacing: gap,
     children: children,
   );
 }

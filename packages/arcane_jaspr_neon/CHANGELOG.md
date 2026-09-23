@@ -1,5 +1,29 @@
 # Changelog
 
+## x.x.x
+
+### Changed
+
+- Refined green text contrast separately from solid control fills, strengthened
+  form-control borders, and aligned button and input sizes at 32, 40, and 48px.
+- Added complete native radio presentations for standard, card, and button
+  variants with labels, descriptions, required/disabled states, and visible focus.
+- Added checkbox labels, descriptions, sizes, and a checkmark in place of the
+  placeholder text mark.
+
+### Fixed
+
+- Radio controls now support native keyboard selection and form submission;
+  their visual state follows both native and runtime changes.
+- Hydrated radios retain their checked property after selection changes, and
+  switches update once per click or keyboard activation.
+- Checkbox marks and switch thumbs follow runtime selection changes, and tabs
+  recognize the selected state emitted by their renderer.
+- Prefixed and suffixed text fields retain one complete, correctly sized control
+  perimeter; disabled menu items no longer receive hover highlights.
+- SizedBox expands infinite dimensions without invalid CSS; Row and Column
+  honor mainAxisSize consistently, and Wrap supports vertical flow.
+
 ## 4.0.0 - 2026-08-31
 
 ### Changed

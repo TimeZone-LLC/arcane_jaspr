@@ -29,7 +29,7 @@ class ArcaneCheckbox extends StatelessWidget {
   final bool disabled;
   final String? group;
   final String? value;
-  final void Function(bool)? _onChanged;
+  final void Function(bool)? onChanged;
 
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
@@ -47,12 +47,11 @@ class ArcaneCheckbox extends StatelessWidget {
     this.disabled = false,
     this.group,
     this.value,
-    void Function(bool)? onChanged,
-    void Function(bool)? onToggle,
+    this.onChanged,
     this.styles,
     this.decoration,
     super.key,
-  }) : _onChanged = onChanged ?? onToggle;
+  });
 
   const ArcaneCheckbox.primary({
     this.id,
@@ -63,13 +62,11 @@ class ArcaneCheckbox extends StatelessWidget {
     this.disabled = false,
     this.group,
     this.value,
-    void Function(bool)? onChanged,
-    void Function(bool)? onToggle,
+    this.onChanged,
     this.styles,
     this.decoration,
     super.key,
-  }) : _onChanged = onChanged ?? onToggle,
-       color = ColorVariant.primary;
+  }) : color = ColorVariant.primary;
 
   const ArcaneCheckbox.success({
     this.id,
@@ -80,13 +77,11 @@ class ArcaneCheckbox extends StatelessWidget {
     this.disabled = false,
     this.group,
     this.value,
-    void Function(bool)? onChanged,
-    void Function(bool)? onToggle,
+    this.onChanged,
     this.styles,
     this.decoration,
     super.key,
-  }) : _onChanged = onChanged ?? onToggle,
-       color = ColorVariant.success;
+  }) : color = ColorVariant.success;
 
   const ArcaneCheckbox.warning({
     this.id,
@@ -97,13 +92,11 @@ class ArcaneCheckbox extends StatelessWidget {
     this.disabled = false,
     this.group,
     this.value,
-    void Function(bool)? onChanged,
-    void Function(bool)? onToggle,
+    this.onChanged,
     this.styles,
     this.decoration,
     super.key,
-  }) : _onChanged = onChanged ?? onToggle,
-       color = ColorVariant.warning;
+  }) : color = ColorVariant.warning;
 
   const ArcaneCheckbox.destructive({
     this.id,
@@ -114,13 +107,11 @@ class ArcaneCheckbox extends StatelessWidget {
     this.disabled = false,
     this.group,
     this.value,
-    void Function(bool)? onChanged,
-    void Function(bool)? onToggle,
+    this.onChanged,
     this.styles,
     this.decoration,
     super.key,
-  }) : _onChanged = onChanged ?? onToggle,
-       color = ColorVariant.destructive;
+  }) : color = ColorVariant.destructive;
 
   static int _autoCounter = 0;
   static String _autoId() {
@@ -140,7 +131,7 @@ class ArcaneCheckbox extends StatelessWidget {
         size: size,
         color: color,
         disabled: disabled,
-        onChanged: _onChanged,
+        onChanged: onChanged,
         group: group,
         value: value,
         styles: styles,

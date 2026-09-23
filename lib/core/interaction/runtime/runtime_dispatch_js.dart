@@ -289,6 +289,7 @@ function onDocumentContextMenu(e) {
 }
 
 function onDocumentKeyDown(e) {
+  if (e.defaultPrevented) return;
   if (e.key === 'Escape') {
     if (ARCANE.stack.length > 0) {
       const top = ARCANE.stack[ARCANE.stack.length - 1];

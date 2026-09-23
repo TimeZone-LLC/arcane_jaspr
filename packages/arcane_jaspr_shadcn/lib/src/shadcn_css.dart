@@ -4,7 +4,7 @@ import 'package:arcane_jaspr/component/view/map/map_style.dart'
     show arcaneMapCss;
 import 'package:arcane_jaspr/util/content/prose_styles.dart';
 
-import 'shadcn_theme.dart';
+import 'package:arcane_jaspr_shadcn/src/shadcn_theme.dart';
 
 class ShadcnCss {
   static const String _lexiconCss = '''
@@ -674,9 +674,9 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
   const ShadcnCss._();
 
   static String componentCss(ShadcnTheme theme) {
-    String neutralOverrides = theme == ShadcnTheme.midnight
+    final String neutralOverrides = theme == ShadcnTheme.midnight
         ? '''
-:root, html.light, .light {
+#arcane-root.arcane-theme-shadcn {
   --card: #ffffff;
   --card-foreground: #09090b;
   --popover: #ffffff;
@@ -689,7 +689,8 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
   --input: #e4e4e7;
 }
 
-html.dark, .dark {
+html.dark #arcane-root.arcane-theme-shadcn,
+#arcane-root.dark.arcane-theme-shadcn {
   --background: #050505;
   --foreground: #F7F4EC;
   --card: #111111;
@@ -709,6 +710,79 @@ html.dark, .dark {
 
     return '''
 $neutralOverrides
+
+#arcane-root.arcane-theme-shadcn {
+  --shadcn-control-border: color-mix(in srgb, var(--foreground) 48%, var(--background));
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button {
+  background-color: var(--shadcn-button-background);
+  color: var(--shadcn-button-foreground);
+  border: 1px solid transparent;
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='primary'] {
+  --shadcn-button-background: var(--primary);
+  --shadcn-button-foreground: var(--primary-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='secondary'] {
+  --shadcn-button-background: var(--secondary);
+  --shadcn-button-foreground: var(--secondary-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='outline'] {
+  --shadcn-button-background: var(--background);
+  --shadcn-button-foreground: var(--foreground);
+  border-color: var(--shadcn-control-border);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='ghost'] {
+  --shadcn-button-background: transparent;
+  --shadcn-button-foreground: var(--foreground);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='link'] {
+  --shadcn-button-background: transparent;
+  --shadcn-button-foreground: var(--primary);
+  text-underline-offset: 4px;
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='destructive'] {
+  --shadcn-button-background: var(--destructive);
+  --shadcn-button-foreground: var(--destructive-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='success'] {
+  --shadcn-button-background: var(--success);
+  --shadcn-button-foreground: var(--success-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='warning'] {
+  --shadcn-button-background: var(--warning);
+  --shadcn-button-foreground: var(--warning-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='info'] {
+  --shadcn-button-background: var(--info);
+  --shadcn-button-foreground: var(--info-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button:hover:not([data-disabled='true']) {
+  background-color: color-mix(in srgb, var(--shadcn-button-background) 88%, var(--shadcn-button-foreground));
+  color: var(--shadcn-button-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn
+  .arcane-button:is([data-variant='outline'], [data-variant='ghost']):hover:not([data-disabled='true']) {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-button[data-variant='link']:hover:not([data-disabled='true']) {
+  background-color: transparent;
+  text-decoration-thickness: 2px;
+}
 
 .arcane-button,
 .arcane-text-input,
@@ -740,7 +814,6 @@ $neutralOverrides
     transform var(--transition);
 }
 
-.arcane-button:hover:not(:disabled):not(.disabled),
 .arcane-text-input:hover:not(:disabled),
 .arcane-select:hover:not(:disabled):not(.disabled),
 .arcane-select-option:hover:not(:disabled):not(.disabled),
@@ -836,20 +909,26 @@ $neutralOverrides
 .arcane-select-option[data-state='checked'],
 .arcane-dropdown-item[data-state='checked'],
 .arcane-context-menu-item[data-state='checked'],
-.arcane-menubar-item[data-state='checked'],
-.arcane-checkbox[data-state='checked'],
-.arcane-toggle-switch[data-state='checked'] {
+.arcane-menubar-item[data-state='checked'] {
   background-color: var(--accent);
   color: var(--accent-foreground);
 }
 
 .arcane-select[data-open='true'],
 .arcane-date-picker-trigger[data-state='open'],
-.arcane-text-input[data-error='true'],
-.arcane-select[data-error='true'],
-.arcane-otp-digit.error,
 .arcane-calendar-day[data-state='selected'] {
   border-color: var(--ring);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-checkbox[data-arcane-state='selected'] {
+  --shadcn-checkbox-background: var(--shadcn-checkbox-fill);
+  --shadcn-checkbox-indicator: inline-flex;
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-toggle-switch[data-arcane-state='selected'] {
+  --shadcn-switch-background: var(--shadcn-switch-active);
+  --shadcn-switch-border: transparent;
+  --shadcn-switch-offset: var(--shadcn-switch-travel);
 }
 
 .arcane-textarea::placeholder {
@@ -864,8 +943,36 @@ $neutralOverrides
   cursor: default;
 }
 
+.arcane-text-input[data-error='true'],
+.arcane-select[data-error='true'],
+.arcane-otp-digit.error,
 .arcane-textarea[data-error='true'] {
   border-color: var(--destructive);
+}
+
+#arcane-root.arcane-theme-shadcn
+  :is(.arcane-radio-item, .arcane-radio-card, .arcane-radio-button):has(input:checked) {
+  --shadcn-radio-dot-opacity: 1;
+  --shadcn-radio-border: var(--primary);
+  --shadcn-radio-ink: var(--primary);
+  --shadcn-radio-indicator-width: 5px;
+  --shadcn-radio-card-background: var(--accent);
+  --shadcn-radio-button-background: var(--primary);
+  --shadcn-radio-button-ink: var(--primary-foreground);
+}
+
+#arcane-root.arcane-theme-shadcn
+  :is(.arcane-radio-card, .arcane-radio-button):has(input:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  #arcane-root.arcane-theme-shadcn :focus-visible {
+    outline: 2px solid Highlight !important;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
 }
 
 /* ============================================

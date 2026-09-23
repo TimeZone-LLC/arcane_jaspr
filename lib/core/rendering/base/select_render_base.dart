@@ -193,6 +193,7 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
       <Component>[
         if (props.label != null)
           dom.label(
+            htmlFor: triggerId,
             classes: '$classPrefix-select-label',
             styles: const dom.Styles(
               raw: <String, String>{
@@ -228,12 +229,17 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
             'aria-haspopup': 'listbox',
             'aria-controls': surfaceId,
             'aria-expanded': '${props.isOpen}',
+            if (hasError) 'aria-invalid': 'true',
+            if (hasError)
+              'aria-describedby': '$surfaceId-error'
+            else if (props.helperText != null)
+              'aria-describedby': '$surfaceId-helper',
             'data-disabled': '${props.disabled}',
             'data-variant': props.multiSelect ? 'multi' : 'single',
             'data-size': props.size.name,
             if (props.disabled) 'disabled': 'true',
             ...anchorAttrs(triggerId),
-            ...interactionAttrs(toggleAction),
+            if (!props.disabled) ...interactionAttrs(toggleAction),
           },
           styles: dom.Styles(
             raw: <String, String>{
@@ -324,6 +330,8 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
           classes: '$classPrefix-select-dropdown $classPrefix-select-content',
           attributes: <String, String>{
             'role': 'listbox',
+            if (props.multiSelect) 'aria-multiselectable': 'true',
+            'aria-label': props.label ?? props.placeholder,
             ...surfaceAttrs(
               surface: 'popover',
               id: surfaceId,
@@ -368,6 +376,7 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
                     type: dom.InputType.text,
                     attributes: <String, String>{
                       'placeholder': props.searchPlaceholder,
+                      'aria-label': props.searchPlaceholder,
                       'autocomplete': 'off',
                       'data-arcane-command-input': surfaceId,
                       'data-arcane-autofocus': 'true',
@@ -439,6 +448,7 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
 
         if (hasError)
           dom.div(
+            id: '$surfaceId-error',
             classes: '$classPrefix-select-error',
             styles: const dom.Styles(
               raw: <String, String>{
@@ -451,6 +461,7 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
           )
         else if (props.helperText != null)
           dom.div(
+            id: '$surfaceId-helper',
             classes: '$classPrefix-select-helper',
             styles: const dom.Styles(
               raw: <String, String>{

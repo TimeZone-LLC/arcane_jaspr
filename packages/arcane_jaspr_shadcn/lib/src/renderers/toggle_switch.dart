@@ -1,6 +1,7 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
+import 'package:arcane_jaspr/core/dom_value.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/toggle_switch_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/toggle_switch_render_base.dart';
@@ -36,9 +37,7 @@ class ShadcnToggleSwitch extends ToggleSwitchRenderBase {
     };
 
     // ShadCN: translate-x-0 (off) / translate-x-5 (on)
-    final double thumbTranslate = props.value
-        ? (width - thumbSize - thumbOffset * 2)
-        : 0.0;
+    final double thumbTranslate = width - thumbSize - thumbOffset * 2 - 2;
 
     // Get color variant colors - inactive uses muted with border for better visibility
     final (String activeColor, String inactiveColor) = switch (props.color) {
@@ -74,10 +73,15 @@ class ShadcnToggleSwitch extends ToggleSwitchRenderBase {
           'width': '${width}px',
           'height': '${height}px',
           'padding': '${thumbOffset}px',
-          'border': props.value ? 'none' : '1px solid var(--border)',
+          'border':
+              '1px solid var(--shadcn-switch-border, var(--shadcn-control-border))',
           'border-radius': 'var(--radius-sm)',
           // ShadCN: bg-input (off) / bg-primary (on)
-          'background-color': props.value ? activeColor : inactiveColor,
+          '--shadcn-switch-active': activeColor,
+          '--shadcn-switch-off': inactiveColor,
+          '--shadcn-switch-travel': '${thumbTranslate}px',
+          'background-color':
+              'var(--shadcn-switch-background, var(--shadcn-switch-off))',
           'cursor': props.disabled ? 'not-allowed' : 'pointer',
           // ShadCN: disabled:opacity-50 disabled:cursor-not-allowed
           'opacity': props.disabled ? '0.5' : '1',
@@ -94,6 +98,7 @@ class ShadcnToggleSwitch extends ToggleSwitchRenderBase {
       events: <String, EventCallback>{
         'click': (event) {
           if (!props.disabled && props.onChanged != null) {
+            domPreventDefault(event);
             props.onChanged!(!props.value);
           }
         },
@@ -121,7 +126,7 @@ class ShadcnToggleSwitch extends ToggleSwitchRenderBase {
               'box-shadow':
                   '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
               // ShadCN: transition-transform
-              'transform': 'translateX(${thumbTranslate}px)',
+              'transform': 'translateX(var(--shadcn-switch-offset, 0px))',
               'transition': 'transform var(--transition)',
               'pointer-events': 'none',
               'flex-shrink': '0',

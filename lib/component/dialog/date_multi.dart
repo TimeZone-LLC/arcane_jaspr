@@ -29,15 +29,15 @@ class _DialogDateMultiState extends State<DialogDateMulti> {
   @override
   void initState() {
     super.initState();
-    _values = List<DateTime>.from(component.values);
+    _values = List<DateTime>.from(widget.values);
   }
 
   @override
   Widget build(BuildContext context) => ArcaneDialog(
-    title: component.title,
+    title: widget.title,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      gap: 12,
+      spacing: 12,
       children: <Widget>[
         ArcaneDatePicker(
           value: _draft,
@@ -65,10 +65,7 @@ class _DialogDateMultiState extends State<DialogDateMulti> {
       ],
     ),
     actions: <Widget>[
-      Button.primary(
-        onPressed: () => component.onConfirm(_values),
-        label: 'Done',
-      ),
+      Button.primary(onPressed: () => widget.onConfirm(_values), label: 'Done'),
     ],
   );
 }

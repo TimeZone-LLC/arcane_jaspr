@@ -31,6 +31,14 @@ String domEventKey(Object? event) {
   return (v as JSString?)?.toDart ?? '';
 }
 
+/// Whether a keyboard event is still confirming an input-method composition.
+bool domEventIsComposing(Object? event) {
+  final JSObject? object = event as JSObject?;
+  return (object?.getProperty<JSAny?>('isComposing'.toJS) as JSBoolean?)
+          ?.toDart ??
+      false;
+}
+
 /// Read `event.target.value` from a DOM event (web) — for handlers that only
 /// have the (dynamic) event, not the target.
 String domEventValue(Object? event) {

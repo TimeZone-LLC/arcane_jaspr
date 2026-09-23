@@ -93,7 +93,15 @@ String _extractBody(String html) {
     r'<body[^>]*>(.*)</body>',
     dotAll: true,
   ).firstMatch(html);
-  return match != null ? match.group(1)! : html;
+  final String body = match != null ? match.group(1)! : html;
+  final Map<String, String> fieldIds = <String, String>{};
+  return body.replaceAllMapped(
+    RegExp(r'\barcane-field-\d+\b'),
+    (Match field) => fieldIds.putIfAbsent(
+      field.group(0)!,
+      () => 'arcane-field-${fieldIds.length}',
+    ),
+  );
 }
 
 void _registerCase(
@@ -158,6 +166,7 @@ void main() {
     'win95',
     win95,
     const Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Card.flat(child: Text('flat panel')),
         Card.ghost(child: Text('ghost panel')),

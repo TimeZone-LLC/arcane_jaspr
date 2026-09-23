@@ -66,12 +66,12 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
   String _searchQuery = '';
 
   List<ComboboxOption<T>> get _filteredOptions {
-    if (_searchQuery.isEmpty) return component.options;
+    if (_searchQuery.isEmpty) return widget.options;
 
     final query = _searchQuery.toLowerCase();
-    return component.options.where((option) {
-      if (component.filterFn != null) {
-        return component.filterFn!(option, _searchQuery);
+    return widget.options.where((option) {
+      if (widget.filterFn != null) {
+        return widget.filterFn!(option, _searchQuery);
       }
       return option.label.toLowerCase().contains(query) ||
           (option.keywords?.any((k) => k.toLowerCase().contains(query)) ??
@@ -80,7 +80,7 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
   }
 
   void _toggleOpen() {
-    if (component.disabled) return;
+    if (widget.disabled) return;
     setState(() {
       _isOpen = !_isOpen;
       if (_isOpen) {
@@ -90,7 +90,7 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
   }
 
   void _selectOption(T value) {
-    component.onChanged?.call(value);
+    widget.onChanged?.call(value);
     setState(() {
       _isOpen = false;
       _searchQuery = '';
@@ -103,7 +103,7 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
     });
   }
 
-  ComponentSize get _propsSize => switch (component.size) {
+  ComponentSize get _propsSize => switch (widget.size) {
     ComboboxSize.sm => ComponentSize.sm,
     ComboboxSize.md => ComponentSize.md,
     ComboboxSize.lg => ComponentSize.lg,
@@ -111,7 +111,7 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final selectOptions = component.options
+    final selectOptions = widget.options
         .map(
           (opt) => SelectOptionProps<T>(
             value: opt.value,
@@ -140,26 +140,26 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
     return context.renderers.select<T>(
       SelectProps<T>(
         options: selectOptions,
-        value: component.value,
-        placeholder: component.placeholder ?? 'Select...',
-        disabled: component.disabled,
-        searchable: component.searchable,
-        label: component.label,
-        error: component.error,
+        value: widget.value,
+        placeholder: widget.placeholder ?? 'Select...',
+        disabled: widget.disabled,
+        searchable: widget.searchable,
+        label: widget.label,
+        error: widget.error,
         size: _propsSize,
-        emptyMessage: component.emptyMessage,
-        searchPlaceholder: component.searchPlaceholder ?? 'Search...',
+        emptyMessage: widget.emptyMessage,
+        searchPlaceholder: widget.searchPlaceholder ?? 'Search...',
         isOpen: _isOpen,
         searchQuery: _searchQuery,
         filteredOptions: filteredSelectOptions,
         onToggle: _toggleOpen,
         onSelect: _selectOption,
         onSearchChange: _handleSearch,
-        id: component.id,
-        group: component.group,
-        onSelectAction: component.onChangedAction,
-        styles: component.styles,
-        decoration: component.decoration,
+        id: widget.id,
+        group: widget.group,
+        onSelectAction: widget.onChangedAction,
+        styles: widget.styles,
+        decoration: widget.decoration,
       ),
     );
   }

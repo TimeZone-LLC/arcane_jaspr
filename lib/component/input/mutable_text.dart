@@ -46,79 +46,79 @@ class _MutableTextState extends State<MutableText> {
   @override
   void initState() {
     super.initState();
-    _value = component.value;
+    _value = widget.value;
   }
 
   @override
-  void didUpdateComponent(covariant MutableText oldComponent) {
-    super.didUpdateComponent(oldComponent);
-    if (!_editing && component.value != oldComponent.value) {
-      _value = component.value;
+  void didUpdateWidget(covariant MutableText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_editing && widget.value != oldWidget.value) {
+      _value = widget.value;
     }
   }
 
   void _startEditing() {
-    if (component.onChanged == null) {
+    if (widget.onChanged == null) {
       return;
     }
     setState(() {
       _editing = true;
-      _value = component.value;
+      _value = widget.value;
     });
-    component.onEditingStarted?.call();
+    widget.onEditingStarted?.call();
   }
 
   void _finishEditing() {
     setState(() {
       _editing = false;
     });
-    component.onEditingComplete?.call();
+    widget.onEditingComplete?.call();
   }
 
-  TextInputType get _textInputType => switch (component.inputType) {
+  TextInputType get _textInputType => switch (widget.inputType) {
     MutableTextInputType.email => TextInputType.email,
     MutableTextInputType.number => TextInputType.number,
     MutableTextInputType.url => TextInputType.url,
     _ => TextInputType.text,
   };
 
-  Widget get _displayText => switch (component.variant) {
-    MutableTextStyle.subtle => Text.bodySmall(component.value),
+  Widget get _displayText => switch (widget.variant) {
+    MutableTextStyle.subtle => Text.bodySmall(widget.value),
     MutableTextStyle.underline => Text(
-      component.value,
+      widget.value,
       decoration: TextDecoration.underline,
     ),
     MutableTextStyle.dashed => Text(
-      component.value,
+      widget.value,
       decoration: TextDecoration.underline,
     ),
-    MutableTextStyle.input => Text.body(component.value),
-    _ => Text(component.value),
+    MutableTextStyle.input => Text.body(widget.value),
+    _ => Text(widget.value),
   };
 
   @override
   Widget build(BuildContext context) {
     if (_editing) {
       final Widget field =
-          component.maxLines > 1 ||
-              component.inputType == MutableTextInputType.multiline
+          widget.maxLines > 1 ||
+              widget.inputType == MutableTextInputType.multiline
           ? TextArea(
               value: _value,
-              rows: component.maxLines,
-              placeholder: component.placeholder,
-              onChange: (String value) {
+              rows: widget.maxLines,
+              placeholder: widget.placeholder,
+              onChanged: (String value) {
                 _value = value;
               },
             )
           : TextInput(
               value: _value,
-              placeholder: component.placeholder,
+              placeholder: widget.placeholder,
               type: _textInputType,
-              onChange: (String value) {
+              onChanged: (String value) {
                 _value = value;
               },
-              onSubmit: (String value) {
-                component.onChanged?.call(value);
+              onSubmitted: (String value) {
+                widget.onChanged?.call(value);
                 _finishEditing();
               },
             );
@@ -126,13 +126,13 @@ class _MutableTextState extends State<MutableText> {
       return Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        gap: 8,
+        spacing: 8,
         children: <Widget>[
           Expanded(child: field),
           IconButton(
             icon: Icons.check(),
             onPressed: () {
-              component.onChanged?.call(_value);
+              widget.onChanged?.call(_value);
               _finishEditing();
             },
           ),
@@ -141,13 +141,13 @@ class _MutableTextState extends State<MutableText> {
       );
     }
 
-    if (component.onChanged == null) {
+    if (widget.onChanged == null) {
       return _displayText;
     }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      gap: 8,
+      spacing: 8,
       children: <Widget>[
         _displayText,
         IconButton(icon: Icons.pencil(), onPressed: _startEditing),

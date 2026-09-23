@@ -26,7 +26,7 @@ class FormHeader extends StatelessWidget {
       Expanded(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          gap: 6,
+          spacing: 6,
           children: <Widget>[
             title ??
                 (titleText != null

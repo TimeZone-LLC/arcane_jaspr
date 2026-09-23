@@ -42,7 +42,7 @@ abstract class NativeSelectRenderBase extends StatelessComponent {
       label: props.label,
       error: props.error,
       fullWidth: props.fullWidth,
-      onChange: props.onChange,
+      onChanged: props.onChange,
       styles: props.styles,
       decoration: props.decoration,
     );

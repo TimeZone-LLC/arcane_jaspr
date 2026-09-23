@@ -6,10 +6,10 @@ import 'package:arcane_jaspr/theme/palette_generator.dart';
 import 'package:arcane_jaspr/util/content/prose_styles.dart'
     show arcaneAllDocsStyles;
 
-import 'win95_cursor_assets.dart';
-import 'win95_loader_assets.dart';
-import 'win95_loader_palette.dart';
-import 'win95_theme.dart';
+import 'package:arcane_jaspr_win95/src/win95_cursor_assets.dart';
+import 'package:arcane_jaspr_win95/src/win95_loader_assets.dart';
+import 'package:arcane_jaspr_win95/src/win95_loader_palette.dart';
+import 'package:arcane_jaspr_win95/src/win95_theme.dart';
 
 /// Component CSS for the Windows 95 theme.
 ///
@@ -24,7 +24,7 @@ import 'win95_theme.dart';
 /// Every rule is scoped to `#arcane-root.arcane-theme-win95` so it can never
 /// affect the shadcn, neon, or neubrutalism themes. The 3D shading is exposed as
 /// `--w95-*` custom properties (composed into `--w95-raised` / `--w95-pressed` /
-/// `--w95-sunken` box-shadow recipes) which the dark "High Contrast Black" block
+/// `--w95-sunken` box-shadow recipes) which the dark silver block
 /// simply re-points, so every bevel inverts for free.
 class Win95Css {
   const Win95Css._();
@@ -49,6 +49,11 @@ class Win95Css {
     final String titleA = _hex(theme.titleStart);
     final String titleB = _hex(theme.titleEnd);
     final String selection = _hex(theme.accent);
+    final String accentForeground = _hex(
+      PaletteGenerator.contrastingForeground(theme.titleEnd),
+    );
+    final String lightLink = _hex(PaletteGenerator.darken(theme.accent, 0.18));
+    final String darkLink = _hex(PaletteGenerator.lighten(theme.titleEnd, 0.5));
     final String loaderDataUri = switch (loaderPalette) {
       Win95LoaderPalette.win98 => win95LoaderWin98DataUri,
       Win95LoaderPalette.amber => win95LoaderAmberDataUri,
@@ -90,10 +95,20 @@ class Win95Css {
   --primary: var(--w95-selection-in, $selection);
   --primary-foreground: var(--w95-selection-text-in, #ffffff);
   --accent: var(--w95-title-b-in, $titleB);
-  --accent-foreground: var(--w95-title-text-in, #ffffff);
+  --accent-foreground: var(--w95-title-text-in, $accentForeground);
   --border: #808080;
   --input: #ffffff;
   --ring: var(--w95-selection-in, $selection);
+  --destructive: #a00000;
+  --destructive-foreground: #ffffff;
+  --success: #005800;
+  --success-foreground: #ffffff;
+  --warning: #644800;
+  --warning-foreground: #ffffff;
+  --info: $lightLink;
+  --info-foreground: #ffffff;
+  --w95-link: $lightLink;
+  --w95-disabled-text: #666666;
   --navbar: #c0c0c0;
   --code-background: #ffffff;
   --radius: 0;
@@ -262,11 +277,21 @@ class Win95Css {
   --secondary-foreground: #ffffff;
   --muted: #2a2a2a;
   --muted-foreground: #bcbcbc;
-  --primary: var(--w95-selection-in, $titleB);
+  --primary: var(--w95-selection-in, $selection);
   --primary-foreground: var(--w95-selection-text-in, #ffffff);
   --border: #4a4a4a;
   --input: #242424;
-  --ring: var(--w95-selection-in, $titleB);
+  --ring: var(--w95-selection-in, $selection);
+  --destructive: #ff8080;
+  --destructive-foreground: #000000;
+  --success: #80d080;
+  --success-foreground: #000000;
+  --warning: #e8ce80;
+  --warning-foreground: #000000;
+  --info: $darkLink;
+  --info-foreground: #000000;
+  --w95-link: $darkLink;
+  --w95-disabled-text: #aaaaaa;
 
   --w95-face: #3a3a3a;
   --w95-face-text: #ffffff;
@@ -396,14 +421,10 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .win95-button[data-variant="destructive"] {
   box-sizing: border-box;
   background: var(--w95-face);
-  color: #a80000;
+  color: var(--destructive);
   font-weight: 700;
-  border: 1px solid #a80000;
+  border: 1px solid var(--destructive);
   box-shadow: var(--w95-raised);
-}
-#arcane-root.arcane-theme-win95.dark .win95-button[data-variant="destructive"] {
-  color: #ff6b6b;
-  border-color: #ff6b6b;
 }
 #arcane-root.arcane-theme-win95 .win95-button[data-variant="outline"] {
   background: var(--w95-face);
@@ -426,15 +447,11 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .win95-button[data-variant="link"] {
   background: transparent;
   box-shadow: none;
-  color: var(--w95-selection);
+  color: var(--w95-link);
   padding-left: 0;
   padding-right: 0;
   text-decoration: underline;
   text-underline-offset: 2px;
-}
-#arcane-root.arcane-theme-win95 .win95-button.dark[data-variant="link"],
-#arcane-root.arcane-theme-win95.dark .win95-button[data-variant="link"] {
-  color: #00ff00;
 }
 
 /* Press: swap the bevel and nudge the label down-right, like a real button. */
@@ -446,7 +463,7 @@ class Win95Css {
   padding-right: calc(0.9rem - 1px);
 }
 #arcane-root.arcane-theme-win95 .win95-button[data-disabled="true"] {
-  color: var(--w95-shadow);
+  color: var(--w95-disabled-text);
   text-shadow: 1px 1px 0 var(--w95-hilite);
   cursor: var(--w95-cursor-arrow);
 }
@@ -731,7 +748,7 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .win95-dropdown-item:hover,
 #arcane-root.arcane-theme-win95 .win95-command-item:hover,
 #arcane-root.arcane-theme-win95 .win95-command-item[aria-selected="true"],
-#arcane-root.arcane-theme-win95 .win95-select-option:hover {
+#arcane-root.arcane-theme-win95 .win95-select-option:hover:not(:disabled):not(.disabled) {
   background: var(--w95-selection);
   color: var(--w95-selection-text);
 }
@@ -873,6 +890,14 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .win95-select-trigger {
   cursor: var(--w95-cursor-arrow);
 }
+#arcane-root.arcane-theme-win95 .win95-select-label {
+  color: var(--w95-face-text) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 1rem !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  margin-bottom: 0.3rem !important;
+}
 #arcane-root.arcane-theme-win95 .win95-text-input-wrapper {
   display: flex;
   flex-direction: column;
@@ -881,13 +906,13 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .win95-text-input-error,
 #arcane-root.arcane-theme-win95 .win95-select-error,
 #arcane-root.arcane-theme-win95 .win95-radio-group-error {
-  color: #c00000;
+  color: var(--destructive);
   font-size: 1.125rem;
 }
 #arcane-root.arcane-theme-win95.dark .win95-text-input-error,
 #arcane-root.arcane-theme-win95.dark .win95-select-error,
 #arcane-root.arcane-theme-win95.dark .win95-radio-group-error {
-  color: #ff5050;
+  color: var(--destructive);
 }
 #arcane-root.arcane-theme-win95 .win95-text-input-helper,
 #arcane-root.arcane-theme-win95 .win95-select-helper,
@@ -897,7 +922,7 @@ class Win95Css {
 }
 #arcane-root.arcane-theme-win95 .win95-select.error .win95-select-trigger,
 #arcane-root.arcane-theme-win95 .win95-text-input[data-error="true"] {
-  outline: 1px solid #c00000;
+  outline: 1px solid var(--destructive);
   outline-offset: -3px;
 }
 
@@ -913,7 +938,7 @@ class Win95Css {
   box-shadow: var(--w95-sunken);
   transition: none;
 }
-#arcane-root.arcane-theme-win95 .win95-checkbox-box[data-state="checked"],
+#arcane-root.arcane-theme-win95 .win95-checkbox-box[data-arcane-state="selected"],
 #arcane-root.arcane-theme-win95 input:checked + .win95-checkbox-box {
   background: var(--w95-field);
   box-shadow: var(--w95-sunken);
@@ -922,6 +947,7 @@ class Win95Css {
    different weight, width and baseline in every font in the fallback stack,
    which is the same failure the window-control masks were introduced to end. */
 #arcane-root.arcane-theme-win95 .win95-checkbox-box[data-state="checked"]::after,
+#arcane-root.arcane-theme-win95 .win95-checkbox-box[data-arcane-state="selected"]::after,
 #arcane-root.arcane-theme-win95 input:checked + .win95-checkbox-box::after {
   content: '';
   position: absolute;
@@ -939,29 +965,6 @@ class Win95Css {
   -webkit-mask-size: 7px 7px;
   mask-size: 7px 7px;
 }
-#arcane-root.arcane-theme-win95 .win95-radio-button {
-  position: relative;
-  width: 0.95rem;
-  height: 0.95rem;
-  border: none;
-  border-radius: 50%;
-  background: var(--w95-field);
-  box-shadow: var(--w95-sunken);
-}
-#arcane-root.arcane-theme-win95 .win95-radio-button[data-state="checked"]::after,
-#arcane-root.arcane-theme-win95 input:checked + .win95-radio-button::after {
-  content: '';
-  position: absolute;
-  inset: 0.28rem;
-  border-radius: 50%;
-  background: var(--w95-field-text);
-}
-#arcane-root.arcane-theme-win95 .win95-radio-option {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 /* Win95 had no toggle switch — render it in-idiom: a sunken track with a raised
    square thumb that slides. */
 #arcane-root.arcane-theme-win95 .win95-toggle-switch {
@@ -979,8 +982,7 @@ class Win95Css {
   cursor: var(--w95-cursor-arrow);
   transition: none;
 }
-#arcane-root.arcane-theme-win95 .win95-toggle-switch[data-state="checked"],
-#arcane-root.arcane-theme-win95 .win95-toggle-switch.active {
+#arcane-root.arcane-theme-win95 .win95-toggle-switch[data-arcane-state="selected"] {
   background: var(--w95-selection);
 }
 #arcane-root.arcane-theme-win95 .win95-toggle-switch[data-disabled="true"] {
@@ -995,8 +997,7 @@ class Win95Css {
   box-shadow: var(--w95-raised);
   transition: none;
 }
-#arcane-root.arcane-theme-win95 .win95-toggle-switch[data-state="checked"] .win95-toggle-thumb,
-#arcane-root.arcane-theme-win95 .win95-toggle-switch.active .win95-toggle-thumb {
+#arcane-root.arcane-theme-win95 .win95-toggle-switch[data-arcane-state="selected"] .win95-toggle-thumb {
   transform: translateX(1.15rem);
 }
 
@@ -1056,10 +1057,10 @@ class Win95Css {
   background: var(--w95-face);
   color: var(--w95-face-text);
 }
-#arcane-root.arcane-theme-win95 .win95-alert[data-variant="destructive"] { color: #c00000; }
-#arcane-root.arcane-theme-win95 .win95-alert[data-variant="success"] { color: #008000; }
-#arcane-root.arcane-theme-win95 .win95-alert[data-variant="warning"] { color: #808000; }
-#arcane-root.arcane-theme-win95 .win95-alert[data-variant="info"] { color: var(--w95-selection); }
+#arcane-root.arcane-theme-win95 .win95-alert[data-variant="destructive"] { color: var(--destructive); }
+#arcane-root.arcane-theme-win95 .win95-alert[data-variant="success"] { color: var(--success); }
+#arcane-root.arcane-theme-win95 .win95-alert[data-variant="warning"] { color: var(--warning); }
+#arcane-root.arcane-theme-win95 .win95-alert[data-variant="info"] { color: var(--info); }
 #arcane-root.arcane-theme-win95 .win95-alert-title { font-weight: 700; color: var(--w95-face-text); }
 #arcane-root.arcane-theme-win95 .win95-alert-description { color: var(--w95-face-text); }
 #arcane-root.arcane-theme-win95 .win95-alert-dismiss {
@@ -1201,7 +1202,7 @@ class Win95Css {
   text-align: center;
   padding: 2rem;
 }
-#arcane-root.arcane-theme-win95 .win95-empty-state-icon { color: var(--w95-shadow); }
+#arcane-root.arcane-theme-win95 .win95-empty-state-icon { color: var(--w95-disabled-text); }
 #arcane-root.arcane-theme-win95 .win95-empty-state-title { font-weight: 700; }
 #arcane-root.arcane-theme-win95 .win95-empty-state-description { color: var(--w95-face-text); }
 #arcane-root.arcane-theme-win95 .win95-toast-title { font-weight: 700; }
@@ -1635,7 +1636,7 @@ class Win95Css {
 }
 
 #arcane-root.arcane-theme-win95 .kb-search-icon {
-  color: var(--w95-shadow);
+  color: var(--w95-disabled-text);
 }
 
 /* Autocomplete results: a raised silver panel with a single hard drop offset. */
@@ -1765,7 +1766,7 @@ class Win95Css {
 }
 
 #arcane-root.arcane-theme-win95 .sidebar-brand-subtitle {
-  color: var(--w95-shadow);
+  color: var(--w95-disabled-text);
 }
 
 #arcane-root.arcane-theme-win95 .sidebar-controls {
@@ -1930,7 +1931,7 @@ class Win95Css {
 
 #arcane-root.arcane-theme-win95 .kb-page-metadata,
 #arcane-root.arcane-theme-win95 .kb-tags-footer {
-  border-color: var(--w95-shadow) !important;
+  border-color: var(--w95-disabled-text) !important;
   color: var(--w95-face-text) !important;
 }
 
@@ -2080,7 +2081,7 @@ class Win95Css {
 
 #arcane-root.arcane-theme-win95 .kb-missing-demo-body,
 #arcane-root.arcane-theme-win95 .arcane-demo-missing-body {
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
 }
 
 /* --- Landing chrome: beveled panels, no gradients / glow --- */
@@ -2382,10 +2383,7 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .win95-cta-card {
   opacity: 1 !important;
 }
-/* Radio buttons + status dots are the only circular Win95 elements. */
-#arcane-root.arcane-theme-win95 .win95-radio-button,
-#arcane-root.arcane-theme-win95 .win95-radio-button::after,
-#arcane-root.arcane-theme-win95 input:checked + .win95-radio-button::after,
+/* Status dots remain circular. */
 #arcane-root.arcane-theme-win95 .win95-avatar-status {
   border-radius: 50% !important;
 }
@@ -2576,7 +2574,7 @@ class Win95Css {
   line-height: 1 !important;
   margin: 0 !important;
   pointer-events: none !important;
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
   z-index: 1 !important;
 }
 
@@ -2829,7 +2827,7 @@ class Win95Css {
   box-shadow: var(--w95-pressed) !important;
   padding-top: 1px !important;
   padding-left: calc(0.3rem + 1px) !important;
-  padding-bottom: -1px !important;
+  padding-bottom: 0 !important;
   padding-right: calc(0.3rem - 1px) !important;
 }
 
@@ -2873,7 +2871,7 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .arcane-calendar--win95 .arcane-calendar-weekday.arcane-calendar-week-num {
   min-width: 0 !important;
   padding: 0 0.25rem !important;
-  color: var(--w95-shadow) !important;
+  color: var(--muted-foreground) !important;
 }
 
 /* ---------- Day grid: real 7-column grid inside a sunken white well ---------- */
@@ -2897,7 +2895,7 @@ class Win95Css {
   min-width: 0 !important;
   padding: 0 0.25rem !important;
   font-size: 0.85rem !important;
-  color: var(--w95-shadow) !important;
+  color: var(--muted-foreground) !important;
 }
 
 /* Day cells: square-ish, centered, flat white ground */
@@ -2926,7 +2924,7 @@ class Win95Css {
 }
 /* Days outside the current month: greyed */
 #arcane-root.arcane-theme-win95 .arcane-calendar--win95 .arcane-calendar-day.arcane-calendar-day-other-month {
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
 }
 /* Today: dotted focus rectangle around the number */
 #arcane-root.arcane-theme-win95 .arcane-calendar--win95 .arcane-calendar-day.arcane-calendar-day-today,
@@ -2956,7 +2954,7 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .arcane-calendar--win95 .arcane-calendar-day.arcane-calendar-day-disabled,
 #arcane-root.arcane-theme-win95 .arcane-calendar--win95 .arcane-calendar-day[disabled],
 #arcane-root.arcane-theme-win95 .arcane-calendar--win95 .arcane-calendar-day[data-disabled="true"] {
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
   background: transparent !important;
   cursor: var(--w95-cursor-arrow) !important;
 }
@@ -3049,7 +3047,7 @@ class Win95Css {
 /* Disabled trigger */
 #arcane-root.arcane-theme-win95 .win95-date-picker.disabled .win95-date-picker-trigger,
 #arcane-root.arcane-theme-win95 .win95-time-picker-trigger.disabled {
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
   cursor: var(--w95-cursor-arrow) !important;
 }
 
@@ -3311,8 +3309,7 @@ class Win95Css {
   cursor: var(--w95-cursor-arrow) !important;
   transition: none !important;
 }
-#arcane-root.arcane-theme-win95 .win95-toggle-switch[data-state="checked"],
-#arcane-root.arcane-theme-win95 .win95-toggle-switch.active {
+#arcane-root.arcane-theme-win95 .win95-toggle-switch[data-arcane-state="selected"] {
   background: var(--w95-selection) !important;
 }
 #arcane-root.arcane-theme-win95 .win95-toggle-switch[data-disabled="true"],
@@ -3334,8 +3331,7 @@ class Win95Css {
 }
 
 /* Travel = inner width (44 - 2*3 = 38) - thumb (16) = 22px. */
-#arcane-root.arcane-theme-win95 .win95-toggle-switch[data-state="checked"] .win95-toggle-thumb,
-#arcane-root.arcane-theme-win95 .win95-toggle-switch.active .win95-toggle-thumb {
+#arcane-root.arcane-theme-win95 .win95-toggle-switch[data-arcane-state="selected"] .win95-toggle-thumb {
   transform: translateX(22px) !important;
 }
 
@@ -3429,7 +3425,7 @@ class Win95Css {
   padding: 2px 8px !important;
 }
 #arcane-root.arcane-theme-win95 .win95-kv-table-row {
-  border-bottom-color: var(--w95-shadow) !important;
+  border-bottom-color: var(--w95-disabled-text) !important;
 }
 
 /* Markdown / prose tables = same beveled treatment (table is its own well) */
@@ -3501,7 +3497,7 @@ class Win95Css {
   box-shadow: var(--w95-sunken) !important;
 }
 #arcane-root.arcane-theme-win95 .arcane-select:disabled {
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
   cursor: var(--w95-cursor-arrow) !important;
 }
 #arcane-root.arcane-theme-win95 .arcane-select-wrapper {
@@ -3510,11 +3506,8 @@ class Win95Css {
   gap: 0.3rem !important;
 }
 #arcane-root.arcane-theme-win95 .arcane-select-error {
-  color: #c00000 !important;
+  color: var(--destructive) !important;
   font-size: 1.125rem !important;
-}
-#arcane-root.arcane-theme-win95.dark .arcane-select-error {
-  color: #ff5050 !important;
 }
 
 /* ---------- Custom select trigger (.win95-select-trigger) ----------
@@ -3544,7 +3537,7 @@ class Win95Css {
   box-shadow: var(--w95-raised-thin) !important;
   border-radius: 0 !important;
 }
-#arcane-root.arcane-theme-win95 .win95-select-trigger > span:last-child svg {
+#arcane-root.arcane-theme-win95 .win95-select-trigger > span:last-child :is(svg, i) {
   display: none !important;
 }
 #arcane-root.arcane-theme-win95 .win95-select-trigger > span:last-child::after {
@@ -3584,29 +3577,30 @@ class Win95Css {
   font-size: 1.219rem !important;
   transition: none !important;
 }
-#arcane-root.arcane-theme-win95 .win95-select-option:hover,
-#arcane-root.arcane-theme-win95 .win95-select-option.selected,
-#arcane-root.arcane-theme-win95 .win95-select-option[data-arcane-state="selected"],
-#arcane-root.arcane-theme-win95 .win95-select-option[aria-selected="true"] {
+#arcane-root.arcane-theme-win95 .win95-select-option:hover:not(:disabled):not(.disabled),
+#arcane-root.arcane-theme-win95 .win95-select-option:focus-visible:not(:disabled),
+#arcane-root.arcane-theme-win95 .win95-select-option.selected:not(:disabled):not(.disabled),
+#arcane-root.arcane-theme-win95 .win95-select-option[data-arcane-state="selected"]:not(:disabled):not(.disabled),
+#arcane-root.arcane-theme-win95 .win95-select-option[aria-selected="true"]:not(:disabled):not(.disabled) {
+  --foreground: var(--w95-selection-text);
+  --muted-foreground: var(--w95-selection-text);
   background: var(--w95-selection) !important;
-  color: var(--w95-selection-text) !important;
-}
-/* Navy selection recolors nested subtitle/description/icon spans (they carry
-   inline muted-foreground colors). */
-#arcane-root.arcane-theme-win95 .win95-select-option:hover *,
-#arcane-root.arcane-theme-win95 .win95-select-option.selected *,
-#arcane-root.arcane-theme-win95 .win95-select-option[data-arcane-state="selected"] *,
-#arcane-root.arcane-theme-win95 .win95-select-option[aria-selected="true"] * {
   color: var(--w95-selection-text) !important;
 }
 #arcane-root.arcane-theme-win95 .win95-select-option.disabled,
 #arcane-root.arcane-theme-win95 .win95-select-option:disabled {
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
   cursor: var(--w95-cursor-arrow) !important;
 }
 #arcane-root.arcane-theme-win95 .win95-select-option:disabled:hover {
   background: transparent !important;
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
+}
+#arcane-root.arcane-theme-win95 .win95-select-option:disabled * {
+  color: inherit !important;
+}
+#arcane-root.arcane-theme-win95 .win95-select-option:focus-visible {
+  outline-color: var(--w95-selection-text) !important;
 }
 
 /* ---------- Custom select search box (wrapper div + inner input) ---------- */
@@ -4194,7 +4188,7 @@ class Win95Css {
   font-weight: 700 !important;
 }
 #arcane-root.arcane-theme-win95 .win95-breadcrumb-separator {
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
   font-family: var(--font-sans) !important;
   user-select: none !important;
   padding: 0 0.1rem !important;
@@ -4343,7 +4337,7 @@ class Win95Css {
 }
 #arcane-root.arcane-theme-win95 .win95-pagination-button.disabled {
   opacity: 0.5 !important;
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
   box-shadow: var(--w95-raised) !important;
 }
 #arcane-root.arcane-theme-win95 .win95-pagination-ellipsis {
@@ -4951,7 +4945,7 @@ class Win95Css {
   flex: 0 0 auto !important;
   display: inline-flex !important;
   align-items: center !important;
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
 }
 
 /* Sunken white search field. Force background/border past the input's
@@ -5126,7 +5120,7 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .win95-dropdown-item:disabled,
 #arcane-root.arcane-theme-win95 .win95-menubar-item.disabled,
 #arcane-root.arcane-theme-win95 .win95-menubar-item[aria-disabled="true"] {
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
   background: transparent !important;
   cursor: var(--w95-cursor-arrow) !important;
   opacity: 1 !important;
@@ -5153,7 +5147,7 @@ class Win95Css {
   font-weight: 700 !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
   background: transparent !important;
   user-select: none !important;
 }
@@ -5677,7 +5671,7 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   box-shadow: var(--w95-pressed);
 }
 #arcane-root.arcane-theme-win95 .win95-cycle-button.disabled {
-  color: var(--w95-shadow);
+  color: var(--w95-disabled-text);
   text-shadow: 1px 1px 0 var(--w95-hilite);
   cursor: var(--w95-cursor-arrow);
 }
@@ -5719,7 +5713,7 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   box-shadow: var(--w95-pressed);
 }
 #arcane-root.arcane-theme-win95 .win95-toggle-button.disabled {
-  color: var(--w95-shadow);
+  color: var(--w95-disabled-text);
   text-shadow: 1px 1px 0 var(--w95-hilite);
   cursor: var(--w95-cursor-arrow);
 }
@@ -5803,29 +5797,20 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
 }
 
 #arcane-root.arcane-theme-win95 .arcane-textarea[data-error="true"] {
-  outline: 1px solid #c00000 !important;
+  outline: 1px solid var(--destructive) !important;
   outline-offset: -3px !important;
 }
 
-#arcane-root.arcane-theme-win95.dark .arcane-textarea[data-error="true"] {
-  outline-color: #ff5050 !important;
-}
 
 #arcane-root.arcane-theme-win95 .arcane-textarea-label > span {
-  color: #c00000 !important;
+  color: var(--destructive) !important;
 }
 
-#arcane-root.arcane-theme-win95.dark .arcane-textarea-label > span {
-  color: #ff5050 !important;
-}
 
 /* Match the text-input error treatment, including the high-contrast mode. */
 #arcane-root.arcane-theme-win95 .arcane-textarea-error {
-  color: #c00000 !important;
+  color: var(--destructive) !important;
   font-size: 1.125rem !important;
-}
-#arcane-root.arcane-theme-win95.dark .arcane-textarea-error {
-  color: #ff5050 !important;
 }
 #arcane-root.arcane-theme-win95 .arcane-textarea-helper {
   color: var(--w95-face-text) !important;
@@ -5852,10 +5837,7 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   color: var(--muted-foreground) !important;
 }
 #arcane-root.arcane-theme-win95 .win95-field-wrapper > p:last-child {
-  color: #c00000 !important;
-}
-#arcane-root.arcane-theme-win95.dark .win95-field-wrapper > p:last-child {
-  color: #ff5050 !important;
+  color: var(--destructive) !important;
 }
 
 /* ===== refine:toggles ===== */
@@ -5865,17 +5847,8 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
 #arcane-root.arcane-theme-win95 .win95-checkbox-box {
   font-size: 0 !important;
 }
-
-/* Radio: the selected centre dot was targeted at [data-state="checked"] and
-   input:checked, but the rendered .win95-radio-button carries
-   data-arcane-state="selected" and has no <input> sibling, so the dot never
-   appeared. Match the attribute the DOM actually emits. */
-#arcane-root.arcane-theme-win95 .win95-radio-button[data-arcane-state="selected"]::after {
-  content: '';
-  position: absolute;
-  inset: 0.28rem;
-  border-radius: 50% !important;
-  background: var(--w95-field-text);
+#arcane-root.arcane-theme-win95 .win95-checkbox-box[data-arcane-state="unselected"]::after {
+  content: none;
 }
 
 /* ===== refine:cards ===== */
@@ -5913,35 +5886,113 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   padding: 1px 2px 0 !important;
 }
 
-/* ===== refine:radio-standard (authored + verified) ===== */
-/* Standard radio (default display mode) renders as dom.label(.win95-radio-option)
-   containing ONLY the text label — no circle element. The theme had no ::before,
-   so standard radios showed as bare text with no radio button at all. Draw the
-   Win95 round sunken well as ::before (a flex item, sits left of the label) and
-   the selected centre dot as ::after. border-radius needs !important to beat the
-   blanket *,::before,::after{border-radius:0!important} reset (win95_css ~1974). */
-#arcane-root.arcane-theme-win95 .win95-radio-option {
-  position: relative;
+/* Radio layouts share native controls, including keyboard selection. */
+#arcane-root.arcane-theme-win95 .win95-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  color: var(--w95-face-text);
 }
-#arcane-root.arcane-theme-win95 .win95-radio-option::before {
-  content: '';
-  flex: 0 0 auto;
-  width: 0.95rem;
-  height: 0.95rem;
+#arcane-root.arcane-theme-win95 .win95-radio-group-label {
+  font-weight: 700;
+}
+#arcane-root.arcane-theme-win95 .win95-radio-group-options {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+#arcane-root.arcane-theme-win95 .win95-radio-group[data-layout="horizontal"] .win95-radio-group-options {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+#arcane-root.arcane-theme-win95 .win95-radio-group[data-layout="grid"] .win95-radio-group-options {
+  display: grid;
+}
+#arcane-root.arcane-theme-win95 .win95-radio-option,
+#arcane-root.arcane-theme-win95 .win95-radio-card,
+#arcane-root.arcane-theme-win95 .win95-radio-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  min-height: 24px;
+  color: var(--w95-face-text);
+  font-family: var(--font-sans);
+  cursor: var(--w95-cursor-arrow);
+}
+#arcane-root.arcane-theme-win95 .win95-radio-control {
+  appearance: none;
+  flex: 0 0 15px;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-radius: 50% !important;
   background: var(--w95-field);
   box-shadow: var(--w95-sunken);
 }
-#arcane-root.arcane-theme-win95 .win95-radio-option[data-arcane-state="selected"]::after {
-  content: '';
+#arcane-root.arcane-theme-win95 .win95-radio-control:checked {
+  background-image: radial-gradient(circle, var(--w95-field-text) 0 3px, transparent 3px);
+}
+#arcane-root.arcane-theme-win95 .win95-radio-caption {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#arcane-root.arcane-theme-win95 .win95-radio-description {
+  color: var(--muted-foreground);
+  font-size: 0.875em;
+  line-height: 1.4;
+}
+#arcane-root.arcane-theme-win95 .win95-radio-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+#arcane-root.arcane-theme-win95 .win95-radio-card,
+#arcane-root.arcane-theme-win95 .win95-radio-button {
+  padding: 0.5rem 0.75rem;
+  background: var(--w95-face);
+  box-shadow: var(--w95-raised);
+}
+#arcane-root.arcane-theme-win95 .win95-radio-card:has(.win95-radio-control:checked) {
+  outline: 1px solid var(--w95-face-text);
+  outline-offset: -1px;
+  box-shadow: var(--w95-pressed);
+}
+#arcane-root.arcane-theme-win95 .win95-radio-button:has(.win95-radio-control:checked),
+#arcane-root.arcane-theme-win95 .win95-radio-button:active:not([data-disabled="true"]) {
+  box-shadow: var(--w95-pressed);
+}
+#arcane-root.arcane-theme-win95 .win95-radio-button .win95-radio-control {
   position: absolute;
-  left: 0.275rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0.4rem;
-  height: 0.4rem;
-  border-radius: 50% !important;
-  background: var(--w95-field-text);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+#arcane-root.arcane-theme-win95 .win95-radio-option:has(.win95-radio-control:focus-visible),
+#arcane-root.arcane-theme-win95 .win95-radio-card:has(.win95-radio-control:focus-visible),
+#arcane-root.arcane-theme-win95 .win95-radio-button:has(.win95-radio-control:focus-visible) {
+  outline: 1px dotted var(--w95-face-text) !important;
+  outline-offset: 1px !important;
+}
+#arcane-root.arcane-theme-win95 .win95-radio-control:focus-visible {
+  outline: none !important;
+}
+#arcane-root.arcane-theme-win95 .win95-radio-option[data-disabled="true"],
+#arcane-root.arcane-theme-win95 .win95-radio-card[data-disabled="true"],
+#arcane-root.arcane-theme-win95 .win95-radio-button[data-disabled="true"] {
+  color: var(--w95-disabled-text);
+  text-shadow: 1px 1px 0 var(--w95-hilite);
+}
+#arcane-root.arcane-theme-win95 [data-disabled="true"] > .win95-radio-caption .win95-radio-description {
+  color: inherit;
 }
 
 /* ===== Themed not-found surface ===== */
@@ -6105,7 +6156,7 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
 #arcane-root.arcane-theme-win95 .win95-menubar-item[aria-disabled="true"],
 #arcane-root.arcane-theme-win95 .arcane-select:disabled,
 #arcane-root.arcane-theme-win95 .arcane-textarea:disabled {
-  color: var(--w95-shadow) !important;
+  color: var(--w95-disabled-text) !important;
   text-shadow: 1px 1px 0 var(--w95-hilite) !important;
 }
 
@@ -6137,6 +6188,56 @@ html.dark:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
 #arcane-root.arcane-theme-win95 .win95-tabs-trigger:focus-visible {
   outline: 1px dotted var(--w95-face-text) !important;
   outline-offset: -3px !important;
+}
+
+/* System high contrast removes bevel shadows; retain real control edges. */
+@media (forced-colors: active) {
+  #arcane-root.arcane-theme-win95,
+  #arcane-root.arcane-theme-win95.dark {
+    --w95-face: ButtonFace;
+    --w95-face-text: ButtonText;
+    --w95-field: Canvas;
+    --w95-field-text: CanvasText;
+    --w95-selection: Highlight;
+    --w95-selection-text: HighlightText;
+    --w95-title-a: Highlight;
+    --w95-title-text: HighlightText;
+    --w95-disabled-text: GrayText;
+  }
+  #arcane-root.arcane-theme-win95 :is(
+    button, input, select, textarea, .win95-checkbox-box,
+    .win95-radio-card, .win95-radio-button, .win95-toggle-thumb
+  ) {
+    border: 1px solid ButtonText !important;
+  }
+  #arcane-root.arcane-theme-win95 .win95-radio-control {
+    appearance: auto;
+  }
+  #arcane-root.arcane-theme-win95 .win95-select-trigger > span:last-child::after {
+    border-top-color: ButtonText !important;
+    forced-color-adjust: none;
+  }
+  #arcane-root.arcane-theme-win95 .win95-radio-button:has(.win95-radio-control:checked) {
+    outline: 2px solid Highlight;
+    outline-offset: -3px;
+  }
+  #arcane-root.arcane-theme-win95 .win95-checkbox-box::after {
+    background-color: CanvasText;
+    forced-color-adjust: none;
+  }
+  #arcane-root.arcane-theme-win95 :focus-visible {
+    outline: 2px solid Highlight !important;
+    outline-offset: 2px !important;
+  }
+  #arcane-root.arcane-theme-win95 .win95-radio-control:focus-visible {
+    outline: none !important;
+  }
+  #arcane-root.arcane-theme-win95 .win95-radio-option:has(.win95-radio-control:focus-visible),
+  #arcane-root.arcane-theme-win95 .win95-radio-card:has(.win95-radio-control:focus-visible),
+  #arcane-root.arcane-theme-win95 .win95-radio-button:has(.win95-radio-control:focus-visible) {
+    outline: 2px solid Highlight !important;
+    outline-offset: 2px !important;
+  }
 }
 
 /* ---------- Shared docs / prose / TOC / map (variable-driven) ---------- */

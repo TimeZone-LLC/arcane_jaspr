@@ -34,7 +34,7 @@ class _ArcaneInlineHeroBannerState extends State<ArcaneInlineHeroBanner> {
 
   void _handleDismiss() {
     setState(() => _isDismissed = true);
-    component.onDismiss?.call();
+    widget.onDismiss?.call();
   }
 
   @override
@@ -43,13 +43,13 @@ class _ArcaneInlineHeroBannerState extends State<ArcaneInlineHeroBanner> {
 
     return context.renderers.inlineHeroBanner(
       InlineHeroBannerProps(
-        message: component.message,
-        ctaText: component.ctaText,
-        ctaHref: component.ctaHref,
-        onCtaClick: component.onCtaClick,
-        onDismiss: component.dismissible ? _handleDismiss : null,
-        dismissible: component.dismissible,
-        icon: component.icon,
+        message: widget.message,
+        ctaText: widget.ctaText,
+        ctaHref: widget.ctaHref,
+        onCtaClick: widget.onCtaClick,
+        onDismiss: widget.dismissible ? _handleDismiss : null,
+        dismissible: widget.dismissible,
+        icon: widget.icon,
       ),
     );
   }

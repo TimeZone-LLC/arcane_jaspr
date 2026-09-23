@@ -62,6 +62,7 @@ void main() {
         tester,
         stylesheet,
         const Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             FeatureCard(
               title: 'Vertical',

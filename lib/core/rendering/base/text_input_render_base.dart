@@ -5,6 +5,7 @@ import 'package:arcane_jaspr/core/decoration/arcane_decoration.dart';
 import 'package:arcane_jaspr/core/dom_value.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/text_input_props.dart';
+import 'package:arcane_jaspr/core/rendering/field_identity.dart';
 
 /// Shared structural base for themed text-input renderers.
 ///
@@ -72,8 +73,23 @@ abstract class TextInputRenderBase extends StatelessComponent {
       const <String, String>{};
 
   @override
-  Component build(BuildContext context) {
+  Component build(BuildContext context) => FieldIdentity(
+    id: props.id ?? props.attributes?['id'],
+    builder: _buildField,
+  );
+
+  Component _buildField(String fieldId) {
     final bool hasError = props.error != null;
+    final bool hasAffixes = props.prefix != null || props.suffix != null;
+    final String? descriptionId = hasError
+        ? '$fieldId-error'
+        : props.helperText != null
+        ? '$fieldId-helper'
+        : null;
+    final String describedBy = <String>[
+      if (props.attributes?['aria-describedby'] case final String value) value,
+      ?descriptionId,
+    ].join(' ');
     final bool hasWrapper =
         props.label != null ||
         props.error != null ||
@@ -107,7 +123,7 @@ abstract class TextInputRenderBase extends StatelessComponent {
 
     final Component inputElement = dom.input(
       type: inputType,
-      id: props.id,
+      id: fieldId,
       name: props.name,
       classes: '$classPrefix-text-input',
       attributes: <String, String>{
@@ -116,25 +132,43 @@ abstract class TextInputRenderBase extends StatelessComponent {
         if (props.disabled) 'disabled': 'true',
         if (props.required) 'required': 'true',
         if (props.readOnly) 'readonly': 'true',
-        'data-disabled': '${props.disabled}',
-        'data-error': '$hasError',
         ...runtimeAttrs,
-        ...?props.attributes,
+        for (final MapEntry<String, String> entry
+            in props.attributes?.entries ?? const <MapEntry<String, String>>[])
+          if (entry.key != 'id') entry.key: entry.value,
+        if (!hasAffixes || borderlessInputReflectsState)
+          'data-disabled': '${props.disabled}',
+        if (!hasAffixes || borderlessInputReflectsState)
+          'data-error': '$hasError',
+        if (hasAffixes && containerOwnsPerimeter)
+          'data-arcane-field-control': 'true',
+        if (hasAffixes && containerOwnsPerimeter)
+          'data-arcane-field-inner': 'true',
+        if (hasError) 'aria-invalid': 'true',
+        if (describedBy.isNotEmpty) 'aria-describedby': describedBy,
       },
       styles: dom.Styles(
-        raw: <String, String>{
-          ...inputStyles(
-            hasError: hasError,
-            isDisabled: props.disabled,
-            height: height,
-            paddingX: paddingX,
-            paddingY: paddingY,
-            fontSize: fontSize,
-          ),
-          ...?props.decoration?.universalStyles(),
-          ...decorationStyles(props.decoration),
-          ...?props.styles?.toMap(),
-        },
+        raw: hasAffixes
+            ? borderlessInputStyles(
+                isDisabled: props.disabled,
+                height: height,
+                paddingX: paddingX,
+                paddingY: paddingY,
+                fontSize: fontSize,
+              )
+            : <String, String>{
+                ...inputStyles(
+                  hasError: hasError,
+                  isDisabled: props.disabled,
+                  height: height,
+                  paddingX: paddingX,
+                  paddingY: paddingY,
+                  fontSize: fontSize,
+                ),
+                ...?props.decoration?.universalStyles(),
+                ...decorationStyles(props.decoration),
+                ...?props.styles?.toMap(),
+              },
       ),
       events: _inputEvents(),
     );
@@ -166,9 +200,7 @@ abstract class TextInputRenderBase extends StatelessComponent {
         if (props.label != null)
           Component.element(
             tag: 'label',
-            attributes: props.id != null
-                ? <String, String>{'for': props.id!}
-                : null,
+            attributes: <String, String>{'for': fieldId},
             styles: const dom.Styles(
               raw: <String, String>{
                 'font-size': 'var(--font-size-sm)',
@@ -191,7 +223,7 @@ abstract class TextInputRenderBase extends StatelessComponent {
                 ),
             ],
           ),
-        if (props.prefix != null || props.suffix != null)
+        if (hasAffixes)
           dom.div(
             classes: '$classPrefix-text-input-container',
             attributes: <String, String>{
@@ -214,38 +246,7 @@ abstract class TextInputRenderBase extends StatelessComponent {
                   styles: dom.Styles(raw: prefixStyles()),
                   <Component>[props.prefix!],
                 ),
-              dom.input(
-                type: inputType,
-                id: props.id,
-                name: props.name,
-                classes: '$classPrefix-text-input',
-                attributes: <String, String>{
-                  if (containerOwnsPerimeter)
-                    'data-arcane-field-control': 'true',
-                  if (containerOwnsPerimeter) 'data-arcane-field-inner': 'true',
-                  if (props.placeholder != null)
-                    'placeholder': props.placeholder!,
-                  if (props.value != null) 'value': props.value!,
-                  if (props.disabled) 'disabled': 'true',
-                  if (props.required) 'required': 'true',
-                  if (props.readOnly) 'readonly': 'true',
-                  if (borderlessInputReflectsState)
-                    'data-disabled': '${props.disabled}',
-                  if (borderlessInputReflectsState) 'data-error': '$hasError',
-                  ...runtimeAttrs,
-                  ...?props.attributes,
-                },
-                styles: dom.Styles(
-                  raw: borderlessInputStyles(
-                    isDisabled: props.disabled,
-                    height: height,
-                    paddingX: paddingX,
-                    paddingY: paddingY,
-                    fontSize: fontSize,
-                  ),
-                ),
-                events: _inputEvents(),
-              ),
+              inputElement,
               if (props.suffix != null)
                 dom.span(
                   classes: '$classPrefix-text-input-suffix',
@@ -258,6 +259,7 @@ abstract class TextInputRenderBase extends StatelessComponent {
           inputElement,
         if (props.error != null)
           dom.span(
+            id: descriptionId,
             classes: '$classPrefix-text-input-error',
             styles: const dom.Styles(
               raw: <String, String>{
@@ -269,6 +271,7 @@ abstract class TextInputRenderBase extends StatelessComponent {
           )
         else if (props.helperText != null)
           dom.span(
+            id: descriptionId,
             classes: '$classPrefix-text-input-helper',
             styles: const dom.Styles(
               raw: <String, String>{
@@ -291,10 +294,10 @@ abstract class TextInputRenderBase extends StatelessComponent {
         },
       if (props.onFocus != null) 'focus': (event) => props.onFocus!(),
       if (props.onBlur != null) 'blur': (event) => props.onBlur!(),
-      if (props.onSubmit != null)
+      if (props.onSubmitted != null)
         'keydown': (event) {
-          if (domEventKey(event) == 'Enter') {
-            props.onSubmit!(domInputValue(event.target));
+          if (domEventKey(event) == 'Enter' && !domEventIsComposing(event)) {
+            props.onSubmitted!(domInputValue(event.target));
           }
         },
     };

@@ -1,6 +1,7 @@
 library;
 
 import 'package:jaspr/jaspr.dart' as jaspr;
+import 'package:meta/meta.dart';
 
 export 'package:jaspr/jaspr.dart'
     show
@@ -18,7 +19,22 @@ export 'package:jaspr/jaspr.dart'
 
 typedef Widget = jaspr.Component;
 
-typedef State<T extends StatefulWidget> = jaspr.State<T>;
+/// A Jaspr state with Flutter's widget access and update lifecycle.
+abstract class State<T extends StatefulWidget> extends jaspr.State<T> {
+  T get widget => component;
+
+  @override
+  @nonVirtual
+  void didUpdateComponent(covariant T oldComponent) {
+    super.didUpdateComponent(oldComponent);
+    didUpdateWidget(oldComponent);
+  }
+
+  /// Called after [widget] receives the new configuration and before rebuilding.
+  @protected
+  @mustCallSuper
+  void didUpdateWidget(covariant T oldWidget) {}
+}
 
 typedef WidgetBuilder = Widget Function(jaspr.BuildContext context);
 
@@ -34,6 +50,9 @@ abstract class StatelessWidget extends jaspr.StatelessComponent {
 
 abstract class StatefulWidget extends jaspr.StatefulComponent {
   const StatefulWidget({super.key});
+
+  @override
+  State<StatefulWidget> createState();
 }
 
 abstract class InheritedWidget extends jaspr.InheritedComponent {

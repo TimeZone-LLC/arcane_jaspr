@@ -40,15 +40,15 @@ class _ArcaneMenubarState extends State<ArcaneMenubar> {
   Widget build(BuildContext context) {
     return context.renderers.menubar(
       MenubarProps(
-        menus: component.menus
+        menus: widget.menus
             .map(
               (menu) => MenubarMenuProps(label: menu.label, items: menu.items),
             )
             .toList(),
         openMenuIndex: _openMenuIndex,
         onMenuChange: _onMenuChange,
-        styles: component.styles,
-        decoration: component.decoration,
+        styles: widget.styles,
+        decoration: widget.decoration,
       ),
     );
   }

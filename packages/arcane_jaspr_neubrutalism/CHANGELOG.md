@@ -1,5 +1,16 @@
 # Changelog
 
+## x.x.x
+
+### Changed
+
+- Flex layouts share Flutter main-axis sizing with the other renderers.
+- Wrap layouts support horizontal and vertical directions.
+
+### Fixed
+
+- SizedBox preserves a finite dimension when its other axis expands.
+
 ## 4.0.0 - 2026-08-31
 
 ### Added

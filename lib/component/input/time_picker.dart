@@ -60,41 +60,41 @@ class _ArcaneTimePickerState extends State<ArcaneTimePicker> {
   }
 
   @override
-  void didUpdateComponent(covariant ArcaneTimePicker oldComponent) {
-    super.didUpdateComponent(oldComponent);
-    if (!_isOpen && component.value != oldComponent.value) {
+  void didUpdateWidget(covariant ArcaneTimePicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_isOpen && widget.value != oldWidget.value) {
       _workingTime = _baseTime;
     }
   }
 
-  TimeOfDay get _baseTime => component.value ?? TimeOfDay.now();
+  TimeOfDay get _baseTime => widget.value ?? TimeOfDay.now();
 
   int get _minuteInterval {
-    if (component.minuteInterval <= 0) {
+    if (widget.minuteInterval <= 0) {
       return 1;
     }
-    if (component.minuteInterval > 60) {
+    if (widget.minuteInterval > 60) {
       return 60;
     }
-    return component.minuteInterval;
+    return widget.minuteInterval;
   }
 
   String get _displayText {
-    if (component.value == null) {
-      return component.placeholder ?? 'Select time...';
+    if (widget.value == null) {
+      return widget.placeholder ?? 'Select time...';
     }
-    return component.value!.format(use24Hour: component.use24Hour);
+    return widget.value!.format(use24Hour: widget.use24Hour);
   }
 
   int get _selectedHour {
-    if (component.use24Hour) {
+    if (widget.use24Hour) {
       return _workingTime.hour;
     }
     return _workingTime.hourOfPeriod;
   }
 
   void _toggleOpen() {
-    if (component.disabled) {
+    if (widget.disabled) {
       return;
     }
     setState(() {
@@ -106,7 +106,7 @@ class _ArcaneTimePickerState extends State<ArcaneTimePicker> {
   }
 
   void _clear() {
-    component.onChanged?.call(null);
+    widget.onChanged?.call(null);
     setState(() {
       _workingTime = _baseTime;
       _isOpen = false;
@@ -115,7 +115,7 @@ class _ArcaneTimePickerState extends State<ArcaneTimePicker> {
 
   void _selectHour(int hour) {
     int resolvedHour = hour;
-    if (!component.use24Hour) {
+    if (!widget.use24Hour) {
       if (_workingTime.isPM) {
         resolvedHour = hour == 12 ? 12 : hour + 12;
       } else {
@@ -153,7 +153,7 @@ class _ArcaneTimePickerState extends State<ArcaneTimePicker> {
   }
 
   void _confirm() {
-    component.onChanged?.call(_workingTime);
+    widget.onChanged?.call(_workingTime);
     setState(() {
       _isOpen = false;
     });
@@ -162,19 +162,19 @@ class _ArcaneTimePickerState extends State<ArcaneTimePicker> {
   @override
   Widget build(BuildContext context) {
     final String resolvedId =
-        component.id ?? 'timepicker-${identityHashCode(component)}';
+        widget.id ?? 'timepicker-${identityHashCode(widget)}';
     return context.renderers.timePicker(
       TimePickerProps(
         id: resolvedId,
-        value: component.value,
+        value: widget.value,
         displayText: _displayText,
-        placeholder: component.placeholder,
-        label: component.label,
-        disabled: component.disabled,
-        error: component.error,
-        clearable: component.clearable,
-        size: component.size,
-        use24Hour: component.use24Hour,
+        placeholder: widget.placeholder,
+        label: widget.label,
+        disabled: widget.disabled,
+        error: widget.error,
+        clearable: widget.clearable,
+        size: widget.size,
+        use24Hour: widget.use24Hour,
         minuteInterval: _minuteInterval,
         isOpen: _isOpen,
         selectedHour: _selectedHour,
@@ -187,8 +187,8 @@ class _ArcaneTimePickerState extends State<ArcaneTimePicker> {
         onTogglePeriod: _togglePeriod,
         onCancel: _cancel,
         onConfirm: _confirm,
-        styles: component.styles,
-        decoration: component.decoration,
+        styles: widget.styles,
+        decoration: widget.decoration,
       ),
     );
   }

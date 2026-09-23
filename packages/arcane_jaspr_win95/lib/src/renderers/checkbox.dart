@@ -4,7 +4,7 @@ import 'package:jaspr/jaspr.dart';
 import 'package:arcane_jaspr/core/props/checkbox_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/checkbox_render_base.dart';
 
-/// Win95 checkbox renderer (neutralized skeleton).
+/// A sunken checkbox well beside its label and description.
 class Win95Checkbox extends CheckboxRenderBase {
   const Win95Checkbox(super.props, {super.key});
 
@@ -13,14 +13,20 @@ class Win95Checkbox extends CheckboxRenderBase {
       'win95-checkbox-wrapper ${props.disabled ? 'disabled' : ''}';
 
   @override
-  Map<String, String> extraWrapperAttrs(CheckboxProps props) => <String, String>{
-    'data-variant': props.color.name,
-    'data-size': props.size.name,
-  };
+  Map<String, String> extraWrapperAttrs(CheckboxProps props) =>
+      <String, String>{
+        'data-variant': props.color.name,
+        'data-size': props.size.name,
+      };
 
   @override
   Map<String, String> wrapperStyles(CheckboxProps props) =>
-      const <String, String>{};
+      const <String, String>{
+        'display': 'flex',
+        'align-items': 'center',
+        'gap': '0.5rem',
+        'min-height': '24px',
+      };
 
   @override
   Map<String, String> labelTextStyles(CheckboxProps props) =>

@@ -14,7 +14,7 @@ enum OtpInputSize { sm, md, lg }
 class ArcaneOtpInput extends StatefulWidget {
   final int length;
   final void Function(String)? onComplete;
-  final void Function(String)? onChange;
+  final void Function(String)? onChanged;
   final String? value;
   final bool obscure;
   final OtpInputSize size;
@@ -34,7 +34,7 @@ class ArcaneOtpInput extends StatefulWidget {
   const ArcaneOtpInput({
     this.length = 6,
     this.onComplete,
-    this.onChange,
+    this.onChanged,
     this.value,
     this.obscure = false,
     this.size = OtpInputSize.md,
@@ -50,7 +50,7 @@ class ArcaneOtpInput extends StatefulWidget {
 
   const ArcaneOtpInput.fourDigit({
     this.onComplete,
-    this.onChange,
+    this.onChanged,
     this.value,
     this.obscure = false,
     this.size = OtpInputSize.md,
@@ -66,7 +66,7 @@ class ArcaneOtpInput extends StatefulWidget {
 
   const ArcaneOtpInput.sixDigit({
     this.onComplete,
-    this.onChange,
+    this.onChanged,
     this.value,
     this.obscure = false,
     this.size = OtpInputSize.md,
@@ -94,18 +94,17 @@ class _ArcaneOtpInputState extends State<ArcaneOtpInput> {
   }
 
   void _initDigits() {
-    if (component.value != null &&
-        component.value!.length == component.length) {
-      _digits = component.value!.split('');
+    if (widget.value != null && widget.value!.length == widget.length) {
+      _digits = widget.value!.split('');
     } else {
-      _digits = List.filled(component.length, '');
+      _digits = List.filled(widget.length, '');
     }
   }
 
   String get _fullValue => _digits.join();
 
   void _handleInput(int index, String value) {
-    if (component.disabled) return;
+    if (widget.disabled) return;
 
     if (value.length > 1) {
       _handlePaste(value);
@@ -117,10 +116,10 @@ class _ArcaneOtpInputState extends State<ArcaneOtpInput> {
         _digits[index] = value;
       });
 
-      component.onChange?.call(_fullValue);
+      widget.onChanged?.call(_fullValue);
 
       if (_digits.every((d) => d.isNotEmpty)) {
-        component.onComplete?.call(_fullValue);
+        widget.onComplete?.call(_fullValue);
       }
     }
   }
@@ -130,19 +129,19 @@ class _ArcaneOtpInputState extends State<ArcaneOtpInput> {
     if (digits.isEmpty) return;
 
     setState(() {
-      for (var i = 0; i < component.length && i < digits.length; i++) {
+      for (var i = 0; i < widget.length && i < digits.length; i++) {
         _digits[i] = digits[i];
       }
     });
 
-    component.onChange?.call(_fullValue);
+    widget.onChanged?.call(_fullValue);
 
     if (_digits.every((d) => d.isNotEmpty)) {
-      component.onComplete?.call(_fullValue);
+      widget.onComplete?.call(_fullValue);
     }
   }
 
-  OtpInputSizeVariant get _propsSize => switch (component.size) {
+  OtpInputSizeVariant get _propsSize => switch (widget.size) {
     OtpInputSize.sm => OtpInputSizeVariant.sm,
     OtpInputSize.md => OtpInputSizeVariant.md,
     OtpInputSize.lg => OtpInputSizeVariant.lg,
@@ -152,18 +151,18 @@ class _ArcaneOtpInputState extends State<ArcaneOtpInput> {
   Widget build(BuildContext context) {
     return context.renderers.otpInput(
       OtpInputProps(
-        length: component.length,
+        length: widget.length,
         digits: _digits,
-        obscure: component.obscure,
+        obscure: widget.obscure,
         size: _propsSize,
-        disabled: component.disabled,
-        error: component.error,
-        label: component.label,
-        separator: component.separator,
-        separatorPosition: component.separatorPosition,
+        disabled: widget.disabled,
+        error: widget.error,
+        label: widget.label,
+        separator: widget.separator,
+        separatorPosition: widget.separatorPosition,
         onInput: _handleInput,
-        styles: component.styles,
-        decoration: component.decoration,
+        styles: widget.styles,
+        decoration: widget.decoration,
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:jaspr/dom.dart' as dom;
 import 'package:jaspr/jaspr.dart';
 
+import 'package:arcane_jaspr/core/dom_value.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/toggle_switch_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/toggle_switch_render_base.dart';
@@ -37,11 +38,12 @@ class NeonToggleSwitch extends ToggleSwitchRenderBase {
       events: props.disabled || props.onChanged == null
           ? null
           : <String, EventCallback>{
-              'click': (_) => props.onChanged!(!props.value),
+              'click': (event) {
+                domPreventDefault(event);
+                props.onChanged!(!props.value);
+              },
             },
-      <Component>[
-        const dom.span(classes: 'neon-toggle-thumb', <Component>[]),
-      ],
+      <Component>[const dom.span(classes: 'neon-toggle-thumb', <Component>[])],
     );
   }
 
@@ -61,14 +63,6 @@ class NeonToggleSwitch extends ToggleSwitchRenderBase {
     return dom.label(
       classes: 'neon-toggle-wrapper',
       attributes: rootAttrs,
-      events: props.disabled || props.onChanged == null
-          ? null
-          : <String, EventCallback>{
-              'click': (e) {
-                if ((e.target as dynamic)?.tagName == 'BUTTON') return;
-                props.onChanged!(!props.value);
-              },
-            },
       children,
     );
   }

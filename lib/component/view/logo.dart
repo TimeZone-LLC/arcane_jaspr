@@ -25,13 +25,13 @@ class Logo extends StatelessWidget {
   Widget build(BuildContext context) {
     final Widget content = Row(
       mainAxisSize: MainAxisSize.min,
-      gap: 12,
+      spacing: 12,
       children: <Widget>[
         ?icon,
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          gap: 2,
+          spacing: 2,
           children: <Widget>[
             Text.label(title),
             if (subtitle != null) Text.bodySmall(subtitle!),

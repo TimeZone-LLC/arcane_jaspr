@@ -4,6 +4,7 @@ import 'package:jaspr/dom.dart' as dom;
 import 'package:arcane_jaspr/core/interaction/interaction.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/checkbox_props.dart';
+import 'package:arcane_jaspr/core/dom_value.dart';
 
 /// Shared structural base for themed checkbox renderers.
 ///
@@ -68,18 +69,22 @@ abstract class CheckboxRenderBase extends StatelessComponent {
       <String, String>{
         'role': 'checkbox',
         'aria-checked': '${props.checked}',
+        'aria-disabled': '${props.disabled}',
+        if (props.label != null) 'aria-labelledby': '${props.id}-label',
+        if (props.description != null)
+          'aria-describedby': '${props.id}-description',
         'tabindex': props.disabled ? '-1' : '0',
         'data-state': props.checked ? 'checked' : 'unchecked',
         'data-disabled': '${props.disabled}',
       },
       if (!props.disabled)
-        interactionAttrs(
-          ArcaneInteraction.toggleValue(groupId, itemValue),
-        ),
+        interactionAttrs(ArcaneInteraction.toggleValue(groupId, itemValue)),
     ]);
 
     final Map<String, String> wrapperAttrs = mergeAttrs(<Map<String, String>>[
       rootAttrs,
+      if (!props.disabled)
+        interactionAttrs(ArcaneInteraction.toggleValue(groupId, itemValue)),
       <String, String>{
         'data-state': props.checked ? 'checked' : 'unchecked',
         'data-disabled': '${props.disabled}',
@@ -94,7 +99,17 @@ abstract class CheckboxRenderBase extends StatelessComponent {
       events: props.disabled || props.onChanged == null
           ? null
           : <String, EventCallback>{
-              'click': (_) => props.onChanged!(!props.checked),
+              'click': (event) {
+                domPreventDefault(event);
+                props.onChanged!(!props.checked);
+              },
+              'keydown': (event) {
+                final String key = domEventKey(event);
+                if (key == ' ' || key == 'Enter') {
+                  domPreventDefault(event);
+                  props.onChanged!(!props.checked);
+                }
+              },
             },
       <Component>[
         buildBox(props, itemAttrs),
@@ -104,11 +119,13 @@ abstract class CheckboxRenderBase extends StatelessComponent {
             <Component>[
               if (props.label != null)
                 dom.span(
+                  id: '${props.id}-label',
                   styles: dom.Styles(raw: labelTextStyles(props)),
                   <Component>[Component.text(props.label!)],
                 ),
               if (props.description != null)
                 dom.span(
+                  id: '${props.id}-description',
                   styles: dom.Styles(raw: descriptionTextStyles(props)),
                   <Component>[Component.text(props.description!)],
                 ),

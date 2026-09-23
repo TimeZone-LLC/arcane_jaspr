@@ -42,12 +42,12 @@ class ArcaneStringField extends StatelessWidget {
                   ? TextArea(
                       value: value,
                       rows: maxLines,
-                      onChange: onChanged,
+                      onChanged: onChanged,
                       placeholder: placeholder,
                     )
                   : TextInput(
                       value: value,
-                      onChange: onChanged,
+                      onChanged: onChanged,
                       placeholder: placeholder,
                     ),
             ),

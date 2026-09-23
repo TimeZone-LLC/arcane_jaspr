@@ -43,7 +43,7 @@ enum ShadcnTheme {
   cream(
     // Light: warm ivory background
     lightBackground: 0xFFfefdfb,
-    lightPrimary: 0xFF78716c, // Warm stone primary for cohesive tinting
+    lightPrimary: 0xFF57534e, // Warm stone primary for cohesive tinting
     // Dark: warm dark brown
     darkBackground: 0xFF1D1712,
     darkPrimary: 0xFFF2E5D2,
@@ -73,7 +73,7 @@ enum ShadcnTheme {
   rose(
     // Light: clean white with rich rose-tinted surfaces
     lightBackground: 0xFFfff7fb,
-    lightPrimary: 0xFFe11d48, // Vibrant rose
+    lightPrimary: 0xFFbe123c, // Vibrant rose
     lightSecondary: 0xFFfce7f3, // Rich pink surface
     lightAccent: 0xFFfbcfe8, // Deeper pink for interaction
     // Dark: deep rose
@@ -88,7 +88,7 @@ enum ShadcnTheme {
   lavender(
     // Light: clean white with rich lavender-tinted surfaces
     lightBackground: 0xFFfbf8ff,
-    lightPrimary: 0xFF9333ea, // Vibrant purple
+    lightPrimary: 0xFF7e22ce, // Vibrant purple
     lightSecondary: 0xFFede9fe, // Rich lavender surface
     lightAccent: 0xFFddd6fe, // Deeper lavender for interaction
     // Dark: deep purple
@@ -103,7 +103,7 @@ enum ShadcnTheme {
   mint(
     // Light: clean white with rich mint-tinted surfaces
     lightBackground: 0xFFf6fff9,
-    lightPrimary: 0xFF16a34a, // Vibrant green
+    lightPrimary: 0xFF166534, // Vibrant green
     lightSecondary: 0xFFdcfce7, // Rich mint surface
     lightAccent: 0xFFbbf7d0, // Deeper mint for interaction
     // Dark: deep forest
@@ -118,7 +118,7 @@ enum ShadcnTheme {
   sky(
     // Light: clean white with rich sky-tinted surfaces
     lightBackground: 0xFFf5fbff,
-    lightPrimary: 0xFF0284c7, // Vibrant sky blue
+    lightPrimary: 0xFF0369a1, // Vibrant sky blue
     lightSecondary: 0xFFe0f2fe, // Rich sky surface
     lightAccent: 0xFFbae6fd, // Deeper blue for interaction
     // Dark: deep ocean
@@ -133,7 +133,7 @@ enum ShadcnTheme {
   peach(
     // Light: clean white with rich peach-tinted surfaces
     lightBackground: 0xFFfffaf5,
-    lightPrimary: 0xFFea580c, // Vibrant orange
+    lightPrimary: 0xFF9a3412, // Vibrant orange
     lightSecondary: 0xFFffedd5, // Rich peach surface
     lightAccent: 0xFFfed7aa, // Deeper orange for interaction
     // Dark: deep amber
@@ -148,7 +148,7 @@ enum ShadcnTheme {
   teal(
     // Light: clean white with rich teal-tinted surfaces
     lightBackground: 0xFFf5fffc,
-    lightPrimary: 0xFF0d9488, // Vibrant teal
+    lightPrimary: 0xFF0f766e, // Vibrant teal
     lightSecondary: 0xFFccfbf1, // Rich teal surface
     lightAccent: 0xFF99f6e4, // Deeper teal for interaction
     // Dark: deep teal

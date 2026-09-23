@@ -30,12 +30,13 @@ class CenterBody extends StatelessWidget {
     child: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
-      gap: 16,
+      spacing: 16,
       children: <Widget>[
         ?icon,
         if (icon == null && iconData != null)
           Icon(iconData!, size: IconSize.xl2),
-        if (message != null) Text.bodyLarge(message!, align: TextAlign.center),
+        if (message != null)
+          Text.bodyLarge(message!, textAlign: TextAlign.center),
         ?child,
         if (actionText != null)
           Button.secondary(onPressed: onActionPressed, label: actionText!),

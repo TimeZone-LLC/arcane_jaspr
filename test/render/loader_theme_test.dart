@@ -65,6 +65,7 @@ void main() {
         ArcaneThemeProvider(
           stylesheet: stylesheet,
           child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               ArcaneLoadingSpinner(size: '30px'),
               Button(label: 'Save', loading: true),

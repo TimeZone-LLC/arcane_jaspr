@@ -171,7 +171,7 @@ class ShadcnSelect<T> extends StatelessComponent {
               'background-color': 'var(--background)',
               'border': hasError
                   ? '1px solid var(--destructive)'
-                  : '1px solid var(--input)',
+                  : '1px solid var(--shadcn-control-border)',
               'border-radius': 'var(--radius-sm)',
               'color': 'var(--foreground)',
               'font-size': size['fontSize']!,

@@ -167,7 +167,7 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
   Timer? _openTimer;
   Timer? _closeTimer;
 
-  bool get _isOpen => component.isOpen ?? _internalIsOpen;
+  bool get _isOpen => widget.isOpen ?? _internalIsOpen;
 
   void _cancelTimers() {
     _openTimer?.cancel();
@@ -178,46 +178,46 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
 
   void _startOpenTimer() {
     _cancelTimers();
-    if (component.openDelay <= 0) {
+    if (widget.openDelay <= 0) {
       _open();
     } else {
-      _openTimer = Timer(Duration(milliseconds: component.openDelay), _open);
+      _openTimer = Timer(Duration(milliseconds: widget.openDelay), _open);
     }
   }
 
   void _startCloseTimer() {
     _cancelTimers();
-    if (component.closeDelay <= 0) {
+    if (widget.closeDelay <= 0) {
       _close();
     } else {
-      _closeTimer = Timer(Duration(milliseconds: component.closeDelay), _close);
+      _closeTimer = Timer(Duration(milliseconds: widget.closeDelay), _close);
     }
   }
 
   void _toggle() {
     _cancelTimers();
     final newState = !_isOpen;
-    if (component.isOpen == null) {
+    if (widget.isOpen == null) {
       setState(() => _internalIsOpen = newState);
     }
-    component.onOpenChange?.call(newState);
+    widget.onOpenChange?.call(newState);
   }
 
   void _open() {
     if (!_isOpen) {
-      if (component.isOpen == null) {
+      if (widget.isOpen == null) {
         setState(() => _internalIsOpen = true);
       }
-      component.onOpenChange?.call(true);
+      widget.onOpenChange?.call(true);
     }
   }
 
   void _close() {
     if (_isOpen) {
-      if (component.isOpen == null) {
+      if (widget.isOpen == null) {
         setState(() => _internalIsOpen = false);
       }
-      component.onOpenChange?.call(false);
+      widget.onOpenChange?.call(false);
     }
   }
 
@@ -234,27 +234,27 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
   @override
   Widget build(BuildContext context) {
     final bool isTextTooltip =
-        component.textContent != null && component.content == null;
+        widget.textContent != null && widget.content == null;
 
     return context.renderers.floating(
       FloatingProps(
-        id: component.id,
-        trigger: component.trigger,
-        content: component.content,
-        textContent: component.textContent,
+        id: widget.id,
+        trigger: widget.trigger,
+        content: widget.content,
+        textContent: widget.textContent,
         isOpen: _isOpen,
-        triggerType: component.triggerType,
-        position: component.position,
+        triggerType: widget.triggerType,
+        position: widget.position,
         onToggle: _toggle,
         onMouseEnter: _handleMouseEnter,
         onMouseLeave: _handleMouseLeave,
-        showArrow: component.showArrow,
-        offset: component.offset,
-        maxWidth: component.maxWidth ?? (isTextTooltip ? 250 : null),
-        closeOnOutsideClick: component.closeOnOutsideClick,
-        closeOnEscape: component.closeOnEscape,
-        styles: component.styles,
-        decoration: component.decoration,
+        showArrow: widget.showArrow,
+        offset: widget.offset,
+        maxWidth: widget.maxWidth ?? (isTextTooltip ? 250 : null),
+        closeOnOutsideClick: widget.closeOnOutsideClick,
+        closeOnEscape: widget.closeOnEscape,
+        styles: widget.styles,
+        decoration: widget.decoration,
       ),
     );
   }

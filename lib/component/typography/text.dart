@@ -35,17 +35,20 @@ import 'package:jaspr/dom.dart'
         FontFamily,
         WhiteSpace;
 
-import '../../util/arcane.dart';
-import '../../util/style_types/index.dart';
+import 'package:arcane_jaspr/component/typography/text_style.dart';
+import 'package:arcane_jaspr/util/arcane.dart';
+import 'package:arcane_jaspr/util/style_types/index.dart';
 
-/// Text component with enum-based styling.
+export 'package:arcane_jaspr/component/typography/text_style.dart';
+
+/// Text with Flutter-shaped styling and optional Arcane typography tokens.
 class Text extends StatelessWidget {
-  final String text;
+  final String data;
   final FontSize? size;
   final FontWeight? weight;
   final TextColor? color;
   final String? colorCustom;
-  final TextAlign? align;
+  final TextAlign? textAlign;
   final LineHeight? lineHeight;
   final LetterSpacing? letterSpacing;
   final TextDecoration? decoration;
@@ -56,16 +59,18 @@ class Text extends StatelessWidget {
   final WhiteSpace? whiteSpace;
   final int? maxLines;
   final bool selectable;
-  final ArcaneStyleData? style;
+  final TextStyle? style;
+  final ArcaneStyleData? cssStyle;
+  final bool? softWrap;
   final String element;
 
   const Text(
-    this.text, {
+    this.data, {
     this.size,
     this.weight,
     this.color,
     this.colorCustom,
-    this.align,
+    this.textAlign,
     this.lineHeight,
     this.letterSpacing,
     this.decoration,
@@ -77,15 +82,19 @@ class Text extends StatelessWidget {
     this.maxLines,
     this.selectable = true,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     this.element = 'span',
     super.key,
-  });
+  }) : assert(maxLines == null || maxLines > 0);
 
   const Text.pageTitle(
-    this.text, {
+    this.data, {
     this.color = TextColor.primary,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.mega,
        weight = FontWeight.bold,
@@ -103,10 +112,12 @@ class Text extends StatelessWidget {
        element = 'h1';
 
   const Text.sectionTitle(
-    this.text, {
+    this.data, {
     this.color = TextColor.primary,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.hero,
        weight = FontWeight.bold,
@@ -124,10 +135,12 @@ class Text extends StatelessWidget {
        element = 'h2';
 
   const Text.heading(
-    this.text, {
+    this.data, {
     this.color = TextColor.primary,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.xl3,
        weight = FontWeight.bold,
@@ -145,10 +158,12 @@ class Text extends StatelessWidget {
        element = 'h2';
 
   const Text.heading2(
-    this.text, {
+    this.data, {
     this.color = TextColor.primary,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.xl2,
        weight = FontWeight.w600,
@@ -166,10 +181,12 @@ class Text extends StatelessWidget {
        element = 'h3';
 
   const Text.heading3(
-    this.text, {
+    this.data, {
     this.color = TextColor.primary,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.xl,
        weight = FontWeight.w600,
@@ -187,10 +204,12 @@ class Text extends StatelessWidget {
        element = 'h4';
 
   const Text.subheading(
-    this.text, {
+    this.data, {
     this.color = TextColor.secondary,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.lg,
        weight = FontWeight.w500,
@@ -208,10 +227,12 @@ class Text extends StatelessWidget {
        element = 'p';
 
   const Text.body(
-    this.text, {
+    this.data, {
     this.color = TextColor.muted,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.base,
        weight = null,
@@ -229,10 +250,12 @@ class Text extends StatelessWidget {
        element = 'p';
 
   const Text.bodyLarge(
-    this.text, {
+    this.data, {
     this.color = TextColor.muted,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.lg,
        weight = null,
@@ -250,10 +273,12 @@ class Text extends StatelessWidget {
        element = 'p';
 
   const Text.bodySmall(
-    this.text, {
+    this.data, {
     this.color = TextColor.muted,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.sm,
        weight = null,
@@ -271,10 +296,12 @@ class Text extends StatelessWidget {
        element = 'p';
 
   const Text.label(
-    this.text, {
+    this.data, {
     this.color = TextColor.primary,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.sm,
        weight = FontWeight.w500,
@@ -292,10 +319,12 @@ class Text extends StatelessWidget {
        element = 'span';
 
   const Text.caption(
-    this.text, {
+    this.data, {
     this.color = TextColor.subtle,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.xs,
        weight = null,
@@ -313,10 +342,12 @@ class Text extends StatelessWidget {
        element = 'span';
 
   const Text.code(
-    this.text, {
+    this.data, {
     this.color = TextColor.accent,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = FontSize.sm,
        weight = null,
@@ -334,10 +365,12 @@ class Text extends StatelessWidget {
        element = 'code';
 
   const Text.link(
-    this.text, {
+    this.data, {
     this.color = TextColor.accent,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : size = null,
        weight = null,
@@ -355,12 +388,14 @@ class Text extends StatelessWidget {
        element = 'span';
 
   const Text.truncated(
-    this.text, {
+    this.data, {
     this.size,
     this.weight,
     this.color,
-    this.align,
+    this.textAlign,
     this.style,
+    this.cssStyle,
+    this.softWrap,
     super.key,
   }) : overflow = TextOverflow.ellipsis,
        whiteSpace = WhiteSpace.nowrap,
@@ -377,21 +412,37 @@ class Text extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, String> textStyles = {};
+    final Map<String, String> textStyles = <String, String>{};
 
     if (size != null) textStyles['font-size'] = size!.css;
     if (weight != null) textStyles['font-weight'] = weight!.css;
     if (color != null) textStyles['color'] = color!.css;
     if (colorCustom != null) textStyles['color'] = colorCustom!;
-    if (align != null) textStyles['text-align'] = align!.css;
     if (lineHeight != null) textStyles['line-height'] = lineHeight!.css;
-    if (letterSpacing != null)
+    if (letterSpacing != null) {
       textStyles['letter-spacing'] = letterSpacing!.css;
+    }
     if (decoration != null) textStyles['text-decoration'] = decoration!.css;
     if (transform != null) textStyles['text-transform'] = transform!.css;
     if (family != null) textStyles['font-family'] = family!.css;
     if (fontStyle != null) textStyles['font-style'] = fontStyle!.css;
-    if (overflow != null) textStyles['text-overflow'] = overflow!.css;
+    textStyles.addAll(style?.toMap() ?? const <String, String>{});
+
+    if (textAlign != null) textStyles['text-align'] = textAlign!.css;
+    final TextOverflow? effectiveOverflow = overflow ?? style?.overflow;
+    if (effectiveOverflow != null) {
+      textStyles['text-overflow'] = effectiveOverflow == TextOverflow.visible
+          ? 'clip'
+          : effectiveOverflow.css;
+      if (effectiveOverflow == TextOverflow.ellipsis) {
+        textStyles['overflow'] = 'hidden';
+      } else if (effectiveOverflow == TextOverflow.visible) {
+        textStyles['overflow'] = 'visible';
+      }
+    }
+    if (softWrap != null) {
+      textStyles['white-space'] = softWrap! ? 'normal' : 'nowrap';
+    }
     if (whiteSpace != null) textStyles['white-space'] = whiteSpace!.css;
 
     if (!selectable) {
@@ -399,103 +450,55 @@ class Text extends StatelessWidget {
       textStyles['-webkit-user-select'] = 'none';
     }
 
-    if (maxLines != null && maxLines! > 0) {
-      textStyles['display'] = '-webkit-box';
-      textStyles['-webkit-line-clamp'] = '$maxLines';
-      textStyles['-webkit-box-orient'] = 'vertical';
-      textStyles['overflow'] = 'hidden';
+    if (maxLines == 1 || softWrap == false) {
+      textStyles['display'] = 'inline-block';
+      textStyles['max-width'] = '100%';
+      textStyles['white-space'] = 'nowrap';
+      textStyles['overflow'] = effectiveOverflow == TextOverflow.visible
+          ? 'visible'
+          : 'hidden';
+    } else if (maxLines != null && maxLines! > 1) {
+      if (effectiveOverflow == TextOverflow.ellipsis) {
+        textStyles['display'] = '-webkit-box';
+        textStyles['-webkit-line-clamp'] = '$maxLines';
+        textStyles['-webkit-box-orient'] = 'vertical';
+        textStyles['overflow'] = 'hidden';
+      } else {
+        textStyles['display'] = 'block';
+        textStyles['max-height'] = '${maxLines}lh';
+        textStyles['overflow'] = effectiveOverflow == TextOverflow.visible
+            ? 'visible'
+            : 'hidden';
+      }
     }
 
-    if (style != null) {
-      textStyles.addAll(style!.toMap());
-    }
+    textStyles.addAll(cssStyle?.toMap() ?? const <String, String>{});
 
     return _buildElement(textStyles);
   }
 
   Widget _buildElement(Map<String, String> styles) {
-    final content = [Component.text(text)];
-
-    switch (element) {
-      case 'h1':
-        return h1(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'h2':
-        return h2(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'h3':
-        return h3(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'h4':
-        return h4(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'h5':
-        return h5(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'h6':
-        return h6(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'p':
-        return p(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'code':
-        return code(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'pre':
-        return pre(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'strong':
-        return strong(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'em':
-        return em(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      case 'small':
-        return small(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-      default:
-        return span(
-          classes: 'arcane-text',
-          styles: Styles(raw: styles),
-          content,
-        );
-    }
+    final String tag = switch (element) {
+      'h1' ||
+      'h2' ||
+      'h3' ||
+      'h4' ||
+      'h5' ||
+      'h6' ||
+      'p' ||
+      'code' ||
+      'pre' ||
+      'strong' ||
+      'em' ||
+      'small' => element,
+      _ => 'span',
+    };
+    return Widget.element(
+      tag: tag,
+      classes: 'arcane-text',
+      styles: Styles(raw: styles),
+      children: <Widget>[Widget.text(data)],
+    );
   }
 }
 

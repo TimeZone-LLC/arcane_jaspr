@@ -8,8 +8,7 @@ library;
 /// varies only the desktop backdrop and the title-bar / selection color.
 /// The default [standard] is the iconic teal desktop with a navy title bar.
 ///
-/// Dark mode is a separate, period-accurate "High Contrast Black" scheme driven
-/// by [Win95Stylesheet.darkSeed]; it is not one of these light schemes.
+/// Dark mode keeps each scheme's caption and desktop hues on dark silver faces.
 enum Win95Theme {
   /// The classic out-of-the-box look: teal desktop, navy title bars.
   standard(

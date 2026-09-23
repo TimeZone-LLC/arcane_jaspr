@@ -23,7 +23,7 @@ class ShadcnTextArea extends TextAreaRenderBase {
     'background-color': isReadOnly ? 'var(--muted)' : 'var(--background)',
     'border': hasError
         ? '1px solid var(--destructive)'
-        : '1px solid var(--input)',
+        : '1px solid var(--shadcn-control-border)',
     'border-radius': '0.375rem',
     'color': isReadOnly ? 'var(--muted-foreground)' : 'var(--foreground)',
     'caret-color': isReadOnly ? 'var(--muted-foreground)' : 'var(--foreground)',

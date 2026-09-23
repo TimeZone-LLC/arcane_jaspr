@@ -44,10 +44,14 @@ function syncGroupItems(groupId, values) {
     const v = item.getAttribute('data-arcane-value');
     const selected = values.indexOf(v) >= 0;
     item.setAttribute('data-arcane-state', selected ? 'selected' : 'unselected');
-    if (item.getAttribute('role') === 'option' || item.getAttribute('role') === 'menuitemcheckbox' ||
-        item.getAttribute('role') === 'menuitemradio') {
+    const role = item.getAttribute('role');
+    if (role === 'option' || role === 'tab') {
       item.setAttribute('aria-selected', selected ? 'true' : 'false');
+    }
+    if (role === 'checkbox' || role === 'switch' || role === 'radio' ||
+        role === 'menuitemcheckbox' || role === 'menuitemradio') {
       item.setAttribute('aria-checked', selected ? 'true' : 'false');
+      item.setAttribute('data-state', selected ? 'checked' : 'unchecked');
     }
     if (item.tagName === 'INPUT' && (item.type === 'checkbox' || item.type === 'radio')) {
       item.checked = selected;

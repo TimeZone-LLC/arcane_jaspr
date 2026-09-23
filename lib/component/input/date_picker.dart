@@ -105,7 +105,7 @@ class _ArcaneDatePickerState extends State<ArcaneDatePicker> {
   @override
   void initState() {
     super.initState();
-    _displayMonth = component.value ?? DateTime.now();
+    _displayMonth = widget.value ?? DateTime.now();
     _displayMonth = DateTime(_displayMonth.year, _displayMonth.month, 1);
   }
 
@@ -114,87 +114,85 @@ class _ArcaneDatePickerState extends State<ArcaneDatePicker> {
   }
 
   String get _displayText {
-    if (component.mode == CalendarMode.range) {
-      if (component.rangeValue == null) {
-        return component.placeholder ?? 'Select date range...';
+    if (widget.mode == CalendarMode.range) {
+      if (widget.rangeValue == null) {
+        return widget.placeholder ?? 'Select date range...';
       }
-      final format = component.formatDate ?? _defaultFormat;
-      return '${format(component.rangeValue!.start)} - ${format(component.rangeValue!.end)}';
+      final format = widget.formatDate ?? _defaultFormat;
+      return '${format(widget.rangeValue!.start)} - ${format(widget.rangeValue!.end)}';
     }
 
-    if (component.value == null) {
-      return component.placeholder ?? 'Select date...';
+    if (widget.value == null) {
+      return widget.placeholder ?? 'Select date...';
     }
-    return (component.formatDate ?? _defaultFormat)(component.value!);
+    return (widget.formatDate ?? _defaultFormat)(widget.value!);
   }
 
   void _toggleOpen() {
-    if (component.disabled) return;
+    if (widget.disabled) return;
     setState(() => _isOpen = !_isOpen);
   }
 
   void _selectDate(DateTime date) {
-    component.onChanged?.call(date);
+    widget.onChanged?.call(date);
     setState(() => _isOpen = false);
   }
 
   void _selectRange(DateRange range) {
-    component.onRangeChanged?.call(range);
+    widget.onRangeChanged?.call(range);
     setState(() => _isOpen = false);
   }
 
   void _clear() {
-    if (component.mode == CalendarMode.range) {
-      component.onRangeChanged?.call(null);
+    if (widget.mode == CalendarMode.range) {
+      widget.onRangeChanged?.call(null);
     } else {
-      component.onChanged?.call(null);
+      widget.onChanged?.call(null);
     }
   }
 
   bool _isDisabled(DateTime date) {
-    if (component.disabledDates?.call(date) ?? false) return true;
-    if (component.minDate != null && date.isBefore(component.minDate!))
-      return true;
-    if (component.maxDate != null && date.isAfter(component.maxDate!))
-      return true;
+    if (widget.disabledDates?.call(date) ?? false) return true;
+    if (widget.minDate != null && date.isBefore(widget.minDate!)) return true;
+    if (widget.maxDate != null && date.isAfter(widget.maxDate!)) return true;
     return false;
   }
 
-  DatePickerSizeVariant get _propsSize => switch (component.size) {
+  DatePickerSizeVariant get _propsSize => switch (widget.size) {
     DatePickerSize.sm => DatePickerSizeVariant.sm,
     DatePickerSize.md => DatePickerSizeVariant.md,
     DatePickerSize.lg => DatePickerSizeVariant.lg,
   };
 
-  CalendarModeVariant get _propsMode => switch (component.mode) {
+  CalendarModeVariant get _propsMode => switch (widget.mode) {
     CalendarMode.single => CalendarModeVariant.single,
     CalendarMode.range => CalendarModeVariant.range,
   };
 
   DateRangeValue? get _propsRangeValue {
-    if (component.rangeValue == null) return null;
+    if (widget.rangeValue == null) return null;
     return DateRangeValue(
-      start: component.rangeValue!.start,
-      end: component.rangeValue!.end,
+      start: widget.rangeValue!.start,
+      end: widget.rangeValue!.end,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final String resolvedId =
-        component.id ?? 'datepicker-${identityHashCode(component)}';
+        widget.id ?? 'datepicker-${identityHashCode(widget)}';
     final String calendarId = '$resolvedId-cal';
     return context.renderers.datePicker(
       DatePickerProps(
         id: resolvedId,
-        value: component.value,
-        label: component.label,
-        placeholder: component.placeholder,
-        minDate: component.minDate,
-        maxDate: component.maxDate,
-        disabled: component.disabled,
-        error: component.error,
-        clearable: component.clearable,
+        value: widget.value,
+        label: widget.label,
+        placeholder: widget.placeholder,
+        minDate: widget.minDate,
+        maxDate: widget.maxDate,
+        disabled: widget.disabled,
+        error: widget.error,
+        clearable: widget.clearable,
         size: _propsSize,
         mode: _propsMode,
         rangeValue: _propsRangeValue,
@@ -205,14 +203,14 @@ class _ArcaneDatePickerState extends State<ArcaneDatePicker> {
         onRangeSelect: (range) =>
             _selectRange(DateRange(start: range.start, end: range.end)),
         onClear: _clear,
-        styles: component.styles,
-        decoration: component.decoration,
+        styles: widget.styles,
+        decoration: widget.decoration,
         calendarProps: CalendarProps(
           id: calendarId,
-          selected: component.value,
+          selected: widget.value,
           displayMonth: _displayMonth,
-          minDate: component.minDate,
-          maxDate: component.maxDate,
+          minDate: widget.minDate,
+          maxDate: widget.maxDate,
           mode: _propsMode,
           selectedRange: _propsRangeValue,
           isDisabled: _isDisabled,

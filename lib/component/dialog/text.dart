@@ -50,46 +50,45 @@ class _DialogTextState extends State<DialogText> {
   @override
   void initState() {
     super.initState();
-    _value = component.initialValue ?? '';
+    _value = widget.initialValue ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
-    final Widget input = component.maxLines > 1
+    final Widget input = widget.maxLines > 1
         ? TextArea(
             value: _value,
-            rows: component.maxLines,
-            onChange: (String value) {
+            rows: widget.maxLines,
+            onChanged: (String value) {
               _value = value;
             },
           )
         : TextInput(
             value: _value,
-            type: component.keyboardType,
-            onChange: (String value) {
+            type: widget.keyboardType,
+            onChanged: (String value) {
               _value = value;
             },
           );
 
     return ArcaneDialog(
-      title: component.title,
+      title: widget.title,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        gap: 12,
+        spacing: 12,
         children: <Widget>[
-          if (component.description != null) Text.body(component.description!),
-          if (component.descriptionWidget is! SizedBox)
-            component.descriptionWidget,
+          if (widget.description != null) Text.body(widget.description!),
+          if (widget.descriptionWidget is! SizedBox) widget.descriptionWidget,
           input,
         ],
       ),
       actions: <Widget>[
-        Button.ghost(onPressed: () {}, label: component.cancelText),
+        Button.ghost(onPressed: () {}, label: widget.cancelText),
         Button.primary(
-          onPressed: () => component.onConfirm(_value),
-          label: component.confirmText,
+          onPressed: () => widget.onConfirm(_value),
+          label: widget.confirmText,
         ),
-        ...?component.actions,
+        ...?widget.actions,
       ],
     );
   }

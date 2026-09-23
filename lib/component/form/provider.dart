@@ -152,7 +152,7 @@ class _ArcaneFormProviderState extends State<ArcaneFormProvider> {
   @override
   void initState() {
     super.initState();
-    _values = Map<String, dynamic>.from(component.initialValues);
+    _values = Map<String, dynamic>.from(widget.initialValues);
   }
 
   void _setValue(String key, dynamic value) {
@@ -171,8 +171,8 @@ class _ArcaneFormProviderState extends State<ArcaneFormProvider> {
   bool get _isValid => !_errors.values.any((e) => e != null);
 
   void _submit() {
-    if (component.validator != null) {
-      final validationErrors = component.validator!(_values);
+    if (widget.validator != null) {
+      final validationErrors = widget.validator!(_values);
       setState(() {
         _errors = validationErrors;
       });
@@ -182,7 +182,7 @@ class _ArcaneFormProviderState extends State<ArcaneFormProvider> {
       }
     }
 
-    component.onSubmit?.call(_values);
+    widget.onSubmit?.call(_values);
   }
 
   @override
@@ -196,7 +196,7 @@ class _ArcaneFormProviderState extends State<ArcaneFormProvider> {
       isValid: _isValid,
     );
 
-    return component.builder(formContext);
+    return widget.builder(formContext);
   }
 }
 

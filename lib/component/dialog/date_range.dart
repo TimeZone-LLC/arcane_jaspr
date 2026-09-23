@@ -26,12 +26,12 @@ class _DialogDateRangeState extends State<DialogDateRange> {
   @override
   void initState() {
     super.initState();
-    _value = component.value;
+    _value = widget.value;
   }
 
   @override
   Widget build(BuildContext context) => ArcaneDialog(
-    title: component.title,
+    title: widget.title,
     child: ArcaneDatePicker.range(
       rangeValue: _value,
       onRangeChanged: (DateRange? value) {
@@ -41,10 +41,7 @@ class _DialogDateRangeState extends State<DialogDateRange> {
       },
     ),
     actions: <Widget>[
-      Button.primary(
-        onPressed: () => component.onConfirm(_value),
-        label: 'Done',
-      ),
+      Button.primary(onPressed: () => widget.onConfirm(_value), label: 'Done'),
     ],
   );
 }

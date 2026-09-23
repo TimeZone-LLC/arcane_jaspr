@@ -112,7 +112,7 @@ class _NavigableCarouselState extends State<ArcaneNavigableCarousel> {
   int _currentIndex = 0;
 
   int get _maxIndex =>
-      (component.children.length / component.visibleItems).ceil() - 1;
+      (widget.children.length / widget.visibleItems).ceil() - 1;
 
   void _goToPrevious() {
     if (_currentIndex > 0) {
@@ -148,7 +148,7 @@ class _NavigableCarouselState extends State<ArcaneNavigableCarousel> {
         raw: {
           'position': 'relative',
           'width': '100%',
-          if (component.height != null) 'height': component.height!,
+          if (widget.height != null) 'height': widget.height!,
         },
       ),
       [
@@ -161,18 +161,18 @@ class _NavigableCarouselState extends State<ArcaneNavigableCarousel> {
               styles: Styles(
                 raw: {
                   'display': 'flex',
-                  'gap': '${component.gap}px',
+                  'gap': '${widget.gap}px',
                   'transform': 'translateX($translatePercent%)',
                   'transition': 'all 200ms ease',
                 },
               ),
               [
-                for (final child in component.children)
+                for (final child in widget.children)
                   div(
                     styles: Styles(
                       raw: {
                         'flex':
-                            '0 0 calc(${100 / component.visibleItems}% - ${component.gap * (component.visibleItems - 1) / component.visibleItems}px)',
+                            '0 0 calc(${100 / widget.visibleItems}% - ${widget.gap * (widget.visibleItems - 1) / widget.visibleItems}px)',
                         'min-width': '0',
                       },
                     ),
@@ -183,7 +183,7 @@ class _NavigableCarouselState extends State<ArcaneNavigableCarousel> {
           ],
         ),
 
-        if (component.showArrows) ...[
+        if (widget.showArrows) ...[
           button(
             classes: 'arcane-carousel-prev',
             attributes: {
@@ -253,7 +253,7 @@ class _NavigableCarouselState extends State<ArcaneNavigableCarousel> {
           ),
         ],
 
-        if (component.showIndicators && _maxIndex > 0)
+        if (widget.showIndicators && _maxIndex > 0)
           div(
             classes: 'arcane-carousel-indicators',
             styles: const Styles(
@@ -329,19 +329,19 @@ class _HeroCarouselState extends State<ArcaneHeroCarousel> {
   void _goToPrevious() {
     setState(() {
       _currentIndex = _currentIndex == 0
-          ? component.children.length - 1
+          ? widget.children.length - 1
           : _currentIndex - 1;
     });
   }
 
   void _goToNext() {
     setState(() {
-      _currentIndex = (_currentIndex + 1) % component.children.length;
+      _currentIndex = (_currentIndex + 1) % widget.children.length;
     });
   }
 
   void _goToIndex(int index) {
-    if (index >= 0 && index < component.children.length) {
+    if (index >= 0 && index < widget.children.length) {
       setState(() {
         _currentIndex = index;
       });
@@ -356,12 +356,12 @@ class _HeroCarouselState extends State<ArcaneHeroCarousel> {
         raw: {
           'position': 'relative',
           'width': '100%',
-          'height': component.height,
+          'height': widget.height,
           'overflow': 'hidden',
         },
       ),
       [
-        for (int i = 0; i < component.children.length; i++)
+        for (int i = 0; i < widget.children.length; i++)
           div(
             classes: 'arcane-hero-slide',
             styles: Styles(
@@ -373,10 +373,10 @@ class _HeroCarouselState extends State<ArcaneHeroCarousel> {
                 'transition': 'opacity 500ms ease, visibility 500ms ease',
               },
             ),
-            [component.children[i]],
+            [widget.children[i]],
           ),
 
-        if (component.showArrows && component.children.length > 1) ...[
+        if (widget.showArrows && widget.children.length > 1) ...[
           button(
             attributes: {'type': 'button', 'aria-label': 'Previous'},
             styles: const Styles(
@@ -425,7 +425,7 @@ class _HeroCarouselState extends State<ArcaneHeroCarousel> {
           ),
         ],
 
-        if (component.showIndicators && component.children.length > 1)
+        if (widget.showIndicators && widget.children.length > 1)
           div(
             styles: const Styles(
               raw: {
@@ -439,7 +439,7 @@ class _HeroCarouselState extends State<ArcaneHeroCarousel> {
               },
             ),
             [
-              for (int i = 0; i < component.children.length; i++)
+              for (int i = 0; i < widget.children.length; i++)
                 button(
                   attributes: {
                     'type': 'button',

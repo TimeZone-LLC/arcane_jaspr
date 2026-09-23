@@ -130,10 +130,10 @@ class _DemoCodeBlockState extends State<_DemoCodeBlock> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> lines = component.code.split('\n');
+    List<String> lines = widget.code.split('\n');
     bool isLong = lines.length > 10;
     String displayCode = _expanded || !isLong
-        ? component.code
+        ? widget.code
         : '${lines.take(10).join('\n')}\n...';
 
     // Use raw div() with explicit inline styles to ensure positioning works
@@ -169,7 +169,7 @@ class _DemoCodeBlockState extends State<_DemoCodeBlock> {
                   'border-radius': '4px',
                 },
               ),
-              <jaspr.Component>[jaspr.Component.text(component.language)],
+              <jaspr.Component>[jaspr.Component.text(widget.language)],
             ),
             if (isLong)
               dom.button(
@@ -196,7 +196,7 @@ class _DemoCodeBlockState extends State<_DemoCodeBlock> {
                 ],
               ),
             dom.button(
-              attributes: {'data-code': component.code},
+              attributes: {'data-code': widget.code},
               styles: dom.Styles(
                 raw: {
                   'display': 'flex',
@@ -245,7 +245,7 @@ class _DemoCodeBlockState extends State<_DemoCodeBlock> {
               children: <jaspr.Component>[
                 jaspr.Component.element(
                   tag: 'code',
-                  classes: 'language-${component.language}',
+                  classes: 'language-${widget.language}',
                   styles: const dom.Styles(
                     raw: {
                       'font-family': 'var(--font-mono)',

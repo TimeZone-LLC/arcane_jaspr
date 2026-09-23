@@ -19,7 +19,7 @@ class FancyProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
-    gap: 8,
+    spacing: 8,
     children: <Widget>[
       if (label != null || showValue)
         Row(

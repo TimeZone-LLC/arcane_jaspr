@@ -58,7 +58,7 @@ class _AppState extends State<App> {
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            gap: 16,
+            spacing: 16,
             children: [
               Text.heading2('Count: $_count'),
               Button.primary(

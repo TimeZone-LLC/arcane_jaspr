@@ -25,12 +25,12 @@ class _DialogTimeState extends State<DialogTime> {
   @override
   void initState() {
     super.initState();
-    _value = component.value;
+    _value = widget.value;
   }
 
   @override
   Widget build(BuildContext context) => ArcaneDialog(
-    title: component.title,
+    title: widget.title,
     child: ArcaneTimePicker(
       value: _value,
       onChanged: (TimeOfDay? value) {
@@ -40,10 +40,7 @@ class _DialogTimeState extends State<DialogTime> {
       },
     ),
     actions: <Widget>[
-      Button.primary(
-        onPressed: () => component.onConfirm(_value),
-        label: 'Done',
-      ),
+      Button.primary(onPressed: () => widget.onConfirm(_value), label: 'Done'),
     ],
   );
 }

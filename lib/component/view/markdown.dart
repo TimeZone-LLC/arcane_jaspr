@@ -13,7 +13,7 @@ class Markdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
-    gap: 12,
+    spacing: 12,
     children: _MarkdownBlockParser.parse(data),
   );
 }
@@ -188,12 +188,12 @@ class _MarkdownBlockParser {
     widgets.add(
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        gap: 8,
+        spacing: 8,
         children: listItems
             .map(
               (String item) => Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                gap: 8,
+                spacing: 8,
                 children: <Widget>[
                   const Text('•'),
                   Expanded(child: Text.body(item)),

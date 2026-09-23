@@ -43,6 +43,7 @@ void main() {
       ArcaneThemeProvider(
         stylesheet: const ShadcnStylesheet(),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             const Card(child: Text('Compute overview')),
             ArcaneFlexiCardsSimple(

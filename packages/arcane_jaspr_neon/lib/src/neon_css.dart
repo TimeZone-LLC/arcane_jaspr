@@ -5,7 +5,7 @@ import 'package:arcane_jaspr/component/view/map/map_style.dart'
 import 'package:arcane_jaspr/util/content/prose_styles.dart'
     show arcaneAllDocsStyles;
 
-import 'neon_theme.dart';
+import 'package:arcane_jaspr_neon/src/neon_theme.dart';
 
 /// Component CSS for the green and grayscale Neon theme.
 ///
@@ -35,9 +35,18 @@ class NeonCss {
 
 #arcane-root.arcane-theme-neon {
   --neon-primary: $primary;
+  --neon-accent-ink: #065f46;
+  --neon-control-border: #858585;
+  --input: var(--card);
   --neon-overlay-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
   --neon-overlay-frost: rgba(var(--card-rgb), 0.78);
   --arcane-nav-dropdown-background: var(--neon-overlay-frost);
+}
+
+html.dark #arcane-root.arcane-theme-neon,
+#arcane-root.dark.arcane-theme-neon {
+  --neon-accent-ink: #34d399;
+  --neon-control-border: #707070;
 }
 
 #arcane-root.arcane-theme-neon ::selection {
@@ -59,7 +68,9 @@ class NeonCss {
   gap: 0.5rem;
   font-family: inherit;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.25;
+  min-height: 2.5rem;
+  box-sizing: border-box;
   white-space: nowrap;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
@@ -72,14 +83,17 @@ class NeonCss {
 }
 
 #arcane-root.arcane-theme-neon .neon-button[data-size="sm"] {
+  min-height: 2rem;
   padding: 0.375rem 0.75rem;
   font-size: var(--font-size-xs);
 }
 #arcane-root.arcane-theme-neon .neon-button[data-size="lg"] {
+  min-height: 3rem;
   padding: 0.625rem 1.25rem;
   font-size: var(--font-size-base);
 }
 #arcane-root.arcane-theme-neon .neon-button[data-size="iconSm"] {
+  min-height: 2rem;
   padding: 0.375rem;
   width: 2rem;
   height: 2rem;
@@ -90,6 +104,7 @@ class NeonCss {
   height: 2.5rem;
 }
 #arcane-root.arcane-theme-neon .neon-button[data-size="iconLg"] {
+  min-height: 3rem;
   padding: 0.625rem;
   width: 3rem;
   height: 3rem;
@@ -106,7 +121,7 @@ class NeonCss {
 }
 #arcane-root.arcane-theme-neon .neon-button[data-variant="outline"] {
   background: transparent;
-  color: var(--primary);
+  color: var(--neon-accent-ink);
   border-color: color-mix(in srgb, var(--primary) 55%, var(--border));
 }
 #arcane-root.arcane-theme-neon .neon-button[data-variant="ghost"] {
@@ -115,7 +130,7 @@ class NeonCss {
 }
 #arcane-root.arcane-theme-neon .neon-button[data-variant="link"] {
   background: transparent;
-  color: var(--primary);
+  color: var(--neon-accent-ink);
   padding-left: 0;
   padding-right: 0;
   text-decoration: underline;
@@ -149,13 +164,14 @@ class NeonCss {
 #arcane-root.arcane-theme-neon
   .neon-button[data-variant="ghost"]:hover:not([data-disabled="true"]) {
   background: rgba(var(--primary-rgb), 0.12);
-  color: var(--primary);
+  color: var(--neon-accent-ink);
 }
 #arcane-root.arcane-theme-neon
   .neon-button:active:not([data-disabled="true"]) {
   opacity: 0.88;
 }
 #arcane-root.arcane-theme-neon .neon-button[data-disabled="true"] {
+  pointer-events: none;
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -306,12 +322,13 @@ class NeonCss {
   color: var(--foreground);
   transition: background var(--transition), color var(--transition);
 }
-#arcane-root.arcane-theme-neon .neon-dropdown-item:hover,
-#arcane-root.arcane-theme-neon .neon-command-item:hover,
+#arcane-root.arcane-theme-neon .neon-dropdown-item:hover:not([data-disabled="true"]),
+#arcane-root.arcane-theme-neon .neon-dropdown-item:focus-visible:not([data-disabled="true"]),
+#arcane-root.arcane-theme-neon .neon-command-item:hover:not([data-disabled="true"]),
 #arcane-root.arcane-theme-neon .neon-command-item[aria-selected="true"],
-#arcane-root.arcane-theme-neon .neon-select-option:hover {
+#arcane-root.arcane-theme-neon .neon-select-option:hover:not([data-disabled="true"]) {
   background: rgba(var(--primary-rgb), 0.14);
-  color: var(--primary);
+  color: var(--neon-accent-ink);
 }
 #arcane-root.arcane-theme-neon .neon-dropdown-label,
 #arcane-root.arcane-theme-neon .neon-command-group-heading {
@@ -337,8 +354,11 @@ class NeonCss {
 #arcane-root.arcane-theme-neon .neon-select-search input,
 #arcane-root.arcane-theme-neon .neon-otp-digit {
   width: 100%;
+  min-width: 0;
+  min-height: 2.5rem;
+  box-sizing: border-box;
   background: var(--input);
-  border: 1px solid var(--border);
+  border: 1px solid var(--neon-control-border);
   border-radius: var(--radius-md);
   padding: 0.5rem 0.75rem;
   color: var(--foreground);
@@ -409,17 +429,45 @@ class NeonCss {
 /* ---------- Checkbox / radio / toggle ---------- */
 
 #arcane-root.arcane-theme-neon .neon-checkbox-box {
-  width: 1.1rem;
-  height: 1.1rem;
-  border: 1px solid var(--border);
+  width: 1.125rem;
+  height: 1.125rem;
+  box-sizing: border-box;
+  margin-top: 0.0625rem;
+  border: 1px solid var(--neon-control-border);
   border-radius: var(--radius-sm);
   background: var(--input);
-  transition: all var(--transition);
+  color: var(--primary-foreground);
+  transition: background-color var(--transition), border-color var(--transition);
 }
-#arcane-root.arcane-theme-neon .neon-checkbox-box[data-state="checked"],
+#arcane-root.arcane-theme-neon .neon-checkbox-box[data-state="checked"]:not([data-arcane-state]),
+#arcane-root.arcane-theme-neon .neon-checkbox-box[data-arcane-state="selected"],
 #arcane-root.arcane-theme-neon input:checked + .neon-checkbox-box {
   background: var(--primary);
   border-color: var(--primary);
+}
+#arcane-root.arcane-theme-neon .neon-checkbox-indicator {
+  display: none;
+}
+#arcane-root.arcane-theme-neon .neon-checkbox-box[data-arcane-state="selected"] .neon-checkbox-indicator {
+  display: inline-flex;
+}
+#arcane-root.arcane-theme-neon .neon-checkbox-wrapper[data-size="sm"] .neon-checkbox-box {
+  width: 1rem;
+  height: 1rem;
+}
+#arcane-root.arcane-theme-neon .neon-checkbox-wrapper[data-size="lg"] .neon-checkbox-box {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+#arcane-root.arcane-theme-neon .neon-toggle-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+}
+#arcane-root.arcane-theme-neon .neon-toggle-label {
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
 }
 #arcane-root.arcane-theme-neon .neon-toggle-switch {
   position: relative;
@@ -435,8 +483,9 @@ class NeonCss {
   cursor: pointer;
   transition: background var(--transition);
 }
-#arcane-root.arcane-theme-neon .neon-toggle-switch[data-state="checked"],
-#arcane-root.arcane-theme-neon .neon-toggle-switch.active {
+#arcane-root.arcane-theme-neon .neon-toggle-switch[data-state="checked"]:not([data-arcane-state]),
+#arcane-root.arcane-theme-neon .neon-toggle-switch[data-arcane-state="selected"],
+#arcane-root.arcane-theme-neon .neon-toggle-switch.active:not([data-arcane-state]) {
   background: var(--primary);
 }
 #arcane-root.arcane-theme-neon .neon-toggle-switch[data-disabled="true"] {
@@ -450,21 +499,101 @@ class NeonCss {
   background: #ffffff;
   transition: transform var(--transition);
 }
-#arcane-root.arcane-theme-neon .neon-toggle-switch[data-state="checked"] .neon-toggle-thumb,
-#arcane-root.arcane-theme-neon .neon-toggle-switch.active .neon-toggle-thumb {
+#arcane-root.arcane-theme-neon .neon-toggle-switch[data-state="checked"]:not([data-arcane-state]) .neon-toggle-thumb,
+#arcane-root.arcane-theme-neon .neon-toggle-switch[data-arcane-state="selected"] .neon-toggle-thumb,
+#arcane-root.arcane-theme-neon .neon-toggle-switch.active:not([data-arcane-state]) .neon-toggle-thumb {
   transform: translateX(1.1rem);
 }
+#arcane-root.arcane-theme-neon .neon-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+}
+#arcane-root.arcane-theme-neon .neon-radio-group-label,
+#arcane-root.arcane-theme-neon .neon-radio-label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.4;
+}
+#arcane-root.arcane-theme-neon .neon-radio-description {
+  font-size: var(--font-size-sm);
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+#arcane-root.arcane-theme-neon .neon-radio-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+#arcane-root.arcane-theme-neon .neon-radio-option,
+#arcane-root.arcane-theme-neon .neon-radio-card,
 #arcane-root.arcane-theme-neon .neon-radio-button {
-  width: 1.1rem;
-  height: 1.1rem;
-  border: 1px solid var(--border);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  min-width: 0;
+  cursor: pointer;
+}
+#arcane-root.arcane-theme-neon .neon-radio-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+}
+#arcane-root.arcane-theme-neon .neon-radio-circle {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  margin-top: 0.0625rem;
+  border: 1px solid var(--neon-control-border);
   border-radius: 50%;
   background: var(--input);
 }
-#arcane-root.arcane-theme-neon .neon-radio-option {
-  display: flex;
+#arcane-root.arcane-theme-neon .neon-radio-input:checked + .neon-radio-circle {
+  border: 5px solid var(--primary);
+}
+#arcane-root.arcane-theme-neon .neon-radio-input:focus-visible {
+  outline: none;
+}
+#arcane-root.arcane-theme-neon .neon-radio-option:has(input:focus-visible) .neon-radio-circle,
+#arcane-root.arcane-theme-neon .neon-radio-card:has(input:focus-visible),
+#arcane-root.arcane-theme-neon .neon-radio-button:has(input:focus-visible) {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+#arcane-root.arcane-theme-neon .neon-radio-card,
+#arcane-root.arcane-theme-neon .neon-radio-button {
+  padding: 0.75rem;
+  border: 1px solid var(--neon-control-border);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  transition: border-color var(--transition), background-color var(--transition);
+}
+#arcane-root.arcane-theme-neon .neon-radio-card:has(input:checked),
+#arcane-root.arcane-theme-neon .neon-radio-button:has(input:checked) {
+  border-color: var(--primary);
+  background: var(--primary-container);
+}
+#arcane-root.arcane-theme-neon .neon-radio-button {
   align-items: center;
-  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0.5rem 0.875rem;
+}
+#arcane-root.arcane-theme-neon .neon-radio-button .neon-radio-circle {
+  display: none;
+}
+#arcane-root.arcane-theme-neon :is(.neon-radio-option, .neon-radio-card, .neon-radio-button)[data-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+#arcane-root.arcane-theme-neon .neon-radio-group[aria-invalid="true"]
+  :is(.neon-radio-card, .neon-radio-button, .neon-radio-circle) {
+  border-color: var(--destructive);
 }
 
 /* ---------- Tabs ---------- */
@@ -495,13 +624,24 @@ class NeonCss {
   color: var(--foreground);
 }
 #arcane-root.arcane-theme-neon .neon-tabs-trigger.active,
-#arcane-root.arcane-theme-neon .neon-tab-bar-item.active {
+#arcane-root.arcane-theme-neon .neon-tabs-trigger[data-state="active"],
+#arcane-root.arcane-theme-neon .neon-tab-bar-item.active,
+#arcane-root.arcane-theme-neon .neon-tab-bar-item[data-state="active"] {
   background: var(--card);
-  color: var(--primary);
+  color: var(--neon-accent-ink);
   outline: 1px solid var(--border);
 }
 #arcane-root.arcane-theme-neon .neon-tabs-content {
   padding-top: 1rem;
+}
+
+@media (forced-colors: active) {
+  #arcane-root.arcane-theme-neon :focus-visible {
+    outline-color: Highlight;
+  }
+  #arcane-root.arcane-theme-neon .neon-radio-input:checked + .neon-radio-circle {
+    border-color: Highlight;
+  }
 }
 
 /* ---------- Alerts ---------- */
@@ -554,7 +694,7 @@ class NeonCss {
   text-transform: uppercase;
   border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
   background: rgba(var(--primary-rgb), 0.16);
-  color: var(--primary);
+  color: var(--neon-accent-ink);
 }
 #arcane-root.arcane-theme-neon .neon-status-indicator {
   width: 0.5rem;
@@ -583,7 +723,7 @@ class NeonCss {
   border-radius: var(--radius-xs);
 }
 #arcane-root.arcane-theme-neon .neon-loading-spinner {
-  color: var(--primary);
+  color: var(--neon-accent-ink);
 }
 
 /* ---------- Misc components ---------- */
@@ -825,7 +965,7 @@ class NeonCss {
 #arcane-root.arcane-theme-neon .kb-topbar-link:hover,
 #arcane-root.arcane-theme-neon .kb-topbar-link.active {
   background: transparent;
-  color: var(--primary);
+  color: var(--neon-accent-ink);
   box-shadow: none;
 }
 
@@ -999,7 +1139,7 @@ class NeonCss {
 
 #arcane-root.arcane-theme-neon .sidebar-link.active {
   background: rgba(var(--primary-rgb), 0.12);
-  color: var(--primary);
+  color: var(--neon-accent-ink);
   outline-color: var(--border);
   box-shadow: none;
 }

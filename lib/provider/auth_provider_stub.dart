@@ -8,13 +8,11 @@ import '../service/auth_state.dart';
 class _AuthInheritedProvider extends InheritedWidget {
   final AuthState state;
 
-  const _AuthInheritedProvider({
-    required this.state,
-    required super.child,
-  });
+  const _AuthInheritedProvider({required this.state, required super.child});
 
   static _AuthInheritedProvider? of(BuildContext context) {
-    return context.dependOnInheritedComponentOfExactType<_AuthInheritedProvider>();
+    return context
+        .dependOnInheritedComponentOfExactType<_AuthInheritedProvider>();
   }
 
   @override
@@ -51,10 +49,7 @@ class _ArcaneAuthProviderState extends State<ArcaneAuthProvider> {
 
   @override
   Widget build(BuildContext context) {
-    return _AuthInheritedProvider(
-      state: _state,
-      child: component.child,
-    );
+    return _AuthInheritedProvider(state: _state, child: widget.child);
   }
 }
 
@@ -75,9 +70,11 @@ extension AuthContextExtension on BuildContext {
 
   String? get idToken => currentUser?.idToken;
 
-  Future<void> signInWithGitHub() => JasprAuthService.instance.signInWithGitHub();
+  Future<void> signInWithGitHub() =>
+      JasprAuthService.instance.signInWithGitHub();
 
-  Future<void> signInWithGoogle() => JasprAuthService.instance.signInWithGoogle();
+  Future<void> signInWithGoogle() =>
+      JasprAuthService.instance.signInWithGoogle();
 
   Future<void> signInWithApple() => JasprAuthService.instance.signInWithApple();
 
@@ -85,7 +82,10 @@ extension AuthContextExtension on BuildContext {
       JasprAuthService.instance.signInWithEmail(email, password);
 
   Future<void> registerWithEmail(
-          String email, String password, String displayName) =>
+    String email,
+    String password,
+    String displayName,
+  ) =>
       JasprAuthService.instance.registerWithEmail(email, password, displayName);
 
   Future<void> sendPasswordResetEmail(String email) =>
@@ -93,7 +93,8 @@ extension AuthContextExtension on BuildContext {
 
   Future<void> signOut() => JasprAuthService.instance.signOut();
 
-  Future<String?> refreshAuthToken() => JasprAuthService.instance.refreshToken();
+  Future<String?> refreshAuthToken() =>
+      JasprAuthService.instance.refreshToken();
 
   Future<bool> deleteAccount() => JasprAuthService.instance.deleteAccount();
 }

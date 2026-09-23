@@ -1,10 +1,10 @@
 import 'package:arcane_jaspr/theme/index.dart';
 import 'package:arcane_jaspr/stylesheets/stylesheet.dart';
 
-import 'renderers/shadcn_renderers.dart';
-import 'shadcn_css.dart';
-import 'shadcn_layout_renderers.dart';
-import 'shadcn_theme.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/shadcn_renderers.dart';
+import 'package:arcane_jaspr_shadcn/src/shadcn_css.dart';
+import 'package:arcane_jaspr_shadcn/src/shadcn_layout_renderers.dart';
+import 'package:arcane_jaspr_shadcn/src/shadcn_theme.dart';
 
 /// ShadCN UI stylesheet.
 ///
@@ -48,10 +48,10 @@ class ShadcnStylesheet extends ArcaneStylesheet {
     // Otherwise let PaletteGenerator derive them with primary tinting
     secondary: theme.lightSecondary,
     accent: theme.lightAccent,
-    destructive: 0xFFef4444,
-    success: 0xFF22c55e,
-    warning: 0xFFf59e0b,
-    info: 0xFF3b82f6,
+    destructive: 0xFFb91c1c,
+    success: 0xFF166534,
+    warning: 0xFF854d0e,
+    info: 0xFF1d4ed8,
   );
 
   @override
@@ -60,10 +60,10 @@ class ShadcnStylesheet extends ArcaneStylesheet {
     background: theme.darkBackground,
     secondary: theme.darkSecondary,
     accent: theme.darkAccent,
-    destructive: 0xFF661B1C,
-    success: 0xFF2E7D55,
-    warning: 0xFFA06022,
-    info: 0xFF007ACC,
+    destructive: 0xFFf87171,
+    success: 0xFF4ade80,
+    warning: 0xFFfbbf24,
+    info: 0xFF60a5fa,
     isDark: true,
   );
 

@@ -55,7 +55,7 @@ class _ArcaneCommandState extends State<ArcaneCommand> {
   String _searchQuery = '';
 
   List<CommandItem> get _allItems {
-    return component.groups.expand((g) => g.items).toList();
+    return widget.groups.expand((g) => g.items).toList();
   }
 
   List<CommandItem> get _filteredItems {
@@ -63,8 +63,8 @@ class _ArcaneCommandState extends State<ArcaneCommand> {
 
     final query = _searchQuery.toLowerCase();
     return _allItems.where((item) {
-      if (component.filterFn != null) {
-        return component.filterFn!(item, _searchQuery);
+      if (widget.filterFn != null) {
+        return widget.filterFn!(item, _searchQuery);
       }
       return item.label.toLowerCase().contains(query) ||
           (item.keywords?.any((k) => k.toLowerCase().contains(query)) ?? false);
@@ -75,17 +75,17 @@ class _ArcaneCommandState extends State<ArcaneCommand> {
     setState(() {
       _searchQuery = value;
     });
-    component.onSearch?.call(value);
+    widget.onSearch?.call(value);
   }
 
   void _selectItem(CommandItemProps item) {
     item.onSelect?.call();
-    component.onClose?.call();
+    widget.onClose?.call();
   }
 
   @override
   Widget build(BuildContext context) {
-    final groupProps = component.groups
+    final groupProps = widget.groups
         .map(
           (g) => CommandGroupProps(
             heading: g.heading,
@@ -124,22 +124,22 @@ class _ArcaneCommandState extends State<ArcaneCommand> {
 
     return context.renderers.command(
       CommandProps(
-        id: component.id,
-        isOpen: component.isOpen,
-        onClose: component.onClose,
+        id: widget.id,
+        isOpen: widget.isOpen,
+        onClose: widget.onClose,
         groups: groupProps,
-        placeholder: component.placeholder,
-        emptyMessage: component.emptyMessage,
+        placeholder: widget.placeholder,
+        emptyMessage: widget.emptyMessage,
         searchQuery: _searchQuery,
         filteredItems: filteredItemProps,
         onSearch: _handleSearch,
         onSelectItem: _selectItem,
-        escapeCloses: component.escapeCloses,
-        scrimCloses: component.scrimCloses,
-        focusTrap: component.focusTrap,
-        restoreFocus: component.restoreFocus,
-        styles: component.styles,
-        decoration: component.decoration,
+        escapeCloses: widget.escapeCloses,
+        scrimCloses: widget.scrimCloses,
+        focusTrap: widget.focusTrap,
+        restoreFocus: widget.restoreFocus,
+        styles: widget.styles,
+        decoration: widget.decoration,
       ),
     );
   }

@@ -53,7 +53,7 @@ class ShadcnTextInput extends TextInputRenderBase {
     'border-radius': 'var(--radius-sm)',
     'border': hasError
         ? '1px solid var(--destructive)'
-        : '1px solid var(--input)',
+        : '1px solid var(--shadcn-control-border)',
     'background-color': 'var(--background)',
     'padding': '$paddingY $paddingX',
     'font-size': fontSize,
@@ -74,7 +74,7 @@ class ShadcnTextInput extends TextInputRenderBase {
     'border-radius': 'var(--radius-sm)',
     'border': hasError
         ? '1px solid var(--destructive)'
-        : '1px solid var(--input)',
+        : '1px solid var(--shadcn-control-border)',
     'background-color': 'var(--background)',
     'overflow': 'hidden',
   };

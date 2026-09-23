@@ -1,11 +1,11 @@
 import 'package:arcane_jaspr/stylesheets/stylesheet.dart';
 import 'package:arcane_jaspr/theme/index.dart';
 
-import 'win95_css.dart';
-import 'win95_font.dart';
-import 'win95_loader_palette.dart';
-import 'win95_theme.dart';
-import 'renderers/win95_renderers.dart';
+import 'package:arcane_jaspr_win95/src/win95_css.dart';
+import 'package:arcane_jaspr_win95/src/win95_font.dart';
+import 'package:arcane_jaspr_win95/src/win95_loader_palette.dart';
+import 'package:arcane_jaspr_win95/src/win95_theme.dart';
+import 'package:arcane_jaspr_win95/src/renderers/win95_renderers.dart';
 
 /// How much "window chrome" (navy title bars) the Windows 95 theme applies.
 ///
@@ -29,9 +29,8 @@ enum Win95Chrome {
 /// Sharp-cornered `#c0c0c0` control faces with the signature layered-inset bevel
 /// (raised buttons, sunken fields), solid navy title bars, segmented
 /// progress wells, chunky beveled scrollbars, dotted focus rectangles, and the
-/// MS Sans Serif bitmap font. Light mode is one of the real Win95 [Win95Theme]
-/// appearance schemes (default: the teal-desktop [Win95Theme.standard]); dark
-/// mode is the period-accurate "High Contrast Black" scheme.
+/// MS Sans Serif bitmap font. Light mode uses a [Win95Theme] appearance scheme;
+/// dark mode uses dark silver faces with the same desktop and caption hues.
 ///
 /// All component styling lives in [Win95Css] scoped to
 /// `#arcane-root.arcane-theme-win95`, so it never affects the shadcn, neon, or
@@ -72,25 +71,24 @@ class Win95Stylesheet extends ArcaneStylesheet {
     secondary: 0xFFC0C0C0,
     accent: theme.titleEnd,
     border: 0xFF808080,
-    destructive: 0xFFC00000,
-    success: 0xFF008000,
-    warning: 0xFF808000,
-    info: theme.accent,
+    destructive: 0xFFA00000,
+    success: 0xFF005800,
+    warning: 0xFF644800,
+    info: PaletteGenerator.darken(theme.accent, 0.18),
   );
 
-  /// High Contrast Black — the real Win95 accessibility scheme: black surfaces,
-  /// white text, lime accents, bevels preserved (inverted) via [Win95Css].
+  /// Dark silver surfaces retain the selected appearance scheme.
   @override
-  ThemeSeed get darkSeed => const ThemeSeed(
-    primary: 0xFF1084D0,
-    background: 0xFF000000,
-    secondary: 0xFF1A1A1A,
-    accent: 0xFF00FF00,
-    border: 0xFF808080,
-    destructive: 0xFFFF5050,
-    success: 0xFF00FF00,
-    warning: 0xFFFFFF00,
-    info: 0xFF00FFFF,
+  ThemeSeed get darkSeed => ThemeSeed(
+    primary: theme.accent,
+    background: 0xFF3A3A3A,
+    secondary: 0xFF3A3A3A,
+    accent: theme.titleEnd,
+    border: 0xFF8E8E8E,
+    destructive: 0xFFFF8080,
+    success: 0xFF80D080,
+    warning: 0xFFE8CE80,
+    info: PaletteGenerator.lighten(theme.titleEnd, 0.5),
     isDark: true,
   );
 

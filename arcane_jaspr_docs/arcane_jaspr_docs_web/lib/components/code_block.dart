@@ -36,7 +36,7 @@ class _CodeBlockState extends State<CodeBlock> {
 
   @override
   Widget build(BuildContext context) {
-    bool hasLabel = component.language != null || component.title != null;
+    bool hasLabel = widget.language != null || widget.title != null;
 
     // Use raw div() with explicit inline styles to ensure positioning works
     return dom.div(
@@ -64,14 +64,14 @@ class _CodeBlockState extends State<CodeBlock> {
               },
             ),
             <jaspr.Component>[
-              if (component.title != null)
+              if (widget.title != null)
                 dom.span(
                   styles: const dom.Styles(
                     raw: {'font-size': '12px', 'color': 'var(--arcane-muted)'},
                   ),
-                  <jaspr.Component>[jaspr.Component.text(component.title!)],
+                  <jaspr.Component>[jaspr.Component.text(widget.title!)],
                 )
-              else if (component.language != null)
+              else if (widget.language != null)
                 dom.span(
                   styles: const dom.Styles(
                     raw: {
@@ -82,7 +82,7 @@ class _CodeBlockState extends State<CodeBlock> {
                       'border-radius': '4px',
                     },
                   ),
-                  <jaspr.Component>[jaspr.Component.text(component.language!)],
+                  <jaspr.Component>[jaspr.Component.text(widget.language!)],
                 ),
             ],
           ),
@@ -97,7 +97,7 @@ class _CodeBlockState extends State<CodeBlock> {
           ),
           <jaspr.Component>[
             dom.button(
-              attributes: {'data-code': component.code},
+              attributes: {'data-code': widget.code},
               styles: dom.Styles(
                 raw: {
                   'display': 'flex',
@@ -146,7 +146,7 @@ class _CodeBlockState extends State<CodeBlock> {
               children: <jaspr.Component>[
                 jaspr.Component.element(
                   tag: 'code',
-                  classes: 'language-${component.language ?? 'dart'}',
+                  classes: 'language-${widget.language ?? 'dart'}',
                   styles: const dom.Styles(
                     raw: {
                       'font-family': 'var(--font-mono)',
@@ -155,7 +155,7 @@ class _CodeBlockState extends State<CodeBlock> {
                     },
                   ),
                   children: <jaspr.Component>[
-                    jaspr.Component.text(component.code),
+                    jaspr.Component.text(widget.code),
                   ],
                 ),
               ],

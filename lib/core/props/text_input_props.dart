@@ -31,7 +31,7 @@ class TextInputProps {
   final void Function(String)? onChanged;
   final void Function()? onFocus;
   final void Function()? onBlur;
-  final void Function(String)? onSubmit;
+  final void Function(String)? onSubmitted;
   final ArcaneInteraction? onChangeAction;
   final ArcaneInteraction? onSubmitAction;
   final String? formId;
@@ -65,7 +65,7 @@ class TextInputProps {
     this.onChanged,
     this.onFocus,
     this.onBlur,
-    this.onSubmit,
+    this.onSubmitted,
     this.onChangeAction,
     this.onSubmitAction,
     this.formId,
@@ -95,7 +95,7 @@ class TextInputProps {
     void Function(String)? onChanged,
     void Function()? onFocus,
     void Function()? onBlur,
-    void Function(String)? onSubmit,
+    void Function(String)? onSubmitted,
     ArcaneInteraction? onChangeAction,
     ArcaneInteraction? onSubmitAction,
     String? formId,
@@ -124,7 +124,7 @@ class TextInputProps {
       onChanged: onChanged ?? this.onChanged,
       onFocus: onFocus ?? this.onFocus,
       onBlur: onBlur ?? this.onBlur,
-      onSubmit: onSubmit ?? this.onSubmit,
+      onSubmitted: onSubmitted ?? this.onSubmitted,
       onChangeAction: onChangeAction ?? this.onChangeAction,
       onSubmitAction: onSubmitAction ?? this.onSubmitAction,
       formId: formId ?? this.formId,

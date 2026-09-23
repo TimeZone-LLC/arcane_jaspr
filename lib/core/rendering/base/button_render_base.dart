@@ -87,17 +87,22 @@ abstract class ButtonRenderBase extends StatelessComponent {
       'data-size': props.size.name,
       ...?props.attributes,
     };
-    final Map<String, String> actionAttrs = interactionAttrs(props.action);
+    final Map<String, String> actionAttrs = isDisabled
+        ? const <String, String>{}
+        : interactionAttrs(props.action);
 
     if (props.href != null) {
-      return dom.a(
+      return Component.element(
+        tag: 'a',
         id: props.id,
         classes: cssClass,
-        href: props.href!,
         attributes: <String, String>{
-          if (isDisabled) 'aria-disabled': 'true',
+          if (!isDisabled) 'href': props.href!,
           ...baseAttributes,
           ...actionAttrs,
+          if (isDisabled) 'aria-disabled': 'true',
+          if (isDisabled) 'role': 'link',
+          if (isDisabled) 'tabindex': '-1',
         },
         styles: dom.Styles(
           raw: <String, String>{'text-decoration': 'none', ...allStyles},
@@ -110,7 +115,7 @@ abstract class ButtonRenderBase extends StatelessComponent {
               }
             },
         },
-        children,
+        children: children,
       );
     }
 

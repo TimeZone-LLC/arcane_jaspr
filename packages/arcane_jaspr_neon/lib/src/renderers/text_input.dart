@@ -1,7 +1,7 @@
 import 'package:arcane_jaspr/core/props/text_input_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/text_input_render_base.dart';
 
-/// Neon Text Input renderer (neutralized skeleton).
+/// Neon text input with one perimeter around optional prefix and suffix slots.
 class NeonTextInput extends TextInputRenderBase {
   const NeonTextInput(super.props, {super.key});
 
@@ -12,14 +12,14 @@ class NeonTextInput extends TextInputRenderBase {
   String get wrapperGap => '0.625rem';
 
   @override
-  bool get borderlessInputReflectsState => false;
+  bool get borderlessInputReflectsState => true;
 
   @override
   (String, String, String, String) sizeValues(ComponentSize size) =>
       switch (size) {
-        ComponentSize.sm => ('38px', '0.875rem', '0.5rem', '0.8125rem'),
-        ComponentSize.md => ('46px', '1rem', '0.675rem', '0.875rem'),
-        ComponentSize.lg => ('54px', '1.125rem', '0.875rem', '1rem'),
+        ComponentSize.sm => ('32px', '0.625rem', '0.375rem', '0.8125rem'),
+        ComponentSize.md => ('40px', '0.75rem', '0.5rem', '0.875rem'),
+        ComponentSize.lg => ('48px', '1rem', '0.75rem', '1rem'),
       };
 
   @override
@@ -30,10 +30,27 @@ class NeonTextInput extends TextInputRenderBase {
     required String paddingX,
     required String paddingY,
     required String fontSize,
-  }) => const <String, String>{};
+  }) => <String, String>{
+    'height': height,
+    'min-height': height,
+    'padding': '$paddingY $paddingX',
+    'font-size': fontSize,
+    if (isDisabled) 'opacity': '0.5',
+    if (isDisabled) 'cursor': 'not-allowed',
+  };
 
   @override
-  Map<String, String> containerStyles(bool hasError) => const <String, String>{};
+  Map<String, String> containerStyles(bool hasError) => <String, String>{
+    'display': 'flex',
+    'align-items': 'center',
+    'min-width': '0',
+    'border': hasError
+        ? '1px solid var(--destructive)'
+        : '1px solid var(--neon-control-border)',
+    'border-radius': 'var(--radius-sm)',
+    'background': 'var(--input)',
+    'overflow': 'hidden',
+  };
 
   @override
   Map<String, String> borderlessInputStyles({
@@ -42,11 +59,32 @@ class NeonTextInput extends TextInputRenderBase {
     required String paddingX,
     required String paddingY,
     required String fontSize,
-  }) => const <String, String>{};
+  }) => <String, String>{
+    'flex': '1',
+    'min-width': '0',
+    'height': height,
+    'min-height': height,
+    'padding': '$paddingY $paddingX',
+    'font-size': fontSize,
+    'background': 'transparent',
+    'border': '0',
+    if (isDisabled) 'opacity': '0.5',
+    if (isDisabled) 'cursor': 'not-allowed',
+  };
 
   @override
-  Map<String, String> prefixStyles() => const <String, String>{};
+  Map<String, String> prefixStyles() => const <String, String>{
+    'display': 'flex',
+    'align-items': 'center',
+    'padding-inline-start': '0.75rem',
+    'color': 'var(--muted-foreground)',
+  };
 
   @override
-  Map<String, String> suffixStyles() => const <String, String>{};
+  Map<String, String> suffixStyles() => const <String, String>{
+    'display': 'flex',
+    'align-items': 'center',
+    'padding-inline-end': '0.75rem',
+    'color': 'var(--muted-foreground)',
+  };
 }
