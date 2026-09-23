@@ -62,7 +62,11 @@ class Win95Slider extends SliderRenderBase {
     required double leftPct,
     required String thumbSize,
     required int thumbSizeNum,
-  }) => const <String, String>{};
+  }) => <String, String>{
+    // Only the value position is inline; the theme CSS centres the bitmap on
+    // it with a transform, and the runtime writes the same bare `left: x%`.
+    'left': '$leftPct%',
+  };
 
   @override
   Map<String, String> minMaxLabelStyles() => const <String, String>{};

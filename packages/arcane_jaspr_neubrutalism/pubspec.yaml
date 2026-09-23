@@ -1,6 +1,6 @@
 name: arcane_jaspr_neubrutalism
 description: Neubrutalism renderer package for Arcane Jaspr — bold colors, thick borders and hard offset shadows.
-version: 5.0.0
+version: 5.0.1
 homepage: https://arcanearts.github.io/arcane_jaspr/
 documentation: https://arcanearts.github.io/arcane_jaspr/
 repository: https://github.com/ArcaneArts/arcane_jaspr

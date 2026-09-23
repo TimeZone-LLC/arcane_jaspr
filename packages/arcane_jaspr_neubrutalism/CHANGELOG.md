@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.0.1 - 2026-09-23
+
+### Fixed
+
+- The slider thumb keeps its centre on the value after a runtime drag; it is
+  positioned with a bare percentage and a centring transform.
+
 ## 5.0.0 - 2026-09-23
 
 ### Changed

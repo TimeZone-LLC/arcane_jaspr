@@ -67,3 +67,11 @@ void domStopPropagation(Object? event) {
 void domPreventDefault(Object? event) {
   (event as JSObject?)?.callMethod<JSAny?>('preventDefault'.toJS);
 }
+
+/// Read a numeric field from a CustomEvent's `detail` object (web).
+double? domEventDetailNumber(Object? event, String key) {
+  final JSObject? ev = event as JSObject?;
+  final JSObject? detail = ev?.getProperty<JSAny?>('detail'.toJS) as JSObject?;
+  final JSAny? value = detail?.getProperty<JSAny?>(key.toJS);
+  return (value as JSNumber?)?.toDartDouble;
+}

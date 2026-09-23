@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.0.1 - 2026-09-23
+
+### Fixed
+
+- Sliders render a track, fill and thumb positioned at the value; the thumb
+  stays centred on the value while the runtime drags it.
+
 ## 5.0.0 - 2026-09-23
 
 ### Changed

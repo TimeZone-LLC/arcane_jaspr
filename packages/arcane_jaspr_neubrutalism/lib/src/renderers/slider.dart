@@ -122,9 +122,11 @@ class NeubrutalismSlider extends SliderRenderBase {
     required int thumbSizeNum,
   }) => <String, String>{
     'position': 'absolute',
-    'left': 'calc($leftPct% - ${thumbSizeNum / 2}px)',
+    // A bare percentage plus a centring transform keeps the thumb on the
+    // value after the runtime writes `left: x%` during a drag.
+    'left': '$leftPct%',
     'top': '50%',
-    'transform': 'translateY(-50%)',
+    'transform': 'translate(-50%, -50%)',
     'width': thumbSize,
     'height': thumbSize,
     'background': 'var(--nb-accent, var(--primary))',

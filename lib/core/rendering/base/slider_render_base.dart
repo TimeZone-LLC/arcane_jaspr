@@ -2,6 +2,7 @@ import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/decoration/arcane_decoration.dart';
+import 'package:arcane_jaspr/core/dom_value.dart';
 import 'package:arcane_jaspr/core/rendering/base/style_layering.dart';
 import 'package:arcane_jaspr/core/interaction/interaction.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
@@ -137,6 +138,7 @@ abstract class SliderRenderBase extends StatelessComponent {
     return dom.div(
       classes: '$classPrefix ${props.disabled ? 'disabled' : ''}',
       attributes: rootAttrs,
+      events: _changeEvents(),
       styles: dom.Styles(
         raw: layerStyles(
           <String, String>{
@@ -304,6 +306,28 @@ abstract class SliderRenderBase extends StatelessComponent {
       ),
       const <Component>[],
     );
+  }
+
+  /// The runtime owns pointer and keyboard handling and reports every value
+  /// change as an `arcane:slider-change` CustomEvent on the root, so the
+  /// hydrated callbacks listen there instead of duplicating the gesture logic.
+  Map<String, EventCallback>? _changeEvents() {
+    if (props.disabled) return null;
+    if (props.isRange ? props.onRangeChanged == null : props.onChanged == null) {
+      return null;
+    }
+    return <String, EventCallback>{
+      'arcane:slider-change': (event) {
+        if (props.isRange) {
+          final double? lo = domEventDetailNumber(event, 'lo');
+          final double? hi = domEventDetailNumber(event, 'hi');
+          if (lo != null && hi != null) props.onRangeChanged!(lo, hi);
+          return;
+        }
+        final double? value = domEventDetailNumber(event, 'value');
+        if (value != null) props.onChanged!(value);
+      },
+    };
   }
 
   Map<String, String> _thumbAriaLabel(String kind) {

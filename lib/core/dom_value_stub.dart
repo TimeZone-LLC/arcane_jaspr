@@ -9,3 +9,4 @@ String domEventValue(Object? event) => '';
 String domEventTargetAttribute(Object? event, String name) => '';
 void domStopPropagation(Object? event) {}
 void domPreventDefault(Object? event) {}
+double? domEventDetailNumber(Object? event, String key) => null;

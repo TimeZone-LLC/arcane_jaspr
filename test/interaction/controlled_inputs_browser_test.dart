@@ -40,6 +40,8 @@ class _ControlsState extends State<_Controls> {
   final List<String> radioChanges = <String>[];
   final List<String> textChanges = <String>[];
   final List<String> submissions = <String>[];
+  double slider = 20;
+  final List<double> sliderChanges = <double>[];
 
   @override
   Widget build(BuildContext context) => Column(
@@ -77,6 +79,18 @@ class _ControlsState extends State<_Controls> {
         helperText: 'A title for your post',
         onChanged: textChanges.add,
         onSubmitted: submissions.add,
+      ),
+      ArcaneSlider(
+        id: 'volume',
+        label: 'Volume',
+        value: slider,
+        min: 0,
+        max: 100,
+        step: 10,
+        onChanged: (double value) => setState(() {
+          slider = value;
+          sliderChanges.add(value);
+        }),
       ),
     ],
   );
@@ -199,6 +213,32 @@ void main() {
       );
       await pumpEventQueue();
       expect(state.submissions, <String>['Draft']);
+
+      // The rendered thumb sits at the value before any interaction.
+      final web.HTMLElement thumb = _element('[data-arcane-slider-thumb]');
+      expect(thumb.style.left, '20%');
+
+      // A pointer press on the track reaches the runtime, which snaps the
+      // value to the step grid and reports it back to the Dart callback.
+      final web.HTMLElement track = _element('[data-arcane-slider-track]');
+      final web.DOMRect rect = track.getBoundingClientRect();
+      track.dispatchEvent(
+        web.PointerEvent(
+          'pointerdown',
+          web.PointerEventInit(
+            clientX: (rect.left + rect.width / 2).round(),
+            clientY: (rect.top + rect.height / 2).round(),
+            bubbles: true,
+            cancelable: true,
+          ),
+        ),
+      );
+      web.document.dispatchEvent(
+        web.PointerEvent('pointerup', web.PointerEventInit(bubbles: true)),
+      );
+      await pumpEventQueue();
+      expect(state.sliderChanges, <double>[50]);
+      expect(_element('[data-arcane-slider-thumb]').style.left, '50%');
     });
   }
 }

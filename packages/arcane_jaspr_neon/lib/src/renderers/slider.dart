@@ -44,7 +44,14 @@ class NeonSlider extends SliderRenderBase {
   Map<String, String> valueTextStyles() => const <String, String>{};
 
   @override
-  Map<String, String> trackStyles(String trackHeight) => const <String, String>{};
+  Map<String, String> trackStyles(String trackHeight) => <String, String>{
+    'position': 'relative',
+    'width': '100%',
+    'height': trackHeight,
+    'border-radius': '9999px',
+    'background': 'var(--muted)',
+    'overflow': 'hidden',
+  };
 
   @override
   Map<String, String> trackFillStyles({
@@ -52,7 +59,14 @@ class NeonSlider extends SliderRenderBase {
     required double percentage,
     required double loPct,
     required double hiPct,
-  }) => const <String, String>{};
+  }) => <String, String>{
+    'position': 'absolute',
+    'top': '0',
+    'bottom': '0',
+    'left': isRange ? '$loPct%' : '0',
+    'width': isRange ? '${hiPct - loPct}%' : '$percentage%',
+    'background': 'var(--primary)',
+  };
 
   @override
   Map<String, String> stepMarkerStyles() => const <String, String>{};
@@ -62,7 +76,21 @@ class NeonSlider extends SliderRenderBase {
     required double leftPct,
     required String thumbSize,
     required int thumbSizeNum,
-  }) => const <String, String>{};
+  }) => <String, String>{
+    // Neon has no slider stylesheet rules, so the thumb carries its own
+    // geometry: a bare percentage plus a centring transform keeps it on the
+    // value after the runtime writes `left: x%` during a drag.
+    'position': 'absolute',
+    'left': '$leftPct%',
+    'top': '50%',
+    'transform': 'translate(-50%, -50%)',
+    'width': thumbSize,
+    'height': thumbSize,
+    'border-radius': '50%',
+    'background': 'var(--primary)',
+    'cursor': props.disabled ? 'not-allowed' : 'grab',
+    'z-index': '2',
+  };
 
   @override
   Map<String, String> minMaxLabelStyles() => const <String, String>{};
