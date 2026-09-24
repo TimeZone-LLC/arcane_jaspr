@@ -26,24 +26,53 @@ abstract class SidebarItemRenderBase extends StatelessComponent {
 
   @override
   Component build(BuildContext context) {
-    final String linkClasses = 'sidebar-link${props.selected ? ' active' : ''}';
-
-    if (props.href != null) {
-      return dom.div(classes: 'sidebar-tree-item', <Component>[
-        dom.a(href: props.href!, classes: linkClasses, <Component>[
-          Component.text(props.label),
+    final String linkClasses =
+        'sidebar-link sidebar-tree-link${props.selected ? ' active' : ''}';
+    final List<Component> content = <Component>[
+      if (props.icon != null) props.icon!,
+      dom.span(classes: 'sidebar-tree-link-label', <Component>[
+        Component.text(props.label),
+      ]),
+      if (props.badge != null)
+        dom.span(classes: 'sidebar-tree-link-badge', <Component>[
+          Component.text(props.badge!),
         ]),
+    ];
+    final Map<String, String> stateAttributes = <String, String>{
+      'data-active': '${props.selected}',
+      if (props.disabled) 'data-disabled': 'true',
+      if (props.tooltip != null) 'title': props.tooltip!,
+    };
+    final EventCallback? onTap = props.onTap != null
+        ? (_) => props.onTap!()
+        : null;
+
+    if (props.href != null && !props.disabled) {
+      return dom.div(classes: 'sidebar-tree-item', <Component>[
+        dom.a(
+          href: props.href!,
+          classes: linkClasses,
+          attributes: stateAttributes,
+          events: onTap != null
+              ? <String, EventCallback>{'click': onTap}
+              : null,
+          content,
+        ),
       ]);
     }
 
     return dom.div(classes: 'sidebar-tree-item', <Component>[
       dom.button(
         classes: linkClasses,
-        attributes: const <String, String>{'type': 'button'},
-        events: props.onTap != null
-            ? <String, EventCallback>{'click': (_) => props.onTap!()}
+        attributes: <String, String>{
+          'type': 'button',
+          if (props.disabled) 'disabled': 'true',
+          ...stateAttributes,
+        },
+        events: !props.disabled && onTap != null
+            ? <String, EventCallback>{'click': onTap}
             : null,
-        <Component>[Component.text(props.label)],
+        content,
       ),
     ]);
   }

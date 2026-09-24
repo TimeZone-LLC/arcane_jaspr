@@ -26,5 +26,5 @@ $arcaneCodeCopyButtonStyles
 
 $arcaneCalloutStyles
 
-$arcaneAllSidebarStyles
+$arcaneSidebarTreeStyles
 ''';
