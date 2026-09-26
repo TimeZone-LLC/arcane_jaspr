@@ -19,6 +19,9 @@
 - Menu rows rendered as buttons use the theme font instead of the browser
   button font.
 - Radio options with a description align the circle to the first line.
+- Homepage and documentation links point to the live docs at
+  https://timezone-llc.github.io/arcane_jaspr/ instead of the retired
+  ArcaneArts Pages address.
 
 ## 5.0.2 - 2026-09-23
 

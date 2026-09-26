@@ -5,8 +5,8 @@ description: >-
   package), so it is kept OUT of the theme packages to keep them web-safe for
   client apps. Docs sites depend on this package directly.
 version: 5.0.0
-homepage: https://arcanearts.github.io/arcane_jaspr/
-documentation: https://arcanearts.github.io/arcane_jaspr/
+homepage: https://timezone-llc.github.io/arcane_jaspr/
+documentation: https://timezone-llc.github.io/arcane_jaspr/
 repository: https://github.com/ArcaneArts/arcane_jaspr
 
 environment:

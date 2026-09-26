@@ -9,6 +9,9 @@
 - Multi-select option boxes use the 3:1 `--shadcn-control-border`.
 - The select label points at its trigger, the trigger reports its open state,
   and the list names itself and its multi-select mode.
+- Homepage and documentation links point to the live docs at
+  https://timezone-llc.github.io/arcane_jaspr/ instead of the retired
+  ArcaneArts Pages address.
 
 ## 5.0.0 - 2026-09-23
 

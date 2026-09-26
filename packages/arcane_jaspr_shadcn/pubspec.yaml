@@ -1,8 +1,8 @@
 name: arcane_jaspr_shadcn
 description: Shadcn renderer package for Arcane Jaspr.
 version: 5.0.0
-homepage: https://arcanearts.github.io/arcane_jaspr/
-documentation: https://arcanearts.github.io/arcane_jaspr/
+homepage: https://timezone-llc.github.io/arcane_jaspr/
+documentation: https://timezone-llc.github.io/arcane_jaspr/
 repository: https://github.com/ArcaneArts/arcane_jaspr
 
 environment:

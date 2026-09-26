@@ -182,7 +182,7 @@ runtime yourself through a CSP-compatible mechanism.
 
 ## Docs
 
-- Package docs: [arcanearts.github.io/arcane_jaspr](https://arcanearts.github.io/arcane_jaspr/)
+- Package docs: [timezone-llc.github.io/arcane_jaspr](https://timezone-llc.github.io/arcane_jaspr/)
 - Docs/demo app: `arcane_jaspr_docs/arcane_jaspr_docs_web`
 - Generated component catalog: `arcane_jaspr_docs/arcane_jaspr_docs_web/content/docs/components-catalog.md`
 

@@ -97,3 +97,18 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Rebuilds the arcane_lexicon docs against this arcane_jaspr revision.
+      # The token is a fine-grained PAT scoped to arcane_lexicon only.
+      - name: Trigger arcane_lexicon docs rebuild
+        env:
+          GH_TOKEN: ${{ secrets.ARCANE_LEXICON_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "ARCANE_LEXICON_DISPATCH_TOKEN is not set; skipping the arcane_lexicon rebuild."
+            exit 0
+          fi
+          gh api repos/TimeZone-LLC/arcane_lexicon/dispatches \
+            -f event_type=arcane-jaspr-updated \
+            -f "client_payload[arcane_jaspr_sha]=$GITHUB_SHA"
+          echo "Dispatched arcane-jaspr-updated to TimeZone-LLC/arcane_lexicon for $GITHUB_SHA."

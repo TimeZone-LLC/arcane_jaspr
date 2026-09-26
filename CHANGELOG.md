@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dropdown menus carry the `id` their `aria-controls` names.
 - `#arcane-root` sets `color-scheme` from the active brightness, so native
   option lists follow dark mode.
+- Homepage and documentation links point to the live docs at
+  https://timezone-llc.github.io/arcane_jaspr/ instead of the retired
+  ArcaneArts Pages address.
 
 ### Changed
 

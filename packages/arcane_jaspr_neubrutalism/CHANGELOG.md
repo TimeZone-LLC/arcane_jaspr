@@ -1,5 +1,11 @@
 # Changelog
 
+## x.x.x
+
+### Fixed
+
+- Homepage and documentation links point to the live docs at https://timezone-llc.github.io/arcane_jaspr/ instead of the retired ArcaneArts Pages address.
+
 ## 5.0.1 - 2026-09-23
 
 ### Fixed

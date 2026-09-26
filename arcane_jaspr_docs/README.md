@@ -21,7 +21,7 @@ dart ../../tool/arcane_jaspr_demo.dart
 
 ```bash
 cd arcane_neon_web
-dart run tool/build.dart --domain=https://arcanearts.github.io/arcane_jaspr --base-url=/arcane_jaspr
+dart run tool/build.dart --domain=https://timezone-llc.github.io/arcane_jaspr --base-url=/arcane_jaspr
 ```
 
 The build script regenerates the component catalog before the search index and static build.

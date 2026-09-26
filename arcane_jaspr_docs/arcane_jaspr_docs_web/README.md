@@ -15,7 +15,7 @@ The demo serves at `http://localhost:8080` and replaces the previous Arcane Jasp
 ## Build
 
 ```bash
-dart run tool/build.dart --domain=https://arcanearts.github.io/arcane_jaspr --base-url=/arcane_jaspr
+dart run tool/build.dart --domain=https://timezone-llc.github.io/arcane_jaspr --base-url=/arcane_jaspr
 ```
 
 ## Primary Documentation Rules
