@@ -275,6 +275,9 @@ class ArcaneSelect extends StatelessWidget {
       attributes: {
         'name': ?name,
         'data-arcane-field-control': 'true',
+        // Lets a theme key its own height table on the size (the inline px
+        // table above is the modern one).
+        'data-size': size.name,
         if (disabled) 'disabled': 'true',
         if (required) 'required': 'true',
         if (hasError) 'aria-invalid': 'true',
@@ -283,6 +286,8 @@ class ArcaneSelect extends StatelessWidget {
       styles: dom.Styles(
         raw: {
           ...sizeStyles,
+          'display': 'block',
+          'max-width': '100%',
           'padding-right': '40px',
           'font-family': 'inherit',
           'background-color': 'var(--background)',
@@ -333,6 +338,9 @@ class ArcaneSelect extends StatelessWidget {
       ],
     );
 
+    // The chevron is positioned against the shell, so the shell must stay the
+    // width of the select: a flex or grid parent would otherwise stretch it
+    // and leave the glyph floating past the control's edge.
     final Widget selectShell = dom.div(
       classes: 'arcane-native-select-shell',
       attributes: const <String, String>{'data-arcane-field-shell': 'true'},
@@ -341,6 +349,8 @@ class ArcaneSelect extends StatelessWidget {
           'position': 'relative',
           'display': fullWidth ? 'block' : 'inline-block',
           if (fullWidth) 'width': '100%',
+          if (!fullWidth) 'width': 'fit-content',
+          if (!fullWidth) 'max-width': '100%',
         },
       ),
       <Widget>[

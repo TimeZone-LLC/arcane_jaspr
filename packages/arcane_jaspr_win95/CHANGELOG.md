@@ -1,5 +1,25 @@
 # Changelog
 
+## x.x.x
+
+### Fixed
+
+- The native select shows one arrow: the chevron span is the raised arrow
+  button, drawn from face tokens in both schemes. The field matches the other
+  Win95 fields in height and type size, and its label matches field labels.
+- Check box captions and descriptions stack with the radio spacing; with a
+  description the well aligns to the first line. Disabled check boxes grey
+  the well and tick and engrave the caption.
+- Bare native check boxes and radios inside the Win95 root use the Win95 well,
+  tick and radio bitmaps.
+- The select list stacks above later fields, opens flush under its field and
+  has no inner gutter. Dropdown menus open flush under their trigger.
+- Menu check and radio indicators and multi-select options use the check box
+  tick (`--w95-check`) and a bitmap bullet in a 6px gutter.
+- Menu rows rendered as buttons use the theme font instead of the browser
+  button font.
+- Radio options with a description align the circle to the first line.
+
 ## 5.0.2 - 2026-09-23
 
 ### Fixed

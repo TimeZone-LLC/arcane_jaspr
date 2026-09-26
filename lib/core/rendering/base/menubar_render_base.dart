@@ -203,6 +203,7 @@ abstract class MenubarRenderBase extends StatelessComponent {
       <Component>[
         if (item.checked)
           dom.span(
+            classes: 'arcane-menu-indicator',
             styles: dom.Styles(
               raw: <String, String>{
                 'position': 'absolute',
@@ -249,6 +250,7 @@ abstract class MenubarRenderBase extends StatelessComponent {
       <Component>[
         if (item.selected)
           dom.span(
+            classes: 'arcane-menu-indicator',
             styles: dom.Styles(
               raw: <String, String>{
                 'position': 'absolute',

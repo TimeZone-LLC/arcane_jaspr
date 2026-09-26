@@ -127,9 +127,26 @@ function positionAnchored(surfaceEl, anchorEl) {
   const offset = parseInt(
     surfaceEl.getAttribute('data-arcane-anchor-offset') || '8', 10
   );
-  const rect = anchorEl.getBoundingClientRect();
   const sw = surfaceEl.offsetWidth;
   const sh = surfaceEl.offsetHeight;
+
+  if (!surfaceEl._arcaneAnchorInlineStyle) {
+    surfaceEl._arcaneAnchorInlineStyle = {
+      position: surfaceEl.style.position,
+      top: surfaceEl.style.top,
+      left: surfaceEl.style.left,
+      width: surfaceEl.style.width,
+      minWidth: surfaceEl.style.minWidth
+    };
+  }
+  // Leave the flow at the measured size before reading the anchor. While the
+  // surface is in flow it can push its anchor (a centred parent re-centres
+  // once the surface is gone), so an earlier read would place the surface
+  // over its own trigger.
+  surfaceEl.style.position = 'fixed';
+  surfaceEl.style.width = sw + 'px';
+  surfaceEl.style.minWidth = sw + 'px';
+  const rect = anchorEl.getBoundingClientRect();
   const vw = window.innerWidth;
   const vh = window.innerHeight;
   let top = 0;
@@ -165,18 +182,6 @@ function positionAnchored(surfaceEl, anchorEl) {
   if (left + sw > vw - 4) left = vw - sw - 4;
   if (top + sh > vh - 4) top = vh - sh - 4;
 
-  if (!surfaceEl._arcaneAnchorInlineStyle) {
-    surfaceEl._arcaneAnchorInlineStyle = {
-      position: surfaceEl.style.position,
-      top: surfaceEl.style.top,
-      left: surfaceEl.style.left,
-      width: surfaceEl.style.width,
-      minWidth: surfaceEl.style.minWidth
-    };
-  }
-  surfaceEl.style.position = 'fixed';
-  surfaceEl.style.width = sw + 'px';
-  surfaceEl.style.minWidth = sw + 'px';
   surfaceEl.style.top = top + 'px';
   surfaceEl.style.left = left + 'px';
   surfaceEl.setAttribute('data-arcane-actual-placement', actualPlacement);

@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [x.x.x]
+
+### Fixed
+
+- Popovers, hover cards, select lists, menus, command palettes, dialogs,
+  sheets and drawers keep their background, border and shadow wherever they
+  are nested, so ShadCN submenus and lists inside cards are no longer
+  transparent. Any other surface nested in a surface still flattens, including
+  a card inside a dialog.
+- ShadCN dropdown menus open again. The legacy fallback binder stopped the
+  trigger click before the interaction runtime saw it; it is removed.
+- Anchored popovers, menus and select lists no longer open over their own
+  trigger in centred layouts. The runtime reads the anchor position after the
+  surface leaves the flow instead of while it still pushes the anchor.
+- A native `ArcaneSelect` that is not `fullWidth` keeps its shell the width of
+  the select inside flex and grid parents, so the chevron stays on the field.
+- Select triggers carry the `id` their label points at, and select lists and
+  dropdown menus carry the `id` their `aria-controls` names.
+- `#arcane-root` sets `color-scheme` from the active brightness, so native
+  option lists follow dark mode.
+
+### Changed
+
+- Menu check and radio indicators carry the `arcane-menu-indicator` class, and
+  multi-select option boxes carry `<prefix>-select-option-check`, so themes can
+  draw their own glyphs.
+- `SelectRenderBase` exposes `anchorOffset` and `optionsPadding` for themes.
+
+### Removed
+
+- `DropdownScripts` and its `bindDropdowns` legacy binder.
+
 ## [5.0.1] - 2026-09-23
 
 ### Fixed

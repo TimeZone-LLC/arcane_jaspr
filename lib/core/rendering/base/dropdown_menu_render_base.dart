@@ -146,6 +146,7 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
           <Component>[props.trigger],
         ),
         dom.div(
+          id: surfaceId,
           classes: menuClass,
           attributes: menuAttrs,
           styles: dom.Styles(raw: <String, String>{
@@ -354,6 +355,7 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
       <Component>[
         if (item.checked)
           dom.span(
+            classes: 'arcane-menu-indicator',
             styles: dom.Styles(
               raw: <String, String>{
                 'position': 'absolute',
@@ -437,6 +439,7 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
       <Component>[
         if (item.selected)
           dom.span(
+            classes: 'arcane-menu-indicator',
             styles: dom.Styles(
               raw: <String, String>{
                 'position': 'absolute',
@@ -511,6 +514,7 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
           <Component>[ArcaneIcon.chevronRight(size: IconSize.sm)],
         ),
         dom.div(
+          id: submenuId,
           classes: submenuClass,
           attributes: surfaceAttrs(
             surface: 'menu',

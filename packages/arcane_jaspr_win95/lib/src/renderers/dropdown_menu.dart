@@ -23,8 +23,9 @@ class Win95DropdownMenu extends DropdownMenuRenderBase {
   @override
   String get submenuClass => 'win95-dropdown-submenu win95-popover';
 
+  /// Win95 menus open flush against their button.
   @override
-  String get anchorOffset => '8';
+  String get anchorOffset => '0';
 
   @override
   String get itemGap => '10px';
@@ -50,8 +51,9 @@ class Win95DropdownMenu extends DropdownMenuRenderBase {
   @override
   String get selectablePaddingLeft => '36px';
 
+  /// The check and bullet sit centred in the 24px gutter win95_css reserves.
   @override
-  String get indicatorLeft => '12px';
+  String get indicatorLeft => '6px';
 
   @override
   String get indicatorColor => 'var(--foreground)';

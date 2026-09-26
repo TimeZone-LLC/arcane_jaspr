@@ -39,8 +39,9 @@ class Win95ContextMenu extends ContextMenuRenderBase {
   @override
   String get indicatorColor => 'currentColor';
 
+  /// The check and bullet sit centred in the 24px gutter win95_css reserves.
   @override
-  String get indicatorLeft => '12px';
+  String get indicatorLeft => '6px';
 
   @override
   String get shortcutLetterSpacing => '0';

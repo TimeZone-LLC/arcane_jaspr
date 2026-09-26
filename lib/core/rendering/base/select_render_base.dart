@@ -8,9 +8,10 @@ import 'package:arcane_jaspr/core/interaction/interaction.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/select_props.dart';
 
-/// Shared structural base for the neon/neubrutalism select renderers.
+/// Shared structural base for the Win95, Neon and Neubrutalism select
+/// renderers.
 ///
-/// These two themes render an identical popover-select tree — the wrapper, the
+/// These themes render an identical popover-select tree: the wrapper, the
 /// label/required asterisk, the trigger button with its prefix/display/clear/
 /// chevron, the dropdown surface/group attribute wiring, the search box, the
 /// loading/empty states and the per-option buttons (with their group-item and
@@ -71,6 +72,12 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
 
   /// Color of an option's leading icon for the given selection state.
   String optionIconColor(bool isSelected);
+
+  /// Gap in px between the trigger and the option list.
+  String get anchorOffset => '8';
+
+  /// Padding around the option rows inside the list.
+  String get optionsPadding => '0.5rem';
 
   /// Per-instance decoration overrides for the trigger. Default: none. A
   /// theme overrides this to translate an [ArcaneDecoration] (elevation
@@ -223,6 +230,7 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
           ),
 
         dom.button(
+          id: triggerId,
           classes: '$classPrefix-select-trigger',
           attributes: <String, String>{
             'type': 'button',
@@ -327,6 +335,7 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
         ),
 
         dom.div(
+          id: surfaceId,
           classes: '$classPrefix-select-dropdown $classPrefix-select-content',
           attributes: <String, String>{
             'role': 'listbox',
@@ -347,7 +356,7 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
                   ? 'top'
                   : 'bottom',
               anchorAlign: 'start',
-              anchorOffset: '8',
+              anchorOffset: anchorOffset,
             ),
             ...groupAttrs(
               groupId: groupId,
@@ -401,8 +410,8 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
             else
               dom.div(
                 classes: '$classPrefix-select-options',
-                styles: const dom.Styles(
-                  raw: <String, String>{'padding': '0.5rem'},
+                styles: dom.Styles(
+                  raw: <String, String>{'padding': optionsPadding},
                 ),
                 <Component>[
                   dom.div(
@@ -530,6 +539,7 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
       <Component>[
         if (props.multiSelect && props.showCheckboxes)
           dom.div(
+            classes: '$classPrefix-select-option-check',
             styles: dom.Styles(raw: optionCheckboxStyles(isSelected)),
             <Component>[
               if (isSelected)

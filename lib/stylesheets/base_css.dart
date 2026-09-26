@@ -184,13 +184,27 @@ html.light body::-webkit-scrollbar-corner {
   transform: none !important;
 }
 
-/* Nested marketing surfaces become open content regions. The renderer owns
-   this marker so custom classes and per-instance styles cannot restore a
-   second frame inside another frame. */
-[data-arcane-surface] [data-arcane-surface] {
+/* A surface nested inside any other surface becomes an open content region,
+   so a card inside a card or a dialog loses its second frame. The renderer
+   owns this marker, so custom classes and per-instance styles cannot restore
+   it. Floating layers (popovers, hover cards, menus, context menus, command
+   palettes, dialogs, sheets and drawers) are separate windows and keep their
+   own frame wherever they are nested. */
+[data-arcane-surface]
+  [data-arcane-surface]:not([data-arcane-surface="popover"], [data-arcane-surface="hovercard"], [data-arcane-surface="menu"], [data-arcane-surface="context-menu"], [data-arcane-surface="command"], [data-arcane-surface="dialog"], [data-arcane-surface="sheet"], [data-arcane-surface="drawer"]) {
   background: transparent !important;
   border-color: transparent !important;
   box-shadow: none !important;
+}
+
+/* Native control popups (select option lists, date pickers, scrollbars)
+   follow the app brightness instead of the operating system setting. */
+#arcane-root.light {
+  color-scheme: light;
+}
+
+#arcane-root.dark {
+  color-scheme: dark;
 }
 
 /* iOS Safari zooms the viewport when a focused text control renders below

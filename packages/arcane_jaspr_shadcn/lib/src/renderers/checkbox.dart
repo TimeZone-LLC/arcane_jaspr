@@ -19,13 +19,16 @@ class ShadcnCheckbox extends CheckboxRenderBase {
   Map<String, String> extraWrapperAttrs(CheckboxProps props) =>
       const <String, String>{};
 
+  /// A one-line label centres on the box; a description pins the box to the
+  /// label line so the text block grows downward.
   @override
   Map<String, String> wrapperStyles(CheckboxProps props) => <String, String>{
     'display': 'flex',
-    'align-items': 'flex-start',
+    'align-items': props.description == null ? 'center' : 'flex-start',
     'gap': 'var(--space-2)', // gap-2
     'cursor': props.disabled ? 'not-allowed' : 'pointer',
-    // ShadCN: disabled:opacity-50 disabled:cursor-not-allowed
+    // ShadCN: disabled:opacity-50 disabled:cursor-not-allowed. The wrapper is
+    // the only dimmed layer so the box and label fade together, once.
     'opacity': props.disabled ? '0.5' : '1',
     'pointer-events': props.disabled ? 'none' : 'auto',
   };

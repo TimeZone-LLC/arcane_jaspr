@@ -105,6 +105,7 @@ class ShadcnSelect<T> extends StatelessComponent {
         // Label
         if (props.label != null)
           dom.label(
+            htmlFor: triggerId,
             classes: 'arcane-select-label',
             styles: const dom.Styles(
               raw: <String, String>{
@@ -131,13 +132,14 @@ class ShadcnSelect<T> extends StatelessComponent {
 
         // Trigger button - ShadCN SelectTrigger
         dom.button(
+          id: triggerId,
           classes:
               'arcane-select ${hasError ? 'error' : ''} ${props.disabled ? 'disabled' : ''}',
           attributes: <String, String>{
             'type': 'button',
             'aria-haspopup': 'listbox',
             'aria-controls': surfaceId,
-            'aria-expanded': 'false',
+            'aria-expanded': '${props.isOpen}',
             if (props.disabled) 'disabled': 'true',
             'data-disabled': '${props.disabled || props.loading}',
             'data-error': '$hasError',
@@ -271,9 +273,12 @@ class ShadcnSelect<T> extends StatelessComponent {
 
         // Dropdown - ShadCN SelectContent
         dom.div(
+          id: surfaceId,
           classes: 'arcane-select-dropdown',
           attributes: <String, String>{
             'role': 'listbox',
+            if (props.multiSelect) 'aria-multiselectable': 'true',
+            'aria-label': props.label ?? props.placeholder,
             ...surfaceAttrs(
               surface: 'popover',
               id: surfaceId,
@@ -335,6 +340,7 @@ class ShadcnSelect<T> extends StatelessComponent {
                     type: dom.InputType.text,
                     attributes: <String, String>{
                       'placeholder': props.searchPlaceholder,
+                      'aria-label': props.searchPlaceholder,
                       'autocomplete': 'off',
                       'data-arcane-command-input': surfaceId,
                       'data-arcane-autofocus': 'true',
@@ -553,7 +559,7 @@ class ShadcnSelect<T> extends StatelessComponent {
                 'box-sizing': 'border-box',
                 'border': isSelected
                     ? '1px solid var(--primary)'
-                    : '1px solid var(--input)',
+                    : '1px solid var(--shadcn-control-border)',
                 'border-radius': 'var(--radius-xs)',
                 'box-shadow': 'var(--shadow-xs)',
                 'display': 'flex',

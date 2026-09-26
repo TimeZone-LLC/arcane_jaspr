@@ -1062,7 +1062,6 @@ html.dark #arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-but
 .arcane-tab-bar-item[data-disabled='true'],
 .arcane-tab-bar-item.disabled,
 .arcane-menubar-trigger[data-disabled='true'],
-.arcane-checkbox[data-disabled='true'],
 .arcane-radio-item[data-disabled='true'],
 .arcane-toggle-switch[data-disabled='true'],
 .arcane-pagination-link:disabled,

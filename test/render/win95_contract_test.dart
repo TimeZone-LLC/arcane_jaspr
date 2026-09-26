@@ -805,7 +805,8 @@ void main() {
     test('radios are the 12x12 four-shade bitmap with a 4x4 dot', () {
       final String radio = _rule(
         css,
-        '#arcane-root.arcane-theme-win95 .win95-radio-control {',
+        '#arcane-root.arcane-theme-win95 '
+        ':is(.win95-radio-control, input[type="radio"]) {',
       );
       expect(radio, contains('flex: 0 0 12px;'));
       expect(radio, contains('width: 12px;'));
@@ -826,7 +827,8 @@ void main() {
       );
       final String checked = _rule(
         css,
-        '#arcane-root.arcane-theme-win95 .win95-radio-control:checked {',
+        '#arcane-root.arcane-theme-win95 '
+        ':is(.win95-radio-control, input[type="radio"]):checked {',
       );
       expect(checked, contains('var(--w95-field-text)'));
       expect(checked, isNot(contains('radial-gradient')));

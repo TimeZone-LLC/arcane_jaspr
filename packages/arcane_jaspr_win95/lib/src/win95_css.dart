@@ -1047,6 +1047,57 @@ class Win95Css {
   -webkit-mask-size: 7px 7px;
   mask-size: 7px 7px;
 }
+/* A disabled check box fills its well with the button face and greys the
+   tick; the caption is engraved with the other disabled labels below. */
+#arcane-root.arcane-theme-win95 .win95-checkbox-box[data-disabled="true"] {
+  background: var(--w95-face);
+}
+#arcane-root.arcane-theme-win95 .win95-checkbox-box[data-disabled="true"]::after {
+  background-color: var(--w95-disabled-text);
+}
+#arcane-root.arcane-theme-win95 .win95-checkbox-wrapper[data-disabled="true"] span {
+  color: inherit !important;
+}
+
+/* Bare native check boxes and radios (hosts that skip ArcaneCheckbox and
+   ArcaneRadioGroup) take the same 13px well and 7x7 tick. The tick is seven
+   1x2 columns in the field text colour, so it follows the scheme without a
+   pseudo-element on the input. Switch-role inputs are left to their host. */
+#arcane-root.arcane-theme-win95 input[type="checkbox"]:not([role="switch"]) {
+  --w95-bare-well: var(--w95-field);
+  --w95-bare-tick: var(--w95-field-text);
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  box-sizing: border-box !important;
+  flex: 0 0 13px;
+  width: 13px !important;
+  height: 13px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--w95-bare-well) !important;
+  box-shadow: var(--w95-sunken) !important;
+  accent-color: auto !important;
+}
+#arcane-root.arcane-theme-win95 input[type="checkbox"]:not([role="switch"]):disabled {
+  --w95-bare-well: var(--w95-face);
+  --w95-bare-tick: var(--w95-disabled-text);
+}
+#arcane-root.arcane-theme-win95 input[type="checkbox"]:not([role="switch"]):checked {
+  background:
+    linear-gradient(var(--w95-bare-tick), var(--w95-bare-tick)) 3px 6px / 1px 2px no-repeat,
+    linear-gradient(var(--w95-bare-tick), var(--w95-bare-tick)) 4px 7px / 1px 2px no-repeat,
+    linear-gradient(var(--w95-bare-tick), var(--w95-bare-tick)) 5px 8px / 1px 2px no-repeat,
+    linear-gradient(var(--w95-bare-tick), var(--w95-bare-tick)) 6px 7px / 1px 2px no-repeat,
+    linear-gradient(var(--w95-bare-tick), var(--w95-bare-tick)) 7px 6px / 1px 2px no-repeat,
+    linear-gradient(var(--w95-bare-tick), var(--w95-bare-tick)) 8px 5px / 1px 2px no-repeat,
+    linear-gradient(var(--w95-bare-tick), var(--w95-bare-tick)) 9px 4px / 1px 2px no-repeat,
+    var(--w95-bare-well) !important;
+}
+#arcane-root.arcane-theme-win95 input[type="checkbox"]:not([role="switch"]):focus-visible {
+  outline: 1px dotted var(--w95-face-text) !important;
+  outline-offset: 1px !important;
+}
 /* Win95 had no toggle switch — render it in-idiom: a sunken track with a raised
    square thumb that slides. */
 #arcane-root.arcane-theme-win95 .win95-toggle-switch {
@@ -3574,28 +3625,63 @@ class Win95Css {
    =================================================================== */
 
 /* ---------- Native <select class="arcane-select"> ----------
-   Render base sets inline modern styles (1px border, 0.375rem radius,
-   appearance:none, modern gray chevron bg-image). Force a Win95 SUNKEN
-   white field. Keep background-color as a LONGHAND so the inline
-   background-image can be swapped for a Win95 arrow (not wiped). */
+   ArcaneSelect writes modern inline styles (1px border, 0.375rem radius, a
+   px size table) and draws its chevron as the sibling
+   .arcane-native-select-chevron span. Win95 turns the select into the same
+   sunken field as the custom select trigger and turns that span into the
+   raised arrow button, so the control shows exactly one arrow in both
+   schemes. */
 #arcane-root.arcane-theme-win95 .arcane-select {
   background-color: var(--w95-field) !important;
   color: var(--w95-field-text) !important;
   box-shadow: var(--w95-sunken) !important;
   border: 0 !important;
   border-radius: 0 !important;
-  height: 26px !important;
-  padding: 2px 24px 2px 6px !important;
+  /* Same height table as the Win95 text input (sm 38 / md 46 / lg 54) so a
+     select beside text fields in one row lines up. */
+  height: 38px !important;
+  padding: 2px calc(1.15rem + 8px) 2px 6px !important;
   font-family: var(--font-sans) !important;
-  font-size: 0.95rem !important;
-  line-height: 1.1 !important;
+  font-size: 1.219rem !important;
+  line-height: normal !important;
   cursor: var(--w95-cursor-arrow) !important;
   transition: none !important;
-  /* Win95 raised arrow button (silver bevel box + black down-triangle). */
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%3E%3Crect%20width='16'%20height='16'%20fill='%23c0c0c0'/%3E%3Cpath%20d='M0%200H16V1H1V16H0Z'%20fill='%23ffffff'/%3E%3Cpath%20d='M16%200V16H0V15H15V0Z'%20fill='%23808080'/%3E%3Cpath%20d='M4%206H12L8%2011Z'%20fill='%23000000'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 3px center !important;
-  background-size: 16px 16px !important;
+}
+#arcane-root.arcane-theme-win95 .arcane-select[data-size="md"] {
+  height: 46px !important;
+}
+#arcane-root.arcane-theme-win95 .arcane-select[data-size="lg"] {
+  height: 54px !important;
+}
+#arcane-root.arcane-theme-win95 .arcane-native-select-chevron {
+  top: 2px !important;
+  right: 2px !important;
+  bottom: 2px !important;
+  width: 1.15rem !important;
+  transform: none !important;
+  background: var(--w95-face) !important;
+  color: var(--w95-face-text) !important;
+  box-shadow: var(--w95-raised-thin) !important;
+}
+#arcane-root.arcane-theme-win95 .arcane-native-select-chevron :is(svg, i) {
+  display: none !important;
+}
+#arcane-root.arcane-theme-win95 .arcane-native-select-chevron::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--w95-face-text);
+}
+#arcane-root.arcane-theme-win95 .arcane-select:disabled + .arcane-native-select-chevron::after {
+  border-top-color: var(--w95-disabled-text);
+}
+#arcane-root.arcane-theme-win95 .arcane-select-wrapper > label {
+  font-family: var(--font-sans) !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  color: var(--w95-face-text) !important;
 }
 #arcane-root.arcane-theme-win95 .arcane-select:focus {
   outline: 1px dotted var(--w95-field-text) !important;
@@ -3656,7 +3742,9 @@ class Win95Css {
 }
 
 /* ---------- Custom select dropdown surface ----------
-   Silver floating menu in the window frame, sharp corners. */
+   Silver floating menu in the window frame, sharp corners. It stacks like
+   the popup menus so fields positioned later in the form cannot paint over
+   the open list. */
 #arcane-root.arcane-theme-win95 .win95-select-dropdown {
   background: var(--w95-face) !important;
   color: var(--w95-face-text) !important;
@@ -3664,6 +3752,7 @@ class Win95Css {
   border-radius: 0 !important;
   box-shadow: var(--w95-window-frame) !important;
   padding: 2px !important;
+  z-index: 1000 !important;
 }
 
 /* ---------- Custom select options ---------- */
@@ -3707,6 +3796,36 @@ class Win95Css {
 }
 #arcane-root.arcane-theme-win95 .win95-select-option:focus-visible {
   outline-color: var(--w95-selection-text) !important;
+}
+
+/* Multi-select rows carry the check box well and its --w95-check tick, drawn
+   from the row's live selection state so the tick follows runtime toggles.
+   The render base's lucide glyph is hidden. */
+#arcane-root.arcane-theme-win95 .win95-select-option-check {
+  background: var(--w95-field);
+  box-shadow: var(--w95-sunken);
+}
+#arcane-root.arcane-theme-win95 .win95-select-option-check > * {
+  display: none !important;
+}
+#arcane-root.arcane-theme-win95 .win95-select-option[data-arcane-state="selected"] .win95-select-option-check::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 7px;
+  height: 7px;
+  background-color: var(--w95-field-text);
+  -webkit-mask-image: var(--w95-check);
+  mask-image: var(--w95-check);
+  -webkit-mask-size: 7px 7px;
+  mask-size: 7px 7px;
+}
+#arcane-root.arcane-theme-win95 .win95-select-option:disabled .win95-select-option-check {
+  background: var(--w95-face);
+}
+#arcane-root.arcane-theme-win95 .win95-select-option:disabled .win95-select-option-check::after {
+  background-color: var(--w95-disabled-text);
 }
 
 /* ---------- Custom select search box (wrapper div + inner input) ---------- */
@@ -5170,6 +5289,7 @@ class Win95Css {
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
+  font-family: var(--font-sans) !important;
   font-size: 1.219rem !important;
   line-height: 1.5 !important;
   text-align: left !important;
@@ -5199,6 +5319,43 @@ class Win95Css {
 #arcane-root.arcane-theme-win95 .win95-menubar-item.checkbox,
 #arcane-root.arcane-theme-win95 .win95-menubar-item.radio {
   padding-left: 24px !important;
+}
+
+/* Check and bullet indicators: the check box's --w95-check tick and a 6x6
+   bitmap bullet in the item colour (black, white on the navy highlight, grey
+   when disabled), centred in the 24px gutter. The shared lucide glyphs are
+   hidden. */
+#arcane-root.arcane-theme-win95 :is(.win95-dropdown-item, .win95-context-menu-item, .win95-menubar-item) > .arcane-menu-indicator {
+  left: 6px !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  margin: auto 0 !important;
+  display: block !important;
+  font-size: 0 !important;
+  background-color: currentColor !important;
+}
+#arcane-root.arcane-theme-win95 :is(.win95-dropdown-item, .win95-context-menu-item, .win95-menubar-item) > .arcane-menu-indicator > * {
+  display: none !important;
+}
+#arcane-root.arcane-theme-win95 :is(.win95-dropdown-item, .win95-context-menu-item, .win95-menubar-item).checkbox > .arcane-menu-indicator {
+  width: 7px !important;
+  height: 7px !important;
+  -webkit-mask-image: var(--w95-check) !important;
+  mask-image: var(--w95-check) !important;
+  -webkit-mask-size: 7px 7px !important;
+  mask-size: 7px 7px !important;
+}
+#arcane-root.arcane-theme-win95 :is(.win95-dropdown-item, .win95-context-menu-item, .win95-menubar-item).radio > .arcane-menu-indicator {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor) !important;
+  background-position: 2px 0, 1px 1px, 0 2px !important;
+  background-size: 2px 6px, 4px 4px, 6px 2px !important;
+  background-repeat: no-repeat !important;
 }
 
 /* Highlight: navy bar with white text on hover / keyboard highlight,
@@ -6033,8 +6190,9 @@ html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
    (#808080 top-left, white bottom-right) around an inner arc (black top-left,
    #dfdfdf bottom-right). The ring is the --w95-radio-ring sprite over the
    control's own field colour, and --w95-radio-mask clips the square box to
-   the bitmap circle so nothing paints in its corners. */
-#arcane-root.arcane-theme-win95 .win95-radio-control {
+   the bitmap circle so nothing paints in its corners. Bare native radios
+   outside ArcaneRadioGroup take the same bitmap. */
+#arcane-root.arcane-theme-win95 :is(.win95-radio-control, input[type="radio"]) {
   appearance: none;
   flex: 0 0 12px;
   width: 12px;
@@ -6050,12 +6208,23 @@ html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
 }
 /* The 4x4 dot with its corners clipped, drawn as a 2x4 and a 4x2 block in the
    field text colour so it follows the scheme. */
-#arcane-root.arcane-theme-win95 .win95-radio-control:checked {
+#arcane-root.arcane-theme-win95 :is(.win95-radio-control, input[type="radio"]):checked {
   background:
     linear-gradient(var(--w95-field-text), var(--w95-field-text)) 5px 4px / 2px 4px no-repeat,
     linear-gradient(var(--w95-field-text), var(--w95-field-text)) 4px 5px / 4px 2px no-repeat,
     var(--w95-radio-ring) 0 0 / 12px 12px no-repeat,
     var(--w95-field);
+}
+/* Disabled: the button face shows through the ring and the dot greys. */
+#arcane-root.arcane-theme-win95 :is(.win95-radio-control, input[type="radio"]):disabled {
+  background: var(--w95-radio-ring) 0 0 / 12px 12px no-repeat, var(--w95-face);
+}
+#arcane-root.arcane-theme-win95 :is(.win95-radio-control, input[type="radio"]):checked:disabled {
+  background:
+    linear-gradient(var(--w95-disabled-text), var(--w95-disabled-text)) 5px 4px / 2px 4px no-repeat,
+    linear-gradient(var(--w95-disabled-text), var(--w95-disabled-text)) 4px 5px / 4px 2px no-repeat,
+    var(--w95-radio-ring) 0 0 / 12px 12px no-repeat,
+    var(--w95-face);
 }
 #arcane-root.arcane-theme-win95 .win95-radio-caption {
   display: flex;
@@ -6069,6 +6238,14 @@ html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   color: var(--muted-foreground);
   font-size: 0.875em;
   line-height: 1.4;
+}
+/* With a description the caption grows downward, so the circle pins to the
+   first 18px caption line instead of centring on the whole block. */
+#arcane-root.arcane-theme-win95 .win95-radio-option:has(.win95-radio-description) {
+  align-items: flex-start;
+}
+#arcane-root.arcane-theme-win95 .win95-radio-option:has(.win95-radio-description) > .win95-radio-control {
+  margin-top: 3px;
 }
 #arcane-root.arcane-theme-win95 .win95-radio-icon {
   display: inline-flex;
@@ -6274,6 +6451,7 @@ html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
 #arcane-root.arcane-theme-win95 .win95-dropdown-item:disabled,
 #arcane-root.arcane-theme-win95 .win95-menubar-item.disabled,
 #arcane-root.arcane-theme-win95 .win95-menubar-item[aria-disabled="true"],
+#arcane-root.arcane-theme-win95 .win95-checkbox-wrapper[data-disabled="true"],
 #arcane-root.arcane-theme-win95 .arcane-select:disabled,
 #arcane-root.arcane-theme-win95 .arcane-textarea:disabled {
   color: var(--w95-disabled-text) !important;
@@ -6330,7 +6508,7 @@ html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   ) {
     border: 1px solid ButtonText !important;
   }
-  #arcane-root.arcane-theme-win95 .win95-radio-control {
+  #arcane-root.arcane-theme-win95 :is(.win95-radio-control, input[type="radio"]) {
     appearance: auto;
     -webkit-mask: none;
     mask: none;

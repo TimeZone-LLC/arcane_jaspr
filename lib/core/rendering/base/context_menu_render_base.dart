@@ -222,6 +222,7 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
         // Checkbox indicator
         if (item.checked)
           dom.span(
+            classes: 'arcane-menu-indicator',
             styles: dom.Styles(
               raw: {
                 'position': 'absolute',
@@ -285,6 +286,7 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
         // Radio indicator
         if (item.selected)
           dom.span(
+            classes: 'arcane-menu-indicator',
             styles: dom.Styles(
               raw: {
                 'position': 'absolute',

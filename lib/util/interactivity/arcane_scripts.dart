@@ -52,7 +52,6 @@ class ArcaneScripts {
     bindButtons();
     bindCopyButtons();
     bindExpandersAccordions();
-    bindDropdowns();
     bindSelectors();
     bindTreeViews();
     bindPagination();

@@ -1,5 +1,15 @@
 # Changelog
 
+## x.x.x
+
+### Fixed
+
+- Disabled check boxes dim once, at the wrapper, instead of twice.
+- A one-line check box centres its box on the label.
+- Multi-select option boxes use the 3:1 `--shadcn-control-border`.
+- The select label points at its trigger, the trigger reports its open state,
+  and the list names itself and its multi-select mode.
+
 ## 5.0.0 - 2026-09-23
 
 ### Added

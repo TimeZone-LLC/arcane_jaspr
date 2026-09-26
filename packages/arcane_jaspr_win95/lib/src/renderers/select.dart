@@ -42,17 +42,23 @@ class Win95Select<T> extends SelectRenderBase<T> {
   Map<String, String> optionStyles(bool isSelected, bool isDisabled) =>
       const <String, String>{};
 
+  /// The list opens flush under the field, like a Win95 combo box.
+  @override
+  String get anchorOffset => '0';
+
+  /// Rows run edge to edge inside the list's 2px window frame.
+  @override
+  String get optionsPadding => '0';
+
+  /// The 13px check box well; win95_css paints the well and the shared
+  /// `--w95-check` tick from the option's selection state.
   @override
   Map<String, String> optionCheckboxStyles(bool isSelected) =>
       const <String, String>{
-        'display': 'flex',
-        'align-items': 'center',
-        'justify-content': 'center',
-        'flex': '0 0 15px',
-        'width': '15px',
-        'height': '15px',
-        'background': 'var(--w95-field)',
-        'box-shadow': 'var(--w95-sunken)',
+        'position': 'relative',
+        'flex': '0 0 13px',
+        'width': '13px',
+        'height': '13px',
       };
 
   @override
