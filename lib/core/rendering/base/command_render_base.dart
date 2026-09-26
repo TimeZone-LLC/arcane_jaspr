@@ -3,6 +3,7 @@ import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/component/view/icon.dart';
 import 'package:arcane_jaspr/core/decoration/arcane_decoration.dart';
+import 'package:arcane_jaspr/core/interaction/interaction.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/command_props.dart';
 
@@ -197,17 +198,12 @@ abstract class CommandRenderBase extends StatelessComponent {
     String surfaceId,
     String groupId,
   ) {
-    final List<String> actions = <String>[];
-    if (item.href != null && item.href!.isNotEmpty) {
-      final String target = item.hrefTarget ?? '_self';
-      if (target == '_blank') {
-        actions.add('nav.external:${item.href}');
-      } else {
-        actions.add('nav.go:${item.href}');
-      }
-    }
-    actions.add('surface.close:command:$surfaceId');
-    final String actionStr = actions.join(' ; ');
+    final String? href = item.href;
+    final String action = encodeArcaneActions(<ArcaneInteraction>[
+      if (href != null && href.isNotEmpty)
+        ArcaneInteraction.navigate(href, external: item.hrefTarget == '_blank'),
+      ArcaneInteraction.closeCommand(surfaceId),
+    ]);
 
     return dom.div(
       classes: '$itemBaseClass ${item.disabled ? 'disabled' : ''}',
@@ -224,7 +220,7 @@ abstract class CommandRenderBase extends StatelessComponent {
         'data-label': item.label,
         'data-group': ?groupName,
         if (item.disabled) 'data-arcane-disabled': 'true',
-        if (!item.disabled) 'data-arcane-action': actionStr,
+        if (!item.disabled) 'data-arcane-action': action,
         'tabindex': item.disabled ? '-1' : '0',
       },
       styles: dom.Styles(raw: itemStyles(item)),

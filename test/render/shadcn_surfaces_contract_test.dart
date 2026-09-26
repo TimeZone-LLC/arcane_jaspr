@@ -426,6 +426,52 @@ void main() {
       expect(html, isNot(contains('ui-monospace')));
       expect(css, contains('.arcane-command-item[data-arcane-state="active"]'));
     });
+
+    // The runtime splits an action on whitespace, so a row must name its verb
+    // and arguments apart for `nav.go` and `surface.close` to run at all.
+    testServer('rows encode runtime navigation and close actions', (
+      ServerTester tester,
+    ) async {
+      final String html = await _render(
+        tester,
+        const ArcaneCommand(
+          id: 'palette',
+          isOpen: true,
+          groups: <CommandGroup>[
+            CommandGroup(
+              items: <CommandItem>[
+                CommandItem(label: 'Search', href: '/search?q=owl'),
+                CommandItem(
+                  label: 'Docs',
+                  href: 'https://example.com/docs',
+                  hrefTarget: '_blank',
+                ),
+                CommandItem(label: 'Run'),
+              ],
+            ),
+          ],
+        ),
+      );
+      final List<String> rows = _tags(html, 'arcane-command-item');
+      expect(
+        rows[0],
+        contains(
+          'data-arcane-action="nav.go %2Fsearch%3Fq%3Dowl;'
+          'surface.close command palette"',
+        ),
+      );
+      expect(
+        rows[1],
+        contains(
+          'data-arcane-action="nav.external '
+          'https%3A%2F%2Fexample.com%2Fdocs;surface.close command palette"',
+        ),
+      );
+      expect(
+        rows[2],
+        contains('data-arcane-action="surface.close command palette"'),
+      );
+    });
   });
 
   group('tabs', () {

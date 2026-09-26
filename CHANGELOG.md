@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Homepage and documentation links point to the live docs at
   https://timezone-llc.github.io/arcane_jaspr/ instead of the retired
   ArcaneArts Pages address.
+- Win95 and Neubrutalism command palette rows navigate and close. Rows
+  encoded their actions as `nav.go:<href>` and `surface.close:command:<id>`,
+  which the interaction runtime does not parse; they now use the runtime's
+  `nav.go <href>` and `surface.close command <id>` grammar.
 
 ### Changed
 
@@ -40,6 +44,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   theme prefix, and the current item takes `selected` instead of `active`,
   matching ShadCN. CSS that targets `.<prefix>-tab-bar-item.active` must use
   `.selected`.
+- Command palette rows that open a same-tab link go through the runtime's
+  `nav.go`, so they fire the cancelable `arcane:nav` event before setting
+  `location`. An app router can cancel it and navigate in place; with no
+  listener cancelling, the row navigates as before. The legacy palette binder
+  leaves rows that carry `data-arcane-action` to the interaction runtime, so
+  each activation fires one `arcane:nav`.
 
 ### Removed
 

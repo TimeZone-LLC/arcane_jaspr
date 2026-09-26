@@ -77,7 +77,9 @@ class CommandPaletteScripts {
       overlay.dispatchEvent(new CustomEvent('arcane-command-close', { bubbles: true }));
     }
 
-    // Handle item click - navigate via data-href
+    // Handle item click - navigate via data-href. A same-tab row goes through
+    // the runtime's nav.go, which fires the cancelable `arcane:nav` event
+    // before it sets location, so an app router can take the move in place.
     function handleItemClick(item, overlay) {
       var href = item.dataset.href;
       var target = item.dataset.target;
@@ -85,7 +87,7 @@ class CommandPaletteScripts {
         if (target === '_blank') {
           window.open(href, '_blank', 'noopener,noreferrer');
         } else {
-          window.location.href = href;
+          window.Arcane.nav.go(href);
         }
         closeOverlay(overlay);
       }
@@ -198,8 +200,10 @@ class CommandPaletteScripts {
     document.addEventListener('click', function(e) {
       var overlay = findOverlay(e.target);
 
-      // Handle item clicks
+      // Handle item clicks. A row that carries its own runtime action is left
+      // to the interaction runtime, so one activation navigates once.
       var item = e.target.closest('.arcane-command-item, .neon-command-item');
+      if (item && item.hasAttribute('data-arcane-action')) return;
       if (item && overlay && !item.classList.contains('disabled')) {
         e.preventDefault();
         e.stopPropagation();
