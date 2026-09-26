@@ -164,6 +164,28 @@ function auditDom(selector) {
     });
     return blurred;
   };
+  // A gradient whose stops share one colour paints a flat block. Win95 draws
+  // its pixel glyphs that way, so only multi-colour gradients count.
+  const hasGradient = (backgroundImage) => {
+    for (const match of backgroundImage.matchAll(/gradient\(/gi)) {
+      let depth = 1;
+      let end = match.index + match[0].length;
+      while (end < backgroundImage.length && depth > 0) {
+        if (backgroundImage[end] === '(') depth++;
+        if (backgroundImage[end] === ')') depth--;
+        end++;
+      }
+      const colors = backgroundImage
+        .slice(match.index, end)
+        .match(/rgba?\([^)]*\)|#[\da-f]{3,8}\b|\b(?:currentcolor|transparent)\b/gi);
+      if (new Set(colors ?? []).size !== 1) return true;
+    }
+    return false;
+  };
+  // The Neon contract permits frost on its transient menu overlays only.
+  const frostOverlay = '#arcane-root.arcane-theme-neon :is(' +
+    '.neon-dropdown-menu, .neon-dropdown-submenu, .neon-select-dropdown, ' +
+    '.arcane-nav-dropdown-panel)';
   const intrinsicRound = (element) => {
     if (element.matches('input[type="radio"],input[type="checkbox"]')) {
       return true;
@@ -190,12 +212,13 @@ function auditDom(selector) {
       .filter(visible);
     const identity = describe(element);
 
-    if (/gradient\(/i.test(style.backgroundImage)) {
+    if (hasGradient(style.backgroundImage)) {
       violations.push(['gradient/image', identity, style.backgroundImage]);
     }
     if (
-      style.backdropFilter !== 'none' ||
-      style.webkitBackdropFilter && style.webkitBackdropFilter !== 'none'
+      (style.backdropFilter !== 'none' ||
+        style.webkitBackdropFilter && style.webkitBackdropFilter !== 'none') &&
+      !element.matches(frostOverlay)
     ) {
       violations.push(['backdrop/frost', identity]);
     }
@@ -222,7 +245,7 @@ function auditDom(selector) {
       if (!pseudoStyle || ['none', 'normal'].includes(pseudoStyle.content)) {
         continue;
       }
-      if (/gradient\(/i.test(pseudoStyle.backgroundImage)) {
+      if (hasGradient(pseudoStyle.backgroundImage)) {
         violations.push(['gradient/image', `${identity}${pseudo}`]);
       }
       if (hasGlow(pseudoStyle.boxShadow)) {
@@ -351,6 +374,12 @@ async function selectTheme(page, stylesheet, mode) {
 }
 
 async function audit(page) {
+  // A theme can leave a bundled weight unused, so request both faces before
+  // checking them. A missing or broken font file still fails the check.
+  await page.evaluate(() => Promise.allSettled([
+    document.fonts.load('16px "Akzidenz-GroteskPro"'),
+    document.fonts.load('16px "Hack"'),
+  ]));
   return page.evaluate(auditDom, policySelector);
 }
 
