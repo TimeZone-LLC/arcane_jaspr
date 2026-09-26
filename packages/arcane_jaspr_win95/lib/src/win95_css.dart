@@ -1134,50 +1134,6 @@ class Win95Css {
   transform: translateX(1.15rem);
 }
 
-/* ---------- Tabs (raised notched folders) ---------- */
-
-#arcane-root.arcane-theme-win95 .win95-tabs-list,
-#arcane-root.arcane-theme-win95 .win95-tab-bar {
-  display: inline-flex;
-  gap: 0;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  position: relative;
-  z-index: 1;
-}
-#arcane-root.arcane-theme-win95 .win95-tabs-trigger,
-#arcane-root.arcane-theme-win95 .win95-tab-bar-item {
-  padding: 0.35rem 0.85rem;
-  border: none;
-  border-radius: 0;
-  background: var(--w95-face);
-  color: var(--w95-face-text);
-  box-shadow: var(--w95-raised);
-  font-family: var(--font-sans);
-  font-size: 1.219rem;
-  font-weight: 400;
-  cursor: var(--w95-cursor-arrow);
-  margin-right: 2px;
-  transition: none;
-}
-#arcane-root.arcane-theme-win95 .win95-tabs-trigger.active,
-#arcane-root.arcane-theme-win95 .win95-tab-bar-item.active {
-  background: var(--w95-face);
-  color: var(--w95-face-text);
-  padding: 0.45rem 0.95rem 0.35rem;
-  position: relative;
-  z-index: 2;
-}
-#arcane-root.arcane-theme-win95 .win95-tabs-content {
-  padding: 1rem;
-  background: var(--w95-face);
-  box-shadow: var(--w95-raised);
-  margin-top: -1px;
-}
-
 /* ---------- Alerts (message-box panels) ---------- */
 
 #arcane-root.arcane-theme-win95 .win95-alert {
@@ -4332,6 +4288,8 @@ class Win95Css {
   position: relative !important;
   padding: 0.3rem 0.85rem !important;
   margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
   background: var(--w95-face) !important;
   color: var(--w95-face-text) !important;
   box-shadow: var(--w95-raised) !important;
@@ -4379,7 +4337,7 @@ class Win95Css {
 }
 
 /* Content-less tab bar: the selected item reads as pressed-in. */
-#arcane-root.arcane-theme-win95 .win95-tab-bar-item.active {
+#arcane-root.arcane-theme-win95 .win95-tab-bar-item.selected {
   box-shadow: var(--w95-pressed) !important;
   padding: 0.32rem 0.87rem !important;
 }

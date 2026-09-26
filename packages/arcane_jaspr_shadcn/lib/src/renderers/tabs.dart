@@ -4,9 +4,11 @@ import 'package:jaspr/dom.dart' as dom;
 import 'package:arcane_jaspr/core/props/tabs_props.dart';
 
 /// v4 TabsList: `bg-muted text-muted-foreground inline-flex h-9 w-fit
-/// items-center justify-center rounded-lg p-[3px]`.
+/// items-center justify-center rounded-lg p-[3px]`. Tailwind's preflight makes
+/// every box border-box, so the list and triggers state it themselves.
 Map<String, String> _listStyles({required bool fill}) => <String, String>{
   'display': 'inline-flex',
+  'box-sizing': 'border-box',
   'height': '2.25rem',
   'width': fill ? '100%' : 'fit-content',
   'align-items': 'center',
@@ -28,6 +30,7 @@ Map<String, String> _triggerStyles({
   required bool disabled,
 }) => <String, String>{
   'display': 'inline-flex',
+  'box-sizing': 'border-box',
   'align-items': 'center',
   'justify-content': 'center',
   'gap': '0.375rem',

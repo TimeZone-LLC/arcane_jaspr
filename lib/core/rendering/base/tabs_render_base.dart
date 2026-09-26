@@ -148,10 +148,13 @@ abstract class TabsRenderBase extends StatelessComponent {
   }
 }
 
-/// Shared structural base for the neon/neubrutalism tab-bar renderers.
+/// Shared structural base for the neon/neubrutalism/win95 tab-bar renderers.
 ///
 /// Same alignment as [TabsRenderBase] for the content-less tab bar: the list
 /// wrapper and item buttons are identical; only the item typography differs.
+/// The bar and items carry the shared `arcane-tab-bar` and
+/// `arcane-tab-bar-item` classes beside the theme prefix, and the current item
+/// takes `selected`, matching the ShadCN tab bar.
 abstract class TabBarRenderBase extends StatelessComponent {
   const TabBarRenderBase(this.props, {super.key});
 
@@ -177,7 +180,7 @@ abstract class TabBarRenderBase extends StatelessComponent {
   @override
   Component build(BuildContext context) {
     return dom.div(
-      classes: '$classPrefix-tab-bar',
+      classes: 'arcane-tab-bar $classPrefix-tab-bar',
       attributes: const <String, String>{'role': 'tablist'},
       styles: dom.Styles(
         raw: layerStyles(
@@ -206,7 +209,8 @@ abstract class TabBarRenderBase extends StatelessComponent {
     final bool isSelected = index == props.selectedIndex;
 
     return dom.button(
-      classes: '$classPrefix-tab-bar-item ${isSelected ? 'active' : ''}',
+      classes:
+          'arcane-tab-bar-item $classPrefix-tab-bar-item${isSelected ? ' selected' : ''}',
       attributes: <String, String>{
         'type': 'button',
         'role': 'tab',

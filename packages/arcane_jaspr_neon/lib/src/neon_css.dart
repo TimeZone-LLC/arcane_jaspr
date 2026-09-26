@@ -625,7 +625,7 @@ html.dark #arcane-root.arcane-theme-neon,
 }
 #arcane-root.arcane-theme-neon .neon-tabs-trigger.active,
 #arcane-root.arcane-theme-neon .neon-tabs-trigger[data-state="active"],
-#arcane-root.arcane-theme-neon .neon-tab-bar-item.active,
+#arcane-root.arcane-theme-neon .neon-tab-bar-item.selected,
 #arcane-root.arcane-theme-neon .neon-tab-bar-item[data-state="active"] {
   background: var(--card);
   color: var(--neon-accent-ink);

@@ -23,6 +23,14 @@
   https://timezone-llc.github.io/arcane_jaspr/ instead of the retired
   ArcaneArts Pages address.
 
+### Changed
+
+- The selected tab bar item presses in through
+  `.win95-tab-bar-item.selected`, and the bar and items also carry
+  `arcane-tab-bar` and `arcane-tab-bar-item`.
+- Tabs and tab bars are styled by one rule set. The earlier set it overrode is
+  removed; its square, borderless triggers move into the remaining rules.
+
 ## 5.0.2 - 2026-09-23
 
 ### Fixed

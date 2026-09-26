@@ -12,6 +12,8 @@
 - Homepage and documentation links point to the live docs at
   https://timezone-llc.github.io/arcane_jaspr/ instead of the retired
   ArcaneArts Pages address.
+- Tab lists and triggers declare `box-sizing: border-box`, so the 36px list
+  and 29px triggers hold on hosts without a border-box reset.
 
 ## 5.0.0 - 2026-09-23
 

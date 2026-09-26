@@ -442,10 +442,12 @@ void main() {
         ),
       );
       final String list = _tag(html, 'arcane-tabs-list');
+      expect(list, contains('box-sizing: border-box'));
       expect(list, contains('height: 2.25rem'));
       expect(list, contains('padding: 3px'));
       expect(list, contains('border-radius: var(--radius-md)'));
       for (final String tab in _tags(html, 'arcane-tab')) {
+        expect(tab, contains('box-sizing: border-box'));
         expect(tab, contains('border-radius: var(--radius-sm)'));
         expect(tab, contains('height: calc(100% - 1px)'));
         expect(
@@ -467,6 +469,35 @@ void main() {
         css,
         contains('--shadcn-control-shadow: var(--shadcn-focus-ring)'),
       );
+    });
+
+    testServer('tab bar keeps the 36px strip and 29px triggers border-box', (
+      ServerTester tester,
+    ) async {
+      final String html = await _render(
+        tester,
+        ArcaneTabBar(
+          tabs: const <ArcaneTabBarItem>[
+            ArcaneTabBarItem(label: 'Posts'),
+            ArcaneTabBarItem(label: 'Saves'),
+          ],
+          selectedIndex: 0,
+          fill: true,
+          onChanged: (int _) {},
+        ),
+      );
+      final String bar = _tag(html, 'arcane-tab-bar');
+      expect(bar, contains('box-sizing: border-box'));
+      expect(bar, contains('height: 2.25rem'));
+      expect(bar, contains('width: 100%'));
+      expect(bar, contains('padding: 3px'));
+      final List<String> items = _tags(html, 'arcane-tab-bar-item');
+      expect(items, hasLength(2));
+      for (final String item in items) {
+        expect(item, contains('box-sizing: border-box'));
+        expect(item, contains('height: calc(100% - 1px)'));
+        expect(item, contains('flex: 1'));
+      }
     });
   });
 

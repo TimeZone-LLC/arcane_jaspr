@@ -793,6 +793,24 @@ void main() {
       );
     });
 
+    test('tab bars and triggers are declared once, borderless and square', () {
+      const String bar = '#arcane-root.arcane-theme-win95 .win95-tab-bar {';
+      expect(bar.allMatches(css), hasLength(1));
+      final String item = _rule(
+        css,
+        '#arcane-root.arcane-theme-win95 .win95-tab-bar-item {',
+      );
+      expect(item, contains('border: none !important;'));
+      expect(item, contains('border-radius: 0 !important;'));
+      expect(
+        _rule(
+          css,
+          '#arcane-root.arcane-theme-win95 .win95-tab-bar-item.selected {',
+        ),
+        contains('box-shadow: var(--w95-pressed) !important;'),
+      );
+    });
+
     test('disabled text is COLOR_GRAYTEXT over the white emboss', () {
       expect(light, contains('--w95-disabled-text: #808080;'));
       final String button = _rule(

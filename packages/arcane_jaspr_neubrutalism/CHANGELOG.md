@@ -2,6 +2,11 @@
 
 ## x.x.x
 
+### Changed
+
+- The selected tab bar item carries `.selected`, and the bar and items also
+  carry `arcane-tab-bar` and `arcane-tab-bar-item`.
+
 ### Fixed
 
 - Homepage and documentation links point to the live docs at https://timezone-llc.github.io/arcane_jaspr/ instead of the retired ArcaneArts Pages address.

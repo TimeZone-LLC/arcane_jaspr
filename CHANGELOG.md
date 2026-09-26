@@ -35,6 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   multi-select option boxes carry `<prefix>-select-option-check`, so themes can
   draw their own glyphs.
 - `SelectRenderBase` exposes `anchorOffset` and `optionsPadding` for themes.
+- **Breaking:** `TabBarRenderBase` tab bars (Win95, Neon, Neubrutalism) carry
+  the shared `arcane-tab-bar` and `arcane-tab-bar-item` classes beside the
+  theme prefix, and the current item takes `selected` instead of `active`,
+  matching ShadCN. CSS that targets `.<prefix>-tab-bar-item.active` must use
+  `.selected`.
 
 ### Removed
 
