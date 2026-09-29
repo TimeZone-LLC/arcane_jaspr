@@ -470,6 +470,18 @@ class Win95Css {
   border: 1px solid var(--destructive);
   box-shadow: var(--w95-raised);
 }
+/* Padded buttons have no fixed height, so border-box alone does not absorb the
+   ring: each padded size gives 1px of padding back on every side instead. Icon
+   sizes are fixed boxes, where border-box already keeps the footprint. */
+#arcane-root.arcane-theme-win95 .win95-button:is([data-variant="primary"], [data-variant="destructive"]):not([data-size^="icon"]) {
+  padding: calc(0.4rem - 1px) calc(0.9rem - 1px);
+}
+#arcane-root.arcane-theme-win95 .win95-button:is([data-variant="primary"], [data-variant="destructive"])[data-size="sm"] {
+  padding: calc(0.28rem - 1px) calc(0.65rem - 1px);
+}
+#arcane-root.arcane-theme-win95 .win95-button:is([data-variant="primary"], [data-variant="destructive"])[data-size="lg"] {
+  padding: calc(0.55rem - 1px) calc(1.2rem - 1px);
+}
 #arcane-root.arcane-theme-win95 .win95-button[data-variant="outline"] {
   background: var(--w95-face);
   color: var(--w95-face-text);

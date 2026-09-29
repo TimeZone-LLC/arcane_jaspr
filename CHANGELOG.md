@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Packed galleries no longer collapse to one sliver column after a framework
+  re-render rewrites item placements at an unchanged width. The measurement
+  pass now clears any item without a packed placement before it counts the
+  grid's columns.
 - Popovers, hover cards, select lists, menus, command palettes, dialogs,
   sheets and drawers keep their background, border and shadow wherever they
   are nested, so ShadCN submenus and lists inside cards are no longer

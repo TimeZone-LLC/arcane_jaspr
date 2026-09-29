@@ -22,6 +22,9 @@
 - Homepage and documentation links point to the live docs at
   https://timezone-llc.github.io/arcane_jaspr/ instead of the retired
   ArcaneArts Pages address.
+- Win95 primary and destructive buttons are the same height as the other
+  buttons of their size. Their 1px ring no longer adds 2px to the button;
+  padded sizes take that pixel back out of their padding.
 
 ### Changed
 

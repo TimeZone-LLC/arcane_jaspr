@@ -464,6 +464,25 @@ void main() {
       expect(primary, isNot(contains('inset 0 0 0 1px')));
     });
 
+    test('ringed buttons give the ring back in padding at every size', () {
+      // The 1px ring is a real border on primary and destructive buttons, so
+      // each size takes 1px off its padding to keep the normal footprint.
+      const String ringed =
+          '#arcane-root.arcane-theme-win95 .win95-button:is([data-variant="primary"], [data-variant="destructive"])';
+      expect(
+        _rule(css, '$ringed:not([data-size^="icon"]) {'),
+        contains('padding: calc(0.4rem - 1px) calc(0.9rem - 1px);'),
+      );
+      expect(
+        _rule(css, '$ringed[data-size="sm"] {'),
+        contains('padding: calc(0.28rem - 1px) calc(0.65rem - 1px);'),
+      );
+      expect(
+        _rule(css, '$ringed[data-size="lg"] {'),
+        contains('padding: calc(0.55rem - 1px) calc(1.2rem - 1px);'),
+      );
+    });
+
     test('no blurred or alpha-composited shadow survives the theme', () {
       // componentCss is the sheet the theme itself owns; baseCss additionally
       // carries the core --shadow-* token block, which no Win95 rule spends.

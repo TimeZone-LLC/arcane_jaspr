@@ -678,6 +678,9 @@ class GalleryScripts {
     };
   }
 
+  // The grid-column value galleryPlacementStyle writes.
+  const PACKED_COLUMN = /^\d+ \/ span \d+$/;
+
   function resetPlacementsForMeasurement(
     elements,
     previousWidth,
@@ -685,7 +688,14 @@ class GalleryScripts {
   ) {
     const isFirstMeasurement = !Number.isFinite(previousWidth);
     const widthShrank = currentWidth < previousWidth - 0.5;
-    if (!isFirstMeasurement && !widthShrank) {
+    // A framework re-sync (Jaspr diffing) can rewrite an item's inline style
+    // back to its rendered span-only form at an unchanged width. Those spans
+    // can also address implicit tracks, so treat any item without a packed
+    // `N / span M` placement like a first measurement.
+    const placementReplaced = elements.some(
+      (element) => !PACKED_COLUMN.test(element.style.gridColumn || ''),
+    );
+    if (!isFirstMeasurement && !widthShrank && !placementReplaced) {
       return false;
     }
 
