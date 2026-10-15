@@ -2,7 +2,6 @@ import 'package:arcane_jaspr/flutter.dart';
 import 'package:jaspr/jaspr.dart' as jaspr;
 import 'package:jaspr/dom.dart' as dom;
 
-import '../../core/interaction/runtime/runtime.dart';
 import '../../core/theme_provider.dart';
 import '../../util/interactivity/arcane_scripts.dart';
 
@@ -64,10 +63,6 @@ class _ArcaneAppState extends State<ArcaneApp> {
     final String baseCss = stylesheet.baseCss;
     if (baseCss.isNotEmpty) {
       headElements.add(HeadElementData.style(baseCss));
-    }
-
-    if (widget.includeFallbackScripts) {
-      headElements.add(HeadElementData.style(arcaneInteractivityRuntimeCss));
     }
 
     // Build CSS classes: brightness + any stylesheet-specific classes

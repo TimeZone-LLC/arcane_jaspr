@@ -33,12 +33,16 @@ ArcaneStylesheet resolveDemoStylesheet(
   required Map<String, ArcaneStylesheet> neonStylesheets,
   required Map<String, ArcaneStylesheet> neubrutalismStylesheets,
   required Map<String, ArcaneStylesheet> win95Stylesheets,
+  required ArcaneStylesheet asciiStylesheet,
   required ArcaneStylesheet fallbackStylesheet,
 }) {
   web.Element? root = web.document.getElementById('arcane-root');
   String? storedStylesheetId = web.window.localStorage.getItem(
     'arcane-stylesheet-id',
   );
+  if (storedStylesheetId == 'ascii') {
+    return asciiStylesheet;
+  }
   if (storedStylesheetId == 'shadcn') {
     return _resolvePaletteStylesheet(
       'shadcn',
@@ -73,6 +77,9 @@ ArcaneStylesheet resolveDemoStylesheet(
   }
 
   if (root != null) {
+    if (root.classList.contains('kb-style-ascii')) {
+      return asciiStylesheet;
+    }
     if (root.classList.contains('kb-style-shadcn')) {
       return _resolvePaletteStylesheet(
         'shadcn',

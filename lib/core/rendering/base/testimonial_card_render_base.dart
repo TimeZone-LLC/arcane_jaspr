@@ -42,7 +42,7 @@ abstract class TestimonialCardRenderBase extends StatelessComponent {
         'color': 'var(--card-foreground)',
         'border': '1px solid var(--border)',
         if (props.showAccentBorder) 'border-color': accent,
-        'border-radius': '8px',
+        'border-radius': 'var(--radius-md)',
         'width': '100%',
       },
       <Map<String, String>?>[

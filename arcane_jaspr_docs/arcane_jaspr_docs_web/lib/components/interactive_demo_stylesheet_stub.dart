@@ -6,6 +6,7 @@ ArcaneStylesheet resolveDemoStylesheet(
   required Map<String, ArcaneStylesheet> neonStylesheets,
   required Map<String, ArcaneStylesheet> neubrutalismStylesheets,
   required Map<String, ArcaneStylesheet> win95Stylesheets,
+  required ArcaneStylesheet asciiStylesheet,
   required ArcaneStylesheet fallbackStylesheet,
 }) => parentStylesheet ?? fallbackStylesheet;
 

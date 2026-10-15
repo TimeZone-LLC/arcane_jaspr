@@ -1,8 +1,10 @@
 # Changelog
 
-## x.x.x
+## [6.0.0] - 2026-10-15
 
 ### Changed
+
+- Requires Arcane Jaspr 6.0.0.
 
 - The selected tab bar item carries `.selected`, and the bar and items also
   carry `arcane-tab-bar` and `arcane-tab-bar-item`.

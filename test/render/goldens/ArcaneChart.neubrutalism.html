@@ -1,9 +1,11 @@
 
     <div class="neubrutalism-chart" style="display: flex; flex-direction: column; gap: 0.875rem; padding: 1.25rem; border: var(--nb-border-thin, 2px) solid var(--nb-line, #000); background: var(--nb-paper, var(--card)); box-shadow: var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))">
-      <div style="display: flex; align-items: center; gap: 0.625rem">
-        <span style="width: 5rem; font-size: var(--font-size-xs); color: var(--muted-foreground)">a</span>
-        <div style="height: 14px; flex: 1; background: var(--nb-paper-soft, var(--card)); border: var(--nb-border-thin, 2px) solid var(--nb-line, #000); overflow: hidden"><div style="height: 100%; width: 100.00%; background: var(--primary)"></div></div>
-        <span style="font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); font-variant-numeric: tabular-nums; color: var(--foreground)">1</span>
+      <div class="arcane-chart-row" style="display: flex; align-items: center; gap: 0.625rem">
+        <span class="arcane-chart-label" style="width: 5rem; font-size: var(--font-size-xs); color: var(--muted-foreground)">a</span>
+        <div class="arcane-chart-track" style="height: 14px; flex: 1; background: var(--nb-paper-soft, var(--card)); border: var(--nb-border-thin, 2px) solid var(--nb-line, #000); overflow: hidden" aria-hidden="true">
+          <div class="arcane-chart-fill" style="height: 100%; width: 100.00%; background: var(--primary)"></div>
+        </div>
+        <span class="arcane-chart-value" style="font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); font-variant-numeric: tabular-nums; color: var(--foreground)">1</span>
       </div>
     </div>
   

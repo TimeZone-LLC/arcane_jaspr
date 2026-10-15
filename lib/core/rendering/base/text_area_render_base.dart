@@ -223,7 +223,7 @@ class DefaultTextAreaRenderer extends TextAreaRenderBase {
       'border': hasError
           ? '1px solid var(--destructive)'
           : '1px solid var(--input)',
-      'border-radius': '0.375rem',
+      'border-radius': 'var(--radius-sm)',
       'color': isReadOnly ? 'var(--muted-foreground)' : 'var(--foreground)',
       'caret-color': isReadOnly
           ? 'var(--muted-foreground)'

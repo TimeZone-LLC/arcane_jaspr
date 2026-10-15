@@ -53,48 +53,50 @@ abstract class ChartRenderBase extends StatelessComponent {
               .map((ChartPointProps point) => point.value)
               .reduce((num a, num b) => a > b ? a : b);
 
-    return dom.div(
-      classes: cssClass,
-      styles: dom.Styles(raw: rootStyles),
-      <Component>[
-        if (props.title != null)
-          dom.span(
-            styles: dom.Styles(raw: titleStyles),
-            <Component>[Component.text(props.title!)],
-          ),
-        if (props.description != null)
-          dom.span(
-            styles: dom.Styles(raw: descriptionStyles),
-            <Component>[Component.text(props.description!)],
-          ),
-        for (final ChartPointProps point in props.points)
-          dom.div(
-            styles: dom.Styles(raw: pointRowStyles),
-            <Component>[
-              dom.span(
-                styles: dom.Styles(raw: pointLabelStyles),
-                <Component>[Component.text(point.label)],
-              ),
-              dom.div(
-                styles: dom.Styles(raw: trackStyles),
-                <Component>[
-                  dom.div(
-                    styles: dom.Styles(
-                      raw: fillStyles(
-                        '${((point.value / maxValue) * 100).toStringAsFixed(2)}%',
-                      ),
+    return dom.div(classes: cssClass, styles: dom.Styles(raw: rootStyles), <
+      Component
+    >[
+      if (props.title != null)
+        dom.span(styles: dom.Styles(raw: titleStyles), <Component>[
+          Component.text(props.title!),
+        ]),
+      if (props.description != null)
+        dom.span(styles: dom.Styles(raw: descriptionStyles), <Component>[
+          Component.text(props.description!),
+        ]),
+      for (final ChartPointProps point in props.points)
+        dom.div(
+          classes: 'arcane-chart-row',
+          styles: dom.Styles(raw: pointRowStyles),
+          <Component>[
+            dom.span(
+              classes: 'arcane-chart-label',
+              styles: dom.Styles(raw: pointLabelStyles),
+              <Component>[Component.text(point.label)],
+            ),
+            dom.div(
+              classes: 'arcane-chart-track',
+              attributes: const <String, String>{'aria-hidden': 'true'},
+              styles: dom.Styles(raw: trackStyles),
+              <Component>[
+                dom.div(
+                  classes: 'arcane-chart-fill',
+                  styles: dom.Styles(
+                    raw: fillStyles(
+                      '${(maxValue > 0 ? (point.value / maxValue * 100).clamp(0, 100) : 0).toStringAsFixed(2)}%',
                     ),
-                    const <Component>[],
                   ),
-                ],
-              ),
-              dom.span(
-                styles: dom.Styles(raw: pointValueStyles),
-                <Component>[Component.text(point.value.toString())],
-              ),
-            ],
-          ),
-      ],
-    );
+                  const <Component>[],
+                ),
+              ],
+            ),
+            dom.span(
+              classes: 'arcane-chart-value',
+              styles: dom.Styles(raw: pointValueStyles),
+              <Component>[Component.text(point.value.toString())],
+            ),
+          ],
+        ),
+    ]);
   }
 }

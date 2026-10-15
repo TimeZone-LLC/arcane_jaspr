@@ -191,13 +191,13 @@ String _buildMarkdown({
   lines.add('# Component Catalog');
   lines.add('');
   lines.add(
-    'This page is generated from the current `package:arcane_jaspr/arcane_jaspr.dart` and `package:arcane_jaspr/html.dart` exports.',
+    'This page combines the live demo registry with the current `package:arcane_jaspr/arcane_jaspr.dart` and `package:arcane_jaspr/html.dart` exports. Try every live example in the [Ascii component lab](/ascii#component-lab); examples outside the primary import include their module import.',
   );
   lines.add('');
   lines.add('## Snapshot');
   lines.add('');
   lines.add('- Generated on `$generatedDate`');
-  lines.add('- Primary live component demos: `${liveDemoEntries.length}`');
+  lines.add('- Live component demos: `${liveDemoEntries.length}`');
   lines.add('- Primary support component modules: `${supportEntries.length}`');
   lines.add('- Main-surface foundation exports: `${foundationEntries.length}`');
   lines.add('- Total main-surface export modules: `$mainSurfaceCount`');
@@ -207,7 +207,7 @@ String _buildMarkdown({
     'Use `package:arcane_jaspr/arcane_jaspr.dart` for the Flutter-first surface. Use `package:arcane_jaspr/html.dart` and `package:arcane_jaspr/web.dart` only when you intentionally need lower-level HTML or raw Jaspr escape hatches.',
   );
   lines.add('');
-  lines.add('## Primary Live Components (${liveDemoEntries.length})');
+  lines.add('## Live Components (${liveDemoEntries.length})');
   lines.add('');
   lines.add('| Component | Symbol | Source |');
   lines.add('|---|---|---|');

@@ -1,0 +1,6 @@
+# Resolve the two unpublished workspace packages during local validation.
+dependency_overrides:
+  arcane_jaspr:
+    path: ../..
+  arcane_lexicon:
+    path: ../../../arcane_lexicon

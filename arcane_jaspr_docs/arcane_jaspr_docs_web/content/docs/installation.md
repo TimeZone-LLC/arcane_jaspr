@@ -39,10 +39,11 @@ dart pub global activate jaspr_cli
 
 ```yaml
 dependencies:
-  arcane_jaspr: ^4.0.0
-  arcane_jaspr_neon: ^4.0.0
-  arcane_jaspr_neubrutalism: ^4.0.0
-  arcane_jaspr_shadcn: ^4.0.0
+  arcane_jaspr: ^6.0.0
+  arcane_jaspr_ascii: ^1.0.0
+  arcane_jaspr_neon: ^6.0.0
+  arcane_jaspr_neubrutalism: ^6.0.0
+  arcane_jaspr_shadcn: ^6.0.0
 ```
 
 ```bash
@@ -53,6 +54,7 @@ dart pub get
 
 ```dart
 import 'package:arcane_jaspr/arcane_jaspr.dart';
+import 'package:arcane_jaspr_ascii/arcane_jaspr_ascii.dart';
 import 'package:arcane_jaspr_neon/arcane_jaspr_neon.dart';
 import 'package:arcane_jaspr_neubrutalism/arcane_jaspr_neubrutalism.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
@@ -69,10 +71,12 @@ import 'package:arcane_jaspr/web.dart';
 
 ```dart
 import 'package:arcane_jaspr/arcane_jaspr.dart';
+import 'package:arcane_jaspr_ascii/arcane_jaspr_ascii.dart';
 import 'package:arcane_jaspr_neon/arcane_jaspr_neon.dart';
 import 'package:arcane_jaspr_neubrutalism/arcane_jaspr_neubrutalism.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
 
+const ArcaneStylesheet asciiStylesheet = AsciiStylesheet();
 const ArcaneStylesheet shadcnStylesheet = ShadcnStylesheet(
   theme: ShadcnTheme.midnight,
 );
@@ -82,7 +86,7 @@ const ArcaneStylesheet neonStylesheet = NeonStylesheet(
 const ArcaneStylesheet neubrutalismStylesheet = NeubrutalismStylesheet(
   theme: NeubrutalismTheme.yellow,
 );
-const ArcaneStylesheet selectedStylesheet = shadcnStylesheet;
+const ArcaneStylesheet selectedStylesheet = asciiStylesheet;
 
 class App extends StatelessWidget {
   const App({super.key});

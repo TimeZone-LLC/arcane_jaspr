@@ -1,9 +1,11 @@
 # Changelog
 
-## x.x.x
+## [6.0.0] - 2026-10-15
 
 ### Fixed
 
+- Charts and labeled separators reserve their full width in centered layouts.
+- Slot counters settle immediately when reduced motion is requested, pause in hidden tabs, and release their preference listeners when removed.
 - Disabled check boxes dim once, at the wrapper, instead of twice.
 - A one-line check box centres its box on the label.
 - Multi-select option boxes use the 3:1 `--shadcn-control-border`.
@@ -14,6 +16,10 @@
   ArcaneArts Pages address.
 - Tab lists and triggers declare `box-sizing: border-box`, so the 36px list
   and 29px triggers hold on hosts without a border-box reset.
+
+### Changed
+
+- Requires Arcane Jaspr 6.0.0.
 
 ## 5.0.0 - 2026-09-23
 

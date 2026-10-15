@@ -294,7 +294,7 @@ class ArcaneSelect extends StatelessWidget {
           'border': hasError
               ? '1px solid var(--destructive)'
               : '1px solid var(--input)',
-          'border-radius': '0.375rem',
+          'border-radius': 'var(--radius-sm)',
           'color': 'var(--foreground)',
           'transition':
               'color 150ms ease, border-color 150ms ease, box-shadow 150ms ease',

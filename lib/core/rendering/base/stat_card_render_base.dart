@@ -38,7 +38,7 @@ abstract class StatCardRenderBase extends StatelessComponent {
         'background-color': 'var(--card)',
         'color': 'var(--card-foreground)',
         'border': '1px solid var(--border)',
-        'border-radius': '8px',
+        'border-radius': 'var(--radius-md)',
         'width': '100%',
       },
       <Map<String, String>?>[

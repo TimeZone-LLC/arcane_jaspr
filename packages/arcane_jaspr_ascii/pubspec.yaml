@@ -1,0 +1,18 @@
+name: arcane_jaspr_ascii
+description: Paper-and-ink Ascii components, datum lines, and text motion for Arcane Jaspr.
+version: 1.0.0
+homepage: https://timezone-llc.github.io/arcane_jaspr/
+repository: https://github.com/ArcaneArts/arcane_jaspr
+
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+
+dependencies:
+  arcane_jaspr: ^6.0.0
+  arcane_jaspr_shadcn: ^6.0.0
+  characters: ^1.4.0
+  jaspr: '>=0.23.1 <1.0.0'
+
+dev_dependencies:
+  jaspr_test: '>=0.23.1 <1.0.0'
+  lints: ^6.1.0

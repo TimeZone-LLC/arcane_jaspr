@@ -6,20 +6,20 @@ layout: kb
 
 # Component Catalog
 
-This page is generated from the current `package:arcane_jaspr/arcane_jaspr.dart` and `package:arcane_jaspr/html.dart` exports.
+This page combines the live demo registry with the current `package:arcane_jaspr/arcane_jaspr.dart` and `package:arcane_jaspr/html.dart` exports. Try every live example in the [Ascii component lab](/ascii#component-lab); examples outside the primary import include their module import.
 
 ## Snapshot
 
-- Generated on `August 31, 2026`
-- Primary live component demos: `66`
-- Primary support component modules: `61`
+- Generated on `October 14, 2026`
+- Live component demos: `83`
+- Primary support component modules: `50`
 - Main-surface foundation exports: `24`
 - Total main-surface export modules: `138`
 - Advanced HTML modules: `22`
 
 Use `package:arcane_jaspr/arcane_jaspr.dart` for the Flutter-first surface. Use `package:arcane_jaspr/html.dart` and `package:arcane_jaspr/web.dart` only when you intentionally need lower-level HTML or raw Jaspr escape hatches.
 
-## Primary Live Components (66)
+## Live Components (83)
 
 | Component | Symbol | Source |
 |---|---|---|
@@ -89,18 +89,29 @@ Use `package:arcane_jaspr/arcane_jaspr.dart` for the Flutter-first surface. Use 
 | `effects` | `Shadow` | `lib/util/style_types/effects.dart` |
 | `spacing` | `Gap` | `lib/util/style_types/spacing.dart` |
 | `typography-styles` | `Text` | `lib/component/typography/text.dart` |
+| `slot-counter` | `ArcaneSlotCounter` | `lib/component/view/slot_counter.dart` |
+| `spec-row` | `ArcaneSpecRow` | `lib/component/view/spec_row.dart` |
+| `time-picker` | `ArcaneTimePicker` | `lib/component/input/time_picker.dart` |
+| `scroll-rail` | `ArcaneScrollRail` | `lib/component/layout/scroll_rail.dart` |
+| `promo` | `ArcaneInlineHeroBanner` | `lib/component/promo/promo.dart` |
+| `cta-card` | `CtaCard` | `lib/component/card/cta_card.dart` |
+| `feature-card` | `FeatureCard` | `lib/component/card/feature_card.dart` |
+| `pricing-card` | `PricingCard` | `lib/component/card/pricing_card.dart` |
+| `stat-card` | `StatCard` | `lib/component/card/stat_card.dart` |
+| `testimonial-card` | `TestimonialCard` | `lib/component/card/testimonial_card.dart` |
+| `flexi-cards` | `ArcaneFlexiCards` | `lib/component/card/flexi_cards.dart` |
+| `flow` | `Wrap` | `lib/component/layout/flow.dart` |
+| `gutter` | `Gutter` | `lib/component/layout/gutter.dart` |
+| `gallery` | `ArcaneGallery` | `lib/component/collection/gallery.dart` |
+| `native-select` | `ArcaneNativeSelect` | `lib/component/input/native_select.dart` |
+| `check-list` | `ArcaneCheckList` | `lib/component/view/check_list.dart` |
+| `toast` | `ArcaneToast` | `lib/component/dialog/toast.dart` |
 
-## Primary Support Modules (61)
+## Primary Support Modules (50)
 
 | Symbol | Source |
 |---|---|
-| `CtaCard` | `lib/component/card/cta_card.dart` |
-| `FeatureCard` | `lib/component/card/feature_card.dart` |
-| `PricingCard` | `lib/component/card/pricing_card.dart` |
-| `StatCard` | `lib/component/card/stat_card.dart` |
-| `TestimonialCard` | `lib/component/card/testimonial_card.dart` |
 | `Collection` | `lib/component/collection/collection.dart` |
-| `ArcaneGallery` | `lib/component/collection/gallery.dart` |
 | `ArcaneInfiniteCarousel` | `lib/component/collection/infinite_carousel.dart` |
 | `section` | `lib/component/collection/section.dart` |
 | `ConfirmText` | `lib/component/dialog/confirm_text.dart` |
@@ -110,7 +121,6 @@ Use `package:arcane_jaspr/arcane_jaspr.dart` for the Flutter-first surface. Use 
 | `DialogEmail` | `lib/component/dialog/email.dart` |
 | `DialogText` | `lib/component/dialog/text.dart` |
 | `DialogTime` | `lib/component/dialog/time.dart` |
-| `ArcaneToast` | `lib/component/dialog/toast.dart` |
 | `ArcaneFieldMetadata` | `lib/component/form/field.dart` |
 | `ArcaneBoolField` | `lib/component/form/node/bool.dart` |
 | `ArcaneColorField` | `lib/component/form/node/color.dart` |
@@ -127,16 +137,12 @@ Use `package:arcane_jaspr/arcane_jaspr.dart` for the Flutter-first surface. Use 
 | `Selector` | `lib/component/input/selector.dart` |
 | `Carpet` | `lib/component/layout/carpet.dart` |
 | `FancyProgressBar` | `lib/component/layout/fancy_progress.dart` |
-| `Wrap` | `lib/component/layout/flow.dart` |
 | `FormHeader` | `lib/component/layout/form_header.dart` |
-| `Gutter` | `lib/component/layout/gutter.dart` |
 | `ArcanePage` | `lib/component/layout/page.dart` |
 | `RadioCards` | `lib/component/layout/radio_cards.dart` |
 | `ArcaneScaffold` | `lib/component/layout/scaffold.dart` |
-| `ArcaneScrollRail` | `lib/component/layout/scroll_rail.dart` |
 | `Section` | `lib/component/layout/section.dart` |
 | `TocEntry` | `lib/component/navigation/toc.dart` |
-| `promo` | `lib/component/promo/promo.dart` |
 | `Screen` | `lib/component/screen/abstract_screen.dart` |
 | `FillScreen` | `lib/component/screen/fill_screen.dart` |
 | `ArcaneNotFoundAction` | `lib/component/screen/not_found.dart` |
@@ -150,7 +156,7 @@ Use `package:arcane_jaspr/arcane_jaspr.dart` for the Flutter-first surface. Use 
 | `CardSection` | `lib/component/view/card_section.dart` |
 | `CenterBody` | `lib/component/view/center_body.dart` |
 | `Expander` | `lib/component/view/expander.dart` |
-| `ArcaneIcon` | `lib/component/view/icon.dart` |
+| `ArcaneGlyph` | `lib/component/view/icon.dart` |
 | `Image` | `lib/component/view/image.dart` |
 | `Logo` | `lib/component/view/logo.dart` |
 | `Markdown` | `lib/component/view/markdown.dart` |
@@ -167,7 +173,7 @@ Use `package:arcane_jaspr/arcane_jaspr.dart` for the Flutter-first surface. Use 
 | `ButtonProps` | `lib/core/props/button_props.dart` |
 | `ComponentRenderers` | `lib/core/renderers.dart` |
 | `ArcaneThemeProvider` | `lib/core/theme_provider.dart` |
-| `StatelessWidget` | `lib/flutter.dart` |
+| `State` | `lib/flutter.dart` |
 | `card` | `lib/mods/card.dart` |
 | `auth_guard_export` | `lib/provider/auth_guard_export.dart` |
 | `auth_provider_export` | `lib/provider/auth_provider_export.dart` |

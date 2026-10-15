@@ -10,15 +10,16 @@ See [Flutter authoring](doc/flutter_authoring.md) for supported conventions and
 
 ```yaml
 dependencies:
-  arcane_jaspr: ^4.0.0
-  arcane_jaspr_shadcn: ^4.0.0
-  arcane_jaspr_neon: ^4.0.0
-  arcane_jaspr_neubrutalism: ^4.0.0
-  arcane_jaspr_win95: ^4.0.0
+  arcane_jaspr: ^6.0.0
+  arcane_jaspr_ascii: ^1.0.0
+  arcane_jaspr_shadcn: ^6.0.0
+  arcane_jaspr_neon: ^6.0.0
+  arcane_jaspr_neubrutalism: ^6.0.0
+  arcane_jaspr_win95: ^6.0.0
 ```
 
 `arcane_jaspr` is the core package. Add one or more renderer packages
-(`arcane_jaspr_shadcn`, `arcane_jaspr_neon`, `arcane_jaspr_neubrutalism`, `arcane_jaspr_win95`) for the
+(`arcane_jaspr_ascii`, `arcane_jaspr_shadcn`, `arcane_jaspr_neon`, `arcane_jaspr_neubrutalism`, `arcane_jaspr_win95`) for the
 themes you want; pick a stylesheet from one of them at runtime.
 
 ## Demo
@@ -43,16 +44,18 @@ Use the primary import for normal app code:
 
 ```dart
 import 'package:arcane_jaspr/arcane_jaspr.dart';
+import 'package:arcane_jaspr_ascii/arcane_jaspr_ascii.dart';
 import 'package:arcane_jaspr_neon/arcane_jaspr_neon.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
 
+const ArcaneStylesheet asciiStylesheet = AsciiStylesheet();
 const ArcaneStylesheet shadcnStylesheet = ShadcnStylesheet(
   theme: ShadcnTheme.midnight,
 );
 const ArcaneStylesheet neonStylesheet = NeonStylesheet(
   theme: NeonTheme.green,
 );
-const ArcaneStylesheet selectedStylesheet = shadcnStylesheet;
+const ArcaneStylesheet selectedStylesheet = asciiStylesheet;
 ```
 
 Only reach for the advanced layers when you need them:
@@ -66,6 +69,7 @@ import 'package:arcane_jaspr/web.dart';
 
 ```dart
 import 'package:arcane_jaspr/arcane_jaspr.dart';
+import 'package:arcane_jaspr_ascii/arcane_jaspr_ascii.dart';
 import 'package:arcane_jaspr_neon/arcane_jaspr_neon.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
 

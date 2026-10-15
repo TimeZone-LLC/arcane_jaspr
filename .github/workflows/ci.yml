@@ -29,6 +29,7 @@ jobs:
           - package: "."
             analyze_paths: bin lib test tool
           - package: packages/arcane_jaspr_shadcn
+          - package: packages/arcane_jaspr_ascii
           - package: packages/arcane_jaspr_neon
           - package: packages/arcane_jaspr_neubrutalism
           - package: packages/arcane_jaspr_win95
@@ -79,6 +80,12 @@ jobs:
           else
             echo "No *_test.dart files found; skipping dart test."
           fi
+
+      - name: Browser tests
+        if: matrix.package == '.'
+        env:
+          CHROME_EXECUTABLE: google-chrome
+        run: find test -name '*_browser_test.dart' -type f -print0 | xargs -0 dart test --platform chrome
 
       - name: Publish dry run
         if: matrix.skip_publish != true

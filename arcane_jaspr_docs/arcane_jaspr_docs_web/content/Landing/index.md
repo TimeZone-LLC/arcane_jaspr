@@ -13,7 +13,7 @@ hidden: true
     <h1>Arcane Jaspr documentation.</h1>
     <p>Start with the authoring model, open the component catalog, or follow the styling system from tokens to finished pages.</p>
     <div class="kb-landing-actions">
-      <a class="kb-landing-primary" href="/docs/quick-start">Quick Start</a>
+      <a class="kb-landing-primary" href="/ascii">Explore Ascii</a>
       <a class="kb-landing-secondary" href="/docs/components-catalog">Browse Components</a>
     </div>
   </div>
@@ -35,7 +35,7 @@ hidden: true
         </div>
         <div class="kb-landing-terminal-row">
           <span class="kb-landing-terminal-label">Theme</span>
-          <span class="kb-landing-terminal-value">Shadcn, Neon, and Neubrutalism each get their own visual language.</span>
+          <span class="kb-landing-terminal-value">Ascii, Shadcn, Neon, Neubrutalism, and Windows 95 share one component API.</span>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import 'package:arcane_jaspr/arcane_jaspr.dart';
+import 'package:arcane_jaspr_ascii/arcane_jaspr_ascii.dart';
 import 'package:arcane_jaspr_neon/arcane_jaspr_neon.dart';
 import 'package:arcane_jaspr_neubrutalism/arcane_jaspr_neubrutalism.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
@@ -47,11 +48,19 @@ const Map<String, ArcaneStylesheet> clientWin95Stylesheets =
       'desert': Win95Stylesheet(theme: Win95Theme.desert),
       'rose': Win95Stylesheet(theme: Win95Theme.rose),
     };
-const ArcaneStylesheet selectedClientStylesheet = ShadcnStylesheet(
-  theme: ShadcnTheme.midnight,
-);
+const ArcaneStylesheet selectedClientStylesheet = AsciiStylesheet();
 
 @client
+class InteractiveDemoPage extends StatelessWidget {
+  final String componentType;
+
+  const InteractiveDemoPage({required this.componentType, super.key});
+
+  @override
+  Widget build(BuildContext context) =>
+      InteractiveDemo(componentType: componentType);
+}
+
 class InteractiveDemo extends StatefulWidget {
   final String componentType;
 
@@ -107,6 +116,7 @@ class _InteractiveDemoState extends State<InteractiveDemo> {
       neonStylesheets: clientNeonStylesheets,
       neubrutalismStylesheets: clientNeubrutalismStylesheets,
       win95Stylesheets: clientWin95Stylesheets,
+      asciiStylesheet: const AsciiStylesheet(),
       fallbackStylesheet: selectedClientStylesheet,
     );
     Brightness brightness = resolveDemoBrightness(
@@ -234,7 +244,8 @@ const String _previewScopeCss = '''
 
 .arcane-demo-preview-scope {
   position: relative;
-  overflow: hidden;
+  z-index: 1;
+  overflow: visible;
   isolation: isolate;
   min-height: 180px;
   border-radius: var(--radius);
@@ -292,10 +303,6 @@ const String _previewScopeCss = '''
 .arcane-demo-preview-scope .arcane-command-dialog {
   max-width: min(640px, calc(100% - 2rem)) !important;
   max-height: calc(100% - 2rem) !important;
-}
-
-.arcane-demo-preview-scope .arcane-context-menu {
-  position: absolute !important;
 }
 
 .arcane-demo-code {

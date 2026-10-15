@@ -80,7 +80,9 @@ class ArcaneSkeletonCard extends StatelessWidget {
         raw: {
           'background-color': 'var(--card)',
           'border': '1px solid var(--border)',
-          'border-radius': '0.5rem',
+          'border-radius': 'var(--radius-md)',
+          'width': '100%',
+          'box-sizing': 'border-box',
           'padding': '24px',
         },
       ),

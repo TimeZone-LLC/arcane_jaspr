@@ -6,6 +6,8 @@
 
 import 'package:jaspr/client.dart';
 
+import 'package:arcane_neon_web/components/ascii_showcase.dart'
+    deferred as _ascii_showcase;
 import 'package:arcane_neon_web/components/interactive_demo.dart'
     deferred as _interactive_demo;
 import 'package:jaspr_content/components/_internal/tab_bar.dart'
@@ -29,8 +31,12 @@ import 'package:jaspr_content/components/_internal/tab_bar.dart'
 /// ```
 ClientOptions get defaultClientOptions => ClientOptions(
   clients: {
+    'ascii_showcase': ClientLoader(
+      (p) => _ascii_showcase.AsciiShowcase(),
+      loader: _ascii_showcase.loadLibrary,
+    ),
     'interactive_demo': ClientLoader(
-      (p) => _interactive_demo.InteractiveDemo(
+      (p) => _interactive_demo.InteractiveDemoPage(
         componentType: p['componentType'] as String,
       ),
       loader: _interactive_demo.loadLibrary,

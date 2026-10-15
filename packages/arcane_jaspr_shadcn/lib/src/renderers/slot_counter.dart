@@ -4,6 +4,7 @@ import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/props/slot_counter_props.dart';
+import 'package:arcane_jaspr_shadcn/src/motion/motion_observer.dart';
 
 /// ShadCN Slot Counter renderer (stateful with animation).
 class ShadcnSlotCounter extends StatefulComponent {
@@ -23,10 +24,12 @@ class _ShadcnSlotCounterState extends State<ShadcnSlotCounter> {
   Timer? _spinTimer;
   Timer? _pauseTimer;
   int _spinCount = 0;
+  late final MotionObserver _motion;
 
   @override
   void initState() {
     super.initState();
+    _motion = MotionObserver(_onMotionChanged);
     if (component.props.fixedValue != null) {
       _currentValue = component.props.fixedValue!;
       _targetValue = component.props.fixedValue!;
@@ -43,7 +46,24 @@ class _ShadcnSlotCounterState extends State<ShadcnSlotCounter> {
   void dispose() {
     _spinTimer?.cancel();
     _pauseTimer?.cancel();
+    _motion.dispose();
     super.dispose();
+  }
+
+  void _onMotionChanged(bool allowed) {
+    _spinTimer?.cancel();
+    _pauseTimer?.cancel();
+    if (!allowed) {
+      if (_isSpinning) {
+        setState(() {
+          _currentValue = _targetValue;
+          _isSpinning = false;
+        });
+        component.props.onValueChange?.call(_currentValue);
+      }
+      return;
+    }
+    _scheduleNextSpin();
   }
 
   int _generateRandomValue() {
@@ -54,7 +74,11 @@ class _ShadcnSlotCounterState extends State<ShadcnSlotCounter> {
   }
 
   void _scheduleNextSpin() {
-    if (component.props.fixedValue != null) return;
+    if (component.props.fixedValue != null ||
+        !component.props.autoStart ||
+        !_motion.canAnimate) {
+      return;
+    }
 
     final pauseMs =
         (component.props.basePauseSeconds * 1000) +
@@ -66,6 +90,9 @@ class _ShadcnSlotCounterState extends State<ShadcnSlotCounter> {
   }
 
   void _startSpinning() {
+    if (!_motion.canAnimate || !mounted) {
+      return;
+    }
     _targetValue = _generateRandomValue();
     _spinCount = 0;
     final totalSpinUpdates =

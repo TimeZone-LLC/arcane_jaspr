@@ -1,6 +1,6 @@
 # Changelog
 
-## x.x.x
+## [6.0.0] - 2026-10-15
 
 ### Fixed
 
@@ -27,6 +27,8 @@
   padded sizes take that pixel back out of their padding.
 
 ### Changed
+
+- Requires Arcane Jaspr 6.0.0.
 
 - The selected tab bar item presses in through
   `.win95-tab-bar-item.selected`, and the bar and items also carry

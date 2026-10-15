@@ -1,12 +1,14 @@
 # Changelog
 
-## x.x.x
+## [6.0.0] - 2026-10-15
 
 ### Fixed
 
 - Homepage and documentation links point to the live docs at https://timezone-llc.github.io/arcane_jaspr/ instead of the retired ArcaneArts Pages address.
 
 ### Changed
+
+- Requires Arcane Jaspr 6.0.0.
 
 - The selected tab bar item is styled through `.neon-tab-bar-item.selected`,
   and the bar and items also carry `arcane-tab-bar` and `arcane-tab-bar-item`.

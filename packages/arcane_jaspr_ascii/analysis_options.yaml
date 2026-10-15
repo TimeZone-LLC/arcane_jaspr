@@ -1,0 +1,9 @@
+include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    - avoid_print
+    - avoid_relative_lib_imports
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_final_fields

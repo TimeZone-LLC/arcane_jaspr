@@ -32,6 +32,7 @@ Arcane Jaspr keeps the Flutter-like authoring surface in `package:arcane_jaspr` 
 
 | Stylesheet | Description |
 |------------|-------------|
+| `arcane_jaspr_ascii` / `AsciiStylesheet` | Paper and ink palettes, drawn datum lines, terminal typography, and character-based motion. [Explore Ascii](/ascii). |
 | `arcane_jaspr_shadcn` / `ShadcnStylesheet` | Quiet document/app chrome with compact spacing, subtle borders, and shadcn-style controls |
 | `arcane_jaspr_neon` / `NeonStylesheet` | Command/workbench chrome with stronger contrast, denser shell treatment, larger controls, and bolder radius |
 | `arcane_jaspr_neubrutalism` / `NeubrutalismStylesheet` | Comic-book pop-art chrome with thick black borders, hard-offset shadows, flat saturated colors, and press-down click feedback |

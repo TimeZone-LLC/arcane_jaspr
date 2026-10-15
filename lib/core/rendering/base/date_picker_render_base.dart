@@ -107,6 +107,7 @@ abstract class DatePickerRenderBase extends StatelessComponent {
         'type': 'button',
         'aria-haspopup': 'dialog',
         'aria-controls': popoverId,
+        'aria-expanded': '${props.isOpen}',
         'data-arcane-placeholder': props.placeholder ?? '',
       },
     ]);
@@ -116,7 +117,8 @@ abstract class DatePickerRenderBase extends StatelessComponent {
         surface: 'popover',
         id: popoverId,
         anchorId: triggerAnchorId,
-        anchorPlacement: 'bottom-start',
+        anchorPlacement: 'bottom',
+        anchorAlign: 'start',
         anchorOffset: anchorOffset,
         focusTrap: false,
         initiallyOpen: props.isOpen,
@@ -142,7 +144,10 @@ abstract class DatePickerRenderBase extends StatelessComponent {
           },
           events: <String, EventCallback>{
             if (!props.disabled && props.onToggle != null)
-              'click': (_) => props.onToggle?.call(),
+              'click': (event) {
+                event.stopPropagation();
+                props.onToggle?.call();
+              },
           },
           styles: dom.Styles(
             raw: <String, String>{
@@ -195,6 +200,14 @@ abstract class DatePickerRenderBase extends StatelessComponent {
         dom.div(
           classes: dropdownClasses,
           attributes: popoverAttrs,
+          events: <String, EventCallback>{
+            if (props.onToggle != null)
+              'arcane:close': (_) {
+                if (props.isOpen) {
+                  props.onToggle?.call();
+                }
+              },
+          },
           styles: dom.Styles(raw: dropdownStyles),
           <Component>[
             if (props.calendarProps != null)

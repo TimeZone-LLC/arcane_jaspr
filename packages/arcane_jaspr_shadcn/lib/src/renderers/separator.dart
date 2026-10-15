@@ -42,6 +42,8 @@ class ShadcnSeparator extends SeparatorRenderBase {
   @override
   Map<String, String> labeledContainerStyles(String margin) => <String, String>{
     'display': 'flex',
+    'width': '100%',
+    'min-width': '0',
     'align-items': 'center',
     'gap': 'var(--space-4)',
     'margin': '$margin 0',
@@ -74,6 +76,7 @@ class ShadcnSeparator extends SeparatorRenderBase {
           'border': 'none',
           'flex-shrink': '0',
           'height': thickness,
+          'width': '100%',
           ...backgroundStyle(color),
           ...?props.decoration?.universalStyles(),
           ...?props.styles?.toMap(),

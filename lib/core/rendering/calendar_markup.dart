@@ -89,7 +89,10 @@ Component _calendarHeader(
         ]),
         events: <String, EventCallback>{
           if (props.onPreviousMonth != null)
-            'click': (_) => props.onPreviousMonth?.call(),
+            'click': (event) {
+              event.stopPropagation();
+              props.onPreviousMonth?.call();
+            },
         },
       ),
       dom.div(
@@ -107,7 +110,10 @@ Component _calendarHeader(
         ]),
         events: <String, EventCallback>{
           if (props.onNextMonth != null)
-            'click': (_) => props.onNextMonth?.call(),
+            'click': (event) {
+              event.stopPropagation();
+              props.onNextMonth?.call();
+            },
         },
       ),
     ],
@@ -132,7 +138,10 @@ Component _todayButton(
       ]),
       events: <String, EventCallback>{
         if (props.onGoToToday != null)
-          'click': (_) => props.onGoToToday?.call(),
+          'click': (event) {
+            event.stopPropagation();
+            props.onGoToToday?.call();
+          },
       },
     ),
   ], classes: 'arcane-calendar-today-row');
@@ -238,7 +247,10 @@ Component _dayButton(
     },
     events: <String, EventCallback>{
       if (!disabled && props.onSelectDate != null)
-        'click': (_) => props.onSelectDate?.call(date),
+        'click': (event) {
+          event.stopPropagation();
+          props.onSelectDate?.call(date);
+        },
     },
   );
 }
@@ -254,7 +266,10 @@ String _dayClasses(
   required bool rangeEnd,
   required bool pending,
 }) {
-  final List<String> classes = <String>['arcane-calendar-day', dayButtonClasses];
+  final List<String> classes = <String>[
+    'arcane-calendar-day',
+    dayButtonClasses,
+  ];
   if (!inMonth) classes.add('arcane-calendar-day-other-month');
   if (disabled) classes.add('arcane-calendar-day-disabled');
   if (today) classes.add('arcane-calendar-day-today');

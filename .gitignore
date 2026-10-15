@@ -40,6 +40,8 @@ analysis_benchmark.json
 **/generated_plugin_registrant.dart
 .packages
 pubspec_overrides.yaml
+!packages/arcane_jaspr_ascii/pubspec_overrides.yaml
+!packages/arcane_jaspr_kb/pubspec_overrides.yaml
 !packages/arcane_jaspr_neon/pubspec_overrides.yaml
 !packages/arcane_jaspr_neubrutalism/pubspec_overrides.yaml
 !packages/arcane_jaspr_shadcn/pubspec_overrides.yaml

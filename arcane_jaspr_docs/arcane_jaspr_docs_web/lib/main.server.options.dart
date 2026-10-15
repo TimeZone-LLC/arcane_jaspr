@@ -11,6 +11,8 @@ import 'package:arcane_jaspr/component/collection/infinite_carousel.dart'
     as _infinite_carousel;
 import 'package:arcane_jaspr/component/form/field.dart' as _field;
 import 'package:arcane_jaspr/component/view/avatar.dart' as _avatar;
+import 'package:arcane_neon_web/components/ascii_showcase.dart'
+    as _ascii_showcase;
 import 'package:arcane_neon_web/components/interactive_demo.dart'
     as _interactive_demo;
 import 'package:jaspr_content/components/_internal/tab_bar.dart' as _tab_bar;
@@ -35,10 +37,13 @@ import 'package:jaspr_content/components/tabs.dart' as _tabs;
 ServerOptions get defaultServerOptions => ServerOptions(
   clientId: 'main.client.dart.js',
   clients: {
-    _interactive_demo.InteractiveDemo:
-        ClientTarget<_interactive_demo.InteractiveDemo>(
+    _ascii_showcase.AsciiShowcase: ClientTarget<_ascii_showcase.AsciiShowcase>(
+      'ascii_showcase',
+    ),
+    _interactive_demo.InteractiveDemoPage:
+        ClientTarget<_interactive_demo.InteractiveDemoPage>(
           'interactive_demo',
-          params: __interactive_demoInteractiveDemo,
+          params: __interactive_demoInteractiveDemoPage,
         ),
     _tab_bar.TabBar: ClientTarget<_tab_bar.TabBar>(
       'jaspr_content:tab_bar',
@@ -57,8 +62,8 @@ ServerOptions get defaultServerOptions => ServerOptions(
   ],
 );
 
-Map<String, Object?> __interactive_demoInteractiveDemo(
-  _interactive_demo.InteractiveDemo c,
+Map<String, Object?> __interactive_demoInteractiveDemoPage(
+  _interactive_demo.InteractiveDemoPage c,
 ) => {'componentType': c.componentType};
 Map<String, Object?> __tab_barTabBar(_tab_bar.TabBar c) => {
   'initialValue': c.initialValue,

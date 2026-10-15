@@ -2,6 +2,7 @@
 library;
 
 import 'package:arcane_lexicon/arcane_lexicon.dart' hide runApp;
+import 'package:arcane_jaspr_ascii/arcane_jaspr_ascii.dart';
 import 'package:arcane_jaspr_neon/arcane_jaspr_neon.dart';
 import 'package:arcane_jaspr_neubrutalism/arcane_jaspr_neubrutalism.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
@@ -9,8 +10,9 @@ import 'package:arcane_jaspr_win95/arcane_jaspr_win95.dart';
 import 'package:arcane_jaspr_kb/arcane_jaspr_kb.dart';
 import 'package:jaspr/server.dart';
 
-import 'components/interactive_demo.dart';
-import 'main.server.options.dart';
+import 'package:arcane_neon_web/components/ascii_showcase.dart';
+import 'package:arcane_neon_web/components/interactive_demo.dart';
+import 'package:arcane_neon_web/main.server.options.dart';
 
 /// Base URL for the site (for GitHub Pages subdirectory hosting)
 const String baseUrl = String.fromEnvironment('BASE_URL', defaultValue: '');
@@ -73,8 +75,10 @@ const ArcaneStylesheet win95Eggplant = Win95Stylesheet(
 const ArcaneStylesheet win95Desert = Win95Stylesheet(theme: Win95Theme.desert);
 const ArcaneStylesheet win95Rose = Win95Stylesheet(theme: Win95Theme.rose);
 
-const ArcaneStylesheet selectedStylesheet = win95Standard;
+const ArcaneStylesheet asciiStylesheet = AsciiStylesheet();
+const ArcaneStylesheet selectedStylesheet = asciiStylesheet;
 const List<KBStylesheetOption> stylesheetOptions = <KBStylesheetOption>[
+  KBStylesheetOption(id: 'ascii', label: 'Ascii', stylesheet: asciiStylesheet),
   KBStylesheetOption(
     id: 'win95',
     label: 'Windows 95',
@@ -289,6 +293,7 @@ void main() async {
         paletteSwitcherEnabled: true,
         pageNavEnabled: true,
         headerLinks: const <NavLink>[
+          NavLink(label: 'Ascii', href: '/ascii'),
           NavLink(label: 'Docs', href: '/docs'),
           NavLink(label: 'Components', href: '/docs/components/accordion'),
           NavLink(label: 'Styling', href: '/styling'),
@@ -303,8 +308,9 @@ void main() async {
       ),
       stylesheet: selectedStylesheet,
       stylesheetOptions: stylesheetOptions,
-      demoBuilder: (String componentType) =>
-          InteractiveDemo(componentType: componentType),
+      demoBuilder: (String componentType) => componentType == 'ascii-showcase'
+          ? const AsciiShowcase()
+          : InteractiveDemoPage(componentType: componentType),
     ),
   );
 }

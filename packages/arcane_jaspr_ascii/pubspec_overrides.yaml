@@ -1,0 +1,5 @@
+dependency_overrides:
+  arcane_jaspr:
+    path: ../../
+  arcane_jaspr_shadcn:
+    path: ../arcane_jaspr_shadcn

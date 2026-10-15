@@ -5,10 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [x.x.x]
+## [6.0.0] - 2026-10-15
+
+### Added
+
+- The `arcane_jaspr_ascii` renderer package supplies paper-and-ink light and dark themes for every component family, with datum lines, bracketed controls, accessible text motion, and reduced-motion support.
+- The documentation's `/ascii` workbench presents replayable text and datum specimens, adjustable motion, and the full interactive component catalog; Ascii is the default selectable documentation theme.
 
 ### Fixed
 
+- Switching themes in the Ascii workbench rebuilds each demo once through a single client island.
+- Hydrated calendars retain their seven-column layout and selection states when fallback scripts are disabled; structural interaction CSS is always included with the stylesheet.
+- Hydrated date pickers anchor beside their trigger, open and reopen with one click, synchronize dismissal with component state, and advance calendar months once per action.
+- Charts keep visible proportional bars inside centered layouts and render zero-value datasets without invalid widths.
+- Native selects, card actions, text areas, and skeleton cards follow the active theme's corner tokens.
+- Skeleton cards and labeled separators retain their full width inside centered layouts.
+- ShadCN and Ascii slot counters settle when reduced motion is requested, pause in hidden tabs, and release preference listeners on removal.
 - Packed galleries no longer collapse to one sliver column after a framework
   re-render rewrites item placements at an unchanged width. The measurement
   pass now clears any item without a packed placement before it counts the

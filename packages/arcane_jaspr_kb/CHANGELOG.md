@@ -1,10 +1,14 @@
 # Changelog
 
-## x.x.x
+## [6.0.0] - 2026-10-15
 
 ### Fixed
 
 - Homepage and documentation links point to the live docs at https://timezone-llc.github.io/arcane_jaspr/ instead of the retired ArcaneArts Pages address.
+
+### Changed
+
+- Requires Arcane Jaspr 6.0.0 and Arcane Lexicon 4.0.0.
 
 ## 5.0.0 - 2026-09-23
 

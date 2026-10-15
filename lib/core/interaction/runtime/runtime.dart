@@ -56,7 +56,7 @@ const String _runtimeBaseCss = r'''
 [data-arcane-calendar] .arcane-calendar-today {
   background: transparent;
   border: 1px solid var(--border, rgba(127,127,127,0.2));
-  border-radius: 0.25rem;
+  border-radius: var(--radius-xs, 0.25rem);
   padding: 0.25rem 0.5rem;
   cursor: pointer;
   font: inherit;
@@ -98,7 +98,7 @@ const String _runtimeBaseCss = r'''
   aspect-ratio: 1 / 1;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-xs, 0.25rem);
   padding: 0;
   cursor: pointer;
   font: inherit;

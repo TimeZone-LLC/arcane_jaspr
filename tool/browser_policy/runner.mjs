@@ -46,8 +46,14 @@ const interactions = [
   {
     route: '/docs/components/alert-dialog/',
     action: 'click',
-    text: 'Delete project',
-    expectedText: 'This action cannot be undone.',
+    text: 'Show alert',
+    expectedText: 'This alert has one dismissal action.',
+  },
+  {
+    route: '/docs/components/alert-dialog/',
+    action: 'click',
+    text: 'Confirm action',
+    expectedText: 'Confirm or cancel this demonstration action.',
   },
   {
     route: '/docs/components/command/',
@@ -196,6 +202,19 @@ function auditDom(selector) {
       /(?:avatar|radio|checkbox|switch|slider|fab|icon-button)/i.test(className);
   };
   const violations = [];
+  const clientAnchors = [];
+  const comments = document.createNodeIterator(document.body, NodeFilter.SHOW_COMMENT);
+  for (let comment = comments.nextNode(); comment; comment = comments.nextNode()) {
+    const marker = comment.nodeValue ?? '';
+    if (/^@\S+/.test(marker)) {
+      if (clientAnchors.length) {
+        violations.push(['nested client boundary', clientAnchors.at(-1), marker]);
+      }
+      clientAnchors.push(marker);
+    } else if (/^\/@\S+/.test(marker)) {
+      clientAnchors.pop();
+    }
+  }
   const elements = [...document.querySelectorAll(selector)].filter(visible);
 
   for (const element of elements) {
@@ -273,7 +292,8 @@ function auditDom(selector) {
   const codeFont = code ? getComputedStyle(code).fontFamily : '';
   if (
     !bodyFont.includes('Akzidenz-GroteskPro') &&
-    !bodyFont.includes('Pixelated MS Sans Serif')
+    !bodyFont.includes('Pixelated MS Sans Serif') &&
+    !(fontRoot.classList.contains('arcane-theme-ascii') && bodyFont.includes('Hack'))
   ) {
     violations.push(['remote/unapproved body font', bodyFont]);
   }
@@ -351,11 +371,20 @@ async function selectTheme(page, stylesheet, mode) {
   await stylesheetSelect.selectOption(stylesheet, { force: true });
   await page.waitForFunction(({ stylesheet, mode }) => {
     const root = document.getElementById('arcane-root');
+    const enabledStyles = [...document.querySelectorAll(
+      'style[data-kb-stylesheet-id]',
+    )].filter((style) => style.media === 'all');
     return localStorage.getItem('arcane-stylesheet-id') === stylesheet &&
-      root?.classList.contains(`kb-style-${stylesheet}`);
+      root?.classList.contains(`kb-style-${stylesheet}`) &&
+      enabledStyles.length === 2 &&
+      enabledStyles.every((style) =>
+        style.getAttribute('data-kb-stylesheet-id') === stylesheet
+      );
   }, { stylesheet, mode });
   const currentMode = await page.evaluate(() =>
-    localStorage.getItem('arcane-theme-mode') ?? 'dark'
+    document.getElementById('arcane-root')?.classList.contains('dark')
+      ? 'dark'
+      : 'light'
   );
   if (currentMode !== mode) {
     const themeToggle = page.locator(
@@ -367,7 +396,8 @@ async function selectTheme(page, stylesheet, mode) {
   }
   await page.waitForFunction((mode) => {
     const root = document.getElementById('arcane-root');
-    return localStorage.getItem('arcane-theme-mode') === mode &&
+    const savedMode = localStorage.getItem('arcane-theme-mode');
+    return (savedMode === null || savedMode === mode) &&
       root?.classList.contains(mode);
   }, mode);
   await page.waitForTimeout(20);
@@ -464,6 +494,18 @@ async function runInteraction(failures, page, viewport, interaction) {
 }
 
 const mutations = [
+  {
+    name: 'nested client boundary',
+    expected: 'nested client boundary',
+    apply: () => {
+      const boundary = document.createElement('div');
+      boundary.dataset.arcaneMutation = 'true';
+      for (const marker of ['@outer', '@inner', '/@inner', '/@outer']) {
+        boundary.append(document.createComment(marker));
+      }
+      document.body.append(boundary);
+    },
+  },
   {
     name: 'gradient',
     expected: 'gradient/image',
@@ -599,7 +641,10 @@ async function runMutationSelfTests(failures, page, viewport) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({
+  headless: true,
+  executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE,
+});
 const failures = [];
 
 try {
@@ -615,6 +660,14 @@ try {
 
   for (const viewport of viewports) {
     const page = await browser.newPage({ viewport });
+    page.on('pageerror', (error) => {
+      failures.push({
+        viewport: viewport.name,
+        route: page.url(),
+        state: 'runtime',
+        violation: ['client runtime error', error.stack ?? error.message],
+      });
+    });
     page.setDefaultTimeout(5000);
     console.log(`Auditing ${routes.length} routes at ${viewport.width}px...`);
     for (const route of routes) {

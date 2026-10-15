@@ -1,5 +1,6 @@
 library;
 
+import 'package:arcane_jaspr/core/interaction/runtime/runtime.dart';
 import 'package:arcane_jaspr/stylesheets/base_css.dart';
 import 'package:arcane_jaspr/theme/index.dart';
 
@@ -29,6 +30,8 @@ $fontFaces
 ${CssGenerator.generateBoth(light: lightPalette, dark: darkPalette, fonts: fonts, radius: radius)}
 
 ${ArcaneBaseCss.shared}
+
+$arcaneInteractivityRuntimeCss
 
 ${componentCss()}
 ''';

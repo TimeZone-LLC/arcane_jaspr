@@ -11,6 +11,9 @@ class ShadcnChart extends ChartRenderBase {
     'display': 'flex',
     'flex-direction': 'column',
     'gap': '0.75rem',
+    'width': '100%',
+    'min-width': '0',
+    'box-sizing': 'border-box',
     'padding': '1rem',
     'border': '1px solid var(--border)',
     'border-radius': 'var(--radius-md)',
@@ -42,6 +45,7 @@ class ShadcnChart extends ChartRenderBase {
   @override
   Map<String, String> get pointLabelStyles => const <String, String>{
     'width': '5rem',
+    'flex-shrink': '0',
     'font-size': '0.75rem',
     'color': 'var(--muted-foreground)',
   };
@@ -50,6 +54,7 @@ class ShadcnChart extends ChartRenderBase {
   Map<String, String> get trackStyles => const <String, String>{
     'height': '0.5rem',
     'flex': '1',
+    'min-width': '1rem',
     'border-radius': 'var(--radius-md)',
     'background': 'var(--muted)',
     'overflow': 'hidden',
@@ -68,5 +73,7 @@ class ShadcnChart extends ChartRenderBase {
     'font-size': '0.75rem',
     'font-weight': '500',
     'color': 'var(--foreground)',
+    'min-width': '3ch',
+    'text-align': 'end',
   };
 }

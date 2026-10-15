@@ -1,6 +1,13 @@
 library;
 
 import 'package:arcane_jaspr/arcane_jaspr.dart';
+import 'package:jaspr/dom.dart' as dom;
+import 'package:arcane_jaspr/component/card/flexi_cards.dart';
+import 'package:arcane_jaspr/component/input/native_select.dart';
+import 'package:arcane_jaspr/component/input/time_picker.dart';
+import 'package:arcane_jaspr/component/view/check_list.dart';
+import 'package:arcane_jaspr/component/view/slot_counter.dart';
+import 'package:arcane_jaspr/component/view/spec_row.dart';
 
 typedef DemoPreviewBuilder = Widget Function(DemoStateController state);
 
@@ -142,9 +149,16 @@ List<DemoDefinition> demoDefinitions = <DemoDefinition>[
     componentType: 'alert-dialog',
     symbolName: 'ArcaneAlertDialog',
     sourcePath: 'lib/component/dialog/confirm.dart',
-    code: '''ArcaneBox(
+    code: '''ArcaneConfirmDialog(
+  title: 'Save example?',
+  message: 'Confirm or cancel this demonstration action.',
+  onConfirm: saveExample,
+  onCancel: closeDialog,
+)
+
+ArcaneBox(
   children: [
-    Button.destructive(label: 'Delete project', onPressed: openDialog),
+    Button.secondary(label: 'Show alert', onPressed: openDialog),
     if (dialogOpen)
       ArcaneAlertDialog(
         title: 'Delete Project?',
@@ -234,7 +248,10 @@ ArcaneBox(
     componentType: 'button-group',
     symbolName: 'ButtonGroup',
     sourcePath: 'lib/component/layout/button_panel.dart',
-    code: '''ButtonGroup(
+    code: '''ButtonPanel(children: actions)
+ArcaneToolbar(children: actions)
+
+ButtonGroup(
   children: [
     Button.secondary(label: 'Back', onPressed: () {}),
     Button.primary(label: 'Continue', onPressed: () {}),
@@ -468,11 +485,11 @@ ArcaneDatePicker(
     sourcePath: 'lib/component/menu/dropdown_menu.dart',
     code: '''ArcaneDropdownMenu(
   trigger: Button.secondary(label: 'Open menu', onPressed: () {}),
-  items: const [
-    MenuItemAction(label: 'Profile'),
-    MenuItemAction(label: 'Billing'),
-    MenuItemSeparator(),
-    MenuItemAction(label: 'Sign out', destructive: true),
+  items: [
+    MenuItemAction(label: 'Profile', onSelect: selectProfile),
+    MenuItemAction(label: 'Billing', onSelect: selectBilling),
+    const MenuItemSeparator(),
+    MenuItemAction(label: 'Sign out', destructive: true, onSelect: signOut),
   ],
 )''',
     previewBuilder: _buildDropdownMenuDemo,
@@ -653,8 +670,8 @@ ArcanePagination(
     width: Size.full,
   ),
   children: const [
-    ArcaneProgressBar(value: 68, showValue: true),
-    ArcaneProgressBar.success(value: 42),
+    ArcaneProgressBar(value: 0.68, showValue: true),
+    ArcaneProgressBar.success(value: 0.42),
   ],
 )''',
     previewBuilder: _buildProgressDemo,
@@ -1119,6 +1136,142 @@ ArcaneToggleGroup(
 )''',
     previewBuilder: _buildTypographyStylesDemo,
   ),
+  DemoDefinition(
+    componentType: 'slot-counter',
+    symbolName: 'ArcaneSlotCounter',
+    sourcePath: 'lib/component/view/slot_counter.dart',
+    code:
+        '''ArcaneSlotCounter(minValue: 10, maxValue: 90, suffix: 'ms', label: 'Response time')''',
+    previewBuilder: _buildSlotCounterDemo,
+  ),
+  DemoDefinition(
+    componentType: 'spec-row',
+    symbolName: 'ArcaneSpecRow',
+    sourcePath: 'lib/component/view/spec_row.dart',
+    code:
+        '''import 'package:arcane_jaspr/component/view/spec_row.dart';\n\nArcaneSpecRow(label: 'Storage', value: '128 GB')''',
+    previewBuilder: _buildSpecRowDemo,
+  ),
+  DemoDefinition(
+    componentType: 'time-picker',
+    symbolName: 'ArcaneTimePicker',
+    sourcePath: 'lib/component/input/time_picker.dart',
+    code:
+        '''ArcaneTimePicker(label: 'Start time', value: time, use24Hour: true, onChanged: setTime)''',
+    previewBuilder: _buildTimePickerDemo,
+  ),
+  DemoDefinition(
+    componentType: 'scroll-rail',
+    symbolName: 'ArcaneScrollRail',
+    sourcePath: 'lib/component/layout/scroll_rail.dart',
+    code:
+        '''ArcaneScrollRailLayout(rail: ArcaneScrollRail(children: sections), child: content)''',
+    previewBuilder: _buildScrollRailDemo,
+  ),
+  DemoDefinition(
+    componentType: 'promo',
+    symbolName: 'ArcaneInlineHeroBanner',
+    sourcePath: 'lib/component/promo/promo.dart',
+    code:
+        '''ArcaneInlineHeroBanner(message: 'Preview available', ctaText: 'Open preview', onCtaClick: openPreview)''',
+    previewBuilder: _buildPromoDemo,
+  ),
+  DemoDefinition(
+    componentType: 'cta-card',
+    symbolName: 'CtaCard',
+    sourcePath: 'lib/component/card/cta_card.dart',
+    code:
+        '''CtaCard(title: 'Create a workspace', ctaText: 'Create', onTap: createWorkspace)''',
+    previewBuilder: _buildCtaCardDemo,
+  ),
+  DemoDefinition(
+    componentType: 'feature-card',
+    symbolName: 'FeatureCard',
+    sourcePath: 'lib/component/card/feature_card.dart',
+    code:
+        '''FeatureCard(title: 'Component library', description: 'Forms, navigation, and feedback.', showCta: true, onTap: openLibrary)''',
+    previewBuilder: _buildFeatureCardDemo,
+  ),
+  DemoDefinition(
+    componentType: 'pricing-card',
+    symbolName: 'PricingCard',
+    sourcePath: 'lib/component/card/pricing_card.dart',
+    code:
+        '''PricingCard(title: 'Example plan', price: '\$12', features: ['One workspace'], onButtonClick: selectPlan)''',
+    previewBuilder: _buildPricingCardDemo,
+  ),
+  DemoDefinition(
+    componentType: 'stat-card',
+    symbolName: 'StatCard',
+    sourcePath: 'lib/component/card/stat_card.dart',
+    code:
+        '''StatCard(label: 'Completed tasks', value: '128', trend: '+12', description: 'Example dataset')''',
+    previewBuilder: _buildStatCardDemo,
+  ),
+  DemoDefinition(
+    componentType: 'testimonial-card',
+    symbolName: 'TestimonialCard',
+    sourcePath: 'lib/component/card/testimonial_card.dart',
+    code:
+        '''TestimonialCard(quote: 'Sample quote for testing type and spacing.', authorName: 'Example author', rating: 4)''',
+    previewBuilder: _buildTestimonialCardDemo,
+  ),
+  DemoDefinition(
+    componentType: 'flexi-cards',
+    symbolName: 'ArcaneFlexiCards',
+    sourcePath: 'lib/component/card/flexi_cards.dart',
+    code:
+        '''import 'package:arcane_jaspr/component/card/flexi_cards.dart';\n\nArcaneFlexiCards(items: items)
+ArcaneFlexiCardsSimple(items: items)''',
+    previewBuilder: _buildFlexiCardsDemo,
+  ),
+  DemoDefinition(
+    componentType: 'flow',
+    symbolName: 'Wrap',
+    sourcePath: 'lib/component/layout/flow.dart',
+    code: '''Wrap(spacing: 12, runSpacing: 12, children: controls)''',
+    previewBuilder: _buildFlowDemo,
+  ),
+  DemoDefinition(
+    componentType: 'gutter',
+    symbolName: 'Gutter',
+    sourcePath: 'lib/component/layout/gutter.dart',
+    code:
+        '''Column(children: [Text('Before'), Gutter.large(), Text('After')])''',
+    previewBuilder: _buildGutterDemo,
+  ),
+  DemoDefinition(
+    componentType: 'gallery',
+    symbolName: 'ArcaneGallery',
+    sourcePath: 'lib/component/collection/gallery.dart',
+    code:
+        '''ArcaneGallery(ariaLabel: 'Type studies', tiles: tiles, draggableTiles: true)''',
+    previewBuilder: _buildGalleryDemo,
+  ),
+  DemoDefinition(
+    componentType: 'native-select',
+    symbolName: 'ArcaneNativeSelect',
+    sourcePath: 'lib/component/input/native_select.dart',
+    code:
+        '''ArcaneNativeSelect(label: 'Environment', value: value, options: options, onChanged: setValue)''',
+    previewBuilder: _buildNativeSelectDemo,
+  ),
+  DemoDefinition(
+    componentType: 'check-list',
+    symbolName: 'ArcaneCheckList',
+    sourcePath: 'lib/component/view/check_list.dart',
+    code:
+        '''ArcaneCheckList(items: ['Keyboard access', 'Light and dark', 'Reduced motion'])''',
+    previewBuilder: _buildCheckListDemo,
+  ),
+  DemoDefinition(
+    componentType: 'toast',
+    symbolName: 'ArcaneToast',
+    sourcePath: 'lib/component/dialog/toast.dart',
+    code:
+        '''ArcaneToast(message: 'Saved locally', duration: 4000, onClose: closeToast)''',
+    previewBuilder: _buildToastDemo,
+  ),
 ];
 
 Map<String, DemoDefinition> demoRegistry =
@@ -1170,36 +1323,69 @@ Widget _buildAlertDemo(DemoStateController state) {
 }
 
 Widget _buildAlertDialogDemo(DemoStateController state) {
-  bool dialogOpen = state.boolValue('alert-dialog-open');
+  bool alertOpen = state.boolValue('alert-dialog-open');
+  bool confirmOpen = state.boolValue('confirm-dialog-open');
   return _surface(
-    ArcaneBox(
-      style: const ArcaneStyleData(
-        display: Display.flex,
-        flexDirection: FlexDirection.column,
-        alignItems: AlignItems.center,
-        gap: Gap.sm,
-      ),
-      children: [
-        Button.destructive(
-          label: 'Delete project',
-          onPressed: () => state.setBool('alert-dialog-open', true),
+    Column(
+      children: <Widget>[
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: <Widget>[
+            Button.secondary(
+              label: 'Show alert',
+              onPressed: () => state.setBool('alert-dialog-open', true),
+            ),
+            Button.primary(
+              label: 'Confirm action',
+              onPressed: () => state.setBool('confirm-dialog-open', true),
+            ),
+          ],
         ),
-        if (dialogOpen)
+        Text(
+          state.stringValue('confirm-result', initial: 'Open either dialog.'),
+        ),
+        if (alertOpen)
           ArcaneAlertDialog(
-            title: 'Delete Project?',
-            message: 'This action cannot be undone.',
+            title: 'Preview notification',
+            message: 'This alert has one dismissal action.',
             buttonText: 'Understood',
             onDismiss: () => state.setBool('alert-dialog-open', false),
           ),
+        if (confirmOpen)
+          ArcaneConfirmDialog(
+            title: 'Save example?',
+            message: 'Confirm or cancel this demonstration action.',
+            confirmText: 'Save example',
+            onConfirm: () {
+              state.setBool('confirm-dialog-open', false);
+              state.setString('confirm-result', 'Example saved.');
+            },
+            onCancel: () {
+              state.setBool('confirm-dialog-open', false);
+              state.setString('confirm-result', 'Action cancelled.');
+            },
+          ),
       ],
     ),
-    minHeight: '220px',
+    minHeight: '320px',
   );
 }
 
 Widget _buildAspectRatioDemo(DemoStateController state) {
   return _surface(
-    ArcaneAspectRatio.video(child: const Card(child: Text('16:9 container'))),
+    const ArcaneAspectRatio.video(
+      child: Card(
+        fillWidth: true,
+        styles: ArcaneStyleData(
+          height: Size.full,
+          display: Display.flex,
+          alignItems: AlignItems.center,
+          justifyContent: JustifyContent.center,
+        ),
+        child: Text('16:9 container'),
+      ),
+    ),
   );
 }
 
@@ -1253,11 +1439,28 @@ Widget _buildButtonDemo(DemoStateController state) {
 }
 
 Widget _buildButtonGroupDemo(DemoStateController state) {
+  List<Widget> actions = <Widget>[
+    Button.secondary(
+      label: 'Back',
+      onPressed: () => state.setString('group-action', 'Back'),
+    ),
+    Button.primary(
+      label: 'Continue',
+      onPressed: () => state.setString('group-action', 'Continue'),
+    ),
+  ];
   return _surface(
-    ButtonGroup(
-      children: [
-        Button.secondary(label: 'Back', onPressed: () {}),
-        Button.primary(label: 'Continue', onPressed: () {}),
+    Column(
+      children: <Widget>[
+        const Text('Button group'),
+        ButtonGroup(children: actions),
+        const Gutter.medium(),
+        const Text('Toolbar'),
+        ArcaneToolbar(children: actions),
+        const Gutter.medium(),
+        const Text('Button panel'),
+        ButtonPanel(children: actions),
+        Text(state.stringValue('group-action', initial: 'Choose an action.')),
       ],
     ),
   );
@@ -1447,12 +1650,13 @@ Widget _buildDatePickerDemo(DemoStateController state) {
       style: const ArcaneStyleData(width: Size.full, maxWidthCustom: '20rem'),
       children: [
         ArcaneDatePicker(
-          value: startDate,
+          value: state.boolValue('date-picker-cleared') ? null : startDate,
           label: 'Start date',
           onChanged: (value) {
             if (value != null) {
               state.setDate('date-picker-start', value);
             }
+            state.setBool('date-picker-cleared', value == null);
           },
         ),
       ],
@@ -1536,14 +1740,32 @@ Widget _buildDrawerDemo(DemoStateController state) {
 
 Widget _buildDropdownMenuDemo(DemoStateController state) {
   return _surface(
-    ArcaneDropdownMenu(
-      trigger: Button.secondary(label: 'Open menu', onPressed: () {}),
-      items: const [
-        MenuItemAction(label: 'Profile'),
-        MenuItemAction(label: 'Billing'),
-        MenuItemSeparator(),
-        MenuItemAction(label: 'Sign out', destructive: true),
-      ],
+    _demoColumn(
+      ArcaneDropdownMenu(
+        trigger: Button.secondary(label: 'Open menu', onPressed: () {}),
+        items: [
+          MenuItemAction(
+            label: 'Profile',
+            onSelect: () =>
+                state.setString('menu-selection', 'Profile selected'),
+          ),
+          MenuItemAction(
+            label: 'Billing',
+            onSelect: () =>
+                state.setString('menu-selection', 'Billing selected'),
+          ),
+          const MenuItemSeparator(),
+          MenuItemAction(
+            label: 'Sign out',
+            destructive: true,
+            onSelect: () =>
+                state.setString('menu-selection', 'Sign out selected'),
+          ),
+        ],
+      ),
+      Text(
+        state.stringValue('menu-selection', initial: 'Select a menu action.'),
+      ),
     ),
   );
 }
@@ -1695,10 +1917,25 @@ Widget _buildPopoverDemo(DemoStateController state) {
 }
 
 Widget _buildProgressDemo(DemoStateController state) {
+  double progress = state.doubleValue('progress-value', initial: 0.4);
   return _surface(
     _demoColumn(
-      const ArcaneProgressBar(value: 68, showValue: true),
-      const ArcaneProgressBar.success(value: 42),
+      ArcaneProgressBar(value: progress, showValue: true),
+      _demoRow(
+        ArcaneCircularProgress(
+          value: progress,
+          size: '72px',
+          label: 'Completed',
+        ),
+        const ArcaneLoadingSpinner(),
+      ),
+      Button.secondary(
+        label: progress >= 1 ? 'Restart progress' : 'Advance progress',
+        onPressed: () => state.setDouble(
+          'progress-value',
+          progress >= 1 ? 0 : (progress + 0.2).clamp(0.0, 1.0),
+        ),
+      ),
     ),
   );
 }
@@ -2258,7 +2495,14 @@ Widget _colorTile(String label, Background background) {
       border: BorderPreset.standard,
       borderRadius: Radius.md,
     ),
-    children: [Text.body(label, color: TextColor.primary)],
+    children: [
+      Text.body(
+        label,
+        color: background == Background.primary
+            ? TextColor.onPrimary
+            : TextColor.primary,
+      ),
+    ],
   );
 }
 
@@ -2311,3 +2555,319 @@ class _DemoUser {
     required this.status,
   });
 }
+
+Widget _buildSlotCounterDemo(DemoStateController state) {
+  bool running = state.boolValue('counter-running', initial: true);
+  int generation = state.intValue('counter-generation');
+  return _surface(
+    _demoColumn(
+      ArcaneSlotCounter(
+        minValue: 10,
+        maxValue: 90,
+        fixedValue: running ? null : 24,
+        suffix: 'ms',
+        label: 'Example response time',
+        autoStart: running,
+        key: ValueKey<String>('counter-$running-$generation'),
+      ),
+      Button.secondary(
+        label: running ? 'Pause counter' : 'Run counter',
+        onPressed: () {
+          state.setBool('counter-running', !running);
+          state.setInt('counter-generation', generation + 1);
+        },
+      ),
+    ),
+  );
+}
+
+Widget _buildSpecRowDemo(DemoStateController state) => _surface(
+  const Column(
+    children: <Widget>[
+      ArcaneSpecRow(label: 'Storage', value: '128 GB'),
+      ArcaneSpecRow(label: 'Memory', value: '16 GB'),
+      ArcaneSpecRow.highlight(label: 'Status', value: 'Ready'),
+    ],
+  ),
+);
+
+Widget _buildTimePickerDemo(DemoStateController state) {
+  int minutes = state.intValue('time-minutes', initial: 570);
+  TimeOfDay time = TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
+  return _surface(
+    _demoColumn(
+      ArcaneTimePicker(
+        label: 'Start time',
+        value: state.boolValue('time-cleared') ? null : time,
+        use24Hour: true,
+        minuteInterval: 15,
+        onChanged: (TimeOfDay? value) {
+          if (value != null) {
+            state.setInt('time-minutes', value.hour * 60 + value.minute);
+          }
+          state.setBool('time-cleared', value == null);
+        },
+      ),
+      Text(
+        state.boolValue('time-cleared')
+            ? 'No time selected'
+            : 'Selected: ${time.format(use24Hour: true)}',
+      ),
+    ),
+    minHeight: '380px',
+  );
+}
+
+Widget _buildScrollRailDemo(DemoStateController state) => _surface(
+  dom.div(<Widget>[
+    ArcaneScrollRailLayout(
+      railWidth: '140px',
+      rail: Column(
+        children: <Widget>[
+          for (int index = 1; index <= 12; index++)
+            Button.ghost(
+              label: 'Section $index',
+              onPressed: () => state.setInt('rail-section', index),
+            ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text('Section ${state.intValue('rail-section', initial: 1)}'),
+      ),
+    ),
+  ], classes: 'ascii-showcase-scroll-rail'),
+);
+
+Widget _buildPromoDemo(DemoStateController state) => _surface(
+  _demoColumn(
+    ArcaneTopAnnouncementBar(
+      message: 'Top announcement preview',
+      ctaText: 'Select',
+      onCtaClick: () =>
+          state.setString('promo-choice', 'Top announcement selected'),
+    ),
+    ArcaneInlineHeroBanner(
+      message: 'Inline announcement preview',
+      ctaText: 'Select',
+      onCtaClick: () =>
+          state.setString('promo-choice', 'Inline announcement selected'),
+    ),
+    Text(
+      state.stringValue(
+        'promo-choice',
+        initial: 'Select or dismiss either announcement.',
+      ),
+    ),
+  ),
+);
+
+Widget _buildCtaCardDemo(DemoStateController state) => _surface(
+  CtaCard(
+    title: state.boolValue('workspace-created')
+        ? 'Workspace created'
+        : 'Create a workspace',
+    description: 'An example action surface with a full perimeter.',
+    ctaText: state.boolValue('workspace-created')
+        ? 'Create another'
+        : 'Create workspace',
+    height: '280px',
+    onTap: () => state.toggleBool('workspace-created'),
+  ),
+);
+
+Widget _buildFeatureCardDemo(DemoStateController state) => _surface(
+  FeatureCard(
+    title: 'Component library',
+    description: state.boolValue('feature-open')
+        ? 'Library selected. Use the component selector to explore.'
+        : 'Forms, navigation, data, and feedback in one visual language.',
+    showCta: true,
+    ctaText: 'Select library',
+    onTap: () => state.toggleBool('feature-open'),
+  ),
+);
+
+Widget _buildPricingCardDemo(DemoStateController state) => _surface(
+  PricingCard(
+    title: 'Example plan',
+    subtitle: 'A specimen, not a purchasable offer.',
+    price: r'$12',
+    features: const <String>['One workspace', 'Shared components'],
+    excludedFeatures: const <String>['Additional workspaces'],
+    buttonText: state.boolValue('plan-selected')
+        ? 'Plan selected'
+        : 'Select example',
+    onButtonClick: () => state.toggleBool('plan-selected'),
+  ),
+);
+
+Widget _buildStatCardDemo(DemoStateController state) => _surface(
+  _demoColumn(
+    StatCard(
+      label: 'Completed tasks',
+      value: state.intValue('stat-count', initial: 128).toString(),
+      trend: '+12',
+      description: 'Example dataset',
+    ),
+    Button.secondary(
+      label: 'Complete a task',
+      onPressed: () => state.setInt(
+        'stat-count',
+        state.intValue('stat-count', initial: 128) + 1,
+      ),
+    ),
+  ),
+);
+
+Widget _buildTestimonialCardDemo(DemoStateController state) => _surface(
+  const TestimonialCard(
+    quote:
+        'A sample quotation to inspect the typography, rating, and author layout.',
+    authorName: 'Example author',
+    authorTitle: 'Component specimen',
+    rating: 4,
+  ),
+);
+
+Widget _buildFlexiCardsDemo(DemoStateController state) {
+  List<FlexiCardItem> items = <FlexiCardItem>[
+    FlexiCardItem(
+      icon: ArcaneIcon.box(),
+      shortText: 'Structure',
+      longText: 'Hover, focus, or select a card to explore its content.',
+      onTap: () => state.setString('flexi-choice', 'Structure selected'),
+    ),
+    FlexiCardItem(
+      icon: ArcaneIcon.settings(),
+      shortText: 'Details',
+      longText: 'The surrounding cards adjust to make room.',
+      onTap: () => state.setString('flexi-choice', 'Details selected'),
+    ),
+  ];
+  return _surface(
+    Column(
+      children: <Widget>[
+        ArcaneFlexiCards(items: items, minCardWidth: '110px', gap: '0.75rem'),
+        const Gutter.medium(),
+        ArcaneFlexiCardsSimple(items: items, gap: '0.75rem'),
+        Text(state.stringValue('flexi-choice', initial: 'Select either card.')),
+      ],
+    ),
+  );
+}
+
+Widget _buildFlowDemo(DemoStateController state) => _surface(
+  Wrap(
+    spacing: 12,
+    runSpacing: 12,
+    children: <Widget>[
+      for (String label in const <String>[
+        'Paper',
+        'Ink',
+        'Line',
+        'Type',
+        'Motion',
+      ])
+        Button(
+          label: label,
+          variant: state.stringValue('flow-choice') == label
+              ? ButtonVariant.primary
+              : ButtonVariant.secondary,
+          onPressed: () => state.setString('flow-choice', label),
+        ),
+    ],
+  ),
+);
+
+Widget _buildGutterDemo(DemoStateController state) => _surface(
+  const Column(
+    children: <Widget>[
+      Text('Small space'),
+      Gutter.small(),
+      ArcaneSeparator(),
+      Gutter.large(),
+      Text('Large space'),
+    ],
+  ),
+);
+
+Widget _buildGalleryDemo(DemoStateController state) => _surface(
+  ArcaneBox(
+    style: const ArcaneStyleData(width: Size.full),
+    children: <Widget>[
+      ArcaneGallery(
+        ariaLabel: 'Typography studies',
+        layout: ArcaneGalleryLayout.grid,
+        minColumnWidth: 130,
+        draggableTiles: true,
+        tiles: <ArcaneGalleryTile>[
+          for (String title in const <String>['Aa', '01', '+/'])
+            ArcaneGalleryTile(
+              title: 'Type study $title',
+              dragId: title,
+              media: const ArcaneGalleryMedia(aspectRatio: 1),
+              mediaChild: Center(child: Text.heading(title)),
+              footer: Text('Study $title'),
+              onTap: () => state.setString('gallery-choice', title),
+            ),
+        ],
+      ),
+      Text(
+        state.stringValue(
+          'gallery-choice',
+          initial: 'Select or move a type study.',
+        ),
+      ),
+    ],
+  ),
+);
+
+Widget _buildNativeSelectDemo(DemoStateController state) => _surface(
+  _demoColumn(
+    ArcaneNativeSelect(
+      label: 'Environment',
+      value: state.stringValue('native-environment', initial: 'preview'),
+      options: const <ArcaneSelectOption>[
+        ArcaneSelectOption(value: 'preview', label: 'Preview'),
+        ArcaneSelectOption(value: 'production', label: 'Production'),
+        ArcaneSelectOption(
+          value: 'disabled',
+          label: 'Unavailable',
+          disabled: true,
+        ),
+      ],
+      onChanged: (String value) => state.setString('native-environment', value),
+    ),
+    Text(
+      'Selected: ${state.stringValue('native-environment', initial: 'preview')}',
+    ),
+  ),
+);
+
+Widget _buildCheckListDemo(DemoStateController state) => _surface(
+  const ArcaneCheckList(
+    items: <String>[
+      'Keyboard access',
+      'Paper and ink palettes',
+      'Reduced-motion support',
+    ],
+  ),
+);
+
+Widget _buildToastDemo(DemoStateController state) => _surface(
+  _demoColumn(
+    Button.secondary(
+      label: 'Show notification',
+      onPressed: () => state.setBool('toast-visible', true),
+    ),
+    state.boolValue('toast-visible')
+        ? ArcaneToast(
+            title: 'Saved',
+            message: 'Changes saved locally.',
+            duration: 4000,
+            onClose: () => state.setBool('toast-visible', false),
+          )
+        : const Text('Notifications dismiss after four seconds.'),
+  ),
+);
