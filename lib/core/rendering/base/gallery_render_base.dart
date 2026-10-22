@@ -187,7 +187,8 @@ abstract class GalleryRenderBase extends StatelessComponent {
         raw: layerStyles(
           <String, String>{
             'position': 'relative',
-            'flex': '1 1 auto',
+            'flex': masonry ? '1 1 auto' : '0 0 auto',
+            if (!masonry) 'aspect-ratio': '1',
             'min-height': '0',
             'width': '100%',
             'overflow': 'hidden',
