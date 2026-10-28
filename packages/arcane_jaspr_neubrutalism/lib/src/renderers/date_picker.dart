@@ -51,8 +51,10 @@ class NeubrutalismDatePicker extends DatePickerRenderBase {
   String get triggerClasses => 'neubrutalism-date-picker-trigger';
 
   @override
-  Map<String, String> triggerExtraAttrs(bool hasError) =>
-      const <String, String>{};
+  Map<String, String> triggerExtraAttrs(bool hasError) => <String, String>{
+    'data-error': '$hasError',
+    'aria-invalid': '$hasError',
+  };
 
   @override
   Map<String, String> triggerStyles({
@@ -79,7 +81,8 @@ class NeubrutalismDatePicker extends DatePickerRenderBase {
     'cursor': props.disabled ? 'not-allowed' : 'pointer',
     'transition':
         'transform var(--nb-transition, 120ms ease), box-shadow var(--nb-transition, 120ms ease)',
-    'box-shadow': 'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
+    'box-shadow':
+        'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
     if (props.disabled) 'opacity': '0.5',
   };
 

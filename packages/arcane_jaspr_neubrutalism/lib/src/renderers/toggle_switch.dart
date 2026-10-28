@@ -14,15 +14,17 @@ class NeubrutalismToggleSwitch extends ToggleSwitchRenderBase {
     ToggleSwitchProps props,
     Map<String, String> itemAttrs,
   ) {
-    (double, double, double, double) sizing = switch (props.size) {
-      ComponentSize.sm => (44.0, 24.0, 16.0, 4.0),
-      ComponentSize.md => (52.0, 28.0, 20.0, 4.0),
-      ComponentSize.lg => (60.0, 32.0, 24.0, 4.0),
+    (double, double) sizing = switch (props.size) {
+      ComponentSize.sm => (56.0, 36.0),
+      ComponentSize.md => (72.0, 44.0),
+      ComponentSize.lg => (88.0, 52.0),
     };
     double width = sizing.$1;
     double height = sizing.$2;
-    double thumbSize = sizing.$3;
-    double inset = sizing.$4;
+    double borderWidth = 3;
+    double inset = 2;
+    double thumbSize = height - (borderWidth + inset) * 2;
+    double thumbTravel = width - thumbSize - (borderWidth + inset) * 2;
 
     String tone = switch (props.color) {
       ColorVariant.primary => 'var(--nb-accent, var(--primary))',
@@ -33,7 +35,7 @@ class NeubrutalismToggleSwitch extends ToggleSwitchRenderBase {
       ColorVariant.info => 'var(--info)',
     };
 
-    double thumbTranslate = props.value ? (width - thumbSize - (inset * 2)) : 0;
+    double thumbTranslate = props.value ? thumbTravel : 0;
 
     return dom.button(
       classes:
@@ -57,14 +59,17 @@ class NeubrutalismToggleSwitch extends ToggleSwitchRenderBase {
           'position': 'relative',
           'display': 'inline-flex',
           'align-items': 'center',
+          'box-sizing': 'border-box',
+          'flex-shrink': '0',
           'width': '${width}px',
           'height': '${height}px',
           'padding': '${inset}px',
-          'border-radius': 'var(--nb-radius-soft, 4px)',
-          'border': 'var(--nb-border-thick, 3px) solid var(--nb-line, #000)',
+          '--nb-switch-travel': '${thumbTravel}px',
+          'border-radius': 'var(--nb-switch-track-radius, 0)',
+          'border': 'var(--nb-border-base, 3px) solid var(--nb-line, #000)',
           'background-color': props.value
               ? tone
-              : 'var(--nb-paper, var(--card))',
+              : 'var(--nb-paper-soft, var(--muted))',
           'box-shadow':
               'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))',
           'cursor': props.disabled ? 'not-allowed' : 'pointer',
@@ -94,12 +99,13 @@ class NeubrutalismToggleSwitch extends ToggleSwitchRenderBase {
           styles: dom.Styles(
             raw: <String, String>{
               'display': 'block',
+              'box-sizing': 'border-box',
+              'flex-shrink': '0',
               'width': '${thumbSize}px',
               'height': '${thumbSize}px',
-              'border-radius': '50%',
+              'border-radius': 'var(--nb-switch-thumb-radius, 0)',
               'background-color': 'var(--nb-paper, #fff)',
-              'border':
-                  'var(--nb-border-thick, 3px) solid var(--nb-line, #000)',
+              'border': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
               'transform': 'translateX(${thumbTranslate}px)',
               'transition': 'transform 220ms cubic-bezier(0.4, 0.1, 0.3, 1)',
               'pointer-events': 'none',
@@ -136,6 +142,7 @@ class NeubrutalismToggleSwitch extends ToggleSwitchRenderBase {
         raw: <String, String>{
           'display': 'inline-flex',
           'align-items': 'center',
+          'min-height': '44px',
           'gap': '0.625rem',
           'cursor': props.disabled ? 'not-allowed' : 'pointer',
         },

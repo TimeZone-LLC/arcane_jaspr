@@ -41,6 +41,139 @@ const layout = {
   gap: 10,
 };
 
+test('justified rows retain source order and exact image proportions', () => {
+  const items = [2.3256, 1.7778, 1, 0.65, 1.4, 1, 0.8].map(
+    (aspectRatio) => ({ aspectRatio, chromeWidth: 4 }),
+  );
+  const rows = gallery.justifiedRows(items, { width: 1422, gap: 12 });
+  let nextIndex = 0;
+  for (const row of rows) {
+    assert.equal(row.start, nextIndex);
+    assert.ok(row.height > 0 && row.height <= 380);
+    const occupiedWidth = row.widths.reduce((sum, width) => sum + width, 0)
+      + (row.count - 1) * 12;
+    assert.ok(occupiedWidth <= 1422 + 0.01);
+    for (let index = 0; index < row.count; index++) {
+      assert.ok(Math.abs((row.widths[index] - 4) / row.height
+        - items[row.start + index].aspectRatio) < 0.0001);
+    }
+    nextIndex += row.count;
+  }
+  assert.equal(nextIndex, items.length);
+  assert.ok(rows.some((row) => row.count > 1));
+});
+
+test('single-column strips retain natural ratios beyond masonry span buckets', () => {
+  const items = [8, 0.15, 1].map((aspectRatio) => ({ aspectRatio, chromeWidth: 4 }));
+  const rows = gallery.justifiedRows(items, { width: 390, gap: 12 });
+  assert.equal(rows.length, 3);
+  rows.forEach((row, index) => {
+    assert.equal(row.count, 1);
+    assert.equal(row.widths[0], 390);
+    assert.equal(row.height, 386 / items[index].aspectRatio);
+  });
+});
+
+test('portrait-heavy desktop strips fill the row with five or six panels', () => {
+  for (const ratios of [
+    [1, 0.5625, 0.5625, 0.5625, 1, 2.3256, 0.5625, 1],
+    [1, 0.5625, 0.5625, 0.5625, 0.5625, 0.5625, 1, 2.3256],
+  ]) {
+    const items = ratios.map((aspectRatio) => ({ aspectRatio, chromeWidth: 4 }));
+    const rows = gallery.justifiedRows(items, { width: 1320, gap: 12 });
+    assert.ok(rows[0].count >= 5 && rows[0].count <= 6);
+    const occupiedWidth = rows[0].widths.reduce((sum, width) => sum + width, 0)
+      + (rows[0].count - 1) * 12;
+    assert.ok(Math.abs(occupiedWidth - 1320) < 0.01,
+      'a square followed by standard portraits should fill a non-final row');
+    let nextIndex = 0;
+    for (const row of rows) {
+      assert.equal(row.start, nextIndex);
+      assert.ok(row.height > 0 && row.height <= 380);
+      row.widths.forEach((width, index) => {
+        assert.ok(Math.abs((width - 4) / row.height
+          - ratios[row.start + index]) < 0.0001);
+      });
+      nextIndex += row.count;
+    }
+    assert.equal(nextIndex, items.length);
+  }
+});
+
+test('an incomplete final strip keeps a restrained image height', () => {
+  const rows = gallery.justifiedRows(
+    [{ aspectRatio: 0.65, chromeWidth: 4 }],
+    { width: 1422, gap: 12 },
+  );
+  assert.equal(rows[0].height, 280);
+  assert.equal(rows[0].widths[0], 186);
+});
+
+test('captioned mixed strips choose readable panel widths over a crowded sixth panel', () => {
+  const ratios = [1, 0.563, 0.563, 0.563, 0.75, 1.776, 0.563, 1];
+  const items = ratios.map((aspectRatio) => ({
+    aspectRatio, chromeWidth: 4, minimumWidth: 180,
+  }));
+  const [first] = gallery.justifiedRows(items, { width: 1320, gap: 12 });
+  assert.equal(first.count, 5);
+  assert.ok(first.widths.every((width) => width >= 180));
+  assert.ok(Math.abs(first.widths.reduce((sum, width) => sum + width, 0)
+    + (first.count - 1) * 12 - 1320) < 0.01);
+  first.widths.forEach((width, index) => {
+    assert.ok(Math.abs((width - 4) / first.height - ratios[index]) < 0.0001);
+  });
+
+  const [uncaptioned] = gallery.justifiedRows(
+    items.map(({ minimumWidth, ...item }) => item),
+    { width: 1320, gap: 12 },
+  );
+  assert.equal(uncaptioned.count, 6);
+  const [portraits] = gallery.justifiedRows(
+    Array.from({ length: 8 }, () => ({
+      aspectRatio: 0.563, chromeWidth: 4, minimumWidth: 180,
+    })),
+    { width: 1320, gap: 12 },
+  );
+  assert.equal(portraits.count, 6);
+  assert.ok(portraits.widths.every((width) => width >= 180));
+});
+
+test('an incomplete captioned strip grows only enough to keep its caption readable', () => {
+  const [row] = gallery.justifiedRows(
+    [{ aspectRatio: 0.563, chromeWidth: 4, minimumWidth: 180 }],
+    { width: 1320, gap: 12, maxHeight: 600 },
+  );
+  assert.equal(row.widths[0], 180);
+  assert.ok(Math.abs(row.height - 176 / 0.563) < 0.0001);
+});
+
+test('caption height is reserved before scoring artwork proportions', () => {
+  const [candidate] = gallery.candidateSpans(
+    { aspectRatio: 1, chromeHeight: 80, chromeWidth: 4 },
+    {
+      columns: 1,
+      columnWidth: 204,
+      rowHeight: 140,
+      gap: 0,
+      targetTileArea: 2,
+    },
+  );
+
+  assert.equal(candidate.rowSpan, 2);
+  assert.equal(candidate.displayRatio, 1);
+  assert.equal(candidate.ratioScore, 0);
+});
+
+test('captions cannot consume an entire artwork cell', () => {
+  const candidates = gallery.candidateSpans(
+    { aspectRatio: 1, chromeHeight: 160 },
+    { columns: 1, columnWidth: 160, rowHeight: 80, gap: 0 },
+  );
+
+  assert.ok(candidates.length > 0);
+  assert.ok(candidates.every((candidate) => candidate.rowSpan >= 3));
+});
+
 function placements(candidates) {
   return Array.from(candidates, (candidate) => ({
     columnSpan: candidate.columnSpan,

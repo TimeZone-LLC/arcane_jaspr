@@ -22,7 +22,7 @@ void main() {
         GalleryProps(tiles: <ArcaneGalleryTile>[], ariaLabel: 'g'),
       );
       // Default: no title bar leaking a rounded caption strip onto card tiles.
-      expect(gallery.showsTileHeader, isFalse);
+      expect(gallery.captionPlacement, ArcaneGalleryCaptionPlacement.hidden);
     });
   });
 

@@ -10,6 +10,8 @@ const Set<String> _galleryStructureAttributes = <String>{
   'data-ratio',
   'data-span',
   'data-column-span',
+  'data-arcane-gallery-measure-media',
+  'data-arcane-gallery-fit',
 };
 
 const Set<String> _galleryDragAttributes = <String>{
@@ -73,7 +75,8 @@ int galleryRowSpan(double aspect) {
 /// packing script can refine placements. Each tile stretches to fill its grid
 /// cell; the media (the consumer's [ArcaneGalleryTile.mediaChild] or a default
 /// `<img>`) covers the cell (object-fit: cover), with an optional title/meta
-/// header, corner overlays, and a footer.
+/// caption, corner overlays, and a footer. Renderers may preserve complete
+/// artwork and reserve measured caption space in the packer.
 ///
 /// Lives in core; depends only on core props. Never import a theme package.
 abstract class GalleryRenderBase extends StatelessComponent {
@@ -99,24 +102,35 @@ abstract class GalleryRenderBase extends StatelessComponent {
   Map<String, String> mediaStyles(ArcaneGalleryTile tile) =>
       const <String, String>{};
 
-  /// Whether the tile's title/meta render as a visible header block.
-  ///
-  /// Win95 shows it as the window's navy title bar; the card-style themes
-  /// (shadcn, neubrutalism, neon) render clean media-only tiles — the title is
-  /// exposed to assistive tech via the tile's `aria-label` instead of a visible
-  /// caption, so a rounded card never grows a stray caption strip. Default:
-  /// false; win95 overrides to true.
-  bool get showsTileHeader => false;
+  /// Visible captions can sit above or below the media; hidden captions still
+  /// contribute the tile's accessible name.
+  ArcaneGalleryCaptionPlacement get captionPlacement =>
+      ArcaneGalleryCaptionPlacement.hidden;
+
+  /// Preserve complete artwork inside the packer's reserved media rectangle.
+  bool get preservesMediaAspectRatio => false;
+
+  /// Arrange panels in reading order with exact image ratios and aligned rows.
+  bool get usesJustifiedRows => false;
 
   @override
   Component build(BuildContext context) {
-    final bool masonry = props.layout == ArcaneGalleryLayout.masonry;
+    final bool masonry =
+        !usesJustifiedRows && props.layout == ArcaneGalleryLayout.masonry;
     final int rowUnit = galleryRowUnitFor(props.minColumnWidth).round();
     final Map<String, String> surface = layerStyles(
       <String, String>{
-        'display': 'grid',
-        'grid-template-columns':
-            'repeat(auto-fill, minmax(${props.minColumnWidth.round()}px, 1fr))',
+        if (usesJustifiedRows) ...<String, String>{
+          'display': 'flex',
+          'flex-wrap': 'wrap',
+          'align-content': 'start',
+          'min-width': '0',
+          'max-width': '100%',
+        } else ...<String, String>{
+          'display': 'grid',
+          'grid-template-columns':
+              'repeat(auto-fill, minmax(${props.minColumnWidth.round()}px, 1fr))',
+        },
         if (masonry) ...<String, String>{
           'grid-auto-rows': '${rowUnit}px',
           'grid-auto-flow': 'dense',
@@ -135,11 +149,12 @@ abstract class GalleryRenderBase extends StatelessComponent {
         'role': 'region',
         'aria-label': props.ariaLabel,
         'data-arcane-gallery': 'true',
-        if (props.packing) 'data-packing': 'true',
-        if (props.minimumTileArea != null)
+        if (usesJustifiedRows) 'data-arcane-gallery-composition': 'justified',
+        if (props.packing && !usesJustifiedRows) 'data-packing': 'true',
+        if (props.minimumTileArea != null && !usesJustifiedRows)
           'data-arcane-gallery-minimum-tile-area': props.minimumTileArea!
               .toString(),
-        if (props.targetTileArea != null)
+        if (props.targetTileArea != null && !usesJustifiedRows)
           'data-arcane-gallery-target-tile-area': props.targetTileArea!
               .toString(),
         if (props.draggableTiles) ...<String, String>{
@@ -158,11 +173,18 @@ abstract class GalleryRenderBase extends StatelessComponent {
   }
 
   Component _tile(ArcaneGalleryTile tile, bool masonry, int index) {
-    final double aspect = _clampAspect(tile.media.aspectRatio);
+    final double aspect = usesJustifiedRows
+        ? tile.media.aspectRatio.isFinite && tile.media.aspectRatio > 0
+              ? tile.media.aspectRatio
+              : 1
+        : _clampAspect(tile.media.aspectRatio);
     final int rowSpan = galleryRowSpan(aspect);
     final int columnSpan = galleryColumnSpan(aspect);
-    final bool hasVisibleHeader =
-        showsTileHeader && (tile.title != null || tile.meta != null);
+    final bool captionBelowMedia =
+        captionPlacement == ArcaneGalleryCaptionPlacement.belowMedia;
+    final bool hasVisibleCaption =
+        captionPlacement != ArcaneGalleryCaptionPlacement.hidden &&
+        (tile.title != null || tile.meta != null);
 
     final Map<String, String> frame = layerStyles(
       <String, String>{
@@ -174,7 +196,12 @@ abstract class GalleryRenderBase extends StatelessComponent {
         'flex-direction': 'column',
         'overflow': 'hidden',
         'min-width': '0',
-        'height': '100%',
+        'height': usesJustifiedRows ? 'auto' : '100%',
+        if (usesJustifiedRows) ...<String, String>{
+          'flex': '0 0 auto',
+          'width': 'min(100%, 280px)',
+          'box-sizing': 'border-box',
+        },
         'text-decoration': 'none',
         'color': 'inherit',
       },
@@ -183,12 +210,14 @@ abstract class GalleryRenderBase extends StatelessComponent {
 
     final Component media = dom.div(
       classes: '$tileClass-media',
+      attributes: const <String, String>{'data-arcane-gallery-media': 'true'},
       styles: dom.Styles(
         raw: layerStyles(
           <String, String>{
             'position': 'relative',
             'flex': masonry ? '1 1 auto' : '0 0 auto',
-            if (!masonry) 'aspect-ratio': '1',
+            if (!masonry) 'aspect-ratio': usesJustifiedRows ? '$aspect' : '1',
+            if (usesJustifiedRows) 'box-sizing': 'border-box',
             'min-height': '0',
             'width': '100%',
             'overflow': 'hidden',
@@ -204,12 +233,23 @@ abstract class GalleryRenderBase extends StatelessComponent {
 
     final List<Component> children = <Component>[
       media,
-      if (hasVisibleHeader)
+      if (hasVisibleCaption)
         dom.div(
-          classes: '$tileClass-header',
+          classes: '$tileClass-${captionBelowMedia ? 'caption' : 'header'}',
           attributes: <String, String>{
+            if (captionBelowMedia) 'data-arcane-gallery-caption': 'below-media',
             if (props.draggableTiles) 'data-arcane-drag-handle': 'true',
           },
+          styles: captionBelowMedia
+              ? const dom.Styles(
+                  raw: <String, String>{
+                    'display': 'flex',
+                    'flex-direction': 'column',
+                    'flex': '0 0 auto',
+                    'min-width': '0',
+                  },
+                )
+              : null,
           <Component>[
             if (tile.title != null)
               dom.span(classes: '$tileClass-title', <Component>[
@@ -222,7 +262,16 @@ abstract class GalleryRenderBase extends StatelessComponent {
           ],
         ),
       if (tile.footer != null)
-        dom.div(classes: '$tileClass-footer', <Component>[tile.footer!]),
+        dom.div(
+          classes: '$tileClass-footer',
+          attributes: <String, String>{
+            if (captionBelowMedia) 'data-arcane-gallery-footer': 'true',
+          },
+          styles: captionBelowMedia
+              ? const dom.Styles(raw: <String, String>{'flex': '0 0 auto'})
+              : null,
+          <Component>[tile.footer!],
+        ),
     ];
 
     final bool ownsKeyboardSemantics =
@@ -246,7 +295,9 @@ abstract class GalleryRenderBase extends StatelessComponent {
         );
     final String? explicitAriaLabel = _nonEmpty(tile.attributes['aria-label']);
     final String? callerRole = _nonEmpty(callerAttributes['role']);
-    final String? hiddenTitle = showsTileHeader ? null : _nonEmpty(tile.title);
+    final String? hiddenTitle = hasVisibleCaption
+        ? null
+        : _nonEmpty(tile.title);
     final bool suppressesAccessibleName =
         callerRole != null &&
         _rolesWithoutAuthorName.contains(callerRole.toLowerCase());
@@ -268,9 +319,13 @@ abstract class GalleryRenderBase extends StatelessComponent {
       ...callerAttributes,
       'data-arcane-surface': 'gallery-tile',
       'data-arcane-gallery-item': 'true',
-      'data-ratio': aspect.toStringAsFixed(4),
+      'data-ratio': usesJustifiedRows ? '$aspect' : aspect.toStringAsFixed(4),
       'data-span': '$rowSpan',
       'data-column-span': '$columnSpan',
+      'data-arcane-gallery-fit': preservesMediaAspectRatio
+          ? 'contain'
+          : 'cover',
+      if (captionBelowMedia) 'data-arcane-gallery-measure-media': 'true',
       if (props.draggableTiles) ...<String, String>{
         'data-arcane-draggable-item': 'true',
         'draggable': 'false',
@@ -279,7 +334,7 @@ abstract class GalleryRenderBase extends StatelessComponent {
         'aria-description':
             'Hold Shift and use the arrow keys to reposition this item.',
         'data-arcane-drag-key': tile.dragId ?? index.toString(),
-        if (!hasVisibleHeader) 'data-arcane-drag-handle': 'true',
+        if (!hasVisibleCaption) 'data-arcane-drag-handle': 'true',
       },
       if (tile.href == null && (props.draggableTiles || tile.onTap != null))
         'tabindex': '0',
@@ -334,13 +389,13 @@ abstract class GalleryRenderBase extends StatelessComponent {
         if (media.thumbHash != null) 'data-thumbhash': media.thumbHash!,
         'loading': 'lazy',
       },
-      styles: const dom.Styles(
+      styles: dom.Styles(
         raw: <String, String>{
           'position': 'absolute',
           'inset': '0',
           'width': '100%',
           'height': '100%',
-          'object-fit': 'cover',
+          'object-fit': preservesMediaAspectRatio ? 'contain' : 'cover',
           'display': 'block',
         },
       ),

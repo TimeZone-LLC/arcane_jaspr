@@ -1,4 +1,5 @@
 import 'package:arcane_jaspr/core/rendering/base/gallery_render_base.dart';
+import 'package:arcane_jaspr/core/props/gallery_props.dart';
 
 /// Win95 gallery renderer.
 class Win95Gallery extends GalleryRenderBase {
@@ -13,5 +14,6 @@ class Win95Gallery extends GalleryRenderBase {
   /// Each tile is a chromed application window, so the title/meta render as the
   /// navy title bar (lifted above the media by `order: -1` in the win95 CSS).
   @override
-  bool get showsTileHeader => true;
+  ArcaneGalleryCaptionPlacement get captionPlacement =>
+      ArcaneGalleryCaptionPlacement.aboveMedia;
 }

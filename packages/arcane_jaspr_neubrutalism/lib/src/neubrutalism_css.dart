@@ -6,7 +6,7 @@ import 'package:arcane_jaspr/component/view/map/map_style.dart'
     show arcaneMapCss;
 import 'package:arcane_jaspr/util/content/prose_styles.dart';
 
-import 'neubrutalism_theme.dart';
+import 'package:arcane_jaspr_neubrutalism/src/neubrutalism_theme.dart';
 
 class NeubrutalismCss {
   const NeubrutalismCss._();
@@ -67,23 +67,28 @@ class NeubrutalismCss {
     int lightBandColor = _mix(theme.color, 0.72, 0xFFFFFFFF);
     String lightBand = _hex(lightBandColor);
     String lightBandForeground = _foregroundFor(lightBandColor);
-    // Dark mode keeps only a hint of the accent in its surfaces: heavier mixes
-    // washed the whole dark canvas in the accent hue (an olive-brown page under
-    // the yellow theme) and left near-black cards with invisible shadows.
-    int darkBackgroundColor = _mix(theme.color, 0.08, 0xFF101114);
-    int darkSecondaryColor = _mix(theme.color, 0.06, 0xFF1E1E22);
-    int darkMutedColor = _mix(theme.color, 0.08, 0xFF26262A);
-    int darkCardHoverColor = _mix(theme.color, 0.08, 0xFF2E2E32);
+    int darkBackgroundColor = theme.darkBackground;
+    int darkSecondaryColor = theme.darkSecondary;
+    int darkMutedColor = theme.darkMuted;
+    int darkCardHoverColor = theme.darkCardHover;
     String darkBackground = _hex(darkBackgroundColor);
     String darkSecondary = _hex(darkSecondaryColor);
     String darkMuted = _hex(darkMutedColor);
     String darkCardHover = _hex(darkCardHoverColor);
-    String darkBackgroundForeground = _foregroundFor(darkBackgroundColor);
-    String darkSecondaryForeground = _foregroundFor(darkSecondaryColor);
-    String darkMutedForeground = _foregroundFor(darkMutedColor);
+    String darkBackgroundForeground = _hex(theme.darkForeground);
+    String darkSecondaryForeground = _hex(theme.darkForeground);
+    String darkMutedForeground = _hex(theme.darkForeground);
+    String darkBorder = _hex(theme.darkBorder);
+    String lightBorder = _hex(theme.lightBorder);
+    String lightInk = _hex(theme.lightInk);
 
     return '''
 #arcane-root.arcane-theme-neubrutalism {
+  --font-sans: 'Inter', Arial, Helvetica, sans-serif;
+  --font-heading: 'Space Grotesk', Arial, Helvetica, sans-serif;
+  --font-mono: 'Space Mono', 'SFMono-Regular', Consolas, monospace;
+  --font-display: 'Syne', 'Space Grotesk', sans-serif;
+  --font-body: var(--font-sans);
   --background: $lightSurface;
   --foreground: $lightSurfaceForeground;
   --secondary-background: #FFFFFF;
@@ -92,14 +97,29 @@ class NeubrutalismCss {
   --popover: #FFFFFF;
   --popover-foreground: #000000;
   --muted: $lightSecondary;
-  --muted-foreground: $lightSecondaryForeground;
-  --border: #000000;
+  --muted-foreground: #555555;
+  --primary: var(--nb-accent);
+  --primary-foreground: var(--nb-on-accent);
+  --secondary: $lightSecondary;
+  --secondary-foreground: $lightSecondaryForeground;
+  --success: #88D498;
+  --success-foreground: #000000;
+  --warning: #FFD23F;
+  --warning-foreground: #000000;
+  --destructive: #FF4444;
+  --destructive-foreground: #000000;
+  --nb-error-foreground: #B42318;
+  --info: #74B9FF;
+  --info-foreground: #000000;
+  --border: $lightBorder;
   --input: #FFFFFF;
-  --ring: #000000;
+  --ring: var(--foreground);
   --main: var(--nb-accent);
   --main-foreground: var(--nb-on-accent-in, $accentForeground);
-  --nb-ink: #000000;
-  --nb-line: var(--nb-line-in, #000000);
+  --nb-ink: $lightInk;
+  --nb-line: var(--nb-line-in, $lightBorder);
+  --nb-control-line: var(--nb-line);
+  --nb-switch-thumb: var(--nb-paper);
   --nb-shadow-color: #000000;
   --nb-paper: var(--secondary-background);
   --nb-paper-soft: var(--muted);
@@ -145,8 +165,8 @@ class NeubrutalismCss {
   --nb-shadow-xs: 2px 2px 0 0 var(--nb-shadow-color);
   --nb-shadow-sm: 3px 3px 0 0 var(--nb-shadow-color);
   --nb-shadow-md: 5px 5px 0 0 var(--nb-shadow-color);
-  --nb-shadow-lg: 7px 7px 0 0 var(--nb-shadow-color);
-  --nb-shadow-xl: 10px 10px 0 0 var(--nb-shadow-color);
+  --nb-shadow-lg: 8px 8px 0 0 var(--nb-shadow-color);
+  --nb-shadow-xl: 12px 12px 0 0 var(--nb-shadow-color);
 
   --nb-shadow-accent-md: 5px 5px 0 0 var(--nb-accent);
   --nb-shadow-hot-md: 5px 5px 0 0 var(--nb-accent-hot);
@@ -157,14 +177,29 @@ class NeubrutalismCss {
   --nb-translate-press-lg: translate(5px, 5px);
 
   --nb-radius-tight: 0;
-  --nb-radius-soft: 5px;
-  --nb-radius-soft-lg: 5px;
-  --border-radius: 5px;
+  --nb-radius-soft: 0;
+  --nb-radius-soft-lg: 0;
+  --nb-switch-track-radius: 0;
+  --nb-switch-thumb-radius: 0;
+  --radius-xs: var(--nb-radius-tight);
+  --radius-sm: 0;
+  --radius-md: var(--nb-radius-soft);
+  --radius: var(--radius-md);
+  --border-radius: var(--nb-radius-soft);
 
-  --nb-transition: 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  --nb-transition-fast: 80ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --nb-transition: 150ms ease;
+  --nb-transition-fast: 100ms ease;
 
   background: var(--background) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism.neubrutalism-rounded {
+  --nb-radius-tight: 4px;
+  --nb-radius-soft: 8px;
+  --nb-radius-soft-lg: 12px;
+  --nb-switch-track-radius: 9999px;
+  --nb-switch-thumb-radius: 50%;
+  --radius-sm: 6px;
 }
 
 html:has(#arcane-root.arcane-theme-neubrutalism),
@@ -213,16 +248,19 @@ html.light #arcane-root.arcane-theme-neubrutalism,
   --popover: #FFFFFF;
   --popover-foreground: #000000;
   --muted: $lightSecondary;
-  --muted-foreground: $lightSecondaryForeground;
+  --muted-foreground: #555555;
+  --nb-error-foreground: #B42318;
   --accent: var(--main);
   --accent-foreground: var(--nb-on-accent-in, $accentForeground);
-  --border: #000000;
+  --border: $lightBorder;
   --input: #FFFFFF;
-  --ring: #000000;
+  --ring: var(--foreground);
   --main: var(--nb-accent);
   --main-foreground: var(--nb-on-accent-in, $accentForeground);
-  --nb-ink: #000000;
-  --nb-line: var(--nb-line-in, #000000);
+  --nb-ink: $lightInk;
+  --nb-line: var(--nb-line-in, $lightBorder);
+  --nb-control-line: var(--nb-line);
+  --nb-switch-thumb: var(--nb-paper);
   --nb-shadow-color: #000000;
   --nb-paper: var(--secondary-background);
   --nb-paper-soft: var(--muted);
@@ -241,7 +279,7 @@ html.light #arcane-root.arcane-theme-neubrutalism,
   --nb-control-foreground: var(--nb-on-paper);
   --nb-tooltip-foreground: var(--nb-on-ink);
   --nb-selection-bg: $lightSecondary;
-  --nb-selection-line: #000000;
+  --nb-selection-line: $lightBorder;
   --nb-selection-mark: var(--nb-accent);
   --nb-landing-band-bg: $lightBand;
   --nb-on-landing-band: $lightBandForeground;
@@ -258,22 +296,24 @@ html.dark #arcane-root.arcane-theme-neubrutalism,
   --popover: var(--secondary-background);
   --popover-foreground: $darkSecondaryForeground;
   --muted: $darkMuted;
-  --muted-foreground: $darkMutedForeground;
+  --muted-foreground: #BBB8AC;
+  --nb-error-foreground: #FF6B6B;
+  --secondary: $darkMuted;
+  --secondary-foreground: $darkMutedForeground;
   --accent: var(--main);
   --accent-foreground: var(--nb-on-accent-in, $accentForeground);
-  --border: #686870;
-  --input: var(--muted);
-  --ring: var(--main);
+  --border: $darkBorder;
+  --input: var(--secondary-background);
+  --ring: var(--foreground);
   --main: var(--nb-accent);
   --main-foreground: var(--nb-on-accent-in, $accentForeground);
-  --nb-dark-inverse-black: #EAEAEF;
-  --nb-dark-inverse-black-soft: rgba(234, 234, 239, 0.82);
+  --nb-dark-inverse-black: var(--foreground);
   --nb-on-dark-inverse-black: #000000;
-  --info: #6FB3FF;
-  --destructive: #FF4747;
-  --nb-ink: #000000;
-  --nb-line: var(--nb-line-in, color-mix(in srgb, var(--nb-dark-inverse-black) 72%, var(--background)));
-  --nb-shadow-color: var(--nb-dark-inverse-black-soft);
+  --nb-ink: $lightInk;
+  --nb-line: var(--nb-line-in, #080808);
+  --nb-control-line: var(--nb-line-in, var(--border));
+  --nb-switch-thumb: var(--foreground);
+  --nb-shadow-color: #080808;
   --nb-paper: var(--secondary-background);
   --nb-paper-soft: var(--muted);
   --nb-on-background: $darkBackgroundForeground;
@@ -287,21 +327,16 @@ html.dark #arcane-root.arcane-theme-neubrutalism,
   --nb-on-accent-cool: $accentCoolForeground;
   --nb-on-ink: #FFFFFF;
   --nb-surface-foreground: var(--nb-on-paper);
-  --nb-control-paper: var(--muted);
-  --nb-control-foreground: var(--nb-on-paper-soft);
+  --nb-control-paper: var(--nb-paper);
+  --nb-control-foreground: var(--nb-on-paper);
   --nb-tooltip-foreground: var(--nb-on-ink);
   --nb-selection-bg: var(--muted);
-  --nb-selection-line: #686870;
+  --nb-selection-line: var(--nb-control-line);
   --nb-selection-mark: var(--nb-accent);
   --nb-landing-band-bg: var(--muted);
   --nb-on-landing-band: var(--foreground);
-  --nb-terminal-bg: var(--nb-dark-inverse-black);
-  --nb-terminal-foreground: var(--nb-on-dark-inverse-black);
-  --nb-shadow-xs: 2px 2px 0 0 var(--nb-shadow-color);
-  --nb-shadow-sm: 3px 3px 0 0 var(--nb-shadow-color);
-  --nb-shadow-md: 4px 4px 0 0 var(--nb-shadow-color);
-  --nb-shadow-lg: 6px 6px 0 0 var(--nb-shadow-color);
-  --nb-shadow-xl: 8px 8px 0 0 var(--nb-shadow-color);
+  --nb-terminal-bg: #080808;
+  --nb-terminal-foreground: var(--foreground);
 }
 
 html.dark #arcane-root.arcane-theme-neubrutalism::before,
@@ -322,12 +357,21 @@ html.light #arcane-root.arcane-theme-neubrutalism::before {
 }
 
 #arcane-root.arcane-theme-neubrutalism :focus-visible {
-  outline: var(--nb-border-base) solid var(--main);
+  outline: var(--nb-border-base) solid var(--ring) !important;
+  outline-offset: 2px;
+}
+
+#arcane-root.arcane-theme-neubrutalism [data-arcane-field-shell="true"]:focus-within:not(.arcane-native-select-shell),
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-form-select button.neubrutalism-select-trigger[data-arcane-field-control="true"]:focus,
+#arcane-root.arcane-theme-neubrutalism .arcane-native-select-shell select.arcane-select[data-arcane-field-control="true"]:focus-visible {
+  outline: var(--nb-border-base) solid var(--ring) !important;
   outline-offset: 2px;
 }
 
 #arcane-root.arcane-theme-neubrutalism {
   font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
   color: var(--foreground);
 }
 
@@ -489,12 +533,24 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
 #arcane-root.arcane-theme-neubrutalism h5,
 #arcane-root.arcane-theme-neubrutalism h6 {
   font-family: var(--font-heading);
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.02em;
-  line-height: 1.05;
+  line-height: 1.15;
   text-transform: none;
   color: var(--foreground);
 }
+
+#arcane-root.arcane-theme-neubrutalism :is(.display, .font-display, .neubrutalism-display) {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+:where(#arcane-root.arcane-theme-neubrutalism) h1 { font-size: clamp(2.5rem, 6vw, 5rem); }
+:where(#arcane-root.arcane-theme-neubrutalism) h2 { font-size: clamp(2rem, 4vw, 3.5rem); }
+:where(#arcane-root.arcane-theme-neubrutalism) h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+:where(#arcane-root.arcane-theme-neubrutalism) h4 { font-size: clamp(1.25rem, 2vw, 1.5rem); }
 
 #arcane-root.arcane-theme-neubrutalism a {
   color: var(--foreground);
@@ -526,9 +582,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
 #arcane-root.arcane-theme-neubrutalism .arcane-scaffold-sidebar,
 #arcane-root.arcane-theme-neubrutalism .arcane-scaffold-secondary,
 #arcane-root.arcane-theme-neubrutalism .arcane-scaffold-footer,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-card:not([data-arcane-decorated]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-command-dialog,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-calendar,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-chart,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-data-table-container,
@@ -538,12 +592,6 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-resizable,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-scroll-area,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-form-section,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-input-group,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-field-wrapper,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-otp-input,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-group,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-tabs,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-toggle-group,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-slot-counter,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-slot-counter-card,
@@ -559,12 +607,119 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
   color: var(--nb-surface-foreground) !important;
 }
 
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-feature-card, .neubrutalism-icon-card, .neubrutalism-cta-card, .neubrutalism-stat-card, .neubrutalism-pricing-card, .neubrutalism-testimonial-card):not([data-arcane-decorated]) {
+  min-width: 0;
+  border: var(--nb-border-base) solid var(--nb-line) !important;
+  border-radius: var(--nb-radius-soft-lg) !important;
+  box-shadow: var(--nb-shadow-md) !important;
+  padding: clamp(1rem, 3vw, 1.5rem) !important;
+  overflow-wrap: anywhere;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-feature-card[data-arcane-accent]:not([data-arcane-decorated]) {
+  border-color: var(--arcane-card-accent) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-feature-card-icon, .neubrutalism-icon-card-icon, .neubrutalism-cta-card-icon, .neubrutalism-stat-card-icon, .neubrutalism-pricing-card-icon) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: var(--nb-radius-tight);
+  border: var(--nb-border-thin) solid var(--nb-line);
+  background: transparent;
+  box-shadow: var(--nb-shadow-xs);
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-feature-card-icon, .neubrutalism-icon-card-icon, .neubrutalism-cta-card-icon, .neubrutalism-stat-card-icon, .neubrutalism-pricing-card-icon):not([data-arcane-accent]) {
+  background: var(--nb-accent);
+  color: var(--nb-on-accent) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-feature-card-cta {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-feature-card-cta:not([data-arcane-accent]) {
+  color: var(--foreground) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-cta-card-button, .neubrutalism-pricing-card-cta) {
+  min-height: 44px;
+  border: var(--nb-border-base) solid var(--nb-line) !important;
+  border-radius: var(--nb-radius-soft) !important;
+  box-shadow: var(--nb-shadow-sm);
+  font-family: var(--font-sans);
+  font-size: 1rem !important;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-cta-card-button, .neubrutalism-pricing-card-cta):not([data-arcane-accent]) {
+  background: var(--nb-accent) !important;
+  color: var(--nb-on-accent) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-testimonial-card [data-arcane-intrinsic-shape="avatar"]:not(img) {
+  border: var(--nb-border-thin) solid var(--nb-line);
+  background: var(--nb-accent) !important;
+  color: var(--nb-on-accent) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-rating-stars,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-testimonial-card-rating > span:first-child {
+  color: var(--foreground) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-pagination {
+  max-width: 100%;
+  flex-wrap: wrap;
+  padding: 4px;
+  row-gap: .75rem !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-pagination-button {
+  flex-shrink: 0;
+  min-height: 40px;
+  border-radius: var(--nb-radius-soft);
+  font-family: var(--font-sans);
+  color: var(--foreground) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-pagination-button[aria-current="page"] {
+  background: var(--nb-accent) !important;
+  color: var(--nb-on-accent) !important;
+  border: var(--nb-border-base) solid var(--nb-line) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-flexi-cards {
+  flex-wrap: wrap;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-flexi-cards > * {
+  max-width: 100%;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-flexi-cards-simple {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)) !important;
+}
+
+@media (max-width: 600px) {
+  #arcane-root.arcane-theme-neubrutalism .neubrutalism-pricing-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-card.clickable {
   cursor: pointer;
   transition: transform var(--nb-transition), box-shadow var(--nb-transition);
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-card.clickable:hover {
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-card.clickable:is([data-variant="elevated"], [data-variant="interactive"]):not([data-arcane-decorated]):hover {
   transform: translate(-2px, -2px);
   box-shadow: var(--nb-shadow-lg) !important;
 }
@@ -579,9 +734,9 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
   box-shadow: none !important;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-card.clickable:active {
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-card.clickable:is([data-variant="elevated"], [data-variant="interactive"]):not([data-arcane-decorated]):active {
   transform: var(--nb-translate-press);
-  box-shadow: var(--nb-shadow-xs) !important;
+  box-shadow: none !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-dropdown-menu,
@@ -589,12 +744,11 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-context-menu,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-menubar-content,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-content,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-date-picker,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-time-picker,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-date-picker-dropdown,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-time-picker-dropdown,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-popover,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-tooltip,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-tabs-list,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast:not([data-arcane-decorated]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-command,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-dialog,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-sheet,
@@ -610,13 +764,48 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
   -webkit-backdrop-filter: none !important;
 }
 
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-dialog-overlay {
+  box-sizing: border-box;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-dialog {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 0;
+  max-height: calc(100vh - 3rem);
+  max-height: calc(100dvh - 3rem);
+  overflow: hidden;
+  padding: clamp(1rem, 4vw, 2rem) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-dialog-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+  margin: 0 -6px;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-dialog-title,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-dialog-actions {
+  flex-shrink: 0;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-dialog-actions {
+  flex-wrap: wrap;
+}
+
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-dropdown-item,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-context-menu-item,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-menubar-trigger,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option {
   position: relative;
   border: var(--nb-border-thin) solid transparent !important;
-  border-radius: 0 !important;
+  border-radius: var(--nb-radius-tight) !important;
   color: var(--foreground) !important;
   background-color: transparent !important;
   transition:
@@ -636,25 +825,12 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-menubar-trigger:focus-visible:not([data-disabled="true"]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option:hover:not([data-disabled="true"]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option:focus-visible:not([data-disabled="true"]),
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option[data-state="selected"] {
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option[aria-selected="true"] {
   background-color: var(--nb-selection-bg) !important;
   border-color: var(--nb-selection-line) !important;
   color: var(--foreground) !important;
   box-shadow: var(--nb-shadow-xs) !important;
   transform: translate(-1px, -1px);
-}
-
-html.dark #arcane-root.arcane-theme-neubrutalism .arcane-scaffold-sidebar,
-html.dark #arcane-root.arcane-theme-neubrutalism .arcane-scaffold-secondary,
-html.dark #arcane-root.arcane-theme-neubrutalism .arcane-scaffold-footer,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-card,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-panel,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-dropdown-menu,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-dropdown-submenu,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-content,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-popover {
-  border-color: var(--nb-line) !important;
-  box-shadow: var(--nb-shadow-lg) !important;
 }
 
 html.dark #arcane-root.arcane-theme-neubrutalism .arcane-scaffold-main {
@@ -709,7 +885,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .arcane-scaffold-main {
   margin: 0.25rem 0 !important;
   padding: 0.45rem 0.55rem 0.45rem 1.35rem !important;
   border: var(--nb-border-thin) solid transparent !important;
-  border-radius: 0 !important;
+  border-radius: var(--nb-radius-tight) !important;
   background: transparent !important;
   color: var(--foreground) !important;
   font-family: var(--font-sans);
@@ -781,31 +957,36 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-toc-panel .toc-title {
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-button {
   font-family: var(--font-heading);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0;
   text-transform: none;
-  border: var(--nb-border-base) solid var(--nb-line) !important;
+  border: var(--nb-border-base) solid var(--nb-line);
   border-radius: var(--nb-radius-soft) !important;
   box-shadow: var(--nb-shadow-md);
-  transition: transform var(--nb-transition), box-shadow var(--nb-transition);
+  transition: transform var(--nb-transition-fast), box-shadow var(--nb-transition-fast);
   background-image: none !important;
   filter: none !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-button:hover:not(:disabled):not([data-disabled="true"]) {
-  transform: translate(-1px, -1px);
+  transform: translate(-2px, -2px);
   box-shadow: var(--nb-shadow-lg);
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-button:active:not(:disabled):not([data-disabled="true"]) {
   transform: var(--nb-translate-press);
-  box-shadow: var(--nb-shadow-xs);
+  box-shadow: none;
 }
 
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-button[data-variant="ghost"],
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-button[data-variant="link"] {
   border: none !important;
   box-shadow: none !important;
   background-color: transparent !important;
+  transform: none !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-button[data-variant="link"] {
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 4px;
@@ -820,49 +1001,97 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-toc-panel .toc-title {
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-select,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-trigger,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-native-select,
+#arcane-root.arcane-theme-neubrutalism .arcane-select,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-otp-digit,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-date-picker-trigger,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-time-picker-trigger,
 #arcane-root.arcane-theme-neubrutalism textarea {
-  background-color: var(--nb-paper) !important;
-  border: var(--nb-border-base) solid var(--nb-line) !important;
+  background-color: var(--nb-control-paper) !important;
+  border: var(--nb-border-base) solid var(--nb-control-line) !important;
   border-radius: var(--nb-radius-soft) !important;
-  box-shadow: var(--nb-shadow-xs) !important;
-  color: var(--nb-surface-foreground) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  color: var(--nb-control-foreground) !important;
   font-family: var(--font-sans);
-  font-weight: 500;
+  font-size: 1rem !important;
+  font-weight: 400;
   transition: box-shadow var(--nb-transition), transform var(--nb-transition);
 }
 
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-select,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-native-select,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-otp-digit,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-date-picker-trigger,
-html.dark #arcane-root.arcane-theme-neubrutalism .neubrutalism-time-picker-trigger,
-html.dark #arcane-root.arcane-theme-neubrutalism textarea {
-  background-color: var(--nb-control-paper) !important;
-  color: var(--nb-control-foreground) !important;
+#arcane-root.arcane-theme-neubrutalism .arcane-select[aria-invalid="true"] {
+  border-color: var(--destructive) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-label {
+  display: block;
+  margin-bottom: .5rem;
+  color: var(--foreground) !important;
+  font-family: var(--font-sans) !important;
+  font-size: .875rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .025em !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-trigger {
+  gap: .75rem;
+  min-width: 0;
+  text-align: left;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-trigger > :first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-chevron {
+  display: flex;
+  flex-shrink: 0;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-dropdown {
+  padding: .375rem;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option {
+  width: calc(100% - 8px) !important;
+  min-height: 40px;
+  overflow-wrap: anywhere;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-error {
+  margin-top: .5rem;
+  color: var(--nb-error-foreground) !important;
+  font-size: .875rem;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-search input {
+  border-color: var(--nb-control-line) !important;
+  font-family: var(--font-sans);
+  font-size: 1rem !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input:focus,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input:focus-within,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea:focus,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-select:focus,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-select[data-open="true"],
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-trigger:focus,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-trigger[aria-expanded="true"],
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-date-picker-trigger:focus,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-time-picker-trigger:focus,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-otp-digit:focus,
 #arcane-root.arcane-theme-neubrutalism textarea:focus {
-  outline: none !important;
-  box-shadow: var(--nb-shadow-sm) !important;
+  outline: var(--nb-border-base) solid var(--ring) !important;
+  outline-offset: 2px;
+  box-shadow: var(--nb-shadow-md) !important;
   transform: translate(-1px, -1px);
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-checkbox {
   background-color: var(--nb-paper) !important;
-  border: var(--nb-border-base) solid var(--nb-line) !important;
+  border: var(--nb-border-base) solid var(--nb-control-line) !important;
   border-radius: var(--nb-radius-soft) !important;
   box-shadow: var(--nb-shadow-xs) !important;
   transition: transform var(--nb-transition), box-shadow var(--nb-transition);
@@ -874,45 +1103,93 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-checkbox[data-state="checked"] {
+  border-color: var(--nb-line) !important;
   background-color: var(--nb-accent) !important;
   color: var(--nb-on-accent) !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-toggle-switch {
   background-color: var(--nb-paper-soft) !important;
-  border: var(--nb-border-base) solid var(--nb-line) !important;
-  border-radius: var(--nb-radius-soft) !important;
+  border: var(--nb-border-base) solid var(--nb-control-line) !important;
+  border-radius: var(--nb-switch-track-radius) !important;
   box-shadow: var(--nb-shadow-xs) !important;
   transition: background-color var(--nb-transition), box-shadow var(--nb-transition);
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-toggle-switch[data-state="checked"] {
+  border-color: var(--nb-line) !important;
   background-color: var(--nb-accent) !important;
-  box-shadow: var(--nb-shadow-sm) !important;
+  box-shadow: var(--nb-shadow-xs) !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-toggle-switch-thumb {
-  background-color: var(--nb-paper) !important;
+  background-color: var(--nb-switch-thumb) !important;
   border: var(--nb-border-thin) solid var(--nb-line) !important;
-  border-radius: 50% !important;
-  box-shadow: var(--nb-shadow-xs) !important;
+  border-radius: var(--nb-switch-thumb-radius) !important;
+  box-shadow: none !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toggle-switch[data-state="unchecked"] .neubrutalism-toggle-switch-thumb {
+  transform: translateX(0) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toggle-switch[data-state="checked"] .neubrutalism-toggle-switch-thumb {
+  transform: translateX(var(--nb-switch-travel)) !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-circle {
   background-color: var(--nb-paper) !important;
-  border: var(--nb-border-base) solid var(--nb-line) !important;
-  border-radius: 50% !important;
-  box-shadow: var(--nb-shadow-xs) !important;
+  border: var(--nb-border-base) solid var(--nb-control-line) !important;
+  border-radius: var(--nb-radius-tight) !important;
+  box-shadow: none !important;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-input:checked + .neubrutalism-radio-circle {
-  background-color: var(--nb-accent) !important;
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-option[data-state="checked"] .neubrutalism-radio-circle {
+  border-color: var(--nb-line) !important;
+  background-color: var(--nb-accent-hot) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-dot {
+  visibility: hidden;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-option[data-state="checked"] .neubrutalism-radio-dot {
+  visibility: visible;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-card .neubrutalism-radio-label {
+  color: var(--foreground) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-radio-card, .neubrutalism-radio-button) {
+  border-color: var(--nb-control-line) !important;
+  background: var(--nb-paper) !important;
+  color: var(--foreground) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-radio-card, .neubrutalism-radio-button)[data-state="checked"] {
+  border-color: var(--nb-line) !important;
+  background: var(--nb-accent) !important;
+  color: var(--nb-on-accent) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-card .neubrutalism-radio-description {
+  color: var(--muted-foreground) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-card[data-state="checked"] :is(.neubrutalism-radio-label, .neubrutalism-radio-description) {
+  color: var(--nb-on-accent) !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-slider-track {
   background-color: var(--nb-paper) !important;
-  border: var(--nb-border-base) solid var(--nb-line) !important;
+  border: var(--nb-border-base) solid var(--nb-control-line) !important;
   border-radius: var(--nb-radius-soft) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-slider-value {
+  color: var(--foreground) !important;
+  font-family: var(--font-mono);
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-slider-fill {
@@ -921,9 +1198,9 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-slider-thumb {
-  background-color: var(--nb-paper) !important;
-  border: var(--nb-border-base) solid var(--nb-line) !important;
-  border-radius: 50% !important;
+  background-color: var(--nb-switch-thumb) !important;
+  border: var(--nb-border-base) solid var(--nb-control-line) !important;
+  border-radius: var(--nb-radius-tight) !important;
   box-shadow: var(--nb-shadow-xs) !important;
 }
 
@@ -940,12 +1217,41 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
   border-right: var(--nb-border-thin) solid var(--nb-line);
 }
 
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-tabs,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-tabs-content {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-tabs-list,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-tab-bar {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-tabs-trigger,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-tab-bar-item {
+  min-width: 0;
+  max-width: 100%;
+  flex-basis: auto !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-tab,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-tabs-trigger,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-tab-bar-item {
-  border: var(--nb-border-base) solid var(--nb-line) !important;
+  border: var(--nb-border-base) solid var(--nb-control-line) !important;
   border-radius: var(--nb-radius-soft) !important;
-  font-weight: 700;
+  font-family: var(--font-heading);
+  font-weight: 700 !important;
   background-color: var(--nb-paper) !important;
   transition: transform var(--nb-transition), box-shadow var(--nb-transition), background-color var(--nb-transition);
 }
@@ -953,7 +1259,9 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-tab:hover:not([data-disabled="true"]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-tabs-trigger:hover:not([data-disabled="true"]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-tab-bar-item:hover:not([data-disabled="true"]) {
+  border-color: var(--nb-line) !important;
   background-color: var(--accent) !important;
+  color: var(--nb-on-accent) !important;
   transform: translate(-1px, -1px);
   box-shadow: var(--nb-shadow-xs);
 }
@@ -961,6 +1269,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-tab[data-state="active"],
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-tabs-trigger[data-state="active"],
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-tab-bar-item[data-state="active"] {
+  border-color: var(--nb-line) !important;
   background-color: var(--nb-accent) !important;
   color: var(--nb-on-accent) !important;
   box-shadow: var(--nb-shadow-xs) !important;
@@ -973,7 +1282,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
   box-shadow: var(--nb-shadow-xs);
   font-weight: 700;
   background-color: var(--nb-paper);
-  color: var(--nb-surface-foreground);
+  color: var(--nb-surface-foreground) !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-avatar-inner {
@@ -990,10 +1299,6 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
   font-weight: 600;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast {
-  border-width: var(--nb-border-thick) !important;
-}
-
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-separator {
   background-color: var(--nb-ink) !important;
   border: none !important;
@@ -1006,6 +1311,10 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
   border-radius: var(--nb-radius-soft) !important;
   box-shadow: var(--nb-shadow-xs);
   opacity: 0.55;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-skeleton[data-arcane-intrinsic-shape="skeleton-circle"] {
+  border-radius: 50% !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-pagination-link {
@@ -1073,9 +1382,9 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
 
 #arcane-root.arcane-theme-neubrutalism .prose h1 {
   font-family: var(--font-heading);
-  font-size: 2.5rem;
-  font-weight: 900;
-  line-height: 1;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1.15;
   letter-spacing: -0.03em;
   margin-top: 0;
   margin-bottom: 1.5rem;
@@ -1083,9 +1392,9 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
 
 #arcane-root.arcane-theme-neubrutalism .prose h2 {
   font-family: var(--font-heading);
-  font-size: 1.75rem;
-  font-weight: 900;
-  line-height: 1.1;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   border-bottom: var(--nb-border-base) solid var(--nb-line);
   padding-bottom: 0.5rem;
@@ -1095,16 +1404,16 @@ html.dark #arcane-root.arcane-theme-neubrutalism textarea {
 
 #arcane-root.arcane-theme-neubrutalism .prose h3 {
   font-family: var(--font-heading);
-  font-size: 1.375rem;
-  font-weight: 800;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
   margin-top: 1.75rem;
   margin-bottom: 0.75rem;
 }
 
 #arcane-root.arcane-theme-neubrutalism .prose blockquote {
-  border-left: var(--nb-border-thick) solid var(--nb-line);
+  border: var(--nb-border-base) solid var(--nb-line);
   background-color: var(--nb-accent-cool);
-  color: var(--nb-on-accent);
+  color: var(--nb-on-accent-cool);
   padding: 0.75rem 1rem;
   margin: 1.5rem 0;
   font-weight: 600;
@@ -1219,10 +1528,11 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-button[data-variant="default"] {
   background-color: var(--nb-accent) !important;
   color: var(--nb-on-accent) !important;
-  border: var(--nb-border-base) solid var(--nb-line) !important;
+  border: var(--nb-border-base) solid var(--nb-line);
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-button[data-variant="secondary"] {
+  border-color: var(--nb-control-line);
   background-color: var(--nb-paper-soft) !important;
   color: var(--nb-surface-foreground) !important;
 }
@@ -1232,14 +1542,15 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   color: var(--destructive-foreground, var(--nb-paper)) !important;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-button[data-variant="outline"],
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-button[data-variant="ghost"] {
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-button[data-variant="outline"] {
+  border-color: var(--nb-control-line);
   background-color: var(--nb-paper) !important;
   color: var(--nb-surface-foreground) !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-button[data-variant="ghost"]:hover:not(:disabled):not([data-disabled="true"]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-button[data-variant="outline"]:hover:not(:disabled):not([data-disabled="true"]) {
+  border-color: var(--nb-line);
   background-color: var(--nb-accent) !important;
   color: var(--nb-on-accent) !important;
 }
@@ -1253,9 +1564,9 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-slider-thumb {
-  background: var(--nb-paper) !important;
+  background: var(--nb-switch-thumb) !important;
   background-image: none !important;
-  border: var(--nb-border-base) solid var(--nb-line) !important;
+  border: var(--nb-border-base) solid var(--nb-control-line) !important;
   box-shadow: var(--nb-shadow-xs) !important;
 }
 
@@ -1270,9 +1581,12 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   background-image: none !important;
   border: var(--nb-border-thin) solid var(--nb-line) !important;
   border-radius: var(--nb-radius-soft) !important;
-  box-shadow: var(--nb-shadow-xs) !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.02em;
+  box-shadow: var(--nb-shadow-sm) !important;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 400 !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-badge-primary {
@@ -1349,48 +1663,120 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   box-shadow: var(--nb-shadow-xs) !important;
 }
 
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-group,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure {
-  background: var(--nb-paper) !important;
-  background-image: none !important;
-  border: var(--nb-border-base) solid var(--nb-line) !important;
-  border-radius: var(--nb-radius-soft) !important;
-  box-shadow: var(--nb-shadow-sm) !important;
+  min-width: 0;
+  background: var(--nb-paper);
+  border: var(--nb-border-base) solid var(--nb-line);
+  border-radius: var(--nb-radius-soft);
+  box-shadow: var(--nb-shadow-sm);
+  color: var(--nb-surface-foreground);
   overflow: hidden;
 }
 
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion > details,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-group > .neubrutalism-disclosure {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion > details + details,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-group > .neubrutalism-disclosure + .neubrutalism-disclosure {
+  border-top: var(--nb-border-thin) solid var(--nb-line);
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-group {
+  gap: 0 !important;
+}
+
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-minimal {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-default {
-  background: transparent !important;
-  border: none !important;
-  border-bottom: var(--nb-border-thin) solid var(--nb-line) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion > details > summary,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-summary {
-  background: transparent !important;
-  font-family: var(--font-heading) !important;
-  font-weight: 800 !important;
-  letter-spacing: 0 !important;
-  padding: 0.875rem 1.125rem !important;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-height: 52px;
+  padding: .875rem 1.125rem;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.5;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
 }
 
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion > details > summary::-webkit-details-marker,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-summary::-webkit-details-marker {
+  display: none;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion > details > summary:hover,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-summary:hover {
-  background: var(--nb-paper-soft) !important;
+  background: var(--nb-paper-soft);
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion > details > summary:focus-visible,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-summary:focus-visible {
+  outline-offset: -4px;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion-title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion-category {
+  padding: .125rem .375rem;
+  background: var(--nb-accent);
+  color: var(--nb-on-accent);
+  border: var(--nb-border-thin) solid var(--nb-line);
+  border-radius: var(--nb-radius-tight);
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion-content {
+  padding: 0 1.125rem 1.125rem;
+  color: var(--nb-surface-foreground);
+  font-size: .9375rem;
+  line-height: 1.65;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-content {
-  border-top: var(--nb-border-thin) solid var(--nb-line) !important;
+  color: var(--nb-surface-foreground);
+  line-height: 1.65;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-minimal .neubrutalism-disclosure-content,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-default .neubrutalism-disclosure-content {
-  border-top: none !important;
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-chevron,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion .faq-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: 0;
+  color: inherit;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure[open] > summary > .neubrutalism-disclosure-chevron,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion > details[open] > summary > .faq-chevron {
+  transform: rotate(180deg);
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-empty-state-icon {
@@ -1464,7 +1850,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   border-bottom: none !important;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-static-table-header,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-static-table thead,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-data-table-header {
   background: var(--nb-accent) !important;
   color: var(--nb-on-accent) !important;
@@ -1473,35 +1859,101 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   border-bottom: var(--nb-border-base) solid var(--nb-line) !important;
 }
 
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-data-table-row.selected > td {
+  color: inherit !important;
+}
+
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-fade-edge,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-scroll-shadow {
   display: none !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-scroll-area {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  padding: 1rem;
+  scrollbar-gutter: stable;
   overflow: auto;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-scroll-rail {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  scrollbar-gutter: stable;
+  border-radius: var(--nb-radius-tight);
   background: var(--nb-paper) !important;
   border: var(--nb-border-base) solid var(--nb-line) !important;
   scrollbar-color: var(--nb-line) transparent;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast {
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-scroll-rail > div {
+  box-sizing: border-box;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-scroll-rail-content {
+  padding: 1rem;
+  overflow-wrap: anywhere;
+  overflow-y: auto;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-slot-counter,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-slot-counter-card {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  padding: 1rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-slot-counter > div {
+  max-width: 100%;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-slot-counter-row > .neubrutalism-slot-counter {
+  flex: 1 1 9rem;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-slot-counter-card > .neubrutalism-slot-counter {
+  width: 100%;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast-container {
+  max-width: calc(100% - var(--nb-toast-offset, 20px) - var(--nb-toast-offset, 20px));
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast-container > div {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast:not([data-arcane-decorated]) {
   background: var(--nb-paper) !important;
   background-image: none !important;
-  border: var(--nb-border-thick) solid var(--nb-line) !important;
+  border: var(--nb-border-base) solid var(--nb-line) !important;
   border-radius: var(--nb-radius-soft) !important;
   box-shadow: var(--nb-shadow-md) !important;
   color: var(--foreground) !important;
-  font-weight: 600;
+  font-weight: 400;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast[data-variant="success"]:not([data-arcane-decorated]) { border-color: var(--success) !important; }
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast[data-variant="warning"]:not([data-arcane-decorated]) { border-color: var(--warning) !important; }
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast[data-variant="error"]:not([data-arcane-decorated]) { border-color: var(--destructive) !important; }
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast[data-variant="info"]:not([data-arcane-decorated]) { border-color: var(--info, #3b82f6) !important; }
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast[data-variant="success"]:not([data-arcane-decorated]) { background: var(--success) !important; color: var(--success-foreground) !important; }
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast[data-variant="warning"]:not([data-arcane-decorated]) { background: var(--warning) !important; color: var(--warning-foreground) !important; }
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast[data-variant="error"]:not([data-arcane-decorated]) { background: #FF6B6B !important; color: #000000 !important; }
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast[data-variant="info"]:not([data-arcane-decorated]) { background: var(--info) !important; color: var(--info-foreground) !important; }
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast :is(.neubrutalism-toast-title, .neubrutalism-toast-message, .neubrutalism-toast-description, .neubrutalism-toast-icon, .neubrutalism-toast-dismiss) {
+  color: inherit !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-toast-title {
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-otp-digit {
   font-family: var(--font-mono) !important;
@@ -1511,6 +1963,20 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-otp-digit:focus {
   background: var(--nb-paper-soft) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-otp-digit[data-state="filled"] {
+  background: var(--nb-accent) !important;
+  color: var(--nb-on-accent) !important;
+  border-color: var(--nb-line) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-otp-digit.error {
+  border-color: var(--destructive) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-otp-input[data-state="error"] > span:last-child {
+  color: var(--nb-error-foreground) !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-floating,
@@ -1541,12 +2007,11 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   text-shadow: none !important;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-input:checked + .neubrutalism-radio-circle::after {
-  background: var(--nb-on-accent) !important;
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-radio-option[data-state="checked"] .neubrutalism-radio-circle > div {
+  background: var(--nb-on-accent-hot) !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-avatar-inner {
-  border-radius: var(--nb-radius-soft) !important;
   background-image: none !important;
 }
 
@@ -1693,11 +2158,6 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   font-weight: 900;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-disclosure-chevron,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-accordion-chevron {
-  color: var(--foreground) !important;
-}
-
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-resizable-handle {
   background: var(--nb-line) !important;
 }
@@ -1710,6 +2170,28 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   color: var(--foreground) !important;
   font-weight: 900;
   opacity: 0.6;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-breadcrumb-current,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar-group-label {
+  color: var(--foreground) !important;
+  font-weight: 700;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-top-announcement-bar, .neubrutalism-inline-hero-banner) {
+  flex-wrap: wrap;
+  gap: .75rem 1rem !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-top-announcement-bar, .neubrutalism-inline-hero-banner) a {
+  color: var(--foreground) !important;
+  text-decoration-thickness: 2px !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-top-announcement-bar, .neubrutalism-inline-hero-banner) button {
+  min-width: 36px;
+  min-height: 36px;
+  font-size: 1.5rem;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-context-menu-item,
@@ -1760,10 +2242,27 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   height: 4px !important;
 }
 
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-drawer-header {
+  gap: 12px;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-drawer-header > div,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-drawer-content,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-drawer-footer {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-drawer-content {
+  min-height: 0;
+}
+
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input::placeholder,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea::placeholder,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-command-input::placeholder,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-search::placeholder,
 #arcane-root.arcane-theme-neubrutalism textarea::placeholder {
-  color: color-mix(in srgb, var(--foreground) 45%, transparent) !important;
+  color: var(--muted-foreground) !important;
   font-weight: 500;
   opacity: 1;
 }
@@ -1797,8 +2296,12 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   font-weight: 600;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-field-error {
-  color: var(--destructive) !important;
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-field-error,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input-error,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea-error,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-error,
+#arcane-root.arcane-theme-neubrutalism .arcane-select-error {
+  color: var(--nb-error-foreground) !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-form-section {
@@ -2042,7 +2545,7 @@ $arcaneTocTreeLinesCss
   width: 1.65rem !important;
   height: 1.65rem !important;
   border: 0 !important;
-  border-radius: 0 !important;
+  border-radius: var(--nb-radius-tight) !important;
   background: transparent !important;
   color: currentColor !important;
   box-shadow: none !important;
@@ -2052,7 +2555,7 @@ $arcaneTocTreeLinesCss
   width: 1.45rem !important;
   height: 1.45rem !important;
   object-fit: contain !important;
-  border-radius: 0 !important;
+  border-radius: var(--nb-radius-tight) !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .kb-topbar-brand-label {
@@ -2214,7 +2717,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
   min-height: 100% !important;
   padding: 0 !important;
   border: 0 !important;
-  border-radius: 0 !important;
+  border-radius: var(--nb-radius-soft-lg) !important;
   background: transparent !important;
   box-shadow: none !important;
   overflow: visible !important;
@@ -2371,6 +2874,96 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
   transform: translate(2px, 2px) !important;
   background: var(--main) !important;
   color: var(--main-foreground) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar > .sidebar-header {
+  padding: 1rem !important;
+  border: 0 !important;
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar > .sidebar-nav {
+  padding: 0 0.75rem 0.75rem !important;
+  gap: 0.75rem !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar .neubrutalism-sidebar-expanded-only {
+  padding: 0 0.25rem 0.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar-group {
+  gap: 0.375rem !important;
+  margin-bottom: 0 !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar-group-label,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar .sidebar-section-header {
+  min-height: 0 !important;
+  padding: 0.25rem 0.375rem 0.375rem !important;
+  border: 0 !important;
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0.06em !important;
+  opacity: 1;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar :is(.sidebar-section, .sidebar-tree) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar .sidebar-details[open] > .sidebar-tree {
+  padding-top: 0.375rem !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar :is(.sidebar-link, .sidebar-summary) {
+  min-height: 44px !important;
+  padding: 0.625rem 0.75rem !important;
+  border: var(--nb-border-thin) solid transparent !important;
+  border-radius: var(--nb-radius-tight) !important;
+  background: transparent !important;
+  font-size: 0.9375rem !important;
+  line-height: 1.4 !important;
+  transform: none !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar :is(.sidebar-link.active, .sidebar-link:hover, .sidebar-summary:hover) {
+  border-color: var(--nb-line) !important;
+  background: var(--nb-accent) !important;
+  color: var(--nb-on-accent) !important;
+  box-shadow: none !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar .neubrutalism-sidebar-separator {
+  flex-shrink: 0;
+  margin: 0 0.375rem !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar-footer {
+  padding: 0.75rem 1rem 1rem !important;
+  gap: 0.75rem !important;
+  font-size: 0.875rem;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar-collapse {
+  min-height: 44px;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar.collapsed > :is(.sidebar-header, .sidebar-nav, .neubrutalism-sidebar-footer) {
+  padding-inline: 7px !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-sidebar.collapsed .neubrutalism-sidebar-collapse {
+  padding-inline: 0 !important;
 }
 
 #arcane-root.arcane-theme-neubrutalism .sidebar-link.active {
@@ -2587,7 +3180,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
   margin: 0 auto !important;
   padding: 0 !important;
   border: 0 !important;
-  border-radius: 0 !important;
+  border-radius: var(--nb-radius-soft-lg) !important;
   background: transparent !important;
   box-shadow: none !important;
   color: var(--foreground) !important;
@@ -2890,7 +3483,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-command-item {
   border: var(--nb-border-thin) solid transparent !important;
-  border-radius: 0 !important;
+  border-radius: var(--nb-radius-tight) !important;
   background: transparent !important;
   color: var(--foreground) !important;
   box-shadow: none !important;
@@ -2901,7 +3494,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-menubar-item:hover:not([data-disabled="true"]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-menubar-trigger:hover:not([data-disabled="true"]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option:hover:not([data-disabled="true"]),
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option[data-state="selected"],
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option[aria-selected="true"],
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-command-item:hover:not([data-disabled="true"]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-command-item[data-selected="true"] {
   border-color: var(--nb-line) !important;
@@ -2911,7 +3504,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-search-input {
   transform: translate(-1px, -1px) !important;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option[data-state="selected"]::before,
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-select-option[aria-selected="true"]::before,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-dropdown-item[aria-checked="true"]::before {
   background: var(--main) !important;
 }
@@ -3064,52 +3657,46 @@ html.light #arcane-root.neubrutalism-greyscale,
 
 html.dark #arcane-root.neubrutalism-greyscale,
 #arcane-root.dark.neubrutalism-greyscale {
-  --background: #101011;
-  --foreground: #F4F4F5;
-  --secondary-background: #1A1A1C;
-  --card: #1D1D20;
-  --card-foreground: #F4F4F5;
-  --card-hover: #29292D;
-  --popover: #1A1A1C;
-  --popover-foreground: #F4F4F5;
-  --muted: #29292D;
-  --muted-foreground: #DADAE0;
-  --border: #54545A;
-  --input: #202024;
-  --main: #EAEAEF;
+  --background: #101010;
+  --foreground: #F4F4F4;
+  --secondary-background: #1A1A1A;
+  --card: #1D1D1D;
+  --card-foreground: #F4F4F4;
+  --card-hover: #292929;
+  --popover: #1A1A1A;
+  --popover-foreground: #F4F4F4;
+  --muted: #292929;
+  --muted-foreground: #DADADA;
+  --border: #797979;
+  --input: #202020;
+  --main: #EAEAEA;
   --main-foreground: #000000;
-  --accent: #EAEAEF;
+  --accent: #EAEAEA;
   --accent-foreground: #000000;
-  --nb-accent: #EAEAEF;
-  --nb-dark-inverse-black: #EAEAEF;
-  --nb-dark-inverse-black-soft: rgba(234, 234, 239, 0.48);
+  --nb-accent: #EAEAEA;
+  --nb-dark-inverse-black: var(--foreground);
   --nb-on-dark-inverse-black: #000000;
-  --nb-line: color-mix(in srgb, var(--nb-dark-inverse-black) 54%, var(--background));
-  --nb-shadow-color: var(--nb-dark-inverse-black-soft);
-  --nb-on-background: #F4F4F5;
-  --nb-on-secondary-background: #F4F4F5;
-  --nb-on-card: #F4F4F5;
-  --nb-on-paper: #F4F4F5;
-  --nb-on-paper-soft: #E2E2E7;
+  --nb-line: var(--nb-line-in, #080808);
+  --nb-shadow-color: #080808;
+  --nb-on-background: #F4F4F4;
+  --nb-on-secondary-background: #F4F4F4;
+  --nb-on-card: #F4F4F4;
+  --nb-on-paper: #F4F4F4;
+  --nb-on-paper-soft: #E2E2E2;
   --nb-on-main: #000000;
   --nb-on-accent: #000000;
-  --nb-paper: #1D1D20;
-  --nb-paper-soft: #29292D;
-  --nb-control-paper: #202024;
-  --nb-control-foreground: #F4F4F5;
+  --nb-paper: #1D1D1D;
+  --nb-paper-soft: #292929;
+  --nb-control-paper: #202020;
+  --nb-control-foreground: #F4F4F4;
   --nb-tooltip-foreground: #FFFFFF;
-  --nb-surface-foreground: #F4F4F5;
-  --nb-selection-bg: #29292D;
-  --nb-selection-line: #686870;
-  --nb-landing-band-bg: #29292D;
-  --nb-on-landing-band: #F4F4F5;
-  --nb-terminal-bg: var(--nb-dark-inverse-black);
-  --nb-terminal-foreground: var(--nb-on-dark-inverse-black);
-  --nb-shadow-xs: 1px 1px 0 0 var(--nb-shadow-color);
-  --nb-shadow-sm: 2px 2px 0 0 var(--nb-shadow-color);
-  --nb-shadow-md: 3px 3px 0 0 var(--nb-shadow-color);
-  --nb-shadow-lg: 4px 4px 0 0 var(--nb-shadow-color);
-  --nb-shadow-xl: 5px 5px 0 0 var(--nb-shadow-color);
+  --nb-surface-foreground: #F4F4F4;
+  --nb-selection-bg: #292929;
+  --nb-selection-line: var(--nb-control-line);
+  --nb-landing-band-bg: #292929;
+  --nb-on-landing-band: #F4F4F4;
+  --nb-terminal-bg: #080808;
+  --nb-terminal-foreground: var(--foreground);
 }
 
 html.dark #arcane-root.neubrutalism-greyscale .kb-landing-hero,
@@ -3149,7 +3736,7 @@ html.dark #arcane-root.neubrutalism-greyscale .kb-landing-kicker,
 #arcane-root.arcane-theme-neubrutalism .kb-landing-terminal,
 #arcane-root.arcane-theme-neubrutalism .kb-landing-list-item {
   border: var(--nb-border-base) solid var(--nb-line);
-  border-radius: 0;
+  border-radius: var(--nb-radius-soft-lg);
   box-shadow: 0.55rem 0.55rem 0 var(--nb-shadow-color);
 }
 
@@ -3157,6 +3744,13 @@ html.dark #arcane-root.neubrutalism-greyscale .kb-landing-kicker,
   --nb-local-foreground: var(--nb-on-paper);
   background: var(--nb-paper, var(--primary));
   color: var(--nb-local-foreground) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .kb-landing-hero h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 #arcane-root.arcane-theme-neubrutalism .kb-landing-hero h1,
@@ -3178,7 +3772,7 @@ html.dark #arcane-root.neubrutalism-greyscale .kb-landing-kicker,
 #arcane-root.arcane-theme-neubrutalism .kb-landing-actions a,
 #arcane-root.arcane-theme-neubrutalism .kb-landing-list-index {
   border: var(--nb-border-base) solid var(--nb-line);
-  border-radius: 0;
+  border-radius: var(--nb-radius-soft);
   box-shadow: 0.25rem 0.25rem 0 var(--nb-shadow-color);
 }
 
@@ -3208,7 +3802,7 @@ html.dark #arcane-root.neubrutalism-greyscale .kb-landing-kicker,
 #arcane-root.arcane-theme-neubrutalism .kb-landing-terminal-row {
   --nb-local-foreground: var(--nb-terminal-foreground);
   border: var(--nb-border-thin) solid var(--nb-line);
-  border-radius: 0;
+  border-radius: var(--nb-radius-tight);
   background: var(--nb-terminal-bg);
   color: var(--nb-local-foreground) !important;
 }
@@ -3351,6 +3945,82 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-topbar-inner,
 #arcane-root.arcane-theme-neubrutalism .kb-search-input:active {
   transform: var(--nb-translate-press) !important;
   box-shadow: var(--nb-shadow-xs) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .arcane-mega-menu-trigger {
+  min-height: 44px;
+  font-family: var(--font-control) !important;
+  font-weight: 700 !important;
+  color: var(--foreground) !important;
+  background: var(--nb-paper) !important;
+  border: var(--nb-border-thin) solid var(--nb-line) !important;
+  border-radius: var(--nb-radius-soft);
+  box-shadow: var(--nb-shadow-xs);
+}
+
+#arcane-root.arcane-theme-neubrutalism .arcane-mega-menu-panel {
+  color: var(--foreground);
+  font-family: var(--font-body);
+  background: var(--nb-paper) !important;
+  border: var(--nb-border-thick) solid var(--nb-line) !important;
+  border-radius: var(--nb-radius-soft) !important;
+  box-shadow: var(--nb-shadow-md) !important;
+  gap: 1rem !important;
+  z-index: 1000 !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .arcane-mega-menu-item {
+  min-height: 44px;
+  font-family: var(--font-control);
+  color: var(--foreground);
+  border-radius: var(--nb-radius-soft) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .arcane-mega-menu-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(
+  .arcane-mega-menu-trigger, .arcane-mega-menu-item,
+  .neubrutalism-menubar-trigger, .neubrutalism-menubar-item
+):focus {
+  outline: 3px solid var(--nb-line) !important;
+  outline-offset: 2px;
+}
+
+#arcane-root.arcane-theme-neubrutalism .arcane-mega-menu-item:hover:not(:disabled),
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-menubar-item:focus {
+  background: var(--nb-selection-bg) !important;
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-menubar-content {
+  overflow-wrap: anywhere;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.neubrutalism-menubar, .neubrutalism-flexi-card-simple):not([data-arcane-decorated]) {
+  border-radius: var(--nb-radius-soft);
+}
+
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-resizable-grip {
+  border-radius: var(--nb-radius-tight);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #arcane-root.arcane-theme-neubrutalism .arcane-mega-menu-panel {
+    --nb-enter-x: 0px;
+    --nb-enter-y: calc(-1 * var(--nb-motion-distance));
+    transform-origin: center top;
+    transition: opacity var(--nb-motion-fast) var(--nb-motion-ease);
+  }
+
+  #arcane-root.arcane-theme-neubrutalism .arcane-mega-menu-panel[data-arcane-state="open"]:not([hidden]) {
+    animation: nb-surface-enter var(--nb-motion-enter) var(--nb-motion-settle);
+  }
+
+  #arcane-root.arcane-theme-neubrutalism .arcane-mega-menu-panel[data-arcane-state="closed"] {
+    opacity: 0;
+  }
 }
 ''';
   }

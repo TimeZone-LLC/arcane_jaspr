@@ -28,6 +28,7 @@ class ArcaneToggleSwitch extends StatelessWidget {
   final ComponentSize size;
   final ColorVariant color;
   final String? label;
+  final String? ariaLabel;
   final bool labelLeft;
   final String? group;
   final String? itemValue;
@@ -47,6 +48,7 @@ class ArcaneToggleSwitch extends StatelessWidget {
     this.size = ComponentSize.md,
     this.color = ColorVariant.primary,
     this.label,
+    this.ariaLabel,
     this.labelLeft = false,
     this.group,
     this.itemValue,
@@ -62,6 +64,7 @@ class ArcaneToggleSwitch extends StatelessWidget {
     this.disabled = false,
     this.size = ComponentSize.md,
     this.label,
+    this.ariaLabel,
     this.labelLeft = false,
     this.group,
     this.itemValue,
@@ -77,6 +80,7 @@ class ArcaneToggleSwitch extends StatelessWidget {
     this.disabled = false,
     this.size = ComponentSize.md,
     this.label,
+    this.ariaLabel,
     this.labelLeft = false,
     this.group,
     this.itemValue,
@@ -92,6 +96,7 @@ class ArcaneToggleSwitch extends StatelessWidget {
     this.disabled = false,
     this.size = ComponentSize.md,
     this.label,
+    this.ariaLabel,
     this.labelLeft = false,
     this.group,
     this.itemValue,
@@ -107,6 +112,7 @@ class ArcaneToggleSwitch extends StatelessWidget {
     this.disabled = false,
     this.size = ComponentSize.md,
     this.label,
+    this.ariaLabel,
     this.labelLeft = false,
     this.group,
     this.itemValue,
@@ -133,6 +139,7 @@ class ArcaneToggleSwitch extends StatelessWidget {
         size: size,
         color: color,
         label: label,
+        ariaLabel: ariaLabel,
         labelLeft: labelLeft,
         group: group,
         itemValue: itemValue,

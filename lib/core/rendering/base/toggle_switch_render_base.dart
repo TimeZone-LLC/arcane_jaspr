@@ -68,7 +68,10 @@ abstract class ToggleSwitchRenderBase extends StatelessComponent {
 
     final Map<String, String> itemAttrs = mergeAttrs(<Map<String, String>>[
       <String, String>{
-        if (props.label != null) 'aria-labelledby': '${props.id}-label',
+        if (props.ariaLabel != null)
+          'aria-label': props.ariaLabel!
+        else if (props.label != null)
+          'aria-labelledby': '${props.id}-label',
       },
       groupItemAttrs(
         groupId: groupId,

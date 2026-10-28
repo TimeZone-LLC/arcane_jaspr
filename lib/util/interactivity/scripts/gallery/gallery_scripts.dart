@@ -58,9 +58,12 @@ class GalleryScripts {
     return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
   }
 
-  function spanDisplayRatio(columnSpan, rowSpan, columnWidth, rowHeight, gap) {
-    const width = columnSpan * columnWidth + Math.max(0, columnSpan - 1) * gap;
-    const height = rowSpan * rowHeight + Math.max(0, rowSpan - 1) * gap;
+  function spanDisplayRatio(columnSpan, rowSpan, columnWidth, rowHeight, gap, item = {}) {
+    const width = columnSpan * columnWidth + Math.max(0, columnSpan - 1) * gap
+      - safeNumber(item.chromeWidth, 0);
+    const height = rowSpan * rowHeight + Math.max(0, rowSpan - 1) * gap
+      - safeNumber(item.chromeHeight, 0);
+    if (width <= 0 || height <= 0) return Infinity;
     return width / Math.max(1, height);
   }
 
@@ -97,13 +100,14 @@ class GalleryScripts {
     };
   }
 
-  function spanRatioScore(aspectRatio, columnSpan, rowSpan, layout) {
+  function spanRatioScore(aspectRatio, columnSpan, rowSpan, layout, item = {}) {
     const displayRatio = spanDisplayRatio(
       columnSpan,
       rowSpan,
       layout.columnWidth,
       layout.rowHeight,
       layout.gap,
+      item,
     );
     return Math.abs(Math.log(displayRatio / aspectRatio));
   }
@@ -133,7 +137,9 @@ class GalleryScripts {
           layout.columnWidth,
           layout.rowHeight,
           layout.gap,
+          item,
         );
+        if (!Number.isFinite(displayRatio)) continue;
         const ratioScore = Math.abs(Math.log(displayRatio / aspectRatio));
         const area = columnSpan * rowSpan;
         let score = ratioScore * 4 + Math.abs(area - targetArea) * 0.12;
@@ -183,6 +189,63 @@ class GalleryScripts {
       a.rowSpan - b.rowSpan,
     );
     return candidates;
+  }
+
+  function galleryJustifiedRows(items, options = {}) {
+    const width = safeNumber(options.width, 1);
+    const gap = safeNumber(options.gap, 0);
+    const targetHeight = safeNumber(options.targetHeight, 280);
+    const maxHeight = safeNumber(options.maxHeight, 380);
+    const rows = [];
+    for (let start = 0; start < items.length;) {
+      if (width <= 600) {
+        const item = items[start];
+        rows.push({
+          start, count: 1,
+          height: Math.max(1, width - safeNumber(item.chromeWidth, 0)) /
+            safeNumber(item.aspectRatio, 1),
+          widths: [width],
+        });
+        start++;
+        continue;
+      }
+
+      let best = null;
+      let ratioSum = 0;
+      let chromeSum = 0;
+      let minimumHeight = 0;
+      for (let count = 1; count <= Math.min(6, items.length - start); count++) {
+        const item = items[start + count - 1];
+        ratioSum += safeNumber(item.aspectRatio, 1);
+        chromeSum += safeNumber(item.chromeWidth, 0);
+        minimumHeight = Math.max(minimumHeight,
+          (safeNumber(item.minimumWidth, 0) - safeNumber(item.chromeWidth, 0)) /
+            safeNumber(item.aspectRatio, 1));
+        const availableWidth = width - chromeSum - (count - 1) * gap;
+        if (availableWidth <= 0) break;
+        const lastRow = start + count === items.length;
+        const height = Math.min(
+          availableWidth / ratioSum,
+          lastRow ? Math.min(maxHeight, Math.max(targetHeight, minimumHeight)) : maxHeight,
+        );
+        const usedWidth = height * ratioSum + chromeSum + (count - 1) * gap;
+        const score = Math.abs(Math.log(height / targetHeight)) +
+          Math.max(0, 1 - usedWidth / width) * 0.5;
+        const fitsMinimumWidth = height >= minimumHeight;
+        if (!best || (fitsMinimumWidth && !best.fitsMinimumWidth) ||
+            (fitsMinimumWidth === best.fitsMinimumWidth && score < best.score)) {
+          best = { start, count, height, score, fitsMinimumWidth };
+        }
+      }
+      if (!best) break;
+      rows.push({
+        start, count: best.count, height: best.height,
+        widths: items.slice(start, start + best.count).map((item) =>
+          best.height * safeNumber(item.aspectRatio, 1) + safeNumber(item.chromeWidth, 0)),
+      });
+      start += best.count;
+    }
+    return rows;
   }
 
   function makeRow(columns) {
@@ -299,12 +362,14 @@ class GalleryScripts {
       current.columnSpan,
       current.rowSpan,
       layout,
+      item,
     );
     const nextScore = spanRatioScore(
       aspectRatio,
       nextPlacement.columnSpan,
       nextPlacement.rowSpan,
       layout,
+      item,
     );
     const allowedMismatch = Math.max(currentScore + 0.08, maxRatioMismatch);
     if (nextScore > allowedMismatch) {
@@ -712,8 +777,129 @@ class GalleryScripts {
 
   const lastMeasuredWidth = typeof WeakMap === 'function' ? new WeakMap() : null;
 
+  function setLayoutProperty(element, property, value) {
+    if (element.style.getPropertyValue(property) === value) return;
+    if (value) element.style.setProperty(property, value);
+    else element.style.removeProperty(property);
+  }
+
+  function styleNumber(style, property) {
+    return Number.parseFloat(style.getPropertyValue(property)) || 0;
+  }
+
+  function boxInsets(style) {
+    return {
+      horizontal: styleNumber(style, 'border-left-width') + styleNumber(style, 'border-right-width') +
+        styleNumber(style, 'padding-left') + styleNumber(style, 'padding-right'),
+      vertical: styleNumber(style, 'border-top-width') + styleNumber(style, 'border-bottom-width') +
+        styleNumber(style, 'padding-top') + styleNumber(style, 'padding-bottom'),
+    };
+  }
+
+  function layoutHeight(element, style) {
+    const height = Number.parseFloat(style.height);
+    if (!Number.isFinite(height)) return element.offsetHeight;
+    return height + (style.boxSizing === 'border-box' ? 0 : boxInsets(style).vertical);
+  }
+
+  function applyJustifiedRows(container) {
+    const style = window.getComputedStyle(container);
+    const width = container.clientWidth - styleNumber(style, 'padding-left') -
+      styleNumber(style, 'padding-right');
+    if (width <= 0) return;
+    const items = Array.from(container.children)
+      .filter((element) => element.hasAttribute('data-arcane-gallery-item'))
+      .map((element) => {
+        const media = element.querySelector('[data-arcane-gallery-media]');
+        const frameStyle = window.getComputedStyle(element);
+        const frameInsets = boxInsets(frameStyle);
+        const mediaInsets = media ? boxInsets(window.getComputedStyle(media)) : { horizontal: 0, vertical: 0 };
+        return {
+          element, media, frameStyle, frameInsets, mediaInsets,
+          aspectRatio: safeNumber(element.dataset.ratio, 1),
+          chromeWidth: frameInsets.horizontal + mediaInsets.horizontal,
+          minimumWidth: element.querySelector('[data-arcane-gallery-caption]') ? 180 : 0,
+        };
+      });
+    const gap = styleNumber(style, 'column-gap');
+    const rowGap = styleNumber(style, 'row-gap');
+    const clearance = styleNumber(style, '--arcane-gallery-decoration-clearance');
+    const horizontalRoom = Math.max(0, Math.min(gap / 2,
+      styleNumber(style, 'padding-left'), styleNumber(style, 'padding-right')) - clearance - .5);
+    const verticalRoom = Math.max(0, Math.min(rowGap / 2,
+      styleNumber(style, 'padding-top'), styleNumber(style, 'padding-bottom')) - clearance - .5);
+    const maxHeight = items.some((item) => item.minimumWidth > 0) ? 600 : 380;
+    const rows = galleryJustifiedRows(items, { width, gap, maxHeight });
+
+    for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+      const row = rows[rowIndex];
+      const imageHeight = Math.max(1 / 64, Math.floor(row.height * 64) / 64);
+      const rowItems = items.slice(row.start, row.start + row.count);
+      const panelWidths = row.widths.map((panelWidth) => Math.floor(panelWidth * 64) / 64);
+      const rowWidth = panelWidths.reduce((sum, panelWidth) => sum + panelWidth, 0) +
+        (row.count - 1) * gap;
+      for (let index = 0; index < rowItems.length; index++) {
+        const item = rowItems[index];
+        // Round down to the browser's layout unit so a full row cannot wrap
+        // its last panel because individual flex widths rounded upward.
+        setLayoutProperty(item.element, 'width', panelWidths[index] + 'px');
+        // Reserve a capped row's unused space without adding nodes that would
+        // conflict with framework reconciliation or change the reading order.
+        setLayoutProperty(item.element, 'margin-inline-end', index === rowItems.length - 1
+          ? 'max(0px, calc(100% - ' + rowWidth + 'px))'
+          : '0px');
+        if (item.media) {
+          setLayoutProperty(item.media, 'height', (imageHeight + item.mediaInsets.vertical) + 'px');
+          setLayoutProperty(item.media, 'aspect-ratio', 'auto');
+        }
+      }
+
+      let chromeHeight = 0;
+      for (const item of rowItems) {
+        let extra = item.frameInsets.vertical + item.mediaInsets.vertical;
+        const children = Array.from(item.element.children);
+        extra += Math.max(0, children.length - 1) * styleNumber(item.frameStyle, 'row-gap');
+        for (const child of children) {
+          const childStyle = window.getComputedStyle(child);
+          extra += styleNumber(childStyle, 'margin-top') + styleNumber(childStyle, 'margin-bottom');
+          if (child !== item.media) extra += layoutHeight(child, childStyle);
+        }
+        chromeHeight = Math.max(chromeHeight, extra);
+      }
+      for (let index = 0; index < rowItems.length; index++) {
+        const item = rowItems[index];
+        const panelHeight = imageHeight + chromeHeight;
+        setLayoutProperty(item.element, 'height', panelHeight + 'px');
+        const desiredAngle = styleNumber(item.frameStyle, '--arcane-gallery-panel-angle');
+        let lower = 0;
+        let upper = Math.abs(desiredAngle);
+        // Reserve the rotated ink and focus bounds without scaling the artwork.
+        for (let step = 0; step < 16; step++) {
+          const angle = (lower + upper) / 2;
+          const radians = angle * Math.PI / 180;
+          const expansionX = (panelWidths[index] * (Math.cos(radians) - 1) +
+            panelHeight * Math.sin(radians)) / 2;
+          const expansionY = (panelHeight * (Math.cos(radians) - 1) +
+            panelWidths[index] * Math.sin(radians)) / 2;
+          if (expansionX <= horizontalRoom && expansionY <= verticalRoom) lower = angle;
+          else upper = angle;
+        }
+        const rotation = Math.sign(desiredAngle) * Math.floor(lower * 1000) / 1000;
+        setLayoutProperty(item.element, '--arcane-gallery-panel-rotation', rotation + 'deg');
+        item.element.dataset.arcaneGalleryRow = String(rowIndex);
+        item.element.dataset.arcaneGalleryDisplayRatio = String(item.aspectRatio);
+        item.element.dataset.arcaneGalleryRatioMismatch = '0';
+      }
+    }
+    container.classList.add('is-arcane-gallery-ready');
+  }
+
   function applyMasonry(container) {
     if (!container || container.clientWidth <= 0) {
+      return;
+    }
+    if (container.dataset.arcaneGalleryComposition === 'justified') {
+      applyJustifiedRows(container);
       return;
     }
 
@@ -766,9 +952,19 @@ class GalleryScripts {
       },
       columns,
     );
-    const items = elements.map((element) => ({
-      aspectRatio: safeNumber(element.dataset.ratio, 1),
-    }));
+    const items = elements.map((element) => {
+      const item = { aspectRatio: safeNumber(element.dataset.ratio, 1) };
+      if (element.dataset.arcaneGalleryMeasureMedia === 'true') {
+        const media = element.querySelector('[data-arcane-gallery-media]');
+        if (media) {
+          const frameBounds = element.getBoundingClientRect();
+          const mediaBounds = media.getBoundingClientRect();
+          item.chromeHeight = Math.max(0, frameBounds.height - mediaBounds.height);
+          item.chromeWidth = Math.max(0, frameBounds.width - mediaBounds.width);
+        }
+      }
+      return item;
+    });
     const placements = galleryPack(items, {
       columns,
       columnWidth,
@@ -791,30 +987,28 @@ class GalleryScripts {
       // comparison is also the loop-breaker for the document MutationObserver:
       // our own style writes fire style mutations, but the echo repack finds the
       // styles already correct and writes nothing, so the observer settles.
-      if (
-        element.style.gridColumn === gridColumn &&
-        element.style.gridRow === gridRow
-      ) {
-        continue;
-      }
-
       const displayRatio = spanDisplayRatio(
         placement.columnSpan,
         placement.rowSpan,
         columnWidth,
         rowHeight,
         gap,
+        items[index],
       );
       const ratioMismatch = Math.abs(
         Math.log(displayRatio / safeNumber(items[index]?.aspectRatio, 1)),
       );
-      element.style.gridColumn = gridColumn;
-      element.style.gridRow = gridRow;
+      if (element.style.gridColumn !== gridColumn) {
+        element.style.gridColumn = gridColumn;
+      }
+      if (element.style.gridRow !== gridRow) {
+        element.style.gridRow = gridRow;
+      }
       element.dataset.arcaneGalleryColumnSpan = String(placement.columnSpan);
       element.dataset.arcaneGalleryRowSpan = String(placement.rowSpan);
       element.dataset.arcaneGalleryDisplayRatio = displayRatio.toFixed(4);
       element.dataset.arcaneGalleryRatioMismatch = ratioMismatch.toFixed(4);
-      element.dataset.arcaneGalleryFit = 'cover';
+      element.dataset.arcaneGalleryFit ||= 'cover';
     }
 
     container.classList.add('is-arcane-gallery-ready');
@@ -824,12 +1018,12 @@ class GalleryScripts {
     return;
   }
 
-  const CONTAINER_SELECTOR = '[data-arcane-gallery][data-packing="true"]';
+  const CONTAINER_SELECTOR = '[data-arcane-gallery][data-packing="true"], [data-arcane-gallery][data-arcane-gallery-composition="justified"]';
   const scheduled = new WeakSet();
   const resizeObserver = 'ResizeObserver' in window
     ? new ResizeObserver((entries) => {
         for (const entry of entries) {
-          schedule(entry.target);
+          schedule(containerFor(entry.target));
         }
       })
     : null;
@@ -849,6 +1043,8 @@ class GalleryScripts {
     if (!container) {
       return;
     }
+    container.querySelectorAll('[data-arcane-gallery-caption], [data-arcane-gallery-footer]')
+      .forEach((caption) => resizeObserver?.observe(caption));
     if (container.dataset.arcaneGalleryObserved === 'true') {
       // Already wired up: just request a repack (idempotent).
       schedule(container);
@@ -934,6 +1130,7 @@ class GalleryScripts {
         'style',
         'data-ratio',
         'data-packing',
+        'data-arcane-gallery-composition',
         'data-arcane-gallery-minimum-tile-area',
         'data-arcane-gallery-target-tile-area',
       ],
@@ -945,6 +1142,7 @@ class GalleryScripts {
     refresh: refreshAll,
     refreshAll,
     pack: galleryPack,
+    justifiedRows: galleryJustifiedRows,
     candidateSpans: galleryCandidateSpans,
   };
 

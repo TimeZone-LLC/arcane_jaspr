@@ -7,8 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## x.x.x
 
+### Added
+
+- Gallery renderers choose caption placement and proportionate rows that preserve complete artwork and source order.
+- Toggle switches accept an `ariaLabel` for controls labeled by their surrounding application row.
+
 ### Fixed
 
+- Justified galleries retain image proportions, measured captions, and safe panel rotation when their containers resize.
+- Buttons preserve explicit decorations under stylesheet overrides.
 - Grid galleries reserve square artwork areas before media loads, including custom canvas content, without collapsing beneath Win95 title bars.
 
 ## [6.0.0] - 2026-10-15

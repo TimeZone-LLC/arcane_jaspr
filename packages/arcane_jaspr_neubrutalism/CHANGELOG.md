@@ -1,5 +1,22 @@
 # Changelog
 
+## x.x.x
+
+### Added
+
+- `NeubrutalismVariant.neuComic` supplies comic typography, paper and charcoal surfaces, layered overlays, and embedded licensed fonts.
+- NeuComic gallery panels preserve artwork ratios with integrated captions, ink outlines, hard shadows, and bounded rotation.
+- Optional rounded corners and neutral greyscale and red-black palettes.
+
+### Changed
+
+- NeuComic switches use square checked indicators within 44px hit targets; sliders use rectangular thumbs.
+- Shared theme tokens provide readable controls, focus states, muted accents, and reduced-motion styling.
+
+### Fixed
+
+- Date pickers expose validation state for theme styling and assistive technology.
+
 ## [6.0.0] - 2026-10-15
 
 ### Changed

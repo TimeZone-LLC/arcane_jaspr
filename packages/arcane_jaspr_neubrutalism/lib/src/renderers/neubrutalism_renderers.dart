@@ -2,6 +2,7 @@ import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/renderers.dart';
+import 'package:arcane_jaspr_neubrutalism/src/neubrutalism_variant.dart';
 
 // Neubrutalism-specific renderer imports
 import 'accordion.dart';
@@ -69,17 +70,12 @@ import 'toggle_switch.dart';
 import 'skeleton.dart';
 import 'promo/promo.dart';
 
-/// Neubrutalism component renderers.
-///
-/// Implements all components according to the Neubrutalism design language:
-/// - OLED-first dark mode with pure black backgrounds
-/// - Restrained accent emphasis
-/// - 1.25x spacing compared to ShadCN
-/// - Larger border radius (14px default)
-/// - Premium dark, high-contrast aesthetic
+/// Square outlines, hard shadows, and paper surfaces for Classic and NeuComic.
 class NeubrutalismRenderers extends ComponentRenderers
     with TextAreaRendererContract {
-  const NeubrutalismRenderers();
+  final NeubrutalismVariant variant;
+
+  const NeubrutalismRenderers({this.variant = NeubrutalismVariant.classic});
 
   @override
   Component button(ButtonProps props) => NeubrutalismButton(props);
@@ -94,7 +90,8 @@ class NeubrutalismRenderers extends ComponentRenderers
   Component card(CardProps props) => NeubrutalismCard(props);
 
   @override
-  Component gallery(GalleryProps props) => NeubrutalismGallery(props);
+  Component gallery(GalleryProps props) =>
+      NeubrutalismGallery(props, variant: variant);
 
   @override
   Component statCard(StatCardProps props) => NeubrutalismStatCard(props);

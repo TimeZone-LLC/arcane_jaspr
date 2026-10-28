@@ -10,6 +10,9 @@ enum ArcaneGalleryLayout {
   grid,
 }
 
+/// The caption position chosen by a gallery renderer.
+enum ArcaneGalleryCaptionPlacement { hidden, aboveMedia, belowMedia }
+
 /// The primary media of a gallery tile.
 ///
 /// [aspectRatio] (width / height) is REQUIRED — it drives the masonry row span
@@ -44,9 +47,8 @@ class ArcaneGalleryTile {
   /// hover-preview video). Sized by [media]'s aspect ratio.
   final Widget? mediaChild;
 
-  /// The tile caption. Rendered as the win95 window title bar; the card-style
-  /// themes (shadcn, neubrutalism, neon) suppress the visible caption for a
-  /// clean media-only tile and expose it via the tile's `aria-label` instead.
+  /// The tile caption. Win95 uses a title bar and NeuComic places it below the
+  /// artwork. Media-only themes expose it through the tile's accessible name.
   final String? title;
 
   /// Secondary line (author, subtitle).

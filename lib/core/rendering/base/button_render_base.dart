@@ -85,6 +85,8 @@ abstract class ButtonRenderBase extends StatelessComponent {
       'data-disabled': '$isDisabled',
       'data-variant': props.variant.name,
       'data-size': props.size.name,
+      if (props.decoration != null || props.styles != null)
+        'data-arcane-decorated': '',
       ...?props.attributes,
     };
     final Map<String, String> actionAttrs = isDisabled

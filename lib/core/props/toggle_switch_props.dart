@@ -16,6 +16,7 @@ class ToggleSwitchProps {
   final ComponentSize size;
   final ColorVariant color;
   final String? label;
+  final String? ariaLabel;
   final bool labelLeft;
   final String? group;
   final String? itemValue;
@@ -36,6 +37,7 @@ class ToggleSwitchProps {
     this.size = ComponentSize.md,
     this.color = ColorVariant.primary,
     this.label,
+    this.ariaLabel,
     this.labelLeft = false,
     this.group,
     this.itemValue,
@@ -52,6 +54,7 @@ class ToggleSwitchProps {
     ComponentSize? size,
     ColorVariant? color,
     String? label,
+    String? ariaLabel,
     bool? labelLeft,
     String? group,
     String? itemValue,
@@ -67,6 +70,7 @@ class ToggleSwitchProps {
       size: size ?? this.size,
       color: color ?? this.color,
       label: label ?? this.label,
+      ariaLabel: ariaLabel ?? this.ariaLabel,
       labelLeft: labelLeft ?? this.labelLeft,
       group: group ?? this.group,
       itemValue: itemValue ?? this.itemValue,
