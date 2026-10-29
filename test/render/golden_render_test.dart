@@ -94,13 +94,18 @@ String _extractBody(String html) {
     dotAll: true,
   ).firstMatch(html);
   final String body = match != null ? match.group(1)! : html;
-  final Map<String, String> fieldIds = <String, String>{};
+  final Map<String, Map<String, String>> generatedIds =
+      <String, Map<String, String>>{};
   return body.replaceAllMapped(
-    RegExp(r'\barcane-field-\d+\b'),
-    (Match field) => fieldIds.putIfAbsent(
-      field.group(0)!,
-      () => 'arcane-field-${fieldIds.length}',
-    ),
+    RegExp(r'\b(arcane-field|arcane-mega)-\d+\b'),
+    (Match field) {
+      final String prefix = field.group(1)!;
+      final Map<String, String> ids = generatedIds.putIfAbsent(
+        prefix,
+        () => <String, String>{},
+      );
+      return ids.putIfAbsent(field.group(0)!, () => '$prefix-${ids.length}');
+    },
   );
 }
 

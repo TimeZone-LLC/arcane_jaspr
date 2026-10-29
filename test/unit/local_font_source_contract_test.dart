@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:arcane_jaspr/arcane_jaspr.dart';
 import 'package:arcane_jaspr_neubrutalism/arcane_jaspr_neubrutalism.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
 import 'package:jaspr_test/jaspr_test.dart';
@@ -92,6 +91,10 @@ Iterable<File> _sourceFiles() sync* {
           path.endsWith('/web/assets/search-index.json')) {
         continue;
       }
+      // This document records download provenance for fonts embedded as data URLs.
+      if (path == 'packages/arcane_jaspr_neubrutalism/FONT_LICENSES.md') {
+        continue;
+      }
       if (!_sourceExtensions.any(path.endsWith)) continue;
       yield entity;
     }
@@ -136,14 +139,64 @@ void main() {
     expect(_isRemoteFontOrStylesheet(endpoint, stylesheetSource: true), isTrue);
   });
 
-  test('built-in web themes name committed product font assets', () {
-    for (final ArcaneStylesheet stylesheet in <ArcaneStylesheet>[
-      const ShadcnStylesheet(),
-      const NeubrutalismStylesheet(),
+  test('remote font endpoints remain forbidden in ordinary documentation', () {
+    for (final Uri uri in <Uri>[
+      Uri.https('fonts.googleapis.com', '/css2'),
+      Uri.https('fonts.gstatic.com', '/font.woff2'),
     ]) {
-      expect(stylesheet.fonts.sans, "'Akzidenz-GroteskPro'");
-      expect(stylesheet.fonts.heading, "'ITCAvantGardeStd'");
-      expect(stylesheet.fonts.mono, "'Hack'");
+      expect(_isRemoteFontOrStylesheet(uri, documentation: true), isTrue);
+    }
+  });
+
+  test('ShadCN names committed product font assets', () {
+    const ShadcnStylesheet stylesheet = ShadcnStylesheet();
+    expect(stylesheet.fonts.sans, "'Akzidenz-GroteskPro'");
+    expect(stylesheet.fonts.heading, "'ITCAvantGardeStd'");
+    expect(stylesheet.fonts.mono, "'Hack'");
+  });
+
+  test('Neubrutalism font stacks use embedded faces in both variants', () {
+    for (final NeubrutalismVariant variant in NeubrutalismVariant.values) {
+      final NeubrutalismStylesheet stylesheet = NeubrutalismStylesheet(
+        variant: variant,
+      );
+      expect(stylesheet.fonts.sans, "'Inter', Arial, Helvetica, sans-serif");
+      expect(
+        stylesheet.fonts.heading,
+        variant == NeubrutalismVariant.neuComic
+            ? "'Inter', Arial, Helvetica, sans-serif"
+            : "'Space Grotesk', Arial, Helvetica, sans-serif",
+      );
+      expect(
+        stylesheet.fonts.mono,
+        "'Space Mono', 'SFMono-Regular', Consolas, monospace",
+      );
+      final Set<String> embeddedFamilies = RegExp(r"font-family:\s*'([^']+)'")
+          .allMatches(stylesheet.fontFaces)
+          .map((RegExpMatch match) => match.group(1)!)
+          .toSet();
+      expect(
+        embeddedFamilies,
+        containsAll(<String>[
+          'Inter',
+          'Space Grotesk',
+          'Space Mono',
+          'Syne',
+          'Bangers',
+          'Comic Neue',
+        ]),
+      );
+      final List<RegExpMatch> sources = RegExp(
+        r'''url\(['"]?([^'"\)]+)['"]?\)''',
+      ).allMatches(stylesheet.fontFaces).toList();
+      expect(sources, isNotEmpty);
+      for (final RegExpMatch source in sources) {
+        expect(
+          source.group(1)!.startsWith('data:font/woff2;base64,'),
+          isTrue,
+          reason: 'Bundled font faces must not require remote or host assets',
+        );
+      }
     }
   });
 

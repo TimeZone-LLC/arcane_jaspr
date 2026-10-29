@@ -85,7 +85,7 @@ jobs:
         if: matrix.package == '.'
         env:
           CHROME_EXECUTABLE: google-chrome
-        run: find test -name '*_browser_test.dart' -type f -print0 | xargs -0 dart test --platform chrome
+        run: find test -name '*_browser_test.dart' -type f -print0 | xargs -0 dart test --platform chrome --concurrency=1
 
       - name: Publish dry run
         if: matrix.skip_publish != true
