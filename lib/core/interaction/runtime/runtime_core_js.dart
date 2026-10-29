@@ -76,6 +76,19 @@ function getFocusable(root) {
     if (el.offsetParent === null && el.getClientRects().length === 0) continue;
     if (el.hasAttribute('disabled')) continue;
     if (el.getAttribute('aria-hidden') === 'true') continue;
+    // Closed details can retain layout boxes for content that is not tabbable.
+    let closedDetailsContent = false;
+    for (let ancestor = el.parentElement; ancestor && root.contains(ancestor); ancestor = ancestor.parentElement) {
+      if (ancestor.tagName !== 'DETAILS' || ancestor.hasAttribute('open')) continue;
+      const summary = Array.from(ancestor.children).find(function(child) {
+        return child.tagName === 'SUMMARY';
+      });
+      if (!summary || !summary.contains(el)) {
+        closedDetailsContent = true;
+        break;
+      }
+    }
+    if (closedDetailsContent) continue;
     out.push(el);
   }
   return out;

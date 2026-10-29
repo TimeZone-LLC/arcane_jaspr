@@ -804,8 +804,9 @@ class GalleryScripts {
 
   function applyJustifiedRows(container) {
     const style = window.getComputedStyle(container);
-    const width = container.clientWidth - styleNumber(style, 'padding-left') -
-      styleNumber(style, 'padding-right');
+    // Computed CSS widths retain fractions without inheriting visual transforms.
+    const width = styleNumber(style, 'width') -
+      (style.boxSizing === 'border-box' ? boxInsets(style).horizontal : 0);
     if (width <= 0) return;
     const items = Array.from(container.children)
       .filter((element) => element.hasAttribute('data-arcane-gallery-item'))
@@ -1019,7 +1020,9 @@ class GalleryScripts {
   }
 
   const CONTAINER_SELECTOR = '[data-arcane-gallery][data-packing="true"], [data-arcane-gallery][data-arcane-gallery-composition="justified"]';
+  const CONTENT_SELECTOR = '[data-arcane-gallery-caption], [data-arcane-gallery-footer]';
   const scheduled = new WeakSet();
+  const observed = new WeakSet();
   const resizeObserver = 'ResizeObserver' in window
     ? new ResizeObserver((entries) => {
         for (const entry of entries) {
@@ -1039,19 +1042,34 @@ class GalleryScripts {
     });
   }
 
+  function observeSize(element) {
+    if (observed.has(element)) return;
+    observed.add(element);
+    resizeObserver?.observe(element);
+  }
+
+  function observeContent(node) {
+    if (node.matches?.(CONTENT_SELECTOR) && containerFor(node)) observeSize(node);
+    node.querySelectorAll?.(CONTENT_SELECTOR).forEach((element) => {
+      if (containerFor(element)) observeSize(element);
+    });
+  }
+
+  function unobserveRemoved(node) {
+    const elements = [node, ...node.querySelectorAll(CONTAINER_SELECTOR + ', ' + CONTENT_SELECTOR)];
+    for (const element of elements) {
+      if (!observed.has(element) || (element.isConnected && containerFor(element))) continue;
+      resizeObserver?.unobserve(element);
+      observed.delete(element);
+      if (element.matches?.(CONTAINER_SELECTOR)) delete element.dataset.arcaneGalleryObserved;
+    }
+  }
+
   function observe(container) {
-    if (!container) {
-      return;
-    }
-    container.querySelectorAll('[data-arcane-gallery-caption], [data-arcane-gallery-footer]')
-      .forEach((caption) => resizeObserver?.observe(caption));
-    if (container.dataset.arcaneGalleryObserved === 'true') {
-      // Already wired up: just request a repack (idempotent).
-      schedule(container);
-      return;
-    }
+    if (!container) return;
+    observeContent(container);
+    observeSize(container);
     container.dataset.arcaneGalleryObserved = 'true';
-    resizeObserver?.observe(container);
     schedule(container);
   }
 
@@ -1080,6 +1098,9 @@ class GalleryScripts {
   function handleMutations(mutations) {
     for (const mutation of mutations) {
       if (mutation.type === 'childList') {
+        for (const node of mutation.removedNodes) {
+          if (node?.nodeType === 1) unobserveRemoved(node);
+        }
         for (const node of mutation.addedNodes) {
           if (!node || node.nodeType !== 1) {
             continue;
@@ -1092,6 +1113,7 @@ class GalleryScripts {
               .querySelectorAll(CONTAINER_SELECTOR)
               .forEach((container) => observe(container));
           }
+          observeContent(node);
         }
         const container = containerFor(mutation.target);
         if (container) {

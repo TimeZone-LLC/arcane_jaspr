@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Dialog focus traps skip links inside collapsed disclosures while keeping their summaries keyboard accessible.
+- Justified gallery rows retain fractional container widths so flex wrapping cannot split a packed row.
+- Appended gallery captions and footers trigger repacking when their content resizes, including delayed images.
+- Mega menus use anchored placement, touch and keyboard activation, callback dismissal, and focus return.
+- Runtime-owned dialogs remain visible when reopened immediately after Escape; legacy modal handlers no longer bind to them.
 - Justified galleries retain image proportions, measured captions, and safe panel rotation when their containers resize.
 - Buttons preserve explicit decorations under stylesheet overrides.
 - Grid galleries reserve square artwork areas before media loads, including custom canvas content, without collapsing beneath Win95 title bars.

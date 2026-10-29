@@ -1,6 +1,17 @@
 library;
 
 const String runtimeDispatchJs = r'''
+function surfaceFocusTrigger(ctx) {
+  const trigger = ctx.trigger;
+  if (!trigger || !trigger.contains) return trigger;
+  const clicked = ctx.event && findClosest(ctx.event.target, FOCUSABLE_SELECTOR);
+  if (clicked && trigger.contains(clicked)) return clicked;
+  const active = document.activeElement;
+  if (active && trigger.contains(active) && active.matches(FOCUSABLE_SELECTOR)) return active;
+  if (trigger.matches(FOCUSABLE_SELECTOR)) return trigger;
+  return getFocusable(trigger)[0] || trigger;
+}
+
 function runAction(action, ctx) {
   if (!action) return;
   const verb = action.verb;
@@ -11,13 +22,13 @@ function runAction(action, ctx) {
     case 'noop':
       return;
     case 'surface.open':
-      openSurface(args[0], args[1], { trigger: ctx.trigger });
+      openSurface(args[0], args[1], { trigger: surfaceFocusTrigger(ctx) });
       return;
     case 'surface.close':
       closeSurface(args[0], args[1]);
       return;
     case 'surface.toggle':
-      toggleSurface(args[0], args[1], { trigger: ctx.trigger });
+      toggleSurface(args[0], args[1], { trigger: surfaceFocusTrigger(ctx) });
       return;
     case 'surface.dismiss': {
       const surface = withinSurface(ctx.trigger);
@@ -212,6 +223,12 @@ function onDocumentClick(e) {
     return;
   }
 
+  const menuItem = findClosest(e.target, '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]');
+  if (menuItem && shouldHandleClick(menuItem) && !menuItem.hasAttribute('aria-haspopup')) {
+    autoDismissAfterAction(menuItem);
+    return;
+  }
+
   if (ARCANE.stack.length > 0) {
     const top = ARCANE.stack[ARCANE.stack.length - 1];
     const surfaceEl = top.el;
@@ -290,6 +307,7 @@ function onDocumentContextMenu(e) {
 
 function onDocumentKeyDown(e) {
   if (e.defaultPrevented) return;
+  if (handleMenuKey(e)) return;
   if (e.key === 'Escape') {
     if (ARCANE.stack.length > 0) {
       const top = ARCANE.stack[ARCANE.stack.length - 1];
@@ -329,6 +347,86 @@ function onDocumentKeyDown(e) {
   if (keyTarget) {
     runActions(keyTarget.getAttribute('data-arcane-keydown'), { trigger: keyTarget, event: e });
   }
+}
+
+function handleMenuKey(e) {
+  const target = e.target;
+  if (!target || !target.closest || e.isComposing || e.ctrlKey || e.altKey || e.metaKey) return false;
+  if (target.matches('input, textarea, [contenteditable="true"]')) return false;
+  const trigger = target.closest('[aria-haspopup="menu"][aria-controls]');
+  const surface = trigger ? document.getElementById(trigger.getAttribute('aria-controls'))
+    : target.closest('[role="menu"][data-arcane-surface]');
+  if (!surface || surfaceType(surface) !== 'menu') return false;
+  const item = target.closest('[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]');
+  const active = trigger || item;
+  if (active && !shouldHandleClick(active)) return false;
+
+  if ((e.key === 'Enter' || e.key === ' ') && active) {
+    e.preventDefault();
+    active.click();
+    return true;
+  }
+
+  const bar = surface.closest('[role="menubar"]');
+  if (bar && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+    const triggers = Array.from(bar.querySelectorAll('[data-arcane-menubar-trigger]'));
+    const current = triggers.findIndex(function(button) {
+      return button === trigger || button.getAttribute('aria-controls') === surface.id;
+    });
+    if (current >= 0 && triggers.length) {
+      e.preventDefault();
+      const next = (current + (e.key === 'ArrowRight' ? 1 : triggers.length - 1)) % triggers.length;
+      const open = surfaceIsOpen(surface);
+      triggers[next].focus();
+      if (open) triggers[next].click();
+      return true;
+    }
+  }
+
+  if (e.key === 'Tab' && surfaceIsOpen(surface)) {
+    closeSurface('menu', surfaceId(surface), { immediate: true });
+    return false;
+  }
+  const items = Array.from(surface.querySelectorAll(
+    '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]'
+  )).filter(function(candidate) {
+    return shouldHandleClick(candidate) && candidate.getAttribute('aria-disabled') !== 'true' &&
+      candidate.closest('[role="menu"]') === surface;
+  });
+  if (!items.length) return false;
+  const current = items.indexOf(item);
+  let next = -1;
+  if (e.key === 'ArrowDown') next = (current + 1) % items.length;
+  else if (e.key === 'ArrowUp') next = current < 0 ? items.length - 1 : (current + items.length - 1) % items.length;
+  else if (e.key === 'Home') next = 0;
+  else if (e.key === 'End') next = items.length - 1;
+  else if (e.key.length === 1 && /\S/.test(e.key)) {
+    const now = Date.now();
+    const previous = now - (surface._arcaneMenuSearchTime || 0) < 700 ? surface._arcaneMenuSearch || '' : '';
+    const query = previous + e.key.toLocaleLowerCase();
+    surface._arcaneMenuSearch = query;
+    surface._arcaneMenuSearchTime = now;
+    const prefix = Array.from(query).every(function(letter) { return letter === query[0]; }) ? query[0] : query;
+    for (let step = 1; step <= items.length; step++) {
+      const index = (Math.max(current, 0) + step) % items.length;
+      const label = (items[index].getAttribute('data-label') || items[index].textContent || '').trim().toLocaleLowerCase();
+      if (label.startsWith(prefix)) { next = index; break; }
+    }
+  }
+  if (next < 0) return false;
+  e.preventDefault();
+  const focusItem = function() {
+    if (!surfaceIsOpen(surface)) return;
+    items[next].focus({ preventScroll: true });
+    items[next].scrollIntoView({ block: 'nearest' });
+  };
+  if (!surfaceIsOpen(surface)) {
+    openSurface('menu', surfaceId(surface), {
+      trigger: surfaceFocusTrigger({ trigger: trigger, event: e })
+    });
+    nextFrame(focusItem);
+  } else focusItem();
+  return true;
 }
 
 function handleArrowKey(e) {

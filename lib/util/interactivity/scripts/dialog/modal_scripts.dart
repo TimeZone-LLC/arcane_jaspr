@@ -5,6 +5,7 @@ class ModalScripts {
   static const String code = r'''
   function bindDialogs() {
     document.querySelectorAll('.arcane-dialog-overlay, [role="dialog"]').forEach(function(overlay) {
+      if (overlay.closest('[data-arcane-surface]')) return;
       if (overlay.dataset.arcaneInteractive === 'true') return;
       overlay.dataset.arcaneInteractive = 'true';
 

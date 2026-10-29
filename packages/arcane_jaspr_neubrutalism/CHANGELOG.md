@@ -15,6 +15,8 @@
 
 ### Fixed
 
+- NeuComic dialog and sheet titles wrap inside their framed heading at enlarged text sizes.
+- NeuComic rows stay aligned at fractional widths and resize to fit captions and footers added after initial packing.
 - Date pickers expose validation state for theme styling and assistive technology.
 
 ## [6.0.0] - 2026-10-15

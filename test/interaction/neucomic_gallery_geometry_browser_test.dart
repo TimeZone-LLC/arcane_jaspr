@@ -1,6 +1,9 @@
 @TestOn('browser')
 library;
 
+// ignore_for_file: prefer_final_locals
+
+import 'dart:js_interop';
 import 'dart:math' as math;
 
 import 'package:arcane_jaspr/arcane_jaspr.dart';
@@ -14,11 +17,12 @@ const List<double> _ratios = <double>[2.3256, 0.65, 1, 1.7, 0.8, 1.4, 1];
 
 void _mount(
   ClientTester tester,
-  int width,
+  num width,
   Brightness brightness, {
   ArcaneGalleryLayout layout = ArcaneGalleryLayout.masonry,
   List<double> sourceRatios = _ratios,
   double? appendedRatio,
+  Widget? appendedFooter,
 }) {
   final List<double> ratios = <double>[...sourceRatios, ?appendedRatio];
   tester.pumpComponent(
@@ -67,7 +71,11 @@ void _mount(
                   title: 'Artwork $index with a readable title',
                   meta: 'Artist $index',
                   href: '/art/$index',
-                  footer: index == 0 ? const Text('Original print') : null,
+                  footer: index == 0
+                      ? const Text('Original print')
+                      : index == sourceRatios.length
+                      ? appendedFooter
+                      : null,
                 ),
             ],
           ),
@@ -155,7 +163,7 @@ double _rotation(web.Element tile) {
 }
 
 List<web.DOMRect> _checkPanels(
-  int width,
+  num width,
   List<double> ratios, {
   bool requireSharedRows = true,
 }) {
@@ -273,6 +281,24 @@ List<web.DOMRect> _checkPanels(
   return bounds;
 }
 
+void _expectPackedRows() {
+  Map<String, int> rowTops = <String, int>{};
+  web.NodeList tiles = web.document.querySelectorAll(
+    '[data-arcane-gallery-item]',
+  );
+  for (int index = 0; index < tiles.length; index++) {
+    web.HTMLElement tile = tiles.item(index)! as web.HTMLElement;
+    String row = tile.getAttribute('data-arcane-gallery-row')!;
+    expect(
+      tile.offsetTop,
+      rowTops.putIfAbsent(row, () => tile.offsetTop),
+      reason: 'Packed row $row must occupy one physical flex row',
+    );
+  }
+  expect(rowTops.length, greaterThan(1));
+  expect(rowTops.length, lessThan(tiles.length));
+}
+
 void main() {
   setUpAll(() {
     web.document.body!.appendChild(
@@ -281,6 +307,87 @@ void main() {
   });
 
   for (final Brightness brightness in Brightness.values) {
+    for (String boxSizing in <String>['border-box', 'content-box']) {
+      testClient(
+        'NeuComic fractional widths fit $boxSizing containers in ${brightness.name}',
+        (ClientTester tester) async {
+          _mount(tester, 1353.625, brightness);
+          await _settle();
+          _checkPanels(1353.625, _ratios);
+          _expectPackedRows();
+
+          web.HTMLElement gallery =
+              web.document.querySelector('#comic-gallery')! as web.HTMLElement;
+          gallery.style.boxSizing = boxSizing;
+          gallery.style.border = '3px solid transparent';
+          gallery.style.padding = '24.25px 20.375px';
+          if (boxSizing == 'content-box') {
+            gallery.style.width = 'calc(100% - 46.75px)';
+          }
+          await _settle();
+          _expectPackedRows();
+
+          web.HTMLElement frame =
+              web.document.querySelector('#gallery-frame')! as web.HTMLElement;
+          frame.style.transform = 'scale(.85)';
+          frame.style.setProperty('zoom', '1.1');
+          await _settle();
+          _expectPackedRows();
+        },
+      );
+    }
+
+    testClient(
+      'NeuComic appended footer images resize panels in ${brightness.name}',
+      (ClientTester tester) async {
+        _mount(tester, 980, brightness);
+        await _settle();
+        _mount(
+          tester,
+          980,
+          brightness,
+          appendedRatio: 1,
+          appendedFooter: const dom.img(id: 'late-footer-image', src: ''),
+        );
+        await _settle();
+        web.HTMLElement gallery =
+            web.document.querySelector('#comic-gallery')! as web.HTMLElement;
+        web.HTMLElement panel = gallery.lastElementChild! as web.HTMLElement;
+        web.HTMLImageElement image =
+            web.document.querySelector('#late-footer-image')!
+                as web.HTMLImageElement;
+        int before = panel.offsetHeight;
+        image.src = Uri.dataFromString(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="200"/>',
+          mimeType: 'image/svg+xml',
+        ).toString();
+        await image.decode().toDart;
+        await _settle();
+        expect(panel.offsetHeight, greaterThan(before + 150));
+        _expectContained(
+          _layoutBounds(image.parentElement!),
+          _layoutBounds(panel),
+        );
+
+        panel.remove();
+        await _settle();
+        gallery.appendChild(panel);
+        await _settle();
+        before = panel.offsetHeight;
+        image.src = Uri.dataFromString(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="400"/>',
+          mimeType: 'image/svg+xml',
+        ).toString();
+        await image.decode().toDart;
+        await _settle();
+        expect(panel.offsetHeight, greaterThan(before + 190));
+        _expectContained(
+          _layoutBounds(image.parentElement!),
+          _layoutBounds(panel),
+        );
+      },
+    );
+
     testClient(
       'NeuComic panels keep assertive desktop and safe phone angles in ${brightness.name}',
       (ClientTester tester) async {

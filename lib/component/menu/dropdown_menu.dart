@@ -11,6 +11,8 @@ import 'package:jaspr/jaspr.dart'
         ValueKey,
         runApp;
 import 'package:jaspr/dom.dart' as dom;
+import 'package:arcane_jaspr/core/interaction/interaction.dart';
+import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 
 import '../../core/decoration/arcane_decoration.dart';
 import '../../core/theme_provider.dart';
@@ -99,22 +101,25 @@ class ArcaneMegaMenuSection {
 }
 
 class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
-  bool _isOpen = false;
+  late final String _surfaceId = 'arcane-mega-${identityHashCode(this)}';
 
   @override
   Widget build(BuildContext context) {
     return dom.div(
-      classes: 'arcane-mega-menu ${_isOpen ? 'open' : ''}',
+      classes: 'arcane-mega-menu',
       styles: const dom.Styles(raw: {'position': 'relative'}),
-      events: {
-        'mouseenter': (e) => setState(() => _isOpen = true),
-        'mouseleave': (e) => setState(() => _isOpen = false),
-      },
       [
         dom.button(
           classes: 'arcane-mega-menu-trigger',
-          attributes: {'type': 'button'},
-          styles: dom.Styles(
+          attributes: <String, String>{
+            'type': 'button',
+            'aria-haspopup': 'menu',
+            'aria-controls': _surfaceId,
+            'aria-expanded': 'false',
+            ...anchorAttrs('$_surfaceId-trigger'),
+            ...interactionAttrs(ArcaneInteraction.toggleMenu(_surfaceId)),
+          },
+          styles: const dom.Styles(
             raw: {
               'display': 'flex',
               'align-items': 'center',
@@ -122,9 +127,6 @@ class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
               'padding': '8px 12px',
               'font-size': '0.875rem',
               'font-weight': '500',
-              'color': _isOpen
-                  ? 'var(--foreground)'
-                  : 'var(--muted-foreground)',
               'background': 'none',
               'border': 'none',
               'cursor': 'pointer',
@@ -133,91 +135,112 @@ class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
           ),
           [
             Component.text(widget.label),
-            dom.span(
+            const dom.span(
+              attributes: <String, String>{'aria-hidden': 'true'},
               styles: dom.Styles(
                 raw: {
                   'font-size': '0.75rem',
-                  'transform': _isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                   'transition': 'transform 150ms ease',
                 },
               ),
-              [const Component.text('\u25BC')],
+              [Component.text('\u25BC')],
             ),
           ],
         ),
-        if (_isOpen)
-          dom.div(
-            classes: 'arcane-mega-menu-panel',
-            styles: const dom.Styles(
-              raw: {
-                'position': 'absolute',
-                'top': '100%',
-                'left': '50%',
-                'transform': 'translateX(-50%)',
-                'z-index': '100',
-                'margin-top': '0.5rem',
-                'padding': '1rem',
-                'background-color': 'var(--popover)',
-                'border': '1px solid var(--border)',
-                'border-radius': '0.375rem',
-                'box-shadow':
-                    '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
-                'display': 'flex',
-                'gap': '2rem',
-                'animation': 'arcane-dropdown-fade 0.15s ease-out',
-              },
+        dom.div(
+          id: _surfaceId,
+          classes: 'arcane-mega-menu-panel',
+          attributes: <String, String>{
+            'role': 'menu',
+            'aria-label': widget.label,
+            ...surfaceAttrs(
+              surface: 'menu',
+              id: _surfaceId,
+              focusTrap: false,
+              anchorId: '$_surfaceId-trigger',
+              anchorPlacement: 'bottom',
+              anchorAlign: 'start',
+              anchorOffset: '8',
             ),
-            [
-              for (final section in widget.sections)
-                dom.div(
-                  classes: 'arcane-mega-menu-section',
-                  styles: const dom.Styles(raw: {'min-width': '180px'}),
-                  [
-                    if (section.title != null)
-                      dom.div(
-                        styles: const dom.Styles(
-                          raw: {
-                            'font-size': '0.75rem',
-                            'font-weight': '600',
-                            'text-transform': 'uppercase',
-                            'letter-spacing': '0.05em',
-                            'color': 'var(--muted-foreground)',
-                            'margin-bottom': '0.5rem',
-                          },
-                        ),
-                        [Component.text(section.title!)],
-                      ),
+          },
+          styles: const dom.Styles(
+            raw: {
+              'position': 'absolute',
+              'top': '100%',
+              'left': '0',
+              'z-index': '100',
+              'box-sizing': 'border-box',
+              'padding': '1rem',
+              'background-color': 'var(--popover)',
+              'border': '1px solid var(--border)',
+              'border-radius': '0.375rem',
+              'box-shadow':
+                  '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+              'display': 'flex',
+              'flex-wrap': 'wrap',
+              'width': 'max-content',
+              'max-width': 'calc(100vw - 16px)',
+              'max-height': 'calc(100vh - 16px)',
+              'overflow': 'auto',
+              'gap': '2rem',
+            },
+          ),
+          [
+            for (final ArcaneMegaMenuSection section in widget.sections)
+              dom.div(
+                classes: 'arcane-mega-menu-section',
+                styles: const dom.Styles(
+                  raw: <String, String>{
+                    'flex': '1 1 180px',
+                    'min-width': '0',
+                    'overflow-wrap': 'anywhere',
+                  },
+                ),
+                [
+                  if (section.title != null)
                     dom.div(
                       styles: const dom.Styles(
                         raw: {
-                          'display': 'flex',
-                          'flex-direction': 'column',
-                          'gap': '0.25rem',
+                          'font-size': '0.75rem',
+                          'font-weight': '600',
+                          'text-transform': 'uppercase',
+                          'letter-spacing': '0.05em',
+                          'color': 'var(--muted-foreground)',
+                          'margin-bottom': '0.5rem',
                         },
                       ),
-                      [for (final item in section.items) _buildMegaItem(item)],
+                      [Component.text(section.title!)],
                     ),
-                  ],
-                ),
-              if (widget.footer != null)
-                dom.div(
-                  classes: 'arcane-mega-menu-footer',
-                  styles: const dom.Styles(
-                    raw: {
-                      'padding-left': '1rem',
-                      'border-left': '1px solid var(--border)',
-                    },
+                  dom.div(
+                    styles: const dom.Styles(
+                      raw: {
+                        'display': 'flex',
+                        'flex-direction': 'column',
+                        'gap': '0.25rem',
+                      },
+                    ),
+                    [
+                      for (final ArcaneMenuItem item in section.items)
+                        _buildMegaItem(item),
+                    ],
                   ),
-                  [widget.footer!],
+                ],
+              ),
+            if (widget.footer != null)
+              dom.div(
+                classes: 'arcane-mega-menu-footer',
+                styles: const dom.Styles(
+                  raw: {'padding': '1rem', 'border': '1px solid var(--border)'},
                 ),
-            ],
-          ),
+                [widget.footer!],
+              ),
+          ],
+        ),
       ],
     );
   }
 
   Widget _buildMegaItem(ArcaneMenuItem item) {
-    // Handle different menu item types with pattern matching
     return switch (item) {
       final MenuItemAction action => _buildActionItem(action),
       MenuItemSeparator() => const dom.div(
@@ -256,6 +279,7 @@ class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
       [
         if (action.icon != null)
           dom.span(
+            attributes: const <String, String>{'aria-hidden': 'true'},
             styles: const dom.Styles(
               raw: {'flex-shrink': '0', 'margin-top': '2px'},
             ),
@@ -287,10 +311,24 @@ class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
       ],
     );
 
-    if (action.href != null) {
+    final Map<String, String> attributes = <String, String>{
+      'role': 'menuitem',
+      'data-label': action.label,
+      if (action.disabled) ...<String, String>{
+        'aria-disabled': 'true',
+        'data-arcane-disabled': 'true',
+      },
+      if (!action.disabled && action.action != null)
+        ...interactionAttrs(action.action!),
+    };
+    if (action.href != null && !action.disabled) {
       return dom.a(
         href: action.href!,
         classes: 'arcane-mega-menu-item',
+        attributes: attributes,
+        events: action.action == null && action.onSelect != null
+            ? <String, EventCallback>{'click': (_) => action.onSelect!()}
+            : null,
         styles: const dom.Styles(
           raw: {
             'display': 'block',
@@ -306,7 +344,11 @@ class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
 
     return dom.button(
       classes: 'arcane-mega-menu-item',
-      attributes: {'type': 'button'},
+      attributes: <String, String>{
+        ...attributes,
+        'type': 'button',
+        if (action.disabled) 'disabled': '',
+      },
       styles: const dom.Styles(
         raw: {
           'display': 'block',
@@ -320,7 +362,12 @@ class _ArcaneMegaMenuState extends State<ArcaneMegaMenu> {
           'transition': 'background-color 150ms ease',
         },
       ),
-      events: {if (action.onSelect != null) 'click': (e) => action.onSelect!()},
+      events: <String, EventCallback>{
+        if (!action.disabled &&
+            action.action == null &&
+            action.onSelect != null)
+          'click': (_) => action.onSelect!(),
+      },
       [itemContent],
     );
   }

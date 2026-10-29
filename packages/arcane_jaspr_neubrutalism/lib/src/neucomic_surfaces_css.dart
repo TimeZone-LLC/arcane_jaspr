@@ -152,6 +152,10 @@ class NeuComicSurfacesCss {
 }
 
 /* Modal edges carry the weight of a comic page panel. */
+#arcane-root.arcane-theme-neubrutalism.neucomic .neubrutalism-dialog-overlay {
+  padding: min(1.5rem, 24px) !important;
+}
+
 #arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-dialog, .neubrutalism-sheet, .neubrutalism-drawer, .neubrutalism-command-dialog) {
   border: 3px solid var(--neucomic-ink) !important;
   border-radius: var(--neucomic-panel-radius) !important;
@@ -166,8 +170,12 @@ class NeuComicSurfacesCss {
 
 #arcane-root.arcane-theme-neubrutalism.neucomic .neubrutalism-dialog-title,
 #arcane-root.arcane-theme-neubrutalism.neucomic .neubrutalism-sheet-header h2 {
+  box-sizing: border-box;
+  min-width: 0;
   width: fit-content;
   max-width: calc(100% - 36px);
+  white-space: normal;
+  overflow-wrap: anywhere;
   margin: 0 0 20px !important;
   padding: 6px 12px !important;
   border: 2px solid var(--neucomic-ink);

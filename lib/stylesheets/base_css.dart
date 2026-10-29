@@ -46,6 +46,18 @@ class ArcaneBaseCss {
   display: none !important;
 }
 
+.arcane-mega-menu-trigger {
+  color: var(--muted-foreground);
+}
+
+.arcane-mega-menu-trigger[aria-expanded="true"] {
+  color: var(--foreground);
+}
+
+.arcane-mega-menu-trigger[aria-expanded="true"] > [aria-hidden="true"] {
+  transform: rotate(180deg);
+}
+
 html, body {
   height: 100%;
   font-family: var(--font-sans);
