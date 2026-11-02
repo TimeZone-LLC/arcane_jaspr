@@ -1329,6 +1329,7 @@ html.dark #arcane-root.arcane-theme-shadcn .arcane-select:hover:not(:disabled),
 
 /* Code blocks */
 .prose pre {
+  color: var(--foreground);
   background: var(--muted);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -1435,8 +1436,6 @@ html.dark #arcane-root.arcane-theme-shadcn .arcane-select:hover:not(:disabled),
 }
 
 $arcaneSidebarTreeStyles
-
-$arcaneSidebarComponentStyles
 
 $arcaneMapCss
 

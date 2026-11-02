@@ -2349,8 +2349,6 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
 
 $arcaneSidebarTreeStyles
 
-$arcaneSidebarComponentStyles
-
 $arcaneMapCss
 
 $arcaneTocTreeLinesCss
