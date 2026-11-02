@@ -16,7 +16,8 @@ class NeubrutalismDataTable<T> extends DataTableRenderBase<T> {
     'overflow-x': 'auto',
     'border': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
     'background': 'var(--nb-paper, var(--card))',
-    'box-shadow': 'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
+    'box-shadow':
+        'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
   };
 
   @override
@@ -49,30 +50,32 @@ class NeubrutalismDataTable<T> extends DataTableRenderBase<T> {
       <String, String>{
         'padding': '14px 20px',
         'text-align': column.align.css,
-        'font-family': 'var(--font-heading)',
-        'font-size': 'var(--font-size-xs)',
-        'font-weight': 'var(--font-weight-semibold)',
-        'letter-spacing': '0.12em',
+        'font-family': 'var(--font-sans)',
+        'font-size': '0.8125rem',
+        'font-weight': '700',
+        'letter-spacing': '0.04em',
         'text-transform': 'uppercase',
-        'color': 'var(--muted-foreground)',
+        'color': 'inherit',
         'white-space': 'nowrap',
         if (column.width != null) 'width': '${column.width}px',
       };
 
   @override
-  Map<String, String> rowStyles(bool isSelected, bool isClickable) =>
-      <String, String>{
-        'background': isSelected
-            ? 'var(--nb-accent, var(--primary))'
-            : 'transparent',
-        'color': isSelected
-            ? 'var(--nb-ink, #000)'
-            : 'var(--nb-ink, var(--foreground))',
-        if (props.showDividers)
-          'border-bottom': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
-        if (isClickable) 'cursor': 'pointer',
-        'transition': 'background-color 140ms ease',
-      };
+  Map<String, String> rowStyles(
+    bool isSelected,
+    bool isClickable,
+  ) => <String, String>{
+    'background': isSelected
+        ? 'var(--nb-accent, var(--primary))'
+        : 'transparent',
+    'color': isSelected
+        ? 'var(--nb-on-accent, var(--primary-foreground))'
+        : 'var(--foreground)',
+    if (props.showDividers)
+      'border-bottom': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
+    if (isClickable) 'cursor': 'pointer',
+    'transition': 'background-color 140ms ease',
+  };
 
   @override
   Map<String, String>? get bodyStyles => null;

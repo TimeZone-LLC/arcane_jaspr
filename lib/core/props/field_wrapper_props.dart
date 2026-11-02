@@ -6,6 +6,7 @@ import '../decoration/arcane_decoration.dart';
 /// Field wrapper component properties.
 class FieldWrapperProps {
   final Widget field;
+  final String? fieldId;
   final String? labelText;
   final String? description;
   final String? icon;
@@ -23,6 +24,7 @@ class FieldWrapperProps {
 
   const FieldWrapperProps({
     required this.field,
+    this.fieldId,
     this.labelText,
     this.description,
     this.icon,

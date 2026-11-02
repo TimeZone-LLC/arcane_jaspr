@@ -200,11 +200,13 @@ class _AsciiShowcaseState extends State<AsciiShowcase> {
       brightness: resolveDemoBrightness(
         parentTheme?.brightness ?? Brightness.light,
       ),
-      child: dom.div(<Widget>[
-        _buildHero(),
-        _buildMotion(),
-        _buildComponents(),
-      ], classes: 'ascii-workbench'),
+      child: dom.div(
+        <Widget>[_buildHero(), _buildMotion(), _buildComponents()],
+        classes: 'ascii-workbench',
+        attributes: <String, String>{
+          'data-ascii-motion': _motionEnabled ? 'on' : 'off',
+        },
+      ),
     );
   }
 
@@ -214,19 +216,15 @@ class _AsciiShowcaseState extends State<AsciiShowcase> {
       dom.div(<Widget>[
         dom.div(<Widget>[
           dom.h1(const <Widget>[
-            AsciiText(
-              'Ascii.',
-              duration: Duration(milliseconds: 1200),
-              cursor: true,
-            ),
+            Text('Ascii.'),
           ], classes: 'ascii-showcase-title'),
           dom.p(const <Widget>[
-            Text('Drawn lines. Living type. A complete interface.'),
+            Text('A lighter kind of interface.'),
           ], classes: 'ascii-showcase-lede'),
           dom.p(const <Widget>[
             Text(
-              'Paper and ink, precise datum marks, and text that resolves into place. '
-              'Use one stylesheet across forms, navigation, data, and feedback.',
+              'Warm paper. Fine lines. Motion with room to breathe. '
+              'A complete Arcane theme, from a quiet reading surface to a moving composition.',
             ),
           ], classes: 'ascii-showcase-description'),
           dom.nav(
@@ -239,6 +237,14 @@ class _AsciiShowcaseState extends State<AsciiShowcase> {
                 label: 'Use this theme',
                 href: '#installation',
               ),
+              Button.ghost(
+                label: _motionEnabled ? 'Pause motion' : 'Resume motion',
+                attributes: <String, String>{
+                  'aria-pressed': (!_motionEnabled).toString(),
+                },
+                onPressed: () =>
+                    setState(() => _motionEnabled = !_motionEnabled),
+              ),
             ],
             classes: 'ascii-showcase-actions',
             attributes: const <String, String>{
@@ -247,28 +253,29 @@ class _AsciiShowcaseState extends State<AsciiShowcase> {
           ),
         ], classes: 'ascii-showcase-intro'),
         dom.div(<Widget>[
-          dom.pre(
-            const <Widget>[
-              Text(
-                '    +-----------+\n'
-                '    |  A S C I I |\n'
-                '+---+-----------+---+\n'
-                '|  / / / / / / / /  |\n'
-                '|  TYPE    +    LINE |\n'
-                '+---+-----------+---+\n'
-                '    |  0 1 0 1  |\n'
-                '    +-----------+',
-              ),
+          AsciiOrbit(
+            animated: _motionEnabled,
+            classes: 'ascii-showcase-orbit',
+            children: <Widget>[
+              dom.span(const <Widget>[Text('Aa')], classes: 'ascii-orbit-type'),
+              dom.span(const <Widget>[
+                Text('+ / :'),
+              ], classes: 'ascii-orbit-code'),
+              dom.span(const <Widget>[
+                Text('01'),
+              ], classes: 'ascii-orbit-number'),
+              dom.span(const <Widget>[Text('a')], classes: 'ascii-orbit-serif'),
             ],
-            classes: 'ascii-showcase-glyph',
-            attributes: const <String, String>{'aria-hidden': 'true'},
           ),
           AsciiDatum(
             label: 'LIVE COMPONENTS',
             value: demoDefinitions.length.toString(),
           ),
           const AsciiDatum(label: 'COLOR MODES', value: 'PAPER / INK'),
-          const AsciiDatum(label: 'MOTION', value: 'RESPECTS YOUR SETTINGS'),
+          AsciiDatum(
+            label: 'MOTION',
+            value: _motionEnabled ? 'ORBIT / REVEAL' : 'PAUSED',
+          ),
         ], classes: 'ascii-showcase-specimen'),
       ], classes: 'ascii-showcase-hero-grid'),
     ], classes: 'ascii-showcase-hero');
@@ -280,10 +287,11 @@ class _AsciiShowcaseState extends State<AsciiShowcase> {
       <Widget>[
         const AsciiDatum(label: '01 / MOTION STUDIES', value: 'REPLAYABLE'),
         dom.div(<Widget>[
-          dom.h2(const <Widget>[Text('A little movement. A clear purpose.')]),
+          dom.h2(const <Widget>[Text('Set the pace.')]),
           dom.p(const <Widget>[
             Text(
-              'Decode announces a label. Typewriter follows a thought. Datum lines connect a name to its value.',
+              'Slow orbits give a composition depth. Reveals introduce a section. '
+              'Short character transitions add texture to labels.',
             ),
           ]),
         ], classes: 'ascii-showcase-section-heading'),
@@ -296,6 +304,7 @@ class _AsciiShowcaseState extends State<AsciiShowcase> {
           ),
           ArcaneSelect(
             label: 'Duration',
+            fullWidth: true,
             value: _duration.toString(),
             options: const <ArcaneSelectOption>[
               ArcaneSelectOption(value: '700', label: 'Quick / 700 ms'),
@@ -307,21 +316,23 @@ class _AsciiShowcaseState extends State<AsciiShowcase> {
               _replay++;
             }),
           ),
-          Button.secondary(
-            label: _motionEnabled ? 'Pause specimens' : 'Enable motion',
-            attributes: <String, String>{
-              'aria-pressed': (!_motionEnabled).toString(),
-            },
-            onPressed: () => setState(() {
-              _motionEnabled = !_motionEnabled;
-              _replay++;
-            }),
-          ),
-          Button.primary(
-            label: 'Replay motion',
-            disabled: !_motionEnabled,
-            onPressed: () => setState(() => _replay++),
-          ),
+          dom.div(<Widget>[
+            Button.secondary(
+              label: _motionEnabled ? 'Pause specimens' : 'Enable motion',
+              attributes: <String, String>{
+                'aria-pressed': (!_motionEnabled).toString(),
+              },
+              onPressed: () => setState(() {
+                _motionEnabled = !_motionEnabled;
+                _replay++;
+              }),
+            ),
+            Button.primary(
+              label: 'Replay motion',
+              disabled: !_motionEnabled,
+              onPressed: () => setState(() => _replay++),
+            ),
+          ], classes: 'ascii-showcase-motion-actions'),
         ], classes: 'ascii-showcase-motion-controls'),
         dom.div(
           <Widget>[
@@ -355,15 +366,35 @@ class _AsciiShowcaseState extends State<AsciiShowcase> {
                 Text('C / DATUM'),
               ], classes: 'ascii-showcase-label'),
               AsciiDatum(
-                label: 'CONNECTION',
-                value: 'ESTABLISHED',
+                label: 'TYPEFACE',
+                value: 'MONOSPACE',
                 animated: _motionEnabled,
               ),
               AsciiDatum(
-                label: 'LATENCY',
-                value: '24 ms',
+                label: 'PALETTE',
+                value: 'PAPER / INK',
                 animated: _motionEnabled,
               ),
+            ], classes: 'ascii-showcase-motion-sample'),
+            dom.div(<Widget>[
+              dom.span(const <Widget>[
+                Text('D / REVEAL'),
+              ], classes: 'ascii-showcase-label'),
+              for (int index = 0; index < 3; index++)
+                AsciiReveal(
+                  animated: _motionEnabled,
+                  duration: duration,
+                  delay: Duration(milliseconds: index * 120),
+                  child: dom.div(<Widget>[
+                    Text(
+                      const <String>[
+                        'A fine line.',
+                        'A measured entrance.',
+                        'Room to read.',
+                      ][index],
+                    ),
+                  ], classes: 'ascii-showcase-reveal-line'),
+                ),
             ], classes: 'ascii-showcase-motion-sample'),
           ],
           classes: 'ascii-showcase-motion-samples',

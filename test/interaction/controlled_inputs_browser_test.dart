@@ -2,12 +2,14 @@
 library;
 
 import 'package:arcane_jaspr/arcane_jaspr.dart';
+import 'package:arcane_jaspr/component/input/native_select.dart';
 import 'package:arcane_jaspr/core/interaction/runtime/runtime.dart';
 import 'package:arcane_jaspr/util/interactivity/scripts/input/radio_scripts.dart';
 import 'package:arcane_jaspr_neon/arcane_jaspr_neon.dart';
 import 'package:arcane_jaspr_neubrutalism/arcane_jaspr_neubrutalism.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
 import 'package:arcane_jaspr_win95/arcane_jaspr_win95.dart';
+import 'package:jaspr/jaspr.dart' show StatefulBuilder, StateSetter;
 import 'package:jaspr_test/client_test.dart';
 import 'package:web/web.dart' as web;
 
@@ -112,6 +114,84 @@ void main() {
   });
 
   for (final (String name, ArcaneStylesheet theme) in _themes) {
+    for (final bool native in <bool>[false, true]) {
+      testClient('$name native select dispatch preserves changes ($native)', (
+        ClientTester tester,
+      ) async {
+        String selected = 'draft';
+        final List<String> changes = <String>[];
+        tester.pumpComponent(
+          ArcaneThemeProvider(
+            stylesheet: theme,
+            child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                void onChanged(String value) => setState(() {
+                  selected = value;
+                  changes.add(value);
+                });
+
+                const List<ArcaneSelectOption> options = <ArcaneSelectOption>[
+                  ArcaneSelectOption(label: 'Draft', value: 'draft'),
+                  ArcaneSelectOption(label: 'Published', value: 'published'),
+                ];
+                return native
+                    ? ArcaneNativeSelect(
+                        id: 'status',
+                        name: 'status',
+                        label: 'Status',
+                        value: selected,
+                        options: options,
+                        onChanged: onChanged,
+                      )
+                    : ArcaneSelect(
+                        id: 'status',
+                        name: 'status',
+                        label: 'Status',
+                        value: selected,
+                        options: options,
+                        onChanged: onChanged,
+                      );
+              },
+            ),
+          ),
+        );
+        await pumpEventQueue();
+        final web.HTMLSelectElement select =
+            _element('#status') as web.HTMLSelectElement;
+        expect(select.value, 'draft');
+        for (final String value in <String>['published', 'draft']) {
+          select.value = value;
+          select.dispatchEvent(
+            web.Event('change', web.EventInit(bubbles: true)),
+          );
+          await pumpEventQueue();
+          expect(selected, value);
+          expect((_element('#status') as web.HTMLSelectElement).value, value);
+        }
+        expect(changes, <String>['published', 'draft']);
+        expect(_element('label[for="status"]').textContent, 'Status');
+        expect(select.name, 'status');
+      });
+    }
+
+    testClient('$name field wrapper label focuses its input', (
+      ClientTester tester,
+    ) async {
+      tester.pumpComponent(
+        ArcaneThemeProvider(
+          stylesheet: theme,
+          child: const ArcaneFieldWrapper(
+            fieldId: 'account-email',
+            labelText: 'Account email',
+            field: TextInput(id: 'account-email'),
+          ),
+        ),
+      );
+      await pumpEventQueue();
+      await _click('label[for="account-email"]');
+      expect(web.document.activeElement, _element('#account-email'));
+    });
+
     testClient('$name controlled inputs agree with the delegated runtime', (
       ClientTester tester,
     ) async {

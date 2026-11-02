@@ -20,7 +20,7 @@ class NeubrutalismInlineHeroBanner extends StatelessComponent {
         'background': 'var(--card)',
         'color': 'var(--foreground)',
         'border': '1px solid var(--border)',
-        'border-radius': '0',
+        'border-radius': 'var(--nb-radius-soft, 0)',
       },
     ),
     [
@@ -59,7 +59,7 @@ class NeubrutalismInlineHeroBanner extends StatelessComponent {
               'padding': '0.25rem',
               'background': 'transparent',
               'border': '0',
-              'border-radius': '0',
+              'border-radius': 'var(--nb-radius-soft, 0)',
               'color': 'var(--muted-foreground)',
               'cursor': 'pointer',
             },

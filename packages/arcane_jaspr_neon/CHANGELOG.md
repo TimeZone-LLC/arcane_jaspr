@@ -1,5 +1,11 @@
 # Changelog
 
+## x.x.x
+
+### Fixed
+
+- Field wrapper labels associate with their input through `fieldId`.
+
 ## [6.0.0] - 2026-10-15
 
 ### Fixed

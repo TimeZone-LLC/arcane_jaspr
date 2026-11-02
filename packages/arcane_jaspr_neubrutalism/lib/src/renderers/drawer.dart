@@ -23,8 +23,13 @@ class NeubrutalismDrawer extends DrawerRenderBase {
 
   @override
   Map<String, String> get panelDecorationStyles => <String, String>{
+    'box-sizing': 'border-box',
+    'max-width': '100%',
+    'max-height': '100%',
+    'min-width': '0',
     'background': 'var(--nb-paper, var(--card))',
-    'box-shadow': 'var(--nb-shadow-lg, 7px 7px 0 0 var(--nb-shadow-color, #000))',
+    'box-shadow':
+        'var(--nb-shadow-lg, 7px 7px 0 0 var(--nb-shadow-color, #000))',
     'overflow': 'hidden',
   };
 
@@ -34,8 +39,9 @@ class NeubrutalismDrawer extends DrawerRenderBase {
 
   @override
   Map<String, String> get closeButtonStyles => <String, String>{
-    'width': '32px',
-    'height': '32px',
+    'width': '44px',
+    'height': '44px',
+    'flex-shrink': '0',
     'display': 'flex',
     'align-items': 'center',
     'justify-content': 'center',

@@ -32,7 +32,7 @@ class NeubrutalismSelect<T> extends SelectRenderBase<T> {
     'padding': padding,
     'background': 'var(--nb-paper, var(--card))',
     'border': 'var(--nb-border-thick, 3px) solid $borderColor',
-    'border-radius': '0',
+    'border-radius': 'var(--nb-radius-tight, 0)',
     'font-family': 'var(--font-body)',
     'font-weight': '600',
     'font-size': fontSize,
@@ -52,7 +52,7 @@ class NeubrutalismSelect<T> extends SelectRenderBase<T> {
     'overflow-y': 'auto',
     'background': 'var(--nb-paper, var(--card))',
     'border': 'var(--nb-border-thick, 3px) solid var(--nb-line, #000)',
-    'border-radius': '0',
+    'border-radius': 'var(--nb-radius-tight, 0)',
     'box-shadow': 'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
   };
 

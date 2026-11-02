@@ -3,7 +3,8 @@ import 'package:jaspr/jaspr.dart';
 import 'package:arcane_jaspr/core/props/calendar_props.dart';
 import 'package:arcane_jaspr/core/props/date_picker_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/date_picker_render_base.dart';
-import 'calendar.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/calendar.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// ShadCN-style date picker component
 /// Reference: https://ui.shadcn.com/docs/components/date-picker
@@ -12,9 +13,9 @@ class ShadcnDatePicker extends DatePickerRenderBase {
 
   @override
   (String, String) sizeStyles(DatePickerSizeVariant size) => switch (size) {
-    DatePickerSizeVariant.sm => ('32px', '13px'),
-    DatePickerSizeVariant.md => ('36px', '14px'),
-    DatePickerSizeVariant.lg => ('40px', '14px'),
+    DatePickerSizeVariant.sm => ('2rem', '0.875rem'),
+    DatePickerSizeVariant.md => ('2.25rem', '0.875rem'),
+    DatePickerSizeVariant.lg => ('2.5rem', '0.875rem'),
   };
 
   @override
@@ -33,15 +34,11 @@ class ShadcnDatePicker extends DatePickerRenderBase {
     'position': 'relative',
     'display': 'flex',
     'flex-direction': 'column',
-    'gap': 'var(--space-1)',
+    'gap': 'var(--space-2)',
   };
 
   @override
-  Map<String, String> get labelStyles => const <String, String>{
-    'font-size': 'var(--font-size-sm)',
-    'font-weight': 'var(--font-weight-medium)',
-    'color': 'var(--foreground)',
-  };
+  Map<String, String> get labelStyles => shadcnFieldLabelStyles;
 
   @override
   String get triggerClasses => 'arcane-date-picker-trigger';
@@ -70,6 +67,8 @@ class ShadcnDatePicker extends DatePickerRenderBase {
     'border-radius': 'var(--radius-md)',
     'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
     'font-size': fontSize,
+    'font-family': 'var(--font-control, inherit)',
+    'line-height': '1.25rem',
     'color':
         'var(--shadcn-item-foreground, ${hasValue ? 'var(--foreground)' : 'var(--muted-foreground)'})',
     'cursor': props.disabled ? 'not-allowed' : 'pointer',

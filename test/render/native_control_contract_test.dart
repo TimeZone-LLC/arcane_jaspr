@@ -1,4 +1,5 @@
 import 'package:arcane_jaspr/arcane_jaspr.dart';
+import 'package:arcane_jaspr/component/input/native_select.dart';
 import 'package:arcane_jaspr/stylesheets/base_css.dart';
 import 'package:arcane_jaspr_neon/arcane_jaspr_neon.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
@@ -36,6 +37,113 @@ String _cssRule(String css, String selectorStart) {
 }
 
 void main() {
+  for (final ComponentSize size in ComponentSize.values) {
+    testServer('public native selects share themed ${size.name} geometry', (
+      ServerTester tester,
+    ) async {
+      final String html = await _render(
+        tester,
+        Column(
+          children: <Widget>[
+            TextInput(size: size, label: 'Name'),
+            ArcaneSelect(
+              size: size,
+              label: 'Category',
+              options: const <ArcaneSelectOption>[],
+            ),
+            ArcaneNativeSelect(
+              size: size,
+              label: 'Status',
+              options: const <ArcaneSelectOption>[],
+            ),
+          ],
+        ),
+      );
+      final String height = switch (size) {
+        ComponentSize.sm => '2rem',
+        ComponentSize.md => '2.25rem',
+        ComponentSize.lg => '2.5rem',
+      };
+      final List<String> controls = RegExp(
+        r'<(?:input|select)\b[^>]*>',
+      ).allMatches(html).map((RegExpMatch match) => match.group(0)!).toList();
+      expect(controls, hasLength(3));
+      for (final String control in controls) {
+        expect(control, contains('height: $height'));
+        expect(control, contains('font-size: 0.875rem'));
+        expect(control, contains('line-height: 1.25rem'));
+      }
+      for (final RegExpMatch label in RegExp(
+        r'<label\b[^>]*>',
+      ).allMatches(html)) {
+        expect(label.group(0), contains('font-size: 0.875rem'));
+        expect(label.group(0), contains('line-height: 1.25rem'));
+      }
+    });
+  }
+
+  testServer('native select keeps literal styles and native form attributes', (
+    ServerTester tester,
+  ) async {
+    final String html = await _render(
+      tester,
+      const ArcaneSelect(
+        id: 'category',
+        name: 'category',
+        value: 'art',
+        placeholder: 'Choose a category',
+        label: 'Category',
+        error: 'Choose an available category',
+        required: true,
+        disabled: true,
+        styles: ArcaneStyleData(
+          heightCustom: '52px',
+          fontSizeCustom: '18px',
+          paddingStringCustom: '9px 18px',
+        ),
+        options: <ArcaneSelectOption>[
+          ArcaneSelectOption(label: 'Art', value: 'art'),
+          ArcaneSelectOption(label: 'Music', value: 'music', disabled: true),
+        ],
+      ),
+    );
+    final String control = _openingTagForClass(html, 'arcane-select');
+    expect(control, contains('id="category"'));
+    expect(control, contains('name="category"'));
+    expect(control, contains('required="true"'));
+    expect(control, contains('disabled="true"'));
+    expect(control, contains('aria-describedby="category-error"'));
+    expect(control, contains('height: 52px'));
+    expect(control, contains('font-size: 18px'));
+    expect(control, contains('padding: 9px 18px'));
+    expect(
+      control.indexOf('padding: 9px'),
+      greaterThan(control.indexOf('padding-right:')),
+    );
+    expect(RegExp(r'<option\b[^>]*\bselected=').allMatches(html), hasLength(1));
+    expect(html, contains('for="category"'));
+    expect(html, contains('value="music" disabled="true"'));
+  });
+
+  testServer('native select renders without a theme provider', (
+    ServerTester tester,
+  ) async {
+    tester.pumpComponent(
+      const ArcaneSelect(
+        id: 'standalone',
+        label: 'Category',
+        options: <ArcaneSelectOption>[],
+      ),
+    );
+    final DocumentResponse response = await tester.request('/');
+    expect(response.statusCode, 200);
+    expect(response.body, contains('for="standalone"'));
+    expect(
+      _openingTagForClass(response.body, 'arcane-select'),
+      contains('height: 40px'),
+    );
+  });
+
   testServer('native select owns a balanced sibling chevron', (
     ServerTester tester,
   ) async {

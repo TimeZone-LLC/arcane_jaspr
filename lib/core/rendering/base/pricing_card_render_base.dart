@@ -68,13 +68,17 @@ abstract class PricingCardRenderBase extends StatelessComponent {
 
     return dom.div(
       classes: cssClass,
-      attributes: const <String, String>{'data-arcane-surface': 'pricing-card'},
+      attributes: <String, String>{
+        'data-arcane-surface': 'pricing-card',
+        if (props.decoration != null || props.styles != null)
+          'data-arcane-decorated': '',
+      },
       styles: dom.Styles(raw: rootStyles),
       <Component>[
         if (props.icon != null)
           dom.div(
             classes: '$cssClass-icon',
-            styles: dom.Styles(
+            styles: const dom.Styles(
               raw: <String, String>{
                 'display': 'inline-flex',
                 'align-items': 'center',
@@ -85,7 +89,7 @@ abstract class PricingCardRenderBase extends StatelessComponent {
             <Component>[props.icon!],
           ),
         dom.div(
-          styles: dom.Styles(
+          styles: const dom.Styles(
             raw: <String, String>{
               'font-size': titleSize,
               'font-weight': '700',
@@ -242,7 +246,7 @@ Component _specRow(SpecEntry spec, {bool isLast = false}) {
         <Component>[Component.text(spec.label)],
       ),
       dom.span(
-        styles: dom.Styles(
+        styles: const dom.Styles(
           raw: <String, String>{
             'font-weight': '600',
             'color': 'var(--foreground)',

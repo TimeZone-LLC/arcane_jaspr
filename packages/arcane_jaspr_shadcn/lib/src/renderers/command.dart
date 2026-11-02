@@ -48,6 +48,7 @@ class ShadcnCommand extends CommandRenderBase {
     'display': 'flex',
     'flex-direction': 'column',
     'width': '100%',
+    'min-width': '0',
     'max-width': '32rem',
     'padding': '0',
     'background-color': 'var(--popover)',
@@ -67,6 +68,7 @@ class ShadcnCommand extends CommandRenderBase {
     'align-items': 'center',
     'gap': '0.5rem',
     'height': '3rem',
+    'flex-shrink': '0',
     'padding': '0 0.75rem',
     'border-radius': '0',
     'border-bottom': '1px solid var(--border)',
@@ -116,8 +118,10 @@ class ShadcnCommand extends CommandRenderBase {
   @override
   Map<String, String> get footerStyles => const <String, String>{
     'display': 'flex',
+    'flex-wrap': 'wrap',
+    'flex-shrink': '0',
     'align-items': 'center',
-    'gap': '1rem',
+    'gap': '0.5rem 1rem',
     'padding': '0.5rem 0.75rem',
     'border-radius': '0',
     'border-top': '1px solid var(--border)',

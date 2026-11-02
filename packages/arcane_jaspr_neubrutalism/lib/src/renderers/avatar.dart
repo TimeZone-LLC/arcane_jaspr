@@ -93,7 +93,7 @@ class NeubrutalismAvatar extends AvatarRenderBase {
     final String? clipPath = isCircle ? null : 'none';
 
     return dom.div(
-      classes: 'neubrutalism-avatar-inner',
+      classes: 'neubrutalism-avatar-inner${isCircle ? ' rounded-full' : ''}',
       styles: dom.Styles(
         raw: {
           'width': '100%',
@@ -127,7 +127,7 @@ class NeubrutalismAvatar extends AvatarRenderBase {
               raw: {
                 'font-size': fontSize,
                 'font-weight': '600',
-                'color': 'var(--nb-accent-cool, var(--secondary))',
+                'color': 'var(--nb-on-accent, var(--primary-foreground))',
                 'letter-spacing': '0.04em',
                 'text-transform': 'uppercase',
                 'user-select': 'none',
@@ -138,7 +138,10 @@ class NeubrutalismAvatar extends AvatarRenderBase {
         else
           dom.span(
             styles: dom.Styles(
-              raw: {'font-size': fontSize, 'color': 'var(--muted-foreground)'},
+              raw: {
+                'font-size': fontSize,
+                'color': 'var(--nb-on-accent, var(--primary-foreground))',
+              },
             ),
             [const Component.text('?')],
           ),

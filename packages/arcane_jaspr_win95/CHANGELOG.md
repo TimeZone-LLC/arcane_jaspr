@@ -2,9 +2,9 @@
 
 ## x.x.x
 
-### Changed
+### Fixed
 
-- Gallery title bars use the shared caption-placement API and retain their position above the artwork.
+- Field wrapper labels associate with their input through `fieldId`.
 
 ## [6.0.0] - 2026-10-15
 

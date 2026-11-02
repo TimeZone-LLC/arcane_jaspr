@@ -1,6 +1,6 @@
 # Ascii
 
-A paper-and-ink theme for Arcane Jaspr: monospace type, fine datum rules, bracketed controls, stepped readouts, and text that resolves into place. Every Arcane component uses the existing semantic renderer contracts, including forms, navigation, tables, charts, overlays, galleries, and layout primitives.
+A paper-and-ink theme for Arcane Jaspr: proportional reading type, monospace annotations, fine datum rules, and smooth motion. Every Arcane component uses the existing semantic renderer contracts, including forms, navigation, tables, charts, overlays, galleries, and layout primitives.
 
 ## Install
 
@@ -35,7 +35,31 @@ ArcaneApp(
 )
 ```
 
-The stylesheet ID is `ascii`; its display name is `Ascii`. Use the usual Arcane brightness controls for the light paper and dark ink palettes. The font stack uses locally available Geist Mono, IBM Plex Mono, Hack, and system monospace fonts. The package makes no external font requests.
+The stylesheet ID is `ascii`; its display name is `Ascii`. Use the usual Arcane brightness controls for the light paper and dark ink palettes. Reading text and headings use locally available Geist, Inter, or system sans fonts. Controls and annotations use Geist Mono, IBM Plex Mono, Hack, or system monospace. The package makes no external font requests.
+
+## Orbit and reveal
+
+`AsciiOrbit` gives a composition slowly turning hairline rings and orbiting content. `AsciiReveal` introduces content when it reaches the viewport. Both are optional: ordinary controls retain short, smooth state transitions.
+
+```dart
+const AsciiOrbit(
+  duration: Duration(seconds: 120),
+  children: <Widget>[
+    Text('Aa'),
+    Text('01'),
+    Text('+ / :'),
+  ],
+)
+
+const AsciiReveal(
+  delay: Duration(milliseconds: 120),
+  child: Text('A measured entrance.'),
+)
+```
+
+Both accept `animated`, `classes`, and `key`. Orbit defaults to a 120-second revolution; reveal defaults to a 700-millisecond entrance. Orbit pauses offscreen, in hidden tabs, and during interaction. Reduced-motion preferences and `data-ascii-motion="off"` stop decorative movement and keep content visible. Include a pause control for continuously moving compositions. Content remains visible in server-rendered pages without JavaScript.
+
+The visual direction follows [ArtCraft](https://getartcraft.com/): warm neutral paper keeps artwork and content prominent; proportional type supports reading; monospace annotations and datum marks preserve the ASCII identity. Slow orbital movement adds depth to a chosen composition, while short eased transitions make controls responsive.
 
 ## Text and datum motion
 
@@ -56,9 +80,9 @@ const AsciiDatum(label: 'Sample window', value: '60 seconds')
 
 ## Component behavior
 
-- Buttons open their brackets on hover and keyboard focus; inputs and selected items use complete outlines and fills.
+- Buttons respond with restrained color changes; inputs and selected items use complete outlines and fills.
 - Menus and dialogs resolve into view. Sheets and drawers retain directional motion. Cards respond to interaction without moving their descendants.
-- Progress fills advance in measured steps. Indeterminate loading uses terminal glyphs, and skeletons pulse only while displayed as loading states.
+- Progress fills move smoothly. Indeterminate loading uses changing glyphs, and skeletons pulse only while displayed as loading states.
 - Tables, counters, and specification rows use aligned numerals. Structural layouts retain normal document flow and inherit the theme through their children.
 
 All CSS motion respects `prefers-reduced-motion`. Set `data-ascii-motion="off"` on a containing element to disable CSS motion for that subtree and reveal text immediately. Slot counters also honor the system preference and pause their timers while the document is hidden. Focus indicators remain visible in forced-colors mode.
@@ -67,6 +91,6 @@ All CSS motion respects `prefers-reduced-motion`. Set `data-ascii-motion="off"` 
 
 Use the standard Arcane tokens (`--background`, `--foreground`, `--card`, `--border`, `--input`, `--primary`, and `--muted-foreground`) for application surfaces. `--input` supplies stronger control boundaries; `--ascii-rule` and `--ascii-soft-rule` supply decorative rules. Motion uses `--ascii-duration` and `--ascii-ease`.
 
-Optional classes are `ascii-surface` for a square framed surface, `ascii-label` for compact uppercase metadata, `ascii-readout` for numeric text, `ascii-divider` for a horizontal rule, and `ascii-enter` for a finite opacity entrance. Keep controls and content in normal document flow; no animation requires a transformed containing block.
+Optional classes are `ascii-surface` for a square framed surface, `ascii-label` for compact uppercase metadata, `ascii-readout` for numeric text, `ascii-divider` for a horizontal rule, and `ascii-enter` for a finite opacity entrance. Keep ordinary controls and content in normal document flow; use orbital positioning only inside an `AsciiOrbit` composition.
 
 The Arcane documentation app includes the `/ascii` workbench with replay controls and the complete interactive component catalog. Lexicon integrations can offer `AsciiStylesheet()` as an ordinary `KBStylesheetOption`.

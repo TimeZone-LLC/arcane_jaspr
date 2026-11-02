@@ -2,6 +2,20 @@ library;
 
 const String runtimeTimeJs = r'''
 function bindTimePickers() {
+  if (!ARCANE._timePopupBound) {
+    ARCANE._timePopupBound = true;
+    document.addEventListener('arcane:open', function(event) {
+      const popup = event.target;
+      if (!popup.matches || !popup.matches('[data-arcane-time-popup]')) return;
+      const columns = popup.querySelectorAll('[data-arcane-time-column]');
+      for (const column of columns) {
+        const selected = column.querySelector('[aria-pressed="true"]');
+        if (!selected) continue;
+        column.scrollTop = selected.offsetTop -
+          (column.clientHeight - selected.offsetHeight) / 2;
+      }
+    });
+  }
   const pickers = document.querySelectorAll('[data-arcane-time-picker]');
   for (let i = 0; i < pickers.length; i++) {
     const picker = pickers[i];

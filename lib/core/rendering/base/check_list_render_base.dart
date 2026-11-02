@@ -1,6 +1,7 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
+import 'package:arcane_jaspr/component/view/icon.dart';
 import 'package:arcane_jaspr/core/props/check_list_props.dart';
 
 /// Shared structural bases for the Neon-family check-list renderers.
@@ -31,12 +32,12 @@ abstract class CheckItemRenderBase extends StatelessComponent {
 
   @override
   Component build(BuildContext context) {
-    final String iconSymbol = switch (props.icon) {
-      CheckStyle.check => '[check]',
-      CheckStyle.bullet => '-',
-      CheckStyle.arrow => '->',
-      CheckStyle.plus => '+',
-      CheckStyle.star => '*',
+    final Component icon = switch (props.icon) {
+      CheckStyle.check => ArcaneIcon.check(size: IconSize.sm),
+      CheckStyle.bullet => const Component.text('-'),
+      CheckStyle.arrow => const Component.text('->'),
+      CheckStyle.plus => const Component.text('+'),
+      CheckStyle.star => const Component.text('*'),
     };
 
     return dom.div(
@@ -51,6 +52,7 @@ abstract class CheckItemRenderBase extends StatelessComponent {
       <Component>[
         dom.span(
           classes: '$themePrefix-check-item-icon',
+          attributes: const <String, String>{'aria-hidden': 'true'},
           styles: dom.Styles(
             raw: <String, String>{
               'color': props.iconColor ?? defaultIconColor,
@@ -58,7 +60,7 @@ abstract class CheckItemRenderBase extends StatelessComponent {
               'flex-shrink': '0',
             },
           ),
-          <Component>[Component.text(iconSymbol)],
+          <Component>[icon],
         ),
         dom.span(
           classes: '$themePrefix-check-item-text',
@@ -155,13 +157,19 @@ abstract class FeatureRowRenderBase extends StatelessComponent {
     final Component iconWidget = props.included
         ? const dom.span(
             styles: dom.Styles(
-              raw: <String, String>{'font-size': '0.625rem', 'font-weight': '600'},
+              raw: <String, String>{
+                'font-size': '0.625rem',
+                'font-weight': '600',
+              },
             ),
             <Component>[Component.text('✓')],
           )
         : const dom.span(
             styles: dom.Styles(
-              raw: <String, String>{'font-size': '0.625rem', 'font-weight': '600'},
+              raw: <String, String>{
+                'font-size': '0.625rem',
+                'font-weight': '600',
+              },
             ),
             <Component>[Component.text('✕')],
           );
@@ -187,7 +195,8 @@ abstract class FeatureRowRenderBase extends StatelessComponent {
     };
 
     return dom.div(
-      classes: '$themePrefix-feature-row ${props.included ? 'included' : 'excluded'}',
+      classes:
+          '$themePrefix-feature-row ${props.included ? 'included' : 'excluded'}',
       styles: const dom.Styles(
         raw: <String, String>{
           'display': 'flex',

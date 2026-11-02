@@ -164,10 +164,18 @@ class ArcaneHoverCard extends StatefulWidget {
 
 class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
   bool _internalIsOpen = false;
+  bool _hovered = false;
+  bool _focused = false;
   Timer? _openTimer;
   Timer? _closeTimer;
 
   bool get _isOpen => widget.isOpen ?? _internalIsOpen;
+
+  @override
+  void dispose() {
+    _cancelTimers();
+    super.dispose();
+  }
 
   void _cancelTimers() {
     _openTimer?.cancel();
@@ -196,7 +204,7 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
 
   void _toggle() {
     _cancelTimers();
-    final newState = !_isOpen;
+    final bool newState = !_isOpen;
     if (widget.isOpen == null) {
       setState(() => _internalIsOpen = newState);
     }
@@ -222,13 +230,33 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
   }
 
   void _handleMouseEnter() {
-    _cancelTimers();
+    _hovered = true;
     _startOpenTimer();
   }
 
   void _handleMouseLeave() {
+    _hovered = false;
+    if (!_focused) _startCloseTimer();
+  }
+
+  void _handleFocus() {
+    _focused = true;
     _cancelTimers();
-    _startCloseTimer();
+    _open();
+  }
+
+  void _handleBlur() {
+    _focused = false;
+    if (!_hovered) _startCloseTimer();
+  }
+
+  void _handleOpenChange(bool open) {
+    _cancelTimers();
+    if (open) {
+      _open();
+    } else {
+      _close();
+    }
   }
 
   @override
@@ -248,6 +276,9 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
         onToggle: _toggle,
         onMouseEnter: _handleMouseEnter,
         onMouseLeave: _handleMouseLeave,
+        onFocus: _handleFocus,
+        onBlur: _handleBlur,
+        onOpenChange: _handleOpenChange,
         showArrow: widget.showArrow,
         offset: widget.offset,
         maxWidth: widget.maxWidth ?? (isTextTooltip ? 250 : null),

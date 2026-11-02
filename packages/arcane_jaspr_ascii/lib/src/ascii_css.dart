@@ -1,31 +1,31 @@
 const String asciiCss = r'''
 #arcane-root.arcane-theme-ascii {
-  --background: #f6f5f0;
-  --foreground: #242822;
-  --card: #fbfaf6;
-  --card-foreground: #242822;
-  --card-hover: #eef0e7;
-  --popover: #fbfaf6;
-  --popover-foreground: #242822;
-  --primary: #314e39;
+  --background: #f2f1ee;
+  --foreground: #101014;
+  --card: #f9f8f5;
+  --card-foreground: #101014;
+  --card-hover: #eeede9;
+  --popover: #f9f8f5;
+  --popover-foreground: #101014;
+  --primary: #101014;
   --primary-foreground: #ffffff;
-  --secondary: #eaece3;
-  --secondary-foreground: #343c2f;
-  --muted: #eaece3;
-  --muted-foreground: #5c6458;
-  --accent: #e0e6d9;
-  --accent-foreground: #242822;
-  --border: #a0a898;
-  --input: #7b8573;
-  --ring: #314e39;
-  --background-rgb: 246, 245, 240;
-  --foreground-rgb: 36, 40, 34;
-  --card-rgb: 251, 250, 246;
-  --primary-rgb: 49, 78, 57;
-  --secondary-rgb: 234, 236, 227;
-  --accent-rgb: 224, 230, 217;
-  --muted-rgb: 92, 100, 88;
-  --border-rgb: 160, 168, 152;
+  --secondary: #e8e7e3;
+  --secondary-foreground: #35343a;
+  --muted: #e8e7e3;
+  --muted-foreground: #66635f;
+  --accent: #e3e1dc;
+  --accent-foreground: #101014;
+  --border: #d3d0c9;
+  --input: #84817c;
+  --ring: #101014;
+  --background-rgb: 242, 241, 238;
+  --foreground-rgb: 16, 16, 20;
+  --card-rgb: 249, 248, 245;
+  --primary-rgb: 16, 16, 20;
+  --secondary-rgb: 232, 231, 227;
+  --accent-rgb: 227, 225, 220;
+  --muted-rgb: 102, 99, 95;
+  --border-rgb: 211, 208, 201;
   --sidebar: var(--background);
   --sidebar-foreground: var(--foreground);
   --sidebar-border: var(--border);
@@ -33,11 +33,12 @@ const String asciiCss = r'''
   --sidebar-accent-foreground: var(--foreground);
   --ascii-rule: var(--border);
   --ascii-soft-rule: color-mix(in srgb, var(--border) 45%, transparent);
-  --ascii-duration: 180ms;
-  --ascii-ease: cubic-bezier(0.2, 0.75, 0.25, 1);
-  --font-sans: 'Geist Mono', 'IBM Plex Mono', 'Hack', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --ascii-duration: 220ms;
+  --ascii-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-sans: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-heading: var(--font-sans);
-  --font-mono: var(--font-sans);
+  --font-mono: 'Geist Mono', 'IBM Plex Mono', 'Hack', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --font-control: var(--font-mono);
   --radius: 0;
   --radius-xs: 0;
   --radius-sm: 0;
@@ -48,15 +49,15 @@ const String asciiCss = r'''
   --shadow-lg: 0 12px 40px -24px color-mix(in srgb, var(--foreground) 30%, transparent);
   --shadow-xl: var(--shadow-lg);
   --transition: var(--ascii-duration) var(--ascii-ease);
-  --transition-slow: 240ms var(--ascii-ease);
-  --transition-slower: 320ms var(--ascii-ease);
+  --transition-slow: 360ms var(--ascii-ease);
+  --transition-slower: 560ms var(--ascii-ease);
   --shadcn-control-border: var(--input);
   --shadcn-focus-ring: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
   --shadcn-focus-border: var(--ring);
   --shadcn-input-background: var(--card);
-  --shadcn-switch-track: var(--input);
-  --shadcn-switch-thumb-off: var(--background);
-  --shadcn-switch-thumb-on: var(--background);
+  --shadcn-switch-track: var(--muted);
+  --shadcn-switch-thumb-off: var(--muted-foreground);
+  --shadcn-switch-thumb-on: var(--primary);
   --shadcn-hairline: var(--ascii-soft-rule);
   --shadcn-subtle-line: var(--ascii-rule);
   --shadcn-panel-fill: var(--background);
@@ -72,32 +73,32 @@ const String asciiCss = r'''
 
 html.dark #arcane-root.arcane-theme-ascii,
 #arcane-root.dark.arcane-theme-ascii {
-  --background: #111310;
-  --foreground: #e8ebe3;
-  --card: #191c17;
-  --card-foreground: #e8ebe3;
-  --card-hover: #252a22;
-  --popover: #191c17;
-  --popover-foreground: #e8ebe3;
-  --primary: #b1cba1;
-  --primary-foreground: #152015;
-  --secondary: #252a22;
-  --secondary-foreground: #d6ddcf;
-  --muted: #252a22;
-  --muted-foreground: #a2ad99;
-  --accent: #30382a;
-  --accent-foreground: #e8ebe3;
-  --border: #616d58;
-  --input: #7c8b71;
-  --ring: #b1cba1;
-  --background-rgb: 17, 19, 16;
-  --foreground-rgb: 232, 235, 227;
-  --card-rgb: 25, 28, 23;
-  --primary-rgb: 177, 203, 161;
-  --secondary-rgb: 37, 42, 34;
-  --accent-rgb: 48, 56, 42;
-  --muted-rgb: 162, 173, 153;
-  --border-rgb: 97, 109, 88;
+  --background: #101014;
+  --foreground: #f2f1ee;
+  --card: #18181c;
+  --card-foreground: #f2f1ee;
+  --card-hover: #26262b;
+  --popover: #18181c;
+  --popover-foreground: #f2f1ee;
+  --primary: #e9e8e3;
+  --primary-foreground: #101014;
+  --secondary: #26262b;
+  --secondary-foreground: #deddd8;
+  --muted: #26262b;
+  --muted-foreground: #aaa9b0;
+  --accent: #303037;
+  --accent-foreground: #f2f1ee;
+  --border: #35353c;
+  --input: #7a7a82;
+  --ring: #e9e8e3;
+  --background-rgb: 16, 16, 20;
+  --foreground-rgb: 242, 241, 238;
+  --card-rgb: 24, 24, 28;
+  --primary-rgb: 233, 232, 227;
+  --secondary-rgb: 38, 38, 43;
+  --accent-rgb: 48, 48, 55;
+  --muted-rgb: 170, 169, 176;
+  --border-rgb: 53, 53, 60;
   --sidebar: var(--background);
   --sidebar-foreground: var(--foreground);
   --sidebar-border: var(--border);
@@ -105,9 +106,9 @@ html.dark #arcane-root.arcane-theme-ascii,
   --sidebar-accent-foreground: var(--foreground);
   --shadcn-control-border: var(--input);
   --shadcn-input-background: var(--card);
-  --shadcn-switch-track: var(--input);
-  --shadcn-switch-thumb-off: var(--background);
-  --shadcn-switch-thumb-on: var(--background);
+  --shadcn-switch-track: var(--muted);
+  --shadcn-switch-thumb-off: var(--muted-foreground);
+  --shadcn-switch-thumb-on: var(--primary);
   --shadcn-hairline: var(--ascii-soft-rule);
   --shadcn-subtle-line: var(--ascii-rule);
   --shadcn-panel-fill: var(--background);
@@ -133,23 +134,21 @@ html.dark #arcane-root.arcane-theme-ascii,
   outline-offset: 3px;
 }
 
+#arcane-root.arcane-theme-ascii .arcane-command-input:focus-visible {
+  outline: none !important;
+}
+
+#arcane-root.arcane-theme-ascii .arcane-command-search-row:has(> .arcane-command-input:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
 #arcane-root.arcane-theme-ascii :is(.arcane-button, .arcane-cycle-button) {
   position: relative;
+  font-family: var(--font-mono);
   letter-spacing: -0.015em;
   transition: color var(--transition), background-color var(--transition), border-color var(--transition), box-shadow var(--transition) !important;
 }
-
-#arcane-root.arcane-theme-ascii .arcane-button:not([data-size^='icon']):not([data-variant='link'])::before,
-#arcane-root.arcane-theme-ascii .arcane-button:not([data-size^='icon']):not([data-variant='link'])::after {
-  display: inline-block;
-  opacity: 0.55;
-  transition: opacity var(--transition), transform var(--transition);
-}
-
-#arcane-root.arcane-theme-ascii .arcane-button:not([data-size^='icon']):not([data-variant='link'])::before { content: '[' / ''; }
-#arcane-root.arcane-theme-ascii .arcane-button:not([data-size^='icon']):not([data-variant='link'])::after { content: ']' / ''; }
-#arcane-root.arcane-theme-ascii .arcane-button:is(:hover, :focus-visible)::before { opacity: 1; transform: translateX(-2px); }
-#arcane-root.arcane-theme-ascii .arcane-button:is(:hover, :focus-visible)::after { opacity: 1; transform: translateX(2px); }
 
 #arcane-root.arcane-theme-ascii :is(.arcane-button, .arcane-cycle-button):active:not(:disabled) {
   filter: brightness(0.92);
@@ -194,16 +193,137 @@ html.dark #arcane-root.arcane-theme-ascii,
   opacity: 1;
 }
 
-#arcane-root.arcane-theme-ascii :is(.arcane-toggle-switch, .arcane-toggle-switch-thumb, .arcane-slider-thumb, .arcane-progress, .arcane-progress-indicator) {
+#arcane-root.arcane-theme-ascii :is(.arcane-text-input-wrapper, .arcane-textarea-wrapper, .arcane-select-wrapper, .arcane-date-picker, .arcane-time-picker, .arcane-otp-input, .arcane-input-group, .arcane-input-group-item) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#arcane-root.arcane-theme-ascii .arcane-input-group-item:has(input, select, textarea),
+#arcane-root.arcane-theme-ascii .arcane-input-group-item:has(input, select, textarea) > div {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+#arcane-root.arcane-theme-ascii :is(.arcane-toggle-switch, .arcane-toggle-thumb, .arcane-slider-thumb, .arcane-progress, .arcane-progress-indicator) {
   border-radius: 0 !important;
 }
 
-#arcane-root.arcane-theme-ascii .arcane-toggle-switch-thumb {
-  transition: transform var(--transition), background-color var(--transition) !important;
+#arcane-root.arcane-theme-ascii .arcane-toggle-switch {
+  --shadcn-control-border-color: var(--input);
+  --shadcn-switch-thumb-on: var(--shadcn-switch-active);
 }
 
-#arcane-root.arcane-theme-ascii .arcane-checkbox-indicator {
-  animation: ascii-appear 120ms steps(2, end);
+#arcane-root.arcane-theme-ascii .arcane-toggle-switch[data-arcane-state='selected'] {
+  --shadcn-switch-background: var(--accent);
+}
+
+#arcane-root.arcane-theme-ascii .arcane-toggle-switch[data-color='secondary'] {
+  --shadcn-switch-thumb-on: var(--secondary-foreground);
+}
+
+#arcane-root.arcane-theme-ascii :is(.arcane-checkbox-wrapper, .arcane-toggle-wrapper, .arcane-radio-item) {
+  min-width: 0;
+}
+
+#arcane-root.arcane-theme-ascii .arcane-checkbox-wrapper > div:last-child:not(.arcane-checkbox) {
+  min-width: 0;
+}
+
+#arcane-root.arcane-theme-ascii .arcane-checkbox-wrapper > div:last-child > span,
+#arcane-root.arcane-theme-ascii .arcane-toggle-label {
+  line-height: 1.5 !important;
+  overflow-wrap: anywhere;
+}
+
+#arcane-root.arcane-theme-ascii .arcane-checkbox[data-arcane-state='selected'] {
+  --shadcn-checkbox-border: var(--input);
+}
+
+#arcane-root.arcane-theme-ascii .arcane-checkbox-indicator,
+#arcane-root.arcane-theme-ascii .arcane-select-option-checkmark,
+#arcane-root.arcane-theme-ascii .arcane-select-option-check > span,
+#arcane-root.arcane-theme-ascii .arcane-menu-indicator {
+  width: var(--shadcn-checkbox-glyph, 0.875rem);
+  height: var(--shadcn-checkbox-glyph, 0.875rem);
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+  animation: ascii-appear 160ms var(--ascii-ease);
+}
+
+#arcane-root.arcane-theme-ascii :is(.arcane-select-option-checkmark, .arcane-select-option-check > span, .arcane-menu-indicator) {
+  display: inline-flex;
+}
+
+#arcane-root.arcane-theme-ascii :is(.arcane-checkbox-indicator, .arcane-select-option-checkmark, .arcane-select-option-check > span, .arcane-menu-indicator) > i {
+  display: none !important;
+}
+
+#arcane-root.arcane-theme-ascii .arcane-checkbox-indicator::after,
+#arcane-root.arcane-theme-ascii .arcane-select-option-checkmark::after,
+#arcane-root.arcane-theme-ascii .arcane-select-option-check > span::after,
+#arcane-root.arcane-theme-ascii [role='menuitemcheckbox'] > .arcane-menu-indicator::after {
+  content: '';
+  box-sizing: border-box;
+  width: calc(var(--shadcn-checkbox-glyph, 0.875rem) * 0.36);
+  height: calc(var(--shadcn-checkbox-glyph, 0.875rem) * 0.64);
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-12%) rotate(45deg);
+}
+
+#arcane-root.arcane-theme-ascii [role='menuitemradio'] > .arcane-menu-indicator::after {
+  content: '';
+  width: 0.375rem;
+  height: 0.375rem;
+  border: 1px solid currentColor;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+#arcane-root.arcane-theme-ascii :is(.arcane-radio-card, .arcane-radio-button):has(input:focus-visible),
+#arcane-root.arcane-theme-ascii .arcane-radio-input:focus-visible + .arcane-radio-circle {
+  outline: 2px solid var(--ring) !important;
+  outline-offset: 3px;
+  box-shadow: none;
+}
+
+#arcane-root.arcane-theme-ascii input:is([type='checkbox'], [type='radio']) {
+  accent-color: var(--primary);
+}
+
+#arcane-root.arcane-theme-ascii .arcane-circular-progress {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: var(--arcane-circular-progress-size, 80px);
+  justify-items: center;
+  gap: 0;
+  height: auto !important;
+  width: fit-content !important;
+  max-width: 100%;
+}
+
+#arcane-root.arcane-theme-ascii .arcane-circular-progress:has(.arcane-circular-progress-label) {
+  grid-template-rows: var(--arcane-circular-progress-size, 80px) auto;
+  gap: 0.5rem;
+}
+
+#arcane-root.arcane-theme-ascii .arcane-circular-progress > [data-arcane-intrinsic-shape='circular-progress-ring'] {
+  position: relative !important;
+  grid-area: 1 / 1;
+  width: var(--arcane-circular-progress-size, 80px) !important;
+  height: var(--arcane-circular-progress-size, 80px) !important;
+}
+
+#arcane-root.arcane-theme-ascii .arcane-circular-progress-center { display: contents !important; }
+#arcane-root.arcane-theme-ascii .arcane-circular-progress-percentage { grid-area: 1 / 1; line-height: 1.2; }
+#arcane-root.arcane-theme-ascii .arcane-circular-progress-label {
+  grid-area: 2 / 1;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.4;
 }
 
 #arcane-root.arcane-theme-ascii .arcane-slider-track,
@@ -215,11 +335,11 @@ html.dark #arcane-root.arcane-theme-ascii,
 
 #arcane-root.arcane-theme-ascii .arcane-progress-indicator {
   background-image: repeating-linear-gradient(90deg, transparent 0, transparent 6px, var(--background) 6px, var(--background) 8px);
-  transition: transform 320ms steps(12, end), width 320ms steps(12, end) !important;
+  transition: transform var(--ascii-progress-duration, 560ms) var(--ascii-ease), width var(--ascii-progress-duration, 560ms) var(--ascii-ease) !important;
 }
 
 #arcane-root.arcane-theme-ascii .arcane-progress-indicator.indeterminate {
-  animation-timing-function: steps(16, end) !important;
+  animation-timing-function: ease-in-out !important;
 }
 
 #arcane-root.arcane-theme-ascii .arcane-loading-spinner {
@@ -242,24 +362,13 @@ html.dark #arcane-root.arcane-theme-ascii,
 }
 
 #arcane-root.arcane-theme-ascii .arcane-skeleton.animate {
-  animation: ascii-loading-pulse 1600ms steps(6, end) infinite !important;
+  animation: ascii-loading-pulse 1800ms ease-in-out infinite !important;
 }
 
 #arcane-root.arcane-theme-ascii :is(.arcane-cta-card-button, .arcane-pricing-card-cta) {
   transition: color var(--transition), background-color var(--transition), border-color var(--transition);
 }
 
-#arcane-root.arcane-theme-ascii :is(.arcane-cta-card-button, .arcane-pricing-card-cta)::before,
-#arcane-root.arcane-theme-ascii :is(.arcane-cta-card-button, .arcane-pricing-card-cta)::after {
-  display: inline-block;
-  opacity: 0.55;
-  transition: opacity var(--transition), transform var(--transition);
-}
-
-#arcane-root.arcane-theme-ascii :is(.arcane-cta-card-button, .arcane-pricing-card-cta)::before { content: '[' / ''; }
-#arcane-root.arcane-theme-ascii :is(.arcane-cta-card-button, .arcane-pricing-card-cta)::after { content: ']' / ''; }
-#arcane-root.arcane-theme-ascii :is(.arcane-cta-card-button, .arcane-pricing-card-cta):is(:hover, :focus-visible)::before { opacity: 1; transform: translateX(-2px); }
-#arcane-root.arcane-theme-ascii :is(.arcane-cta-card-button, .arcane-pricing-card-cta):is(:hover, :focus-visible)::after { opacity: 1; transform: translateX(2px); }
 #arcane-root.arcane-theme-ascii .arcane-pricing-card-cta:hover { background-color: var(--accent) !important; border-color: var(--input) !important; }
 #arcane-root.arcane-theme-ascii .arcane-cta-card-button:hover { filter: brightness(0.92); }
 
@@ -272,7 +381,7 @@ html.dark #arcane-root.arcane-theme-ascii,
 #arcane-root.arcane-theme-ascii .arcane-chart-fill {
   background-image: repeating-linear-gradient(90deg, transparent 0, transparent 6px, var(--background) 6px, var(--background) 8px);
   transform-origin: left center;
-  animation: ascii-draw 560ms steps(12, end);
+  animation: ascii-draw 700ms var(--ascii-ease);
 }
 
 #arcane-root.arcane-theme-ascii :is(.arcane-dialog, .arcane-sheet-panel, .arcane-drawer, .arcane-popover, .arcane-dropdown-content, .arcane-context-menu, .arcane-command, .arcane-toast, .arcane-tooltip) {
@@ -282,7 +391,7 @@ html.dark #arcane-root.arcane-theme-ascii,
 }
 
 #arcane-root.arcane-theme-ascii :is(.arcane-dialog, .arcane-popover, .arcane-dropdown-content, .arcane-context-menu, .arcane-command, .arcane-tooltip) {
-  animation: ascii-appear 160ms steps(4, end) !important;
+  animation: ascii-surface-enter 220ms var(--ascii-ease) !important;
 }
 
 #arcane-root.arcane-theme-ascii :is(.arcane-accordion-content, .arcane-disclosure-content, .arcane-tab-content, .arcane-empty-state, .arcane-alert, .ascii-enter) {
@@ -297,7 +406,8 @@ html.dark #arcane-root.arcane-theme-ascii,
 #arcane-root.arcane-theme-ascii :is(.arcane-data-table th, .arcane-static-table th) {
   font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   background: var(--muted);
   color: var(--muted-foreground);
@@ -380,7 +490,7 @@ html.dark #arcane-root.arcane-theme-ascii,
   border-color: var(--ascii-rule) !important;
 }
 
-#arcane-root.arcane-theme-ascii :is(.kb-topbar-brand, .kb-topbar-link, .kb-nav-group-label, .kb-sidebar-group-title, .kb-toc-title, .kb-prose, .prose) {
+#arcane-root.arcane-theme-ascii :is(.kb-nav-group-label, .kb-sidebar-group-title, .kb-toc-title) {
   font-family: var(--font-mono);
 }
 
@@ -388,8 +498,12 @@ html.dark #arcane-root.arcane-theme-ascii,
   transition: color var(--transition), background-color var(--transition);
 }
 
+#arcane-root.arcane-theme-ascii :is(.kb-topbar-brand, .kb-topbar-link, .kb-prose, .prose) {
+  font-family: var(--font-sans);
+}
+
 #arcane-root.arcane-theme-ascii :is(.kb-prose, .prose) {
-  line-height: 1.8;
+  line-height: 1.75;
 }
 
 #arcane-root.arcane-theme-ascii :is(.kb-prose, .prose) :is(h2, h3) {
@@ -398,7 +512,7 @@ html.dark #arcane-root.arcane-theme-ascii,
 
 #arcane-root.arcane-theme-ascii :is(.kb-prose, .prose) blockquote {
   padding: 1rem 1.25rem;
-  border: 1px dashed var(--ascii-rule);
+  border: 1px solid var(--ascii-rule);
   color: var(--muted-foreground);
   font-style: normal;
 }
@@ -438,34 +552,57 @@ html.dark #arcane-root.arcane-theme-ascii,
 .ascii-datum-rule { flex: 1 1 auto; min-width: 1rem; height: 1px; background: var(--ascii-rule, currentColor); transform-origin: left center; }
 .ascii-datum[data-animated='true'] .ascii-datum-rule { animation: ascii-draw 700ms var(--ascii-ease, ease-out) both; }
 
-.ascii-text { font-family: var(--font-mono, monospace); overflow-wrap: anywhere; }
+.ascii-text { font-family: inherit; overflow-wrap: anywhere; }
 .ascii-text-char { position: relative; white-space: pre-wrap; }
-.ascii-text-letter { animation: ascii-appear var(--ascii-char-duration) steps(1, end) var(--ascii-char-delay) both; }
+.ascii-text-letter { animation: ascii-decode-letter var(--ascii-char-duration) var(--ascii-ease, ease-out) var(--ascii-char-delay) both; }
+.ascii-text[data-motion='typewriter'] .ascii-text-letter { animation-name: ascii-appear; animation-timing-function: steps(1, end); }
 .ascii-text[data-motion='decode'] .ascii-text-char::before {
   content: attr(data-glyph) / '';
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  font-family: var(--font-mono, monospace);
   color: currentColor;
-  animation: ascii-decode-glyph var(--ascii-char-duration) steps(2, end) var(--ascii-char-delay) both;
+  animation: ascii-decode-glyph var(--ascii-char-duration) steps(1, end) var(--ascii-char-delay) both;
 }
 .ascii-text-cursor { opacity: 0; animation: ascii-cursor 600ms steps(1, end) 4; }
 
 @keyframes ascii-appear { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ascii-surface-enter { from { opacity: 0; translate: 0 4px; } to { opacity: 1; translate: 0 0; } }
+@keyframes ascii-decode-letter { 0%, 60% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes ascii-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-@keyframes ascii-decode-glyph { 0%, 55% { opacity: 0.65; } 100% { opacity: 0; } }
+@keyframes ascii-decode-glyph {
+  0% { content: attr(data-glyph) / ''; opacity: 0; }
+  12% { content: attr(data-glyph) / ''; opacity: 0.55; }
+  30% { content: attr(data-glyph-next) / ''; opacity: 0.55; }
+  48% { content: attr(data-glyph-last) / ''; opacity: 0.45; }
+  66%, 100% { content: attr(data-glyph-last) / ''; opacity: 0; }
+}
 @keyframes ascii-cursor { 0%, 49% { opacity: 0.75; } 50%, 100% { opacity: 0; } }
 @keyframes ascii-loading-glyph { 0%, 100% { content: '+' / ''; } 25% { content: 'x' / ''; } 50% { content: ':' / ''; } 75% { content: '=' / ''; } }
 @keyframes ascii-loading-pulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 0.9; } }
 
 @media (hover: none) and (pointer: coarse) {
-  #arcane-root.arcane-theme-ascii :is(.arcane-button, .arcane-cycle-button, .arcane-tab, .arcane-tab-bar-item, .arcane-pagination-link, .arcane-select, .arcane-dropdown-item, .arcane-context-menu-item, .arcane-menubar-item, .arcane-command-item, .arcane-calendar-day) {
+  #arcane-root.arcane-theme-ascii :is(.arcane-button, .arcane-cycle-button, .arcane-tab, .arcane-tab-bar-item, .arcane-toggle-button, .arcane-toggle-group-item, .arcane-pagination-link, .arcane-select, .arcane-text-input:not([data-arcane-field-inner]), .arcane-text-input-container, .arcane-textarea, .arcane-date-picker-trigger, .arcane-time-picker-trigger, .arcane-dropdown-item, .arcane-context-menu-item, .arcane-menubar-item, .arcane-command-item, .arcane-calendar-day, .arcane-calendar-nav-btn) {
     min-height: 2.75rem;
   }
+  #arcane-root.arcane-theme-ascii .arcane-text-input[data-arcane-field-inner] { min-height: calc(2.75rem - 2px); }
+  #arcane-root.arcane-theme-ascii :is(.arcane-tabs-list, .arcane-tab-bar) { min-height: 3.25rem; }
+  #arcane-root.arcane-theme-ascii .arcane-calendar-nav-btn { min-width: 2.75rem; }
   #arcane-root.arcane-theme-ascii .arcane-button[data-size^='icon'] { min-width: 2.75rem; }
+  #arcane-root.arcane-theme-ascii :is(.arcane-checkbox-wrapper, .arcane-toggle-wrapper, .arcane-radio-item) { min-height: 2.75rem; }
+}
+
+#arcane-root.arcane-theme-ascii[data-ascii-motion='off'],
+#arcane-root.arcane-theme-ascii [data-ascii-motion='off'] {
+  --transition: 0s;
+  --transition-slow: 0s;
+  --transition-slower: 0s;
+  --ascii-progress-duration: 0s;
 }
 
 [data-ascii-motion='off'],
-[data-ascii-motion='off'] *,
+[data-ascii-motion='off'] *:not(.ascii-orbit-track):not(.ascii-orbit-counterturn),
 [data-ascii-motion='off'] *::before,
 [data-ascii-motion='off'] *::after {
   animation: none !important;
@@ -477,7 +614,13 @@ html.dark #arcane-root.arcane-theme-ascii,
 [data-ascii-motion='off'] .ascii-text-letter { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
-  #arcane-root.arcane-theme-ascii *,
+  #arcane-root.arcane-theme-ascii {
+    --transition: 0s;
+    --transition-slow: 0s;
+    --transition-slower: 0s;
+    --ascii-progress-duration: 0s;
+  }
+  #arcane-root.arcane-theme-ascii *:not(.ascii-orbit-track):not(.ascii-orbit-counterturn),
   #arcane-root.arcane-theme-ascii *::before,
   #arcane-root.arcane-theme-ascii *::after,
   .ascii-text *, .ascii-text *::before, .ascii-datum * {
@@ -492,7 +635,21 @@ html.dark #arcane-root.arcane-theme-ascii,
 
 @media (forced-colors: active) {
   #arcane-root.arcane-theme-ascii :focus-visible { outline: 2px solid Highlight !important; }
+  #arcane-root.arcane-theme-ascii .arcane-command-search-row:has(> .arcane-command-input:focus-visible) {
+    outline-color: Highlight;
+  }
   #arcane-root.arcane-theme-ascii :is(.arcane-button, .arcane-card, .ascii-surface) { border: 1px solid ButtonText; }
+  #arcane-root.arcane-theme-ascii .arcane-checkbox {
+    border-color: ButtonText !important;
+  }
+  #arcane-root.arcane-theme-ascii .arcane-checkbox-indicator { color: ButtonText !important; }
+  #arcane-root.arcane-theme-ascii .arcane-toggle-switch { border-color: ButtonText !important; }
+  #arcane-root.arcane-theme-ascii .arcane-toggle-thumb { border: 1px solid ButtonText; background: ButtonText !important; forced-color-adjust: none; box-sizing: border-box; }
+  #arcane-root.arcane-theme-ascii [data-arcane-intrinsic-shape='radio-dot'] { background: ButtonText !important; forced-color-adjust: none; }
+  #arcane-root.arcane-theme-ascii .arcane-circular-progress > [data-arcane-intrinsic-shape='circular-progress-ring'] {
+    background: conic-gradient(Highlight 0deg var(--arcane-circular-progress-angle), CanvasText var(--arcane-circular-progress-angle) 360deg) !important;
+    forced-color-adjust: none;
+  }
   .ascii-datum-rule { background: CanvasText; }
   #arcane-root.arcane-theme-ascii .arcane-progress-indicator { background: Highlight !important; }
 }

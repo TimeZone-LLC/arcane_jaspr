@@ -27,8 +27,11 @@ class NeubrutalismFloating extends FloatingRenderBase {
     positionProp: positionValue,
     ...alignment,
     'z-index': '50',
-    if (maxWidth != null) 'max-width': '${maxWidth}px',
-    if (hasRichContent) 'min-width': '220px',
+    'width': 'max-content',
+    'max-width': maxWidth == null
+        ? 'calc(100vw - 24px)'
+        : 'min(${maxWidth}px, calc(100vw - 24px))',
+    if (hasRichContent) 'min-width': 'min(220px, calc(100vw - 24px))',
     'padding': hasRichContent ? '14px 16px' : '6px 10px',
     'background': hasRichContent
         ? 'var(--nb-paper, var(--card))'
@@ -37,7 +40,7 @@ class NeubrutalismFloating extends FloatingRenderBase {
         ? 'var(--nb-ink, var(--popover-foreground))'
         : 'var(--nb-paper, #fff)',
     'border': 'var(--nb-border-thick, 3px) solid var(--nb-line, #000)',
-    'border-radius': '0',
+    'border-radius': 'var(--nb-radius-soft, 0)',
     'box-shadow': hasRichContent
         ? 'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))'
         : 'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))',

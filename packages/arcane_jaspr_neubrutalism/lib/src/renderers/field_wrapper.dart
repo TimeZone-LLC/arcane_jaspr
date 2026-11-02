@@ -35,6 +35,9 @@ class NeubrutalismFieldWrapper extends FieldWrapperRenderBase {
       [
         if (props.leading != null) props.leading!,
         dom.label(
+          attributes: <String, String>{
+            if (props.fieldId != null) 'for': props.fieldId!,
+          },
           styles: const dom.Styles(
             raw: {
               'font-size': 'var(--font-size-sm)',

@@ -701,7 +701,7 @@ void main() {
       final String select = _tagForId(html, 'native');
       expect(select, contains('height: 2.25rem'));
       expect(select, contains('font-size: 0.875rem'));
-      expect(select, contains('border-radius: var(--arcane-radius-md, 8px)'));
+      expect(select, contains('border-radius: var(--radius-md)'));
       expect(
         select,
         contains(
@@ -932,7 +932,7 @@ void main() {
       );
       final String label = _tagForClass(html, 'arcane-field-label');
       expect(label, contains('font-size: 0.875rem'));
-      expect(label, contains('line-height: 1'));
+      expect(label, contains('line-height: 1.25rem'));
       expect(
         _tagForClass(html, 'arcane-field-description'),
         contains('font-size: 0.875rem'),

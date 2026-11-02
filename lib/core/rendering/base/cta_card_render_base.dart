@@ -49,6 +49,7 @@ abstract class CtaCardRenderBase extends StatelessComponent {
         'width': '100%',
         'min-height': props.height,
         'box-sizing': 'border-box',
+        '--arcane-card-accent': ?props.accentColor,
       },
       <Map<String, String>?>[
         props.decoration?.universalStyles(),
@@ -59,14 +60,20 @@ abstract class CtaCardRenderBase extends StatelessComponent {
 
     return dom.div(
       classes: cssClass,
-      attributes: const <String, String>{
+      attributes: <String, String>{
         'data-arcane-surface': 'cta-card',
+        if (props.accentColor != null) 'data-arcane-accent': '',
+        if (props.decoration != null || props.styles != null)
+          'data-arcane-decorated': '',
       },
       styles: dom.Styles(raw: rootStyles),
       <Component>[
         if (props.icon != null)
           dom.div(
             classes: '$cssClass-icon',
+            attributes: <String, String>{
+              if (props.accentColor != null) 'data-arcane-accent': '',
+            },
             styles: dom.Styles(
               raw: <String, String>{
                 'display': 'inline-flex',
@@ -132,12 +139,11 @@ abstract class CtaCardRenderBase extends StatelessComponent {
       return dom.a(
         classes: '$cssClass-button',
         href: props.href!,
-        attributes: props.isExternal
-            ? const <String, String>{
-                'target': '_blank',
-                'rel': 'noopener noreferrer',
-              }
-            : null,
+        attributes: <String, String>{
+          if (props.accentColor != null) 'data-arcane-accent': '',
+          if (props.isExternal) 'target': '_blank',
+          if (props.isExternal) 'rel': 'noopener noreferrer',
+        },
         styles: dom.Styles(raw: ctaStyles),
         <Component>[
           Component.text(props.ctaText),
@@ -149,7 +155,10 @@ abstract class CtaCardRenderBase extends StatelessComponent {
 
     return dom.button(
       classes: '$cssClass-button',
-      attributes: const <String, String>{'type': 'button'},
+      attributes: <String, String>{
+        'type': 'button',
+        if (props.accentColor != null) 'data-arcane-accent': '',
+      },
       styles: dom.Styles(raw: ctaStyles),
       events: <String, EventCallback>{'click': (_) => props.onTap?.call()},
       <Component>[Component.text(props.ctaText)],

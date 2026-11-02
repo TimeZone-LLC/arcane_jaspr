@@ -3,9 +3,10 @@ import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/props/field_wrapper_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/field_wrapper_render_base.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// ShadCN Field Wrapper renderer (FormItem: `grid gap-2`; FormLabel
-/// `text-sm font-medium leading-none`; FormDescription and FormMessage
+/// `text-sm font-medium leading-5`; FormDescription and FormMessage
 /// `text-sm`).
 class ShadcnFieldWrapper extends FieldWrapperRenderBase {
   const ShadcnFieldWrapper(super.props, {super.key});
@@ -53,11 +54,12 @@ class ShadcnFieldWrapper extends FieldWrapperRenderBase {
         if (props.labelText != null)
           dom.label(
             classes: 'arcane-field-label',
+            attributes: <String, String>{
+              if (props.fieldId != null) 'for': props.fieldId!,
+            },
             styles: dom.Styles(
               raw: {
-                'font-size': '0.875rem',
-                'font-weight': '500',
-                'line-height': '1',
+                ...shadcnFieldLabelStyles,
                 'color': hasError ? 'var(--destructive)' : 'var(--foreground)',
               },
             ),

@@ -25,6 +25,16 @@ function surfaceGroup(el) {
   return el.getAttribute('data-arcane-surface-group');
 }
 
+function restoreSurfaceFocus(surface, target) {
+  if (!target || !target.isConnected || !target.focus) return;
+  const top = ARCANE.stack[ARCANE.stack.length - 1];
+  if (top && !top.el.contains(target)) return;
+  const active = document.activeElement;
+  if (active && active !== document.body && active !== document.documentElement &&
+      active !== target && !surface.contains(active)) return;
+  try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); }
+}
+
 function trapFocus(surface, e) {
   if (!surface) return;
   if (surface.getAttribute('data-arcane-focus-trap') === 'false') return;
@@ -80,10 +90,8 @@ function syncSurfaceStack() {
   if (previousTop && !ARCANE.stack.some(function(entry) { return entry.el === previousTop.el; })) {
     const el = previousTop.el;
     const target = el._arcanePrevFocus;
-    const top = ARCANE.stack[ARCANE.stack.length - 1];
-    if (el.getAttribute('data-arcane-restore-focus') !== 'false' &&
-        target && target.isConnected && (!top || top.el.contains(target))) {
-      target.focus({ preventScroll: true });
+    if (el.getAttribute('data-arcane-restore-focus') !== 'false') {
+      restoreSurfaceFocus(el, target);
     }
     el._arcanePrevFocus = null;
   }
@@ -135,6 +143,9 @@ function positionAnchored(surfaceEl, anchorEl) {
       position: surfaceEl.style.position,
       top: surfaceEl.style.top,
       left: surfaceEl.style.left,
+      bottom: surfaceEl.style.bottom,
+      right: surfaceEl.style.right,
+      transform: surfaceEl.style.transform,
       width: surfaceEl.style.width,
       minWidth: surfaceEl.style.minWidth
     };
@@ -144,6 +155,12 @@ function positionAnchored(surfaceEl, anchorEl) {
   // once the surface is gone), so an earlier read would place the surface
   // over its own trigger.
   surfaceEl.style.position = 'fixed';
+  surfaceEl.style.bottom = 'auto';
+  surfaceEl.style.right = 'auto';
+  const anchorTransform = surfaceEl.getAttribute('data-arcane-anchor-transform');
+  if (anchorTransform && surfaceEl.style.transform === anchorTransform) {
+    surfaceEl.style.transform = 'none';
+  }
   surfaceEl.style.width = sw + 'px';
   surfaceEl.style.minWidth = sw + 'px';
   const rect = anchorEl.getBoundingClientRect();
@@ -201,7 +218,7 @@ function openSurface(type, id, opts) {
     );
     for (let i = 0; i < peers.length; i++) {
       if (peers[i] !== el) {
-        closeSurface(surfaceType(peers[i]), surfaceId(peers[i]), { silent: true });
+        closeSurface(surfaceType(peers[i]), surfaceId(peers[i]), { silent: true, restoreFocus: false });
       }
     }
   }
@@ -222,6 +239,7 @@ function openSurface(type, id, opts) {
   }
 
   el.removeAttribute('hidden');
+  el.removeAttribute('inert');
   el.setAttribute('data-arcane-state', 'open');
   el.setAttribute('aria-hidden', 'false');
 
@@ -249,6 +267,8 @@ function openSurface(type, id, opts) {
         ARCANE.stack[ARCANE.stack.length - 1]?.el !== el) return;
     el.classList.add('arcane-surface-open');
     el.classList.remove('arcane-surface-closing');
+
+    if (type === 'hovercard' || type === 'tooltip') return;
 
     const focusTarget = el.querySelector('[data-arcane-autofocus]') ||
       getFocusable(el)[0];
@@ -290,6 +310,7 @@ function closeSurface(type, id, opts) {
   if (!surfaceIsOpen(el)) return false;
 
   el.setAttribute('data-arcane-state', 'closed');
+  el.setAttribute('inert', '');
   el.setAttribute('aria-hidden', 'true');
   el.classList.remove('arcane-surface-open');
   el.classList.add('arcane-surface-closing');
@@ -324,7 +345,7 @@ function closeSurface(type, id, opts) {
     el._arcaneAnchorReposition = null;
   }
 
-  const restoreFocus = el.getAttribute('data-arcane-restore-focus') !== 'false';
+  const restoreFocus = opts.restoreFocus !== false && el.getAttribute('data-arcane-restore-focus') !== 'false';
   const prevFocus = el._arcanePrevFocus;
 
   const finalize = function() {
@@ -335,12 +356,17 @@ function closeSurface(type, id, opts) {
     el.style.position = inlineStyle ? inlineStyle.position : '';
     el.style.top = inlineStyle ? inlineStyle.top : '';
     el.style.left = inlineStyle ? inlineStyle.left : '';
+    if (inlineStyle) {
+      el.style.bottom = inlineStyle.bottom;
+      el.style.right = inlineStyle.right;
+      el.style.transform = inlineStyle.transform;
+    }
     el.style.width = inlineStyle ? inlineStyle.width : '';
     el.style.minWidth = inlineStyle ? inlineStyle.minWidth : '';
     el._arcaneAnchorInlineStyle = null;
     el.removeAttribute('data-arcane-actual-placement');
-    if (restoreFocus && prevFocus && prevFocus.focus) {
-      try { prevFocus.focus({ preventScroll: true }); } catch (e) { prevFocus.focus(); }
+    if (restoreFocus) {
+      restoreSurfaceFocus(el, prevFocus);
     }
     el._arcanePrevFocus = null;
   };

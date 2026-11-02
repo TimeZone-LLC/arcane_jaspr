@@ -301,8 +301,8 @@ const String _previewScopeCss = '''
 }
 
 .arcane-demo-preview-scope .arcane-command-dialog {
-  max-width: min(640px, calc(100% - 2rem)) !important;
-  max-height: calc(100% - 2rem) !important;
+  max-width: min(640px, 100%) !important;
+  max-height: 100% !important;
 }
 
 .arcane-demo-code {

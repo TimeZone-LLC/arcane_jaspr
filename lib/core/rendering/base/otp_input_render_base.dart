@@ -59,7 +59,11 @@ abstract class OtpInputRenderBase extends StatelessComponent {
 
   /// Theme-ordered `attributes` map for the digit input at [i]. Kept abstract
   /// because the key order is theme-specific and must be preserved exactly.
-  Map<String, String> digitAttributes(int i, bool hasError, List<String> digits);
+  Map<String, String> digitAttributes(
+    int i,
+    bool hasError,
+    List<String> digits,
+  );
 
   /// Inline styles for the digit input at [i].
   Map<String, String> digitStyles(
@@ -96,6 +100,7 @@ abstract class OtpInputRenderBase extends StatelessComponent {
     return dom.div(
       classes: rootClass,
       attributes: <String, String>{
+        'data-arcane-otp': 'true',
         'data-state': hasError ? 'error' : idleState,
         'data-disabled': '${props.disabled}',
         ...extraRootAttrs,
@@ -103,10 +108,9 @@ abstract class OtpInputRenderBase extends StatelessComponent {
       styles: dom.Styles(raw: rootStyles),
       <Component>[
         if (props.label != null)
-          dom.span(
-            styles: dom.Styles(raw: labelStyles),
-            <Component>[Component.text(props.label!)],
-          ),
+          dom.span(styles: dom.Styles(raw: labelStyles), <Component>[
+            Component.text(props.label!),
+          ]),
 
         // Digit inputs row
         dom.div(
@@ -116,10 +120,9 @@ abstract class OtpInputRenderBase extends StatelessComponent {
             for (int i = 0; i < props.length; i++) ...<Component>[
               // Separator
               if (sepPos != null && i == sepPos && props.separator != null)
-                dom.span(
-                  styles: dom.Styles(raw: separatorStyles),
-                  <Component>[Component.text(props.separator!)],
-                ),
+                dom.span(styles: dom.Styles(raw: separatorStyles), <Component>[
+                  Component.text(props.separator!),
+                ]),
 
               // Digit input
               dom.input(
@@ -140,7 +143,9 @@ abstract class OtpInputRenderBase extends StatelessComponent {
                 events: props.onInput != null
                     ? <String, EventCallback>{
                         'input': (e) {
-                          props.onInput!(i, domInputValue(e.target));
+                          if (!domEventIsComposing(e)) {
+                            props.onInput!(i, domOtpInputValue(e));
+                          }
                         },
                       }
                     : null,

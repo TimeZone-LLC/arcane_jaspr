@@ -73,7 +73,7 @@ class ShadcnToast extends StatelessComponent {
           'gap': '0.375rem',
           'box-sizing': 'border-box',
           'width': '356px',
-          'max-width': 'calc(100vw - 2rem)',
+          'max-width': 'min(100%, calc(100vw - 2rem))',
           'padding': '1rem',
           'background-color': 'var(--popover)',
           'color': 'var(--popover-foreground)',
@@ -98,6 +98,7 @@ class ShadcnToast extends StatelessComponent {
       <Component>[
         dom.div(
           classes: 'arcane-toast-icon',
+          attributes: const <String, String>{'aria-hidden': 'true'},
           styles: const dom.Styles(
             raw: <String, String>{
               'display': 'flex',
@@ -118,6 +119,7 @@ class ShadcnToast extends StatelessComponent {
             raw: <String, String>{
               'flex': '1',
               'min-width': '0',
+              'overflow-wrap': 'anywhere',
               'display': 'flex',
               'flex-direction': 'column',
               'gap': '0.125rem',

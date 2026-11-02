@@ -1,6 +1,6 @@
 {
-  "generated": "2026-08-31T04:02:17.463083Z",
-  "itemCount": 79,
+  "generated": "2026-10-15T17:13:32.461107Z",
+  "itemCount": 80,
   "items": [
     {
       "title": "Arcane Jaspr",
@@ -39,7 +39,7 @@
         "arcane",
         "lexicon"
       ],
-      "content": "Arcane Lexicon Documentation with a real front door. Arcane Jaspr docs now open like a product surface instead of a component inventory. Start with the authoring model, jump into the current components, or follow the styling system from tokens to finished pages. Quick Start Browse Components Author Write Markdown once. Render Lexicon owns nav, search, TOC, demos, and routing. Theme Shadcn, Neon, and Neubrutalism each get their own visual language. Build from widgets Use the Flutter-shaped Arcane"
+      "content": "Arcane Lexicon Arcane Jaspr documentation. Start with the authoring model, open the component catalog, or follow the styling system from tokens to finished pages. Explore Ascii Browse Components Author Write Markdown once. Render Lexicon owns nav, search, TOC, demos, and routing. Theme Ascii, Shadcn, Neon, Neubrutalism, and Windows 95 share one component API. Build from widgets Use the Flutter-shaped Arcane Jaspr surface for layout, state, forms, and interactive documentation examples. Read the "
     },
     {
       "title": "ArcaneAccordion",
@@ -239,9 +239,10 @@
       "url": "/docs/components/field",
       "section": "components",
       "keywords": [
-        "arcanefieldwrapper"
+        "arcanefieldwrapper",
+        "fieldid"
       ],
-      "content": "ArcaneFieldWrapper Use field wrappers to pair an input with label, helper text, and validation-ready layout. The live preview and code sample above use the neutral API. The selected stylesheet owns spacing, density, radius, color, and interaction styling, so the same app code can render differently under Shadcn or Neon. Source: See the $1 for the full exported surface and source mapping."
+      "content": "ArcaneFieldWrapper Use field wrappers to pair an input with label, helper text, and validation-ready layout. Set to the of the wrapped input to associate the visible label with that control. Clicking the label focuses the input, and assistive technology reads the label as its accessible name. The live preview and code sample above use the neutral API. The selected stylesheet owns spacing, density, radius, color, and interaction styling, so the same app code can render differently under Shadcn or"
     },
     {
       "title": "ArcaneHoverCard",
@@ -341,9 +342,12 @@
       "url": "/docs/components/progress",
       "section": "components",
       "keywords": [
+        "0.0",
+        "0.4",
+        "1.0",
         "arcaneprogressbar"
       ],
-      "content": "ArcaneProgressBar Use progress bars to show determinate task progress with renderer-owned sizing and status color. The live preview and code sample above use the neutral API. The selected stylesheet owns spacing, density, radius, color, and interaction styling, so the same app code can render differently under Shadcn or Neon. Source: See the $1 for the full exported surface and source mapping."
+      "content": "ArcaneProgressBar Use progress bars to show determinate task progress with renderer-owned sizing and status color. Pass a fraction between and to linear and circular progress components; represents 40%. The live preview and code sample above use the neutral API. The selected stylesheet owns spacing, density, radius, color, and interaction styling, so the same app code can render differently under Shadcn or Neon. Source: See the $1 for the full exported surface and source mapping."
     },
     {
       "title": "ArcaneRadioGroup",
@@ -516,8 +520,42 @@
       "content": "ArcaneTooltip Use tooltips for short contextual help on controls that should not add permanent page text. The live preview and code sample above use the neutral API. The selected stylesheet owns spacing, density, radius, color, and interaction styling, so the same app code can render differently under Shadcn or Neon. Source: See the $1 for the full exported surface and source mapping."
     },
     {
+      "title": "Ascii",
+      "description": "The Ascii theme, with live component examples, text motion, and datum lines.",
+      "url": "/ascii",
+      "section": "",
+      "keywords": [
+        ".\n\n",
+        "and",
+        "arcane",
+        "arcaneapp",
+        "arcaneslotcounter",
+        "ascii",
+        "asciidatum",
+        "asciistylesheet",
+        "asciitext",
+        "asciitextmotion",
+        "component",
+        "componentsize",
+        "controls",
+        "datum",
+        "ink",
+        "installation",
+        "knowledgebaseapp",
+        "lexicon",
+        "lines",
+        "motion",
+        "paper",
+        "reduced",
+        "selection",
+        "siteconfig",
+        "text"
+      ],
+      "content": "Installation Ascii is a renderer package for Arcane Jaspr. Add the core and theme packages to a Jaspr project using local checkout paths: Import the theme and pass to the application root. Existing Arcane buttons, forms, tables, menus, dialogs, and layouts use the theme automatically. Paper and ink uses the paper palette. uses the ink palette. Keep the selected brightness in application state and rebuild when a toggle changes it. Theme selection does not require separate component trees or custo"
+    },
+    {
       "title": "Authoring like Flutter",
-      "description": "The two-surface permeability model — semantic decoration that each theme interprets, plus bounded literal overrides",
+      "description": "Semantic decoration interpreted by each theme, plus bounded literal overrides",
       "url": "/docs/concepts/permeability",
       "section": "concepts",
       "keywords": [
@@ -555,15 +593,14 @@
         "overrides",
         "padding",
         "paddingcustom",
-        "radius.lg",
+        "radius.md",
         "radius.sm",
+        "radius.xs",
         "radius?",
         "resolve",
-        "shadowcolor",
         "string?",
         "styles:",
         "the",
-        "theme-specific:",
         "universal",
         "universalstyles()",
         "var(--x)"
@@ -589,7 +626,6 @@
         "borders",
         "borderstyle",
         "borderwidth",
-        "bottomsubtle",
         "brand",
         "brandthick",
         "card",
@@ -597,7 +633,6 @@
         "dashed",
         "dashedstandard",
         "dashedsubtle",
-        "directional",
         "divider",
         "error",
         "field",
@@ -620,7 +655,6 @@
         "standard",
         "subtle",
         "success",
-        "topsubtle",
         "upload",
         "usage",
         "warning",
@@ -661,7 +695,7 @@
     },
     {
       "title": "Card Family",
-      "description": "Composite marketing cards — StatCard, FeatureCard, CtaCard, TestimonialCard, and PricingCard — built on the primary surface",
+      "description": "StatCard, FeatureCard, CtaCard, TestimonialCard, and PricingCard on the primary surface",
       "url": "/docs/components/card-family",
       "section": "components",
       "keywords": [
@@ -728,7 +762,7 @@
         "the",
         "using"
       ],
-      "content": "Color Operations is an extension on that adds opacity and blend helpers to any CSS color. Colors cross the styling boundary as raw strings — a hex value, a theme variable, an token, or a runtime accent — and these helpers work for every one of those forms. Source: The problem it replaces The historic hex-alpha suffix hack only works on plain hex colors. Applied to anything else it produces invalid CSS: Hand-writing works but is verbose and easy to get wrong: gives you both correctly and concisel"
+      "content": "Color Operations is an extension on that adds opacity and blend helpers to CSS colors. It accepts hex values, theme variables, tokens, and runtime accents. Source: The problem it replaces The historic hex-alpha suffix hack only works on plain hex colors. Applied to anything else it produces invalid CSS: Hand-writing works but is verbose and easy to get wrong: gives you both correctly and concisely. .opacity(double amount) Fades a color toward transparent. is clamped to . It works on hex, variabl"
     },
     {
       "title": "Colors",
@@ -829,8 +863,8 @@
       "keywords": [
         "(22)",
         "(24)",
-        "(61)",
-        "(66)",
+        "(50)",
+        "(83)",
         "138",
         "accordion",
         "advanced",
@@ -851,6 +885,7 @@
         "arcanecatimage",
         "arcanechart",
         "arcanecheckbox",
+        "arcanechecklist",
         "arcanecodeblock",
         "arcanecolorfield",
         "arcanecolors",
@@ -871,15 +906,17 @@
         "arcanefieldmetadata",
         "arcanefieldprovider",
         "arcanefieldwrapper",
+        "arcaneflexicards",
         "arcanegallery",
+        "arcaneglyph",
         "arcaneheader",
         "arcaneheading",
         "arcanehovercard",
         "arcanehtmlfooter",
         "arcanehtmlsection",
-        "arcaneicon",
         "arcaneimage",
         "arcaneinfinitecarousel",
+        "arcaneinlineherobanner",
         "arcaneinputgroup",
         "arcaneinteraction",
         "arcaneitem",
@@ -888,6 +925,7 @@
         "arcanelink",
         "arcanemain",
         "arcanemenubar",
+        "arcanenativeselect",
         "arcanenav",
         "arcanenavdropdown",
         "arcanenotfoundaction",
@@ -913,8 +951,10 @@
         "arcanesidecontent",
         "arcaneskeleton",
         "arcaneslider",
+        "arcaneslotcounter",
         "arcanesonner",
         "arcanespan",
+        "arcanespecrow",
         "arcanespinner",
         "arcanestatusbadge",
         "arcanestringfield",
@@ -926,6 +966,7 @@
         "arcanetext",
         "arcanethemeprovider",
         "arcanetimefield",
+        "arcanetimepicker",
         "arcanetoast",
         "arcanetogglebutton",
         "arcanetogglegroup",
@@ -956,6 +997,7 @@
         "catalog",
         "centerbody",
         "chart",
+        "check-list",
         "checkbox",
         "classes",
         "collapsible",
@@ -969,6 +1011,7 @@
         "components",
         "confirmtext",
         "context-menu",
+        "cta-card",
         "ctacard",
         "data-table",
         "datatable",
@@ -993,11 +1036,15 @@
         "exports",
         "fabsocket",
         "fancyprogressbar",
+        "feature-card",
         "featurecard",
         "field",
         "fillscreen",
+        "flexi-cards",
+        "flow",
         "formheader",
         "foundation",
+        "gallery",
         "gap",
         "gutter",
         "hover-card",
@@ -1048,6 +1095,7 @@
         "menubar",
         "modules",
         "mutabletext",
+        "native-select",
         "navigation-menu",
         "onhover",
         "package:arcane_jaspr/web.dart",
@@ -1055,6 +1103,7 @@
         "passwordpolicy",
         "popover",
         "popupmenu",
+        "pricing-card",
         "pricingcard",
         "primary",
         "progress",
@@ -1066,6 +1115,7 @@
         "resizable",
         "screen",
         "scroll-area",
+        "scroll-rail",
         "searchresult",
         "section",
         "select",
@@ -1077,24 +1127,30 @@
         "skeleton",
         "slider",
         "sliverscreen",
+        "slot-counter",
         "snapshot",
         "sonner",
         "spacing",
+        "spec-row",
         "spinner",
+        "stat-card",
         "statcard",
-        "statelesswidget",
+        "state",
         "statictable",
         "styling",
         "support",
         "switch",
         "table",
         "tabs",
+        "testimonial-card",
         "testimonialcard",
         "text",
         "textarea",
         "textinput",
         "theming",
         "tile",
+        "time-picker",
+        "toast",
         "tocentry",
         "toggle",
         "toggle-group",
@@ -1104,7 +1160,7 @@
         "typography-styles",
         "wrap"
       ],
-      "content": "Component Catalog This page is generated from the current and exports. Snapshot - Generated on - Primary live component demos: - Primary support component modules: - Main-surface foundation exports: - Total main-surface export modules: - Advanced HTML modules: Use for the Flutter-first surface. Use and only when you intentionally need lower-level HTML or raw Jaspr escape hatches. Primary Live Components (66) | Component | Symbol | Source | |---|---|---| | | | | | | | | | | | | | | | | | | | | | "
+      "content": "Component Catalog This page combines the live demo registry with the current and exports. Try every live example in the $1; examples outside the primary import include their module import. Snapshot - Generated on - Live component demos: - Primary support component modules: - Main-surface foundation exports: - Total main-surface export modules: - Advanced HTML modules: Use for the Flutter-first surface. Use and only when you intentionally need lower-level HTML or raw Jaspr escape hatches. Live Co"
     },
     {
       "title": "DataTable",
@@ -1316,7 +1372,7 @@
         "xxxl",
         "z-index"
       ],
-      "content": "Design Tokens Arcane Jaspr uses a comprehensive design token system for consistent styling. These tokens are available as both Dart constants and CSS custom properties. Colors (ArcaneColors) All colors are available as CSS variables with the prefix. Brand & Accent Colors | Token | CSS Variable | Description | |-------|--------------|-------------| | | | Primary accent color | | | | Accent hover state | | | | Accent container background | | | | Text on accent background | Status Colors | Token | "
+      "content": "Design Tokens Arcane Jaspr exposes design tokens as Dart constants and CSS custom properties. Colors (ArcaneColors) All colors are available as CSS variables with the prefix. Brand & Accent Colors | Token | CSS Variable | Description | |-------|--------------|-------------| | | | Primary accent color | | | | Accent hover state | | | | Accent container background | | | | Text on accent background | Status Colors | Token | CSS Variable | Description | |-------|--------------|-------------| | | | S"
     },
     {
       "title": "Display & Layout",
@@ -1407,7 +1463,7 @@
     },
     {
       "title": "Ergonomics",
-      "description": "Small authoring conveniences — the cx class-join helper and semantic tag on Container",
+      "description": "The cx class-join helper and semantic tag on Container",
       "url": "/docs/concepts/ergonomics",
       "section": "concepts",
       "keywords": [
@@ -1520,6 +1576,7 @@
         "arcane",
         "arcaneapp",
         "arcanestylesheet",
+        "asciistylesheet",
         "build",
         "buildcontext",
         "existing",
@@ -1622,28 +1679,6 @@
     },
     {
       "title": "Styling",
-      "description": "Preview renderer-owned styling and copy the ArcaneStyleData shape used by the active stylesheet.",
-      "url": "/styling",
-      "section": "",
-      "keywords": [
-        "arcanebox",
-        "arcanestyledata",
-        "arcanethemeprovider",
-        "borderpreset",
-        "changes",
-        "copy",
-        "flexdirection",
-        "neubrutalismstylesheet",
-        "neubrutalismtheme",
-        "paddingpreset",
-        "pattern",
-        "styling",
-        "what"
-      ],
-      "content": "Styling Use this page as the quick visual check for the active stylesheet and palette. The selector in the top bar swaps the renderer package and palette, while the preview below keeps the same neutral Arcane Jaspr code. What Changes | Control | Effect | |---|---| | Stylesheet | Swaps the concrete renderer package, such as Shadcn, Neon, or Neubrutalism | | Palette | Swaps the renderer palette while preserving the same widget API | | Theme | Switches between light and dark theme variables | Copy "
-    },
-    {
-      "title": "Styling",
       "description": "Learn how to style components using ArcaneStyleData",
       "url": "/docs/concepts/styling",
       "section": "concepts",
@@ -1710,6 +1745,28 @@
       "content": "Styling Arcane Jaspr uses for declarative, type-safe styling. This approach provides autocomplete, compile-time checking, and consistent design tokens. ArcaneStyleData The class is the foundation of all styling in Arcane Jaspr. It converts typed properties into CSS. Basic Usage Using Custom Values Some layout properties accept a named custom value while keeping the supported CSS property explicit: intentionally has no raw property map and no custom shadow, filter, or animation fields. accepts fl"
     },
     {
+      "title": "Styling",
+      "description": "Preview renderer-owned styling and copy the ArcaneStyleData shape used by the active stylesheet.",
+      "url": "/styling",
+      "section": "",
+      "keywords": [
+        "arcanebox",
+        "arcanestyledata",
+        "arcanethemeprovider",
+        "borderpreset",
+        "changes",
+        "copy",
+        "flexdirection",
+        "neubrutalismstylesheet",
+        "neubrutalismtheme",
+        "paddingpreset",
+        "pattern",
+        "styling",
+        "what"
+      ],
+      "content": "Styling Use this page as the quick visual check for the active stylesheet and palette. The selector in the top bar swaps the renderer package and palette, while the preview below keeps the same neutral Arcane Jaspr code. What Changes | Control | Effect | |---|---| | Stylesheet | Swaps the concrete renderer package, such as Shadcn, Neon, or Neubrutalism | | Palette | Swaps the renderer palette while preserving the same widget API | | Theme | Switches between light and dark theme variables | Copy "
+    },
+    {
       "title": "Text",
       "description": "Use typography primitives to express semantic text hierarchy without hard-coded CSS.",
       "url": "/docs/components/typography",
@@ -1754,6 +1811,7 @@
         "arcanestyledata",
         "arcanestylesheet",
         "arcanethemetoggle",
+        "asciistylesheet",
         "available",
         "borderpreset",
         "brightness",
@@ -1864,13 +1922,12 @@
       "keywords": [
         "<a>",
         "<button>",
-        "<canvas>",
         "<p>",
         "and",
         "arcane",
         "arcanestyledata",
         "both",
-        "building:",
+        "building",
         "case",
         "choose",
         "common",
@@ -1926,7 +1983,7 @@
         "when",
         "why"
       ],
-      "content": "Why Jaspr + Arcane Jaspr? This guide helps you understand when Jaspr is the right choice for your web project, especially compared to Flutter web. The Core Difference $1 renders your UI to a canvas element. The browser sees a single tag, not your buttons, text, or links. $1 renders to semantic HTML. Your button is a , your text is a , your link is an . The browser understands your content. This fundamental difference affects everything. --- SEO and Discoverability Search Engine Indexing | Aspect"
+      "content": "Why Jaspr + Arcane Jaspr? Jaspr and Flutter web use different rendering models. Choose between them based on the browser behavior your project needs. The Core Difference Flutter web can render an app through a canvas-based surface. In that mode, browser tools do not receive the same element tree as a normal HTML page. Jaspr renders semantic HTML. A button is a , text can be a , and a link is an . That distinction affects indexing, browser tools, accessibility, and page behavior. --- SEO and Disc"
     }
   ]
 }

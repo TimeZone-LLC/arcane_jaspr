@@ -55,7 +55,7 @@ class NeubrutalismFeatureRow extends FeatureRowRenderBase {
         'width': iconSize,
         'height': iconSize,
         'border': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
-        'border-radius': '0',
+        'border-radius': 'var(--nb-radius-tight, 0)',
         'flex-shrink': '0',
         'background-color': props.included
             ? 'var(--nb-accent, var(--primary))'

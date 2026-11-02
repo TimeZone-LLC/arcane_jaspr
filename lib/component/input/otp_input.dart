@@ -1,10 +1,10 @@
 import 'package:arcane_jaspr/flutter.dart';
 
-import '../../core/decoration/arcane_decoration.dart';
-import '../../core/theme_provider.dart';
-import '../../util/style_types/arcane_style_data.dart';
+import 'package:arcane_jaspr/core/decoration/arcane_decoration.dart';
+import 'package:arcane_jaspr/core/theme_provider.dart';
+import 'package:arcane_jaspr/util/style_types/arcane_style_data.dart';
 
-export '../../core/props/otp_input_props.dart'
+export 'package:arcane_jaspr/core/props/otp_input_props.dart'
     show OtpInputSizeVariant, OtpInputProps;
 
 /// Size variants for OTP input.
@@ -94,10 +94,19 @@ class _ArcaneOtpInputState extends State<ArcaneOtpInput> {
   }
 
   void _initDigits() {
-    if (widget.value != null && widget.value!.length == widget.length) {
-      _digits = widget.value!.split('');
-    } else {
-      _digits = List.filled(widget.length, '');
+    final String value = (widget.value ?? '').replaceAll(RegExp(r'[^0-9]'), '');
+    _digits = List<String>.generate(
+      widget.length,
+      (int index) => index < value.length ? value[index] : '',
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant ArcaneOtpInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.length != oldWidget.length ||
+        (widget.value != oldWidget.value && widget.value != _fullValue)) {
+      _initDigits();
     }
   }
 
@@ -106,37 +115,24 @@ class _ArcaneOtpInputState extends State<ArcaneOtpInput> {
   void _handleInput(int index, String value) {
     if (widget.disabled) return;
 
-    if (value.length > 1) {
-      _handlePaste(value);
+    final String digits = value.replaceAll(RegExp(r'[^0-9]'), '');
+    final List<String> next = List<String>.of(_digits);
+    if (digits.length > 1) {
+      final int start = digits.length >= widget.length ? 0 : index;
+      for (int i = start; i < widget.length; i++) {
+        next[i] = i - start < digits.length ? digits[i - start] : '';
+      }
+    } else {
+      next[index] = digits;
+    }
+    if (_digits.asMap().entries.every(
+      (MapEntry<int, String> entry) => next[entry.key] == entry.value,
+    )) {
       return;
     }
-
-    if (value.isNotEmpty && RegExp(r'[0-9]').hasMatch(value)) {
-      setState(() {
-        _digits[index] = value;
-      });
-
-      widget.onChanged?.call(_fullValue);
-
-      if (_digits.every((d) => d.isNotEmpty)) {
-        widget.onComplete?.call(_fullValue);
-      }
-    }
-  }
-
-  void _handlePaste(String pastedValue) {
-    final digits = pastedValue.replaceAll(RegExp(r'[^0-9]'), '');
-    if (digits.isEmpty) return;
-
-    setState(() {
-      for (var i = 0; i < widget.length && i < digits.length; i++) {
-        _digits[i] = digits[i];
-      }
-    });
-
+    setState(() => _digits = next);
     widget.onChanged?.call(_fullValue);
-
-    if (_digits.every((d) => d.isNotEmpty)) {
+    if (_digits.every((String digit) => digit.isNotEmpty)) {
       widget.onComplete?.call(_fullValue);
     }
   }

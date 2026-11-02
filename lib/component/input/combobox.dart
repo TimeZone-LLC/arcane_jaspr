@@ -68,7 +68,7 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
   List<ComboboxOption<T>> get _filteredOptions {
     if (_searchQuery.isEmpty) return widget.options;
 
-    final query = _searchQuery.toLowerCase();
+    final String query = _searchQuery.toLowerCase();
     return widget.options.where((option) {
       if (widget.filterFn != null) {
         return widget.filterFn!(option, _searchQuery);
@@ -111,7 +111,7 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final selectOptions = widget.options
+    final List<SelectOptionProps<T>> selectOptions = widget.options
         .map(
           (opt) => SelectOptionProps<T>(
             value: opt.value,
@@ -124,7 +124,7 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
         )
         .toList();
 
-    final filteredSelectOptions = _filteredOptions
+    final List<SelectOptionProps<T>> filteredSelectOptions = _filteredOptions
         .map(
           (opt) => SelectOptionProps<T>(
             value: opt.value,
@@ -155,7 +155,7 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
         onToggle: _toggleOpen,
         onSelect: _selectOption,
         onSearchChange: _handleSearch,
-        id: widget.id,
+        id: widget.id ?? 'combobox-${identityHashCode(this)}',
         group: widget.group,
         onSelectAction: widget.onChangedAction,
         styles: widget.styles,

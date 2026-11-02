@@ -165,6 +165,7 @@ abstract class PaginationRenderBase extends StatelessComponent {
   Component _buildEllipsis(String fontSize) {
     return dom.span(
       classes: '$themePrefix-pagination-ellipsis',
+      attributes: const <String, String>{'aria-hidden': 'true'},
       styles: dom.Styles(
         raw: <String, String>{
           'display': 'inline-flex',

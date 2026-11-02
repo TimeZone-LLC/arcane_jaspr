@@ -1,6 +1,7 @@
 import 'package:arcane_jaspr/stylesheets/stylesheet.dart';
 import 'package:arcane_jaspr/theme/index.dart';
 import 'package:arcane_jaspr_ascii/src/ascii_css.dart';
+import 'package:arcane_jaspr_ascii/src/ascii_motion_css.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
 
 class AsciiStylesheet extends ArcaneStylesheet {
@@ -22,11 +23,11 @@ class AsciiStylesheet extends ArcaneStylesheet {
 
   @override
   ThemeSeed get lightSeed => const ThemeSeed(
-    primary: 0xff314e39,
-    background: 0xfff6f5f0,
-    secondary: 0xffeaece3,
-    accent: 0xffe0e6d9,
-    border: 0xffa0a898,
+    primary: 0xff101014,
+    background: 0xfff2f1ee,
+    secondary: 0xffe8e7e3,
+    accent: 0xffe3e1dc,
+    border: 0xffd3d0c9,
     destructive: 0xffa0372d,
     success: 0xff315c3a,
     warning: 0xff79520e,
@@ -35,11 +36,11 @@ class AsciiStylesheet extends ArcaneStylesheet {
 
   @override
   ThemeSeed get darkSeed => const ThemeSeed(
-    primary: 0xffb1cba1,
-    background: 0xff111310,
-    secondary: 0xff252a22,
-    accent: 0xff30382a,
-    border: 0xff616d58,
+    primary: 0xffe9e8e3,
+    background: 0xff101014,
+    secondary: 0xff26262b,
+    accent: 0xff303037,
+    border: 0xff35353c,
     destructive: 0xfff2a095,
     success: 0xffa8cf9c,
     warning: 0xffdfc28b,
@@ -50,9 +51,9 @@ class AsciiStylesheet extends ArcaneStylesheet {
   @override
   FontConfig get fonts => const FontConfig(
     sans:
-        "'Geist Mono', 'IBM Plex Mono', 'Hack', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace",
+        "'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     heading:
-        "'Geist Mono', 'IBM Plex Mono', 'Hack', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace",
+        "'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     mono:
         "'Geist Mono', 'IBM Plex Mono', 'Hack', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace",
   );
@@ -65,5 +66,5 @@ class AsciiStylesheet extends ArcaneStylesheet {
 
   @override
   String get componentCss =>
-      '${_semantics.componentCss.replaceAll('.arcane-theme-shadcn', '.arcane-theme-ascii')}\n$asciiCss';
+      '${_semantics.componentCss.replaceAll('.arcane-theme-shadcn', '.arcane-theme-ascii')}\n$asciiCss\n$asciiMotionCss';
 }

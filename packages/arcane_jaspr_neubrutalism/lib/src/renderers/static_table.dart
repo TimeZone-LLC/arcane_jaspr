@@ -12,7 +12,8 @@ class NeubrutalismStaticTable extends StaticTableRenderBase {
     'overflow-x': 'auto',
     'border': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
     'background': 'var(--nb-paper, var(--card))',
-    'box-shadow': 'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
+    'box-shadow':
+        'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
   };
 
   @override
@@ -33,12 +34,12 @@ class NeubrutalismStaticTable extends StaticTableRenderBase {
   Map<String, String> headerCellStyles(String textAlign) => <String, String>{
     'padding': '1rem 1.5rem',
     'text-align': textAlign,
-    'font-family': 'var(--font-heading)',
-    'font-size': 'var(--font-size-xs)',
-    'font-weight': 'var(--font-weight-semibold)',
-    'letter-spacing': '0.12em',
+    'font-family': 'var(--font-sans)',
+    'font-size': '0.8125rem',
+    'font-weight': '700',
+    'letter-spacing': '0.04em',
     'text-transform': 'uppercase',
-    'color': 'var(--muted-foreground)',
+    'color': 'inherit',
     'white-space': 'nowrap',
   };
 
@@ -63,7 +64,8 @@ class NeubrutalismKeyValueTable extends KeyValueTableRenderBase {
   Map<String, String> get containerStyles => const <String, String>{
     'border': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
     'background': 'var(--nb-paper, var(--card))',
-    'box-shadow': 'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
+    'box-shadow':
+        'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
     'overflow': 'hidden',
   };
 

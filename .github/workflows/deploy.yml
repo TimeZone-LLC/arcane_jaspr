@@ -72,6 +72,8 @@ jobs:
           trap 'kill "$server_pid"' EXIT
           ARCANE_DOCS_URL=http://127.0.0.1:41737/arcane_jaspr \
             npm --prefix tool/browser_policy run audit
+          ARCANE_DOCS_URL=http://127.0.0.1:41737/arcane_jaspr \
+            npm --prefix tool/browser_policy run test:layout
 
       - name: Add .nojekyll
         run: touch build/jaspr/.nojekyll

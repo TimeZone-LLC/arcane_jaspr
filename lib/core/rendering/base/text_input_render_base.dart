@@ -31,6 +31,13 @@ abstract class TextInputRenderBase extends StatelessComponent {
   /// `gap` applied to the column wrapper.
   String get wrapperGap;
 
+  Map<String, String> get labelStyles => const <String, String>{
+    'font-size': 'var(--font-size-sm)',
+    'font-weight': 'var(--font-weight-medium)',
+    'line-height': '1',
+    'color': 'var(--foreground)',
+  };
+
   /// Whether the borderless inner input (inside the prefix/suffix container)
   /// emits `data-disabled`/`data-error` attributes.
   bool get borderlessInputReflectsState;
@@ -201,14 +208,7 @@ abstract class TextInputRenderBase extends StatelessComponent {
           Component.element(
             tag: 'label',
             attributes: <String, String>{'for': fieldId},
-            styles: const dom.Styles(
-              raw: <String, String>{
-                'font-size': 'var(--font-size-sm)',
-                'font-weight': 'var(--font-weight-medium)',
-                'line-height': '1',
-                'color': 'var(--foreground)',
-              },
-            ),
+            styles: dom.Styles(raw: labelStyles),
             children: <Component>[
               Component.text(props.label!),
               if (props.required)

@@ -508,9 +508,11 @@ ArcaneDatePicker(
     symbolName: 'ArcaneFieldWrapper',
     sourcePath: 'lib/component/form/field_wrapper.dart',
     code: '''ArcaneFieldWrapper(
+  fieldId: 'email',
   labelText: 'Email',
   description: 'We only use this for account notices.',
   field: TextInput(
+    id: 'email',
     placeholder: 'name@company.com',
     onChanged: (String value) {},
   ),
@@ -550,6 +552,7 @@ TextInput(
 ArcaneInputGroup(
   children: [
     TextInput(
+      attributes: {'aria-label': 'Search'},
       placeholder: 'Search',
       value: search,
       onChanged: setSearch,
@@ -1518,12 +1521,39 @@ Widget _buildChartDemo(DemoStateController state) {
 }
 
 Widget _buildCheckboxDemo(DemoStateController state) {
-  bool checked = state.boolValue('checkbox-notifications', initial: true);
   return _surface(
-    ArcaneCheckbox(
-      checked: checked,
-      label: 'Enable notifications',
-      onChanged: (value) => state.setBool('checkbox-notifications', value),
+    _demoColumn(
+      ArcaneCheckbox(
+        checked: state.boolValue('checkbox-compact'),
+        size: ComponentSize.sm,
+        label: 'Compact control',
+        onChanged: (bool value) => state.setBool('checkbox-compact', value),
+      ),
+      ArcaneCheckbox(
+        checked: state.boolValue('checkbox-notifications', initial: true),
+        label: 'Enable notifications',
+        description: 'Receive updates when a background task completes.',
+        onChanged: (bool value) =>
+            state.setBool('checkbox-notifications', value),
+      ),
+      _demoColumn(
+        ArcaneCheckbox(
+          checked: state.boolValue('checkbox-large', initial: true),
+          size: ComponentSize.lg,
+          label: 'Include detailed activity in the weekly report',
+          onChanged: (bool value) => state.setBool('checkbox-large', value),
+        ),
+        const ArcaneCheckbox(
+          checked: false,
+          label: 'Unavailable option',
+          disabled: true,
+        ),
+        const ArcaneCheckbox(
+          checked: true,
+          label: 'Required option',
+          disabled: true,
+        ),
+      ),
     ),
   );
 }
@@ -1601,14 +1631,40 @@ Widget _buildCommandDemo(DemoStateController state) {
 
 Widget _buildContextMenuDemo(DemoStateController state) {
   return _surface(
-    ArcaneContextMenu(
-      trigger: Button.secondary(label: 'Right-click me', onPressed: () {}),
-      items: const [
-        MenuItemAction(label: 'Copy'),
-        MenuItemAction(label: 'Rename'),
-        MenuItemSeparator(),
-        MenuItemCheckbox(label: 'Pinned', checked: true),
-      ],
+    _demoColumn(
+      ArcaneContextMenu(
+        trigger: Button.secondary(label: 'Right-click me', onPressed: () {}),
+        items: [
+          MenuItemAction(
+            label: 'Copy',
+            onSelect: () => state.setString('context-action', 'Copy selected'),
+          ),
+          MenuItemAction(
+            label: 'Rename',
+            onSelect: () =>
+                state.setString('context-action', 'Rename selected'),
+          ),
+          const MenuItemSeparator(),
+          MenuItemCheckbox(
+            label: 'Pinned',
+            checked: state.boolValue('context-pinned', initial: true),
+            onChanged: (bool value) => state.setBool('context-pinned', value),
+          ),
+          MenuItemCheckbox(
+            label: 'Show details',
+            checked: state.boolValue('context-details'),
+            onChanged: (bool value) => state.setBool('context-details', value),
+          ),
+          const MenuItemCheckbox(
+            label: 'Required setting',
+            checked: true,
+            disabled: true,
+          ),
+        ],
+      ),
+      Text(
+        state.stringValue('context-action', initial: 'Open the context menu.'),
+      ),
     ),
   );
 }
@@ -1755,6 +1811,34 @@ Widget _buildDropdownMenuDemo(DemoStateController state) {
                 state.setString('menu-selection', 'Billing selected'),
           ),
           const MenuItemSeparator(),
+          MenuItemCheckbox(
+            label: 'Show status',
+            checked: state.boolValue('menu-status', initial: true),
+            onChanged: (bool value) => state.setBool('menu-status', value),
+          ),
+          MenuItemCheckbox(
+            label: 'Show details',
+            checked: state.boolValue('menu-details'),
+            onChanged: (bool value) => state.setBool('menu-details', value),
+          ),
+          const MenuItemCheckbox(
+            label: 'Required setting',
+            checked: true,
+            disabled: true,
+          ),
+          const MenuItemSeparator(),
+          for (String density in <String>['Comfortable', 'Compact'])
+            MenuItemRadio(
+              label: density,
+              group: 'demo-menu-density',
+              value: density,
+              selected:
+                  state.stringValue('menu-density', initial: 'Comfortable') ==
+                  density,
+              onChanged: (String value) =>
+                  state.setString('menu-density', value),
+            ),
+          const MenuItemSeparator(),
           MenuItemAction(
             label: 'Sign out',
             destructive: true,
@@ -1779,11 +1863,14 @@ Widget _buildEmptyDemo(DemoStateController state) {
 }
 
 Widget _buildFieldDemo(DemoStateController state) {
+  String fieldId = 'demo-field-email-${identityHashCode(state)}';
   return _surface(
     ArcaneFieldWrapper(
+      fieldId: fieldId,
       labelText: 'Email',
       description: 'We only use this for account notices.',
       field: TextInput(
+        id: fieldId,
         placeholder: 'name@company.com',
         onChanged: (String value) {},
       ),
@@ -1819,6 +1906,7 @@ Widget _buildInputGroupDemo(DemoStateController state) {
     ArcaneInputGroup(
       children: [
         TextInput(
+          attributes: const <String, String>{'aria-label': 'Search'},
           placeholder: 'Search',
           value: search,
           onChanged: (value) => state.setString('input-group-search', value),
@@ -1943,12 +2031,24 @@ Widget _buildProgressDemo(DemoStateController state) {
 Widget _buildRadioGroupDemo(DemoStateController state) {
   String plan = state.stringValue('radio-plan', initial: 'starter');
   return _surface(
-    ArcaneRadioGroup(
+    ArcaneRadioGroup<String>(
       value: plan,
       options: const [
-        RadioOption(value: 'starter', label: 'Starter'),
-        RadioOption(value: 'pro', label: 'Pro'),
-        RadioOption(value: 'enterprise', label: 'Enterprise'),
+        RadioOption<String>(
+          value: 'starter',
+          label: 'Starter',
+          description: 'One workspace for a small project.',
+        ),
+        RadioOption<String>(
+          value: 'pro',
+          label: 'Pro',
+          description: 'Shared workspaces and scheduled reports for your team.',
+        ),
+        RadioOption<String>(
+          value: 'enterprise',
+          label: 'Enterprise',
+          disabled: true,
+        ),
       ],
       onChanged: (value) => state.setString('radio-plan', value),
     ),
@@ -2099,12 +2199,37 @@ Widget _buildSpinnerDemo(DemoStateController state) {
 }
 
 Widget _buildSwitchDemo(DemoStateController state) {
-  bool syncEnabled = state.boolValue('switch-sync', initial: true);
   return _surface(
-    ArcaneToggleSwitch(
-      value: syncEnabled,
-      label: 'Enable sync',
-      onChanged: (value) => state.setBool('switch-sync', value),
+    _demoColumn(
+      ArcaneToggleSwitch(
+        value: state.boolValue('switch-compact'),
+        size: ComponentSize.sm,
+        label: 'Compact control',
+        onChanged: (bool value) => state.setBool('switch-compact', value),
+      ),
+      ArcaneToggleSwitch(
+        value: state.boolValue('switch-sync', initial: true),
+        label: 'Enable sync',
+        onChanged: (bool value) => state.setBool('switch-sync', value),
+      ),
+      _demoColumn(
+        ArcaneToggleSwitch(
+          value: state.boolValue('switch-large', initial: true),
+          size: ComponentSize.lg,
+          label: 'Automatically synchronize changes across workspaces',
+          onChanged: (bool value) => state.setBool('switch-large', value),
+        ),
+        const ArcaneToggleSwitch(
+          value: false,
+          label: 'Unavailable option',
+          disabled: true,
+        ),
+        const ArcaneToggleSwitch(
+          value: true,
+          label: 'Required option',
+          disabled: true,
+        ),
+      ),
     ),
   );
 }
@@ -2498,9 +2623,11 @@ Widget _colorTile(String label, Background background) {
     children: [
       Text.body(
         label,
-        color: background == Background.primary
-            ? TextColor.onPrimary
-            : TextColor.primary,
+        color: switch (background) {
+          Background.primary => TextColor.onPrimary,
+          Background.info => TextColor.infoForeground,
+          _ => TextColor.primary,
+        },
       ),
     ],
   );
@@ -2748,7 +2875,7 @@ Widget _buildFlexiCardsDemo(DemoStateController state) {
   return _surface(
     Column(
       children: <Widget>[
-        ArcaneFlexiCards(items: items, minCardWidth: '110px', gap: '0.75rem'),
+        ArcaneFlexiCards(items: items, gap: '0.75rem'),
         const Gutter.medium(),
         ArcaneFlexiCardsSimple(items: items, gap: '0.75rem'),
         Text(state.stringValue('flexi-choice', initial: 'Select either card.')),

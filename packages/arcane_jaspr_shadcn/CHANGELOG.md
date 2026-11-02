@@ -1,5 +1,20 @@
 # Changelog
 
+## x.x.x
+
+### Fixed
+
+- Native selects, text fields, and date/time pickers share label metrics, control sizing, and horizontal insets.
+- Command search fields shrink within their dialogs, and keyboard hints wrap on narrow screens.
+- Knowledge-base header controls keep consistent sizes without shrinking into nearby labels; mobile controls provide full touch targets.
+- Long tables of contents scroll within the viewport, and wrapped sidebar labels retain their icon indentation.
+- Pagination controls and both FlexiCards variants wrap within narrow panels while retaining every action and card.
+- Field wrapper labels focus their input when a `fieldId` is provided.
+- Stateful comboboxes filter without browser errors, show one empty result message, and synchronize keyboard and outside dismissal with their open state.
+- Toasts fit their containing panel and wrap long messages without overflowing narrow layouts.
+- Decorative toast and selection icons no longer contribute private-use glyphs to accessible names.
+- Circular progress ring geometry clamps values to the same range as its accessible value.
+
 ## [6.0.0] - 2026-10-15
 
 ### Fixed

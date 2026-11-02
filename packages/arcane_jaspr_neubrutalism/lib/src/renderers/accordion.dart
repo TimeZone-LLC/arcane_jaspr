@@ -1,64 +1,86 @@
-import 'package:arcane_jaspr/core/rendering/base/accordion_render_base.dart';
+import 'package:arcane_jaspr/component/view/icon.dart';
+import 'package:arcane_jaspr/core/props/accordion_props.dart';
+import 'package:arcane_jaspr/core/rendering/base/style_layering.dart';
+import 'package:arcane_jaspr_neubrutalism/src/renderers/decoration_styles.dart';
+import 'package:jaspr/dom.dart' as dom;
+import 'package:jaspr/jaspr.dart';
 
-/// Neubrutalism Accordion renderer.
-///
-/// Uses native HTML details/summary elements for reliable expand/collapse
-/// behavior that works in SSR environments without JavaScript hydration issues.
-///
-/// Implements the Neubrutalism design language:
-/// - Clean card-based items with subtle borders
-/// - Accent-colored chevron buttons
-/// - Smooth CSS transitions
-///
-/// Supports two variants:
-/// - `standard`: Basic accordion with toggle icons
-/// - `faq`: FAQ-style with category badges and accent colors
-class NeubrutalismAccordion extends AccordionRenderBase {
-  const NeubrutalismAccordion(super.props, {super.key});
+class NeubrutalismAccordion extends StatelessComponent {
+  const NeubrutalismAccordion(this.props, {super.key});
+
+  final AccordionProps props;
 
   @override
-  String get classPrefix => 'neubrutalism';
-
-  @override
-  String get accentColorFallback => 'var(--nb-accent, var(--primary))';
-
-  @override
-  Map<String, String> detailsStyles() => const <String, String>{
-    'background': 'var(--nb-paper, var(--card))',
-    'border': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
-    'box-shadow': 'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))',
-    'overflow': 'hidden',
-  };
-
-  @override
-  Map<String, String> categoryBadgeStyles(String accentColor) =>
-      <String, String>{
-        'font-family': 'var(--font-heading)',
-        'font-size': '0.625rem',
-        'font-weight': 'var(--font-weight-semibold)',
-        'color': accentColor,
-        'background': 'var(--nb-paper-soft, var(--card))',
-        'border': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
-        'padding': '0.25rem 0.625rem',
-        'text-transform': 'uppercase',
-        'letter-spacing': '0.08em',
-      };
-
-  @override
-  Map<String, String> chevronStyles(String accentColor) => <String, String>{
-    'display': 'flex',
-    'align-items': 'center',
-    'justify-content': 'center',
-    'width': '28px',
-    'height': '28px',
-    'background': 'var(--nb-paper-soft, var(--card))',
-    'border': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
-    'color': accentColor,
-    'flex-shrink': '0',
-    'transition': 'transform 200ms ease, background 200ms ease',
-  };
-
-  @override
-  String get contentBorderTop =>
-      'var(--nb-border-thin, 2px) solid var(--nb-line, #000)';
+  Component build(BuildContext context) {
+    final String group = 'nb-accordion-${identityHashCode(this)}';
+    final int? initialOpen = props.openItems.isEmpty
+        ? null
+        : props.openItems.reduce(
+            (int first, int second) => first < second ? first : second,
+          );
+    return dom.div(
+      classes: 'neubrutalism-accordion',
+      styles: dom.Styles(
+        raw: layerStyles(
+          const <String, String>{
+            'display': 'flex',
+            'flex-direction': 'column',
+            'gap': '0',
+            'width': '100%',
+          },
+          <Map<String, String>?>[
+            props.decoration?.universalStyles(),
+            neubrutalismDecorationStyles(props.decoration),
+            props.styles?.toMap(),
+          ],
+        ),
+      ),
+      <Component>[
+        for (int index = 0; index < props.items.length; index++)
+          Component.element(
+            tag: 'details',
+            attributes: <String, String>{
+              if (!props.allowMultiple) 'name': group,
+              if (props.allowMultiple
+                  ? props.openItems.contains(index)
+                  : index == initialOpen)
+                'open': '',
+            },
+            children: <Component>[
+              Component.element(
+                tag: 'summary',
+                children: <Component>[
+                  dom.span(classes: 'neubrutalism-accordion-title', <Component>[
+                    Component.text(props.items[index].title),
+                  ]),
+                  if (props.variant == AccordionVariant.faq &&
+                      props.items[index].category != null)
+                    dom.span(
+                      classes: 'neubrutalism-accordion-category',
+                      styles: dom.Styles(
+                        raw: <String, String>{
+                          if (props.items[index].accentColor ??
+                                  props.defaultAccentColor
+                              case final String accent)
+                            'background-color': accent,
+                        },
+                      ),
+                      <Component>[Component.text(props.items[index].category!)],
+                    ),
+                  dom.span(
+                    classes: 'faq-chevron neubrutalism-accordion-chevron',
+                    attributes: const <String, String>{'aria-hidden': 'true'},
+                    <Component>[ArcaneIcon.chevronDown(size: IconSize.sm)],
+                  ),
+                ],
+              ),
+              dom.div(classes: 'neubrutalism-accordion-content', <Component>[
+                props.items[index].customContent ??
+                    Component.text(props.items[index].content),
+              ]),
+            ],
+          ),
+      ],
+    );
+  }
 }

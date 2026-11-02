@@ -63,6 +63,8 @@ class FloatingProps {
 
   /// Called when mouse leaves (for hover mode).
   final void Function()? onMouseLeave;
+  final void Function()? onFocus;
+  final void Function()? onBlur;
 
   /// Whether to show an arrow pointing to trigger.
   final bool showArrow;
@@ -104,6 +106,8 @@ class FloatingProps {
     this.onToggle,
     this.onMouseEnter,
     this.onMouseLeave,
+    this.onFocus,
+    this.onBlur,
     this.showArrow = true,
     this.offset = 8,
     this.openDelay = 0,
@@ -130,6 +134,8 @@ class FloatingProps {
     void Function()? onToggle,
     void Function()? onMouseEnter,
     void Function()? onMouseLeave,
+    void Function()? onFocus,
+    void Function()? onBlur,
     bool? showArrow,
     int? offset,
     int? openDelay,
@@ -152,6 +158,8 @@ class FloatingProps {
       onToggle: onToggle ?? this.onToggle,
       onMouseEnter: onMouseEnter ?? this.onMouseEnter,
       onMouseLeave: onMouseLeave ?? this.onMouseLeave,
+      onFocus: onFocus ?? this.onFocus,
+      onBlur: onBlur ?? this.onBlur,
       showArrow: showArrow ?? this.showArrow,
       offset: offset ?? this.offset,
       openDelay: openDelay ?? this.openDelay,

@@ -19,7 +19,12 @@ class Win95FieldWrapper extends FieldWrapperRenderBase {
     if (props.labelText == null) {
       return null;
     }
-    return dom.label(<Component>[Component.text(props.labelText!)]);
+    return dom.label(
+      attributes: <String, String>{
+        if (props.fieldId != null) 'for': props.fieldId!,
+      },
+      <Component>[Component.text(props.labelText!)],
+    );
   }
 
   @override

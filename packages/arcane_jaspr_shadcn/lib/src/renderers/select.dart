@@ -5,6 +5,7 @@ import 'package:arcane_jaspr/component/view/icon.dart';
 import 'package:arcane_jaspr/core/interaction/interaction.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/theme_provider.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// ShadCN-style select component
 /// Reference: https://ui.shadcn.com/docs/components/select
@@ -62,6 +63,10 @@ class ShadcnSelect<T> extends StatelessComponent {
     final bool hasError = props.error != null;
     final String displayText = _getDisplayText();
     final String dropdownMaxHeight = props.maxDropdownHeight ?? '300px';
+    final List<SelectOptionProps<T>> visibleOptions =
+        props.onSearchChange != null && props.searchQuery.isNotEmpty
+        ? props.filteredOptions
+        : props.options;
 
     final String surfaceId =
         props.id ?? 'arcane-select-${identityHashCode(props)}';
@@ -109,10 +114,7 @@ class ShadcnSelect<T> extends StatelessComponent {
             classes: 'arcane-select-label',
             styles: const dom.Styles(
               raw: <String, String>{
-                'font-size': '0.875rem',
-                'font-weight': '500',
-                'line-height': '1',
-                'color': 'var(--foreground)',
+                ...shadcnFieldLabelStyles,
                 'display': 'flex',
                 'align-items': 'center',
                 'gap': 'var(--space-1)',
@@ -164,6 +166,7 @@ class ShadcnSelect<T> extends StatelessComponent {
               'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
               'color': 'var(--foreground)',
               'font-size': '0.875rem',
+              'font-family': 'var(--font-control, inherit)',
               'line-height': '1.25rem',
               'white-space': 'nowrap',
               'text-align': 'left',
@@ -180,8 +183,11 @@ class ShadcnSelect<T> extends StatelessComponent {
             },
           ),
           events: props.onToggle != null
-              ? <String, void Function(dynamic)>{
-                  'click': (_) => props.onToggle!(),
+              ? <String, EventCallback>{
+                  'click': (event) {
+                    event.stopPropagation();
+                    props.onToggle!();
+                  },
                 }
               : null,
           <Component>[
@@ -242,9 +248,9 @@ class ShadcnSelect<T> extends StatelessComponent {
                   },
                 ),
                 events: props.onClear != null
-                    ? <String, void Function(dynamic)>{
-                        'click': (dynamic event) {
-                          (event as dynamic).stopPropagation();
+                    ? <String, EventCallback>{
+                        'click': (event) {
+                          event.stopPropagation();
                           props.onClear!();
                         },
                       }
@@ -307,6 +313,12 @@ class ShadcnSelect<T> extends StatelessComponent {
             ),
             'data-arcane-command': surfaceId,
           },
+          events: <String, EventCallback>{
+            if (props.onToggle != null)
+              'arcane:close': (_) {
+                if (props.isOpen) props.onToggle!();
+              },
+          },
           styles: dom.Styles(
             raw: <String, String>{
               'background-color': 'var(--popover)',
@@ -336,8 +348,10 @@ class ShadcnSelect<T> extends StatelessComponent {
                   },
                 ),
                 <Component>[
-                  dom.input(
+                  dom.input<String>(
                     type: dom.InputType.text,
+                    value: props.searchQuery,
+                    onInput: props.onSearchChange,
                     attributes: <String, String>{
                       'placeholder': props.searchPlaceholder,
                       'aria-label': props.searchPlaceholder,
@@ -357,20 +371,6 @@ class ShadcnSelect<T> extends StatelessComponent {
                         'outline': 'none',
                       },
                     ),
-                    events: props.onSearchChange != null
-                        ? <String, void Function(dynamic)>{
-                            'input': (dynamic event) {
-                              final dynamic target = (event as dynamic).target;
-                              if (target != null) {
-                                props.onSearchChange!(
-                                  (target as dynamic).value ?? '',
-                                );
-                              }
-                            },
-                            'click': (dynamic event) =>
-                                (event as dynamic).stopPropagation(),
-                          }
-                        : null,
                   ),
                 ],
               ),
@@ -396,22 +396,23 @@ class ShadcnSelect<T> extends StatelessComponent {
                   raw: <String, String>{'padding': '0.25rem'},
                 ),
                 <Component>[
-                  dom.div(
-                    attributes: const <String, String>{
-                      'data-arcane-command-empty': '',
-                      'hidden': '',
-                    },
-                    styles: const dom.Styles(
-                      raw: <String, String>{
-                        'padding': '8px 16px',
-                        'color': 'var(--muted-foreground)',
-                        'font-size': 'var(--font-size-sm)',
-                        'text-align': 'center',
+                  if (props.onSearchChange == null)
+                    dom.div(
+                      attributes: const <String, String>{
+                        'data-arcane-command-empty': '',
+                        'hidden': '',
                       },
+                      styles: const dom.Styles(
+                        raw: <String, String>{
+                          'padding': '8px 16px',
+                          'color': 'var(--muted-foreground)',
+                          'font-size': 'var(--font-size-sm)',
+                          'text-align': 'center',
+                        },
+                      ),
+                      <Component>[Component.text(props.emptyMessage)],
                     ),
-                    <Component>[Component.text(props.emptyMessage)],
-                  ),
-                  if (props.options.isEmpty)
+                  if (visibleOptions.isEmpty)
                     dom.div(
                       styles: const dom.Styles(
                         raw: <String, String>{
@@ -424,7 +425,7 @@ class ShadcnSelect<T> extends StatelessComponent {
                       <Component>[Component.text(props.emptyMessage)],
                     )
                   else
-                    for (final SelectOptionProps<T> option in props.options)
+                    for (final SelectOptionProps<T> option in visibleOptions)
                       _buildOption(
                         option,
                         groupId: groupId,
@@ -487,7 +488,7 @@ class ShadcnSelect<T> extends StatelessComponent {
         ? ArcaneInteraction.toggleValue(groupId, value)
         : ArcaneInteraction.selectValue(groupId, value);
     final ArcaneInteraction itemAction =
-        props.closeOnSelect && !props.multiSelect
+        props.onSelect == null && props.closeOnSelect && !props.multiSelect
         ? ArcaneInteraction.compose(<ArcaneInteraction>[
             selectAction,
             dismissAction,
@@ -508,6 +509,7 @@ class ShadcnSelect<T> extends StatelessComponent {
         'type': 'button',
         'role': 'option',
         'aria-selected': '$isSelected',
+        if (props.onSelect != null) 'data-arcane-keep-open': 'true',
         if (isDisabled || maxReached) 'disabled': 'true',
         'data-arcane-command-item': '',
         'data-arcane-command-group-id': '$surfaceId-default',
@@ -544,7 +546,7 @@ class ShadcnSelect<T> extends StatelessComponent {
         },
       ),
       events: props.onSelect != null && !isDisabled && !maxReached
-          ? <String, void Function(dynamic)>{
+          ? <String, EventCallback>{
               'click': (_) => props.onSelect!(option.value),
             }
           : null,
@@ -552,6 +554,8 @@ class ShadcnSelect<T> extends StatelessComponent {
         // Checkbox for multi-select
         if (props.multiSelect && props.showCheckboxes)
           dom.div(
+            classes: 'arcane-select-option-check',
+            attributes: const <String, String>{'aria-hidden': 'true'},
             styles: dom.Styles(
               raw: <String, String>{
                 'width': '16px',
@@ -646,6 +650,7 @@ class ShadcnSelect<T> extends StatelessComponent {
         if (!props.multiSelect && isSelected)
           dom.span(
             classes: 'arcane-select-option-checkmark',
+            attributes: const <String, String>{'aria-hidden': 'true'},
             styles: const dom.Styles(
               raw: <String, String>{
                 'color': 'var(--accent-foreground)',

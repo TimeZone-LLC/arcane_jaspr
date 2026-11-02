@@ -16,13 +16,20 @@ Component _interactiveSurface({
   required bool isExternal,
   required void Function()? onTap,
   required List<Component> children,
+  bool decorated = false,
+  bool accented = false,
 }) {
+  final Map<String, String> attributes = <String, String>{
+    'data-arcane-surface': 'feature-card',
+    if (decorated) 'data-arcane-decorated': '',
+    if (accented) 'data-arcane-accent': '',
+  };
   if (href != null) {
     return dom.a(
       classes: cssClass,
       href: href,
       attributes: <String, String>{
-        'data-arcane-surface': 'feature-card',
+        ...attributes,
         if (isExternal) 'target': '_blank',
         if (isExternal) 'rel': 'noopener noreferrer',
       },
@@ -37,7 +44,7 @@ Component _interactiveSurface({
     return dom.button(
       type: dom.ButtonType.button,
       classes: '$cssClass clickable',
-      attributes: const <String, String>{'data-arcane-surface': 'feature-card'},
+      attributes: attributes,
       styles: dom.Styles(
         raw: <String, String>{
           // Button UA resets are defaults that theme/decoration/styles must be
@@ -53,7 +60,7 @@ Component _interactiveSurface({
   }
   return dom.div(
     classes: cssClass,
-    attributes: const <String, String>{'data-arcane-surface': 'feature-card'},
+    attributes: attributes,
     styles: dom.Styles(raw: styles),
     children,
   );
@@ -101,6 +108,7 @@ abstract class FeatureCardRenderBase extends StatelessComponent {
         'color': 'var(--card-foreground)',
         'border': '1px solid var(--border)',
         'border-color': ?accent,
+        '--arcane-card-accent': ?accent,
         'border-radius': 'var(--radius-md)',
         'width': '100%',
         'box-sizing': 'border-box',
@@ -142,6 +150,9 @@ abstract class FeatureCardRenderBase extends StatelessComponent {
       if (props.showCta)
         dom.div(
           classes: '$cssClass-cta',
+          attributes: <String, String>{
+            if (accent != null) 'data-arcane-accent': '',
+          },
           styles: dom.Styles(
             raw: <String, String>{
               'display': 'inline-flex',
@@ -161,8 +172,9 @@ abstract class FeatureCardRenderBase extends StatelessComponent {
       if (props.icon != null)
         dom.div(
           classes: '$cssClass-icon',
-          attributes: const <String, String>{
+          attributes: <String, String>{
             'data-arcane-semantic-icon': 'leading',
+            if (accent != null) 'data-arcane-accent': '',
           },
           styles: dom.Styles(
             raw: <String, String>{
@@ -196,6 +208,8 @@ abstract class FeatureCardRenderBase extends StatelessComponent {
       isExternal: props.isExternal,
       onTap: props.onTap,
       children: children,
+      decorated: props.decoration != null || props.styles != null,
+      accented: accent != null,
     );
   }
 }

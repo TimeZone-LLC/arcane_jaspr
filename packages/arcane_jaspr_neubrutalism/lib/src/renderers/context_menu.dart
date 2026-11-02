@@ -13,12 +13,16 @@ class NeubrutalismContextMenu extends ContextMenuRenderBase {
   @override
   Map<String, String> get menuStyles => const <String, String>{
     'z-index': '50',
-    'min-width': '180px',
-    'overflow': 'hidden',
+    'box-sizing': 'border-box',
+    'min-width': 'min(180px, calc(100vw - 8px))',
+    'max-width': 'calc(100vw - 8px)',
+    'max-height': 'calc(100vh - 8px)',
+    'overflow': 'auto',
+    'overflow-wrap': 'anywhere',
     'padding': '6px',
     'background': 'var(--nb-paper, var(--card))',
     'border': 'var(--nb-border-thick, 3px) solid var(--nb-line, #000)',
-    'border-radius': '0',
+    'border-radius': 'var(--nb-radius-soft, 0)',
     'box-shadow':
         'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
     'color': 'var(--nb-ink, var(--popover-foreground))',

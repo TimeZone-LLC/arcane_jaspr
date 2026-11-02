@@ -97,7 +97,7 @@ String _extractBody(String html) {
   final Map<String, Map<String, String>> generatedIds =
       <String, Map<String, String>>{};
   return body.replaceAllMapped(
-    RegExp(r'\b(arcane-field|arcane-mega)-\d+\b'),
+    RegExp(r'\b(arcane-field|arcane-mega|timepicker|nb-accordion)-\d+\b'),
     (Match field) {
       final String prefix = field.group(1)!;
       final Map<String, String> ids = generatedIds.putIfAbsent(

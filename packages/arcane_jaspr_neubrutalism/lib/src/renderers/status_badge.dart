@@ -28,10 +28,17 @@ class NeubrutalismStatusBadge extends StatusBadgeRenderBase {
     ComponentSize.lg => '10px',
   };
 
+  @override
+  String statusFontSize(StatusBadgeProps props) => switch (props.size) {
+    ComponentSize.sm => '0.6875rem',
+    ComponentSize.md => '0.75rem',
+    ComponentSize.lg => '0.875rem',
+  };
+
   String _statusPadding(StatusBadgeProps props) => switch (props.size) {
     ComponentSize.sm => '0.25rem 0.625rem',
-    ComponentSize.md => '0.375rem 0.75rem',
-    ComponentSize.lg => '0.5rem 1rem',
+    ComponentSize.md => '0.25rem 0.75rem',
+    ComponentSize.lg => '0.375rem 1rem',
   };
 
   Map<String, String> _statusContainerStyles(StatusBadgeProps props) {
@@ -45,9 +52,9 @@ class NeubrutalismStatusBadge extends StatusBadgeRenderBase {
       'padding': _statusPadding(props),
       'background': effectiveBackground,
       'border': 'var(--nb-border-thin, 2px) solid $effectiveBorder',
-      'border-radius': 'var(--nb-radius-soft, 4px)',
+      'border-radius': 'var(--nb-radius-soft, 0)',
       'box-shadow':
-          'var(--nb-shadow-xs, 2px 2px 0 0 var(--nb-shadow-color, #000))',
+          'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))',
     };
   }
 
@@ -68,12 +75,13 @@ class NeubrutalismStatusBadge extends StatusBadgeRenderBase {
     StatusBadgeProps props,
     String effectiveLabelColor,
   ) => <String, String>{
-    'font-family': 'var(--font-heading)',
+    'font-family': 'var(--font-mono)',
     'font-size': statusFontSize(props),
-    'font-weight': '800',
+    'font-weight': '400',
     'color': effectiveLabelColor,
     'white-space': 'nowrap',
-    'letter-spacing': '0.02em',
+    'letter-spacing': '0.05em',
+    'text-transform': 'uppercase',
   };
 
   @override
@@ -87,9 +95,9 @@ class NeubrutalismStatusBadge extends StatusBadgeRenderBase {
   };
 
   String _cardFontSize(StatusBadgeProps props) => switch (props.size) {
-    ComponentSize.sm => 'var(--font-size-xs)',
-    ComponentSize.md => 'var(--font-size-xs)',
-    ComponentSize.lg => 'var(--font-size-sm)',
+    ComponentSize.sm => '0.6875rem',
+    ComponentSize.md => '0.75rem',
+    ComponentSize.lg => '0.875rem',
   };
 
   @override
@@ -99,17 +107,18 @@ class NeubrutalismStatusBadge extends StatusBadgeRenderBase {
     'display': 'inline-flex',
     'align-items': 'center',
     'gap': '0.375rem',
-    'font-family': 'var(--font-heading)',
+    'font-family': 'var(--font-mono)',
     'font-size': _cardFontSize(props),
-    'font-weight': '800',
-    'line-height': '1',
+    'font-weight': '400',
+    'line-height': '1.7',
     'white-space': 'nowrap',
     'padding': _cardPadding(props),
-    'letter-spacing': '0.04em',
+    'letter-spacing': '0.05em',
+    'text-transform': 'uppercase',
     'border': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
-    'border-radius': 'var(--nb-radius-soft, 4px)',
+    'border-radius': 'var(--nb-radius-soft, 0)',
     'box-shadow':
-        'var(--nb-shadow-xs, 2px 2px 0 0 var(--nb-shadow-color, #000))',
+        'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))',
     'transition':
         'transform var(--nb-transition, 120ms ease), box-shadow var(--nb-transition, 120ms ease)',
   };

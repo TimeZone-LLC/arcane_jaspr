@@ -40,7 +40,6 @@ class ArcaneScripts {
     bindNumberInputs();
     bindFileUploads();
     bindMutableText();
-    bindOtpInputs();
     bindComboboxes();
     bindCalendars();
     bindDatePickers();

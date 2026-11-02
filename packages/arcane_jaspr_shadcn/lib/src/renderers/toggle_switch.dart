@@ -52,6 +52,7 @@ class ShadcnToggleSwitch extends ToggleSwitchRenderBase {
           if (props.disabled) 'disabled': 'true',
           'data-state': props.value ? 'checked' : 'unchecked',
           'data-disabled': '${props.disabled}',
+          'data-color': props.color.name,
           'data-arcane-intrinsic-shape': 'switch-track',
         },
         itemAttrs,

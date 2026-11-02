@@ -64,6 +64,24 @@ ArcaneApp(
 )
 ```
 
+## Red and black Neubrutalism
+
+`redBlack` keeps the canvas, panels, and controls neutral near-black in dark mode. Off-white text, red emphasis, complete borders, and hard offset shadows share the renderer's tokens. Its secondary brand accents stay red; warning and success colors retain their semantic meanings.
+
+```dart
+ArcaneApp(
+  stylesheet: const NeubrutalismStylesheet(
+    theme: NeubrutalismTheme.redBlack,
+  ),
+  brightness: Brightness.dark,
+  home: YourApp(),
+)
+```
+
+Use the standard `ArcaneSelect`, `ArcaneSlider`, `TextInput`, and `Button` components. Give every control a label. For precise slider values, place a labeled numeric `TextInput` beside it and update both from the same state. Keyboard focus uses a complete visible ring, including inputs whose renderer resets the browser outline. Tab lists wrap within narrow panels, keeping every label and focus ring visible.
+
+The generated dark palette and component CSS resolve their canvas, secondary surface, and border from the same theme values. Runtime `--nb-accent-in`, `--nb-on-accent-in`, `--nb-line-in`, and `--nb-dark-bg-in` overrides remain available; verify foreground and focus contrast whenever overriding them.
+
 ## Brightness Mode
 
 Control light/dark mode with the `brightness` parameter:

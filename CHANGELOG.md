@@ -9,19 +9,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Gallery renderers choose caption placement and proportionate rows that preserve complete artwork and source order.
+- Gallery renderers can opt into proportionate comic-strip rows with measured captions and natural-ratio mobile panels.
+- Gallery renderers choose typed caption placement, with measured caption and footer space available to aspect-aware packing.
+- Ascii orbit and viewport reveal components, with live pausable examples in the documentation workbench.
 - Toggle switches accept an `ariaLabel` for controls labeled by their surrounding application row.
+- Field wrappers accept a `fieldId` to associate their visible label with the input in every stylesheet.
+- Ascii control previews cover all sizes, wrapped labels, disabled states, and menu checkbox and radio states.
+
+### Changed
+
+- Ascii uses neutral paper and ink, proportional reading type, monospace annotations, and smooth control transitions inspired by ArtCraft.
 
 ### Fixed
 
+- Closing surfaces preserve focus moved to another control or a newly opened surface before dismissal finishes.
 - Dialog focus traps skip links inside collapsed disclosures while keeping their summaries keyboard accessible.
 - Justified gallery rows retain fractional container widths so flex wrapping cannot split a packed row.
 - Appended gallery captions and footers trigger repacking when their content resizes, including delayed images.
-- Mega menus use anchored placement, touch and keyboard activation, callback dismissal, and focus return.
-- Runtime-owned dialogs remain visible when reopened immediately after Escape; legacy modal handlers no longer bind to them.
-- Justified galleries retain image proportions, measured captions, and safe panel rotation when their containers resize.
-- Buttons preserve explicit decorations under stylesheet overrides.
+- Justified galleries remeasure when grid containers shrink, preserving image proportions, row alignment, and source order.
+- Mega menus retain viewport-aware placement after opening and reopening near screen edges.
+- Buttons preserve explicit decorations and literal styles under stylesheet overrides.
+- Check items and checklists render the shared check icon instead of a visible placeholder label.
+- OTP fields advance between digits, support paste and keyboard correction across themes, and keep cleared or controlled values synchronized.
+- Menus opened with arrow keys restore focus to their actual trigger button after dismissal.
+- Mega menus and menubars share anchored menu behavior, keyboard navigation, and callback dismissal without duplicate activation.
+
+- Time pickers support anchored placement, Escape and outside dismissal, focus return, and visible selected values when opened.
+
+- Interactive rating stars support keyboard activation without submitting their enclosing form.
+- Custom listboxes preserve form validation and reset behavior, keyboard selection, and focus return, including inside dialogs.
+- Closing animated surfaces immediately blocks keyboard and pointer interaction; reopening restores it.
+- Floating triggers use typed actions and return focus to their actual control after dismissal.
+- Card families preserve explicit decorations and accent colors under theme styling.
+
+- Runtime-owned dialogs remain visible when reopened immediately after Escape, including after a theme change; legacy modal handlers no longer bind to them.
+- Pagination shows every page in short ranges and keeps decorative ellipses out of the accessibility tree across the shared renderers.
 - Grid galleries reserve square artwork areas before media loads, including custom canvas content, without collapsing beneath Win95 title bars.
+- Native selects use the active renderer, keeping their control and label geometry aligned with neighboring fields.
+- Form labels, control text, and touch sizing stay consistent across Ascii fields; input groups shrink within narrow layouts.
+- Command palettes keep search fields, focus rings, result labels, and keyboard hints inside narrow dialogs.
+- Motion workbench actions stay together below aligned specimen and duration fields.
+- Anchored popovers use one centering offset and retain custom transforms when positioned by the interaction runtime.
+- Calendar days, pagination controls, and FlexiCards fit narrow panels without clipping their content or actions.
+- Comboboxes retain their surface identity while filtering and open once per click, including after Escape or outside dismissal.
+- Ascii selection marks, visible radio focus, touch targets, circular progress captions, and narrow toast layouts remain usable across brightness and accessibility modes.
+- Decorative menu, select, and toast indicators stay out of accessible names.
+- Tooltips open on keyboard focus, dismiss with Escape or blur, preserve trigger focus, and cancel delayed opens when removed.
 
 ## [6.0.0] - 2026-10-15
 

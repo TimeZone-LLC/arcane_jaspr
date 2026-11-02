@@ -125,22 +125,26 @@ abstract class CommandRenderBase extends StatelessComponent {
             },
           ),
           [
-            dom.div(styles: dom.Styles(raw: searchRowStyles), [
-              dom.span(styles: dom.Styles(raw: searchIconStyles), [
-                ArcaneIcon.search(size: IconSize.md),
-              ]),
-              dom.RawText(
-                '<input class="$inputClass" type="text" '
-                'aria-label="Search commands" '
-                'placeholder="${props.placeholder}" '
-                'autofocus autocomplete="off" spellcheck="false" '
-                'data-arcane-command-input="$surfaceId" '
-                'data-arcane-input="command.filter:$surfaceId" '
-                'value="${props.searchQuery}" '
-                'style="flex:1;background:transparent;border:none;'
-                '$inputStyleSuffix">',
-              ),
-            ]),
+            dom.div(
+              classes: 'arcane-command-search-row',
+              styles: dom.Styles(raw: searchRowStyles),
+              [
+                dom.span(styles: dom.Styles(raw: searchIconStyles), [
+                  ArcaneIcon.search(size: IconSize.md),
+                ]),
+                dom.RawText(
+                  '<input class="$inputClass" type="text" '
+                  'aria-label="Search commands" '
+                  'placeholder="${props.placeholder}" '
+                  'autofocus autocomplete="off" spellcheck="false" '
+                  'data-arcane-command-input="$surfaceId" '
+                  'data-arcane-input="command.filter:$surfaceId" '
+                  'value="${props.searchQuery}" '
+                  'style="flex:1;min-width:0;background:transparent;border:none;'
+                  '$inputStyleSuffix">',
+                ),
+              ],
+            ),
             dom.div(
               classes: listClasses,
               attributes: const <String, String>{'role': 'listbox'},
@@ -230,6 +234,8 @@ abstract class CommandRenderBase extends StatelessComponent {
           styles: const dom.Styles(
             raw: <String, String>{
               'flex': '1',
+              'min-width': '0',
+              'overflow-wrap': 'anywhere',
               'font-size': 'var(--font-size-sm)',
               'color': 'var(--foreground)',
             },
