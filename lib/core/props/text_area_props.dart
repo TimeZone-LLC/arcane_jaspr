@@ -34,6 +34,10 @@ class TextAreaProps {
   /// Semantic, theme-interpreted decoration (elevation + theme-specific fields).
   final ArcaneDecoration? decoration;
 
+  /// Extra attributes for the native textarea (spellcheck, wrap, ...),
+  /// applied after the library's own.
+  final Map<String, String> attributes;
+
   const TextAreaProps({
     this.placeholder,
     this.rows = 4,
@@ -56,6 +60,7 @@ class TextAreaProps {
     this.fullWidth = true,
     this.styles,
     this.decoration,
+    this.attributes = const <String, String>{},
   });
 
   TextAreaProps copyWith({
@@ -80,6 +85,7 @@ class TextAreaProps {
     bool? fullWidth,
     ArcaneStyleData? styles,
     ArcaneDecoration? decoration,
+    Map<String, String>? attributes,
   }) {
     return TextAreaProps(
       placeholder: placeholder ?? this.placeholder,
@@ -103,6 +109,7 @@ class TextAreaProps {
       fullWidth: fullWidth ?? this.fullWidth,
       styles: styles ?? this.styles,
       decoration: decoration ?? this.decoration,
+      attributes: attributes ?? this.attributes,
     );
   }
 }

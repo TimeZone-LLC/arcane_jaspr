@@ -16,6 +16,12 @@ class ArcaneSlider extends StatelessWidget {
   final double max;
   final double? step;
   final String? label;
+
+  /// Names the thumb for assistive technology without drawing [label].
+  final String? ariaLabel;
+
+  /// Draws the min and max under the track when there is no label or value.
+  final bool showBounds;
   final bool showValue;
   final String? valuePrefix;
   final String? valueSuffix;
@@ -44,6 +50,8 @@ class ArcaneSlider extends StatelessWidget {
     this.max = 100,
     this.step,
     this.label,
+    this.ariaLabel,
+    this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
     this.valueSuffix,
@@ -70,6 +78,8 @@ class ArcaneSlider extends StatelessWidget {
     this.max = 100,
     this.step,
     this.label,
+    this.ariaLabel,
+    this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
     this.valueSuffix,
@@ -96,6 +106,8 @@ class ArcaneSlider extends StatelessWidget {
     this.max = 100,
     this.step,
     this.label,
+    this.ariaLabel,
+    this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
     this.valueSuffix,
@@ -121,6 +133,8 @@ class ArcaneSlider extends StatelessWidget {
     this.max = 100,
     this.step,
     this.label,
+    this.ariaLabel,
+    this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
     this.valueSuffix,
@@ -146,6 +160,8 @@ class ArcaneSlider extends StatelessWidget {
     this.max = 100,
     this.step,
     this.label,
+    this.ariaLabel,
+    this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
     this.valueSuffix,
@@ -171,6 +187,8 @@ class ArcaneSlider extends StatelessWidget {
     this.max = 100,
     this.step,
     this.label,
+    this.ariaLabel,
+    this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
     this.valueSuffix,
@@ -199,6 +217,8 @@ class ArcaneSlider extends StatelessWidget {
         max: max,
         step: step,
         label: label,
+        ariaLabel: ariaLabel,
+        showBounds: showBounds,
         showValue: showValue,
         valuePrefix: valuePrefix,
         valueSuffix: valueSuffix,

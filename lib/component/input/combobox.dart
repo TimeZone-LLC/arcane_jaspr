@@ -31,6 +31,13 @@ class ArcaneCombobox<T> extends StatefulWidget {
   /// Rows under the options (actions such as "New" or "Manage").
   final Widget? footer;
 
+  /// Every keystroke in the list's search box.
+  final void Function(String)? onSearch;
+
+  /// Shows [options] as given while searching: the caller filters them
+  /// (through [onSearch]), for lists too long to hand over whole.
+  final bool externalFilter;
+
   /// The trigger button's id, so a `<label for>` can name it; defaults to
   /// `<id>-trigger`.
   final String? triggerId;
@@ -60,6 +67,8 @@ class ArcaneCombobox<T> extends StatefulWidget {
     this.group,
     this.onChangedAction,
     this.footer,
+    this.onSearch,
+    this.externalFilter = false,
     this.triggerId,
     this.styles,
     this.decoration,
@@ -75,7 +84,7 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
   String _searchQuery = '';
 
   List<ComboboxOption<T>> get _filteredOptions {
-    if (_searchQuery.isEmpty) return widget.options;
+    if (_searchQuery.isEmpty || widget.externalFilter) return widget.options;
 
     final String query = _searchQuery.toLowerCase();
     return widget.options.where((option) {
@@ -90,26 +99,31 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
 
   void _toggleOpen() {
     if (widget.disabled) return;
+    final bool cleared = !_isOpen && _searchQuery.isNotEmpty;
     setState(() {
       _isOpen = !_isOpen;
       if (_isOpen) {
         _searchQuery = '';
       }
     });
+    if (cleared) widget.onSearch?.call('');
   }
 
   void _selectOption(T value) {
+    final bool cleared = _searchQuery.isNotEmpty;
     widget.onChanged?.call(value);
     setState(() {
       _isOpen = false;
       _searchQuery = '';
     });
+    if (cleared) widget.onSearch?.call('');
   }
 
   void _handleSearch(String value) {
     setState(() {
       _searchQuery = value;
     });
+    widget.onSearch?.call(value);
   }
 
   ComponentSize get _propsSize => switch (widget.size) {

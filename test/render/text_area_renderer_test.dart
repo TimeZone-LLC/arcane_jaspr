@@ -52,6 +52,22 @@ String _openingTagForClass(String html, String className) {
 }
 
 void main() {
+  testServer('TextArea passes extra attributes to the native textarea', (
+    ServerTester tester,
+  ) async {
+    final String html = await _render(
+      tester,
+      const ShadcnStylesheet(),
+      const TextArea(
+        id: 'world-json',
+        attributes: <String, String>{'spellcheck': 'false', 'wrap': 'off'},
+      ),
+    );
+    final String tag = _openingTagForClass(html, 'arcane-textarea');
+    expect(tag, contains('spellcheck="false"'));
+    expect(tag, contains('wrap="off"'));
+  });
+
   testServer('TextArea preserves its standalone fallback renderer', (
     ServerTester tester,
   ) async {

@@ -251,7 +251,7 @@ abstract class SliderRenderBase extends StatelessComponent {
             ],
           ],
         ),
-        if (props.label == null && !props.showValue)
+        if (props.label == null && !props.showValue && props.showBounds)
           dom.div(
             styles: dom.Styles(
               raw: <String, String>{
@@ -333,8 +333,9 @@ abstract class SliderRenderBase extends StatelessComponent {
   Map<String, String> _thumbAriaLabel(String kind) {
     switch (kind) {
       case 'value':
-        return props.label != null
-            ? <String, String>{'aria-label': props.label!}
+        final String? name = props.ariaLabel ?? props.label;
+        return name != null
+            ? <String, String>{'aria-label': name}
             : const <String, String>{};
       case 'lo':
         return <String, String>{

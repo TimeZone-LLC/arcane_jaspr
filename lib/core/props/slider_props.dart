@@ -17,6 +17,12 @@ class SliderProps {
   final double max;
   final double? step;
   final String? label;
+
+  /// Names the thumb without drawing [label].
+  final String? ariaLabel;
+
+  /// Draws the min and max under the track when there is no label or value.
+  final bool showBounds;
   final bool showValue;
   final String? valuePrefix;
   final String? valueSuffix;
@@ -46,6 +52,8 @@ class SliderProps {
     this.max = 100,
     this.step,
     this.label,
+    this.ariaLabel,
+    this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
     this.valueSuffix,
@@ -72,6 +80,8 @@ class SliderProps {
     this.max = 100,
     this.step,
     this.label,
+    this.ariaLabel,
+    this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
     this.valueSuffix,
@@ -97,6 +107,8 @@ class SliderProps {
     double? max,
     double? step,
     String? label,
+    String? ariaLabel,
+    bool? showBounds,
     bool? showValue,
     String? valuePrefix,
     String? valueSuffix,
@@ -121,6 +133,8 @@ class SliderProps {
       max: max ?? this.max,
       step: step ?? this.step,
       label: label ?? this.label,
+      ariaLabel: ariaLabel ?? this.ariaLabel,
+      showBounds: showBounds ?? this.showBounds,
       showValue: showValue ?? this.showValue,
       valuePrefix: valuePrefix ?? this.valuePrefix,
       valueSuffix: valueSuffix ?? this.valueSuffix,

@@ -87,6 +87,7 @@ abstract class TextAreaRenderBase extends StatelessComponent {
         'aria-describedby': ?descriptionId,
         if (hasError) 'data-error': 'true',
         if (props.readOnly) 'data-readonly': 'true',
+        ...props.attributes,
       },
       styles: dom.Styles(
         raw: <String, String>{

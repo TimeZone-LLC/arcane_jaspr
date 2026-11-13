@@ -91,8 +91,9 @@ void main() {
       expect(title, contains('font-weight: 600'));
 
       final String close = _tag(html, 'arcane-dialog-close');
-      expect(close, contains('top: 1rem'));
-      expect(close, contains('right: 1rem'));
+      expect(close, contains('top: var(--shadcn-dialog-close-inset, 1rem)'));
+      expect(close, contains('right: var(--shadcn-dialog-close-inset, 1rem)'));
+      expect(close, contains('width: var(--shadcn-dialog-close-size, 1rem)'));
       expect(
         close,
         contains('opacity: var(--shadcn-dialog-close-opacity, 0.7)'),

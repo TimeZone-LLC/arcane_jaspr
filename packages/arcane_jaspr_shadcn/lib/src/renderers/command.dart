@@ -61,13 +61,14 @@ class ShadcnCommand extends CommandRenderBase {
   };
 
   /// The row is square (radius 0) inside the clipped dialog, so its bottom
-  /// rule is a divider rather than an edge accent on a rounded box.
+  /// rule is a divider rather than an edge accent on a rounded box. Compact
+  /// is the plain Command's `h-9` row; the dialog's is `h-12`.
   @override
-  Map<String, String> get searchRowStyles => const <String, String>{
+  Map<String, String> get searchRowStyles => <String, String>{
     'display': 'flex',
     'align-items': 'center',
     'gap': '0.5rem',
-    'height': '3rem',
+    'height': props.compact ? '2.25rem' : '3rem',
     'flex-shrink': '0',
     'padding': '0 0.75rem',
     'border-radius': '0',
@@ -87,8 +88,8 @@ class ShadcnCommand extends CommandRenderBase {
 
   @override
   String get inputStyleSuffix =>
-      'height:3rem;padding:0.75rem 0;font-size:0.875rem;'
-      'color:var(--foreground);outline:none;';
+      '${props.compact ? 'height:2.25rem;padding:0.5rem 0' : 'height:3rem;padding:0.75rem 0'};'
+      'font-size:0.875rem;color:var(--foreground);outline:none;';
 
   @override
   String get listClasses => 'arcane-command-list';

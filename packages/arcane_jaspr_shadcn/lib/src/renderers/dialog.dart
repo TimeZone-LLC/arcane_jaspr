@@ -8,16 +8,18 @@ import 'package:arcane_jaspr/core/props/dialog_props.dart';
 /// Inline chrome for the dialog, sheet and drawer close control (v4
 /// `absolute top-4 right-4 rounded-xs opacity-70`). Opacity and the focus
 /// ring route through variables so the surfaces stylesheet can flip them on
-/// hover and `:focus-visible`.
+/// hover and `:focus-visible`. An app that wants a larger tap target sets
+/// `--shadcn-dialog-close-size` and `--shadcn-dialog-close-inset` (both
+/// `1rem` by default).
 const Map<String, String> shadcnOverlayCloseStyles = <String, String>{
   'position': 'absolute',
-  'top': '1rem',
-  'right': '1rem',
+  'top': 'var(--shadcn-dialog-close-inset, 1rem)',
+  'right': 'var(--shadcn-dialog-close-inset, 1rem)',
   'display': 'inline-flex',
   'align-items': 'center',
   'justify-content': 'center',
-  'width': '1rem',
-  'height': '1rem',
+  'width': 'var(--shadcn-dialog-close-size, 1rem)',
+  'height': 'var(--shadcn-dialog-close-size, 1rem)',
   'padding': '0',
   'border': 'none',
   'border-radius': 'var(--radius-xs)',
@@ -112,9 +114,6 @@ class ShadcnDialog extends StatelessComponent {
               ...?props.styles?.toMap(),
             },
           ),
-          events: <String, EventCallback>{
-            'click': (event) => event.stopPropagation(),
-          },
           <Component>[
             if (props.title != null)
               dom.div(
@@ -363,9 +362,6 @@ class ShadcnSheet extends StatelessComponent {
             'data-arcane-autofocus': '',
           },
           styles: dom.Styles(raw: sheetStyles),
-          events: <String, EventCallback>{
-            'click': (event) => event.stopPropagation(),
-          },
           <Component>[
             if (props.showDragHandle && _isVertical)
               const dom.div(

@@ -138,6 +138,9 @@ class TextArea extends StatelessWidget {
   /// Semantic, theme-interpreted decoration (elevation + theme-specific fields).
   final ArcaneDecoration? decoration;
 
+  /// Extra attributes for the native textarea (spellcheck, wrap, ...).
+  final Map<String, String> attributes;
+
   const TextArea({
     this.placeholder,
     this.rows = 4,
@@ -160,6 +163,7 @@ class TextArea extends StatelessWidget {
     this.fullWidth = true,
     this.styles,
     this.decoration,
+    this.attributes = const <String, String>{},
     super.key,
   });
 
@@ -187,6 +191,7 @@ class TextArea extends StatelessWidget {
       fullWidth: fullWidth,
       styles: styles,
       decoration: decoration,
+      attributes: attributes,
     );
 
     // TextArea historically worked without ArcaneThemeProvider. Keep that

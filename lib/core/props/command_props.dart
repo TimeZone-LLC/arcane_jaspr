@@ -66,6 +66,9 @@ class CommandProps {
   /// them at once.
   final bool animate;
 
+  /// The plain Command's 2.25rem search row instead of the dialog's 3rem.
+  final bool compact;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -90,6 +93,7 @@ class CommandProps {
     this.restoreFocus = true,
     this.externalFilter = false,
     this.animate = true,
+    this.compact = false,
     this.styles,
     this.decoration,
   });
