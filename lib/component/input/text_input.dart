@@ -6,6 +6,7 @@ export '../../core/props/text_input_props.dart'
 export '../../core/props/text_area_props.dart' show TextAreaResize;
 
 import '../../core/interaction/interaction.dart';
+import '../form/form_field.dart' show ArcaneFieldScope;
 import '../../core/rendering/base/text_area_render_base.dart';
 import '../../core/theme_provider.dart';
 import '../../core/decoration/arcane_decoration.dart';
@@ -77,15 +78,16 @@ class TextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ArcaneFieldScope? field = ArcaneFieldScope.maybeOf(context);
     return context.renderers.textInput(
       TextInputProps(
         placeholder: placeholder,
         type: type,
         value: value,
         name: name,
-        id: id,
+        id: id ?? field?.controlId,
         size: size,
-        disabled: disabled,
+        disabled: disabled || (field?.disabled ?? false),
         required: required,
         readOnly: readOnly,
         fullWidth: fullWidth,
@@ -102,7 +104,7 @@ class TextInput extends StatelessWidget {
         onSubmitAction: onSubmitAction,
         formId: formId,
         fieldName: fieldName,
-        attributes: attributes,
+        attributes: field?.controlAttributes(attributes) ?? attributes,
         styles: styles,
         decoration: decoration,
       ),
@@ -169,11 +171,12 @@ class TextArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ArcaneFieldScope? field = ArcaneFieldScope.maybeOf(context);
     final TextAreaProps props = TextAreaProps(
       placeholder: placeholder,
       rows: rows,
       cols: cols,
-      disabled: disabled,
+      disabled: disabled || (field?.disabled ?? false),
       required: required,
       readOnly: readOnly,
       resize: resize,
@@ -183,7 +186,7 @@ class TextArea extends StatelessWidget {
       maxHeight: maxHeight,
       value: value,
       name: name,
-      id: id,
+      id: id ?? field?.controlId,
       label: label,
       error: error,
       helperText: helperText,
@@ -191,7 +194,7 @@ class TextArea extends StatelessWidget {
       fullWidth: fullWidth,
       styles: styles,
       decoration: decoration,
-      attributes: attributes,
+      attributes: field?.controlAttributes(attributes) ?? attributes,
     );
 
     // TextArea historically worked without ArcaneThemeProvider. Keep that
@@ -250,6 +253,7 @@ class ArcaneSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ArcaneFieldScope? field = ArcaneFieldScope.maybeOf(context);
     final NativeSelectProps props = NativeSelectProps(
       options: options
           .map(
@@ -263,13 +267,15 @@ class ArcaneSelect extends StatelessWidget {
       value: value,
       placeholder: placeholder,
       size: size,
-      disabled: disabled,
+      disabled: disabled || (field?.disabled ?? false),
       required: required,
       name: name,
-      id: id,
+      id: id ?? field?.controlId,
       label: label,
       ariaLabel: ariaLabel,
       error: error,
+      describedBy: field?.describedBy,
+      invalid: field?.invalid ?? false,
       fullWidth: fullWidth,
       onChange: onChanged,
       styles: styles,

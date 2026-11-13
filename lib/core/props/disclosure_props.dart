@@ -15,6 +15,11 @@ class DisclosureProps {
   final bool showTreeLines;
   final String? classes;
 
+  /// Makes [open] controlled: a summary click asks for the new state here
+  /// instead of toggling the element, and opens made outside it (find in
+  /// page, script) are reported too.
+  final void Function(bool open)? onOpenChange;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -29,6 +34,7 @@ class DisclosureProps {
     this.showChevron = true,
     this.showTreeLines = false,
     this.classes,
+    this.onOpenChange,
     this.styles,
     this.decoration,
   });

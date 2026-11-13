@@ -1000,6 +1000,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-toc-panel .toc-title {
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input,
+#arcane-root.arcane-theme-neubrutalism .arcane-text-input:not([data-arcane-field-inner]),
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-trigger,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-native-select,
@@ -1075,6 +1076,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .kb-toc-panel .toc-title {
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input:focus,
+#arcane-root.arcane-theme-neubrutalism .arcane-text-input:not([data-arcane-field-inner]):focus,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input:focus-within,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea:focus,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-trigger:focus,
@@ -2258,6 +2260,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input::placeholder,
+#arcane-root.arcane-theme-neubrutalism .arcane-text-input:not([data-arcane-field-inner])::placeholder,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea::placeholder,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-command-input::placeholder,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-search::placeholder,
@@ -2267,10 +2270,52 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   opacity: 1;
 }
 
+/* Field labels beside a control line up with the 46px input; help and
+   errors take the field wrapper's 13px size. */
+#arcane-root.arcane-theme-neubrutalism [data-slot="field"] {
+  --arcane-field-control-height: 46px;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is([data-slot="field-description"], [data-slot="field-error"]) {
+  font-size: 0.8125rem;
+}
+
+/* Bare inputs and textareas carrying the shared classes match TextInput and
+   TextArea at rest. */
+#arcane-root.arcane-theme-neubrutalism :is(.arcane-text-input:not([data-arcane-field-inner]), .arcane-textarea:not(.neubrutalism-textarea)) {
+  width: 100%;
+  min-width: 0;
+  border-radius: var(--nb-radius-soft, 4px);
+  color: var(--foreground);
+  box-shadow: var(--nb-shadow-xs, 2px 2px 0 0 var(--nb-shadow-color, #000));
+  outline: none;
+  transition:
+    transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+#arcane-root.arcane-theme-neubrutalism .arcane-text-input:not([data-arcane-field-inner]) {
+  display: flex;
+  height: 46px;
+  padding: 0.675rem 1rem;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+#arcane-root.arcane-theme-neubrutalism .arcane-textarea:not(.neubrutalism-textarea) {
+  padding: 0.675rem 1rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  line-height: 1.625;
+  caret-color: currentColor;
+}
+
+#arcane-root.arcane-theme-neubrutalism :is(.arcane-text-input:not([data-arcane-field-inner]), .arcane-textarea)[aria-invalid="true"],
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea[data-error="true"] {
   border-color: var(--destructive) !important;
 }
 
+#arcane-root.arcane-theme-neubrutalism :is(.arcane-text-input:not([data-arcane-field-inner]), .arcane-textarea):disabled,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea:disabled {
   pointer-events: none;
   opacity: 0.5;
@@ -2282,7 +2327,8 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
   cursor: default;
 }
 
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-field-label {
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-field-label,
+#arcane-root.arcane-theme-neubrutalism :is([data-slot="field-label"], [data-slot="field-legend"]) {
   font-family: var(--font-heading);
   font-weight: 800;
   letter-spacing: 0;
@@ -2292,11 +2338,13 @@ html.dark #arcane-root.arcane-theme-neubrutalism .prose .hljs-built_in { color: 
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-field-help,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-field-error,
-#arcane-root.arcane-theme-neubrutalism .neubrutalism-field-description {
+#arcane-root.arcane-theme-neubrutalism .neubrutalism-field-description,
+#arcane-root.arcane-theme-neubrutalism :is([data-slot="field-description"], [data-slot="field-error"]) {
   font-weight: 600;
 }
 
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-field-error,
+#arcane-root.arcane-theme-neubrutalism [data-slot="field-error"],
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-text-input-error,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-textarea-error,
 #arcane-root.arcane-theme-neubrutalism .neubrutalism-select-error,

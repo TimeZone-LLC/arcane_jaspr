@@ -349,6 +349,7 @@ html.dark #arcane-root.arcane-theme-neon,
 /* ---------- Inputs ---------- */
 
 #arcane-root.arcane-theme-neon .neon-text-input,
+#arcane-root.arcane-theme-neon .arcane-text-input:not([data-arcane-field-inner]),
 #arcane-root.arcane-theme-neon .neon-select-trigger,
 #arcane-root.arcane-theme-neon .neon-command-input,
 #arcane-root.arcane-theme-neon .neon-select-search input,
@@ -365,12 +366,40 @@ html.dark #arcane-root.arcane-theme-neon,
   font: inherit;
   transition: border-color var(--transition);
 }
+/* Field labels beside a control line up with the 40px input. */
+#arcane-root.arcane-theme-neon [data-slot="field"] {
+  --arcane-field-control-height: 2.5rem;
+}
+
+/* Bare inputs and textareas carrying the shared classes match TextInput and
+   TextArea at rest. */
+#arcane-root.arcane-theme-neon .arcane-text-input:not([data-arcane-field-inner]) {
+  height: 2.5rem;
+  font-size: 0.875rem;
+}
+#arcane-root.arcane-theme-neon .arcane-textarea:not(.neon-textarea) {
+  width: 100%;
+  min-width: 0;
+  background-color: var(--input);
+  border: 1px solid var(--neon-control-border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  color: var(--foreground);
+  caret-color: var(--foreground);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.625;
+  outline: none;
+  transition: border-color var(--transition);
+}
 #arcane-root.arcane-theme-neon .neon-otp-digit {
   width: 2.75rem;
   text-align: center;
   font-weight: 600;
 }
 #arcane-root.arcane-theme-neon .neon-text-input::placeholder,
+#arcane-root.arcane-theme-neon .arcane-text-input:not([data-arcane-field-inner])::placeholder,
+#arcane-root.arcane-theme-neon .arcane-textarea::placeholder,
 #arcane-root.arcane-theme-neon .neon-textarea::placeholder,
 #arcane-root.arcane-theme-neon .neon-command-input::placeholder,
 #arcane-root.arcane-theme-neon .neon-select-search input::placeholder {
@@ -378,6 +407,8 @@ html.dark #arcane-root.arcane-theme-neon,
   opacity: 1;
 }
 #arcane-root.arcane-theme-neon .neon-text-input:focus,
+#arcane-root.arcane-theme-neon .arcane-text-input:not([data-arcane-field-inner]):focus,
+#arcane-root.arcane-theme-neon .arcane-textarea:focus,
 #arcane-root.arcane-theme-neon .neon-textarea:focus,
 #arcane-root.arcane-theme-neon .neon-select-trigger:focus,
 #arcane-root.arcane-theme-neon .neon-command-input:focus,
@@ -409,10 +440,12 @@ html.dark #arcane-root.arcane-theme-neon,
 }
 #arcane-root.arcane-theme-neon .neon-select.error .neon-select-trigger,
 #arcane-root.arcane-theme-neon .neon-text-input[data-error="true"],
+#arcane-root.arcane-theme-neon :is(.arcane-text-input:not([data-arcane-field-inner]), .arcane-textarea)[aria-invalid="true"],
 #arcane-root.arcane-theme-neon .neon-textarea[data-error="true"] {
   border-color: var(--destructive);
 }
 
+#arcane-root.arcane-theme-neon :is(.arcane-text-input:not([data-arcane-field-inner]), .arcane-textarea):disabled,
 #arcane-root.arcane-theme-neon .neon-textarea:disabled {
   pointer-events: none;
   opacity: 0.5;

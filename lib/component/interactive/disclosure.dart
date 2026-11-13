@@ -18,6 +18,10 @@ class ArcaneDisclosure extends StatelessWidget {
   final bool showTreeLines;
   final List<String>? classes;
 
+  /// Makes [open] controlled: clicks on the summary call this with the
+  /// requested state and the disclosure only changes when [open] does.
+  final void Function(bool open)? onOpenChange;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -32,6 +36,7 @@ class ArcaneDisclosure extends StatelessWidget {
     this.showChevron = true,
     this.showTreeLines = true,
     this.classes,
+    this.onOpenChange,
     this.styles,
     this.decoration,
     super.key,
@@ -44,6 +49,7 @@ class ArcaneDisclosure extends StatelessWidget {
     this.showChevron = true,
     this.showTreeLines = true,
     this.classes,
+    this.onOpenChange,
     this.styles,
     this.decoration,
     super.key,
@@ -56,6 +62,7 @@ class ArcaneDisclosure extends StatelessWidget {
     this.showChevron = true,
     this.showTreeLines = true,
     this.classes,
+    this.onOpenChange,
     this.styles,
     this.decoration,
     super.key,
@@ -68,6 +75,7 @@ class ArcaneDisclosure extends StatelessWidget {
     this.showChevron = true,
     this.showTreeLines = true,
     this.classes,
+    this.onOpenChange,
     this.styles,
     this.decoration,
     super.key,
@@ -84,6 +92,7 @@ class ArcaneDisclosure extends StatelessWidget {
         showChevron: showChevron,
         showTreeLines: showTreeLines,
         classes: classes == null ? null : cx(classes!),
+        onOpenChange: onOpenChange,
         styles: styles,
         decoration: decoration,
       ),

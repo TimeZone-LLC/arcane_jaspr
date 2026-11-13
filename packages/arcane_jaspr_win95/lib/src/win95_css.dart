@@ -862,6 +862,7 @@ class Win95Css {
 /* ---------- Inputs (sunken white wells) ---------- */
 
 #arcane-root.arcane-theme-win95 .win95-text-input,
+#arcane-root.arcane-theme-win95 .arcane-text-input:not([data-arcane-field-inner]),
 #arcane-root.arcane-theme-win95 .win95-select-trigger,
 #arcane-root.arcane-theme-win95 .win95-command-input,
 #arcane-root.arcane-theme-win95 .win95-select-search,
@@ -967,10 +968,12 @@ class Win95Css {
   font-weight: 700;
 }
 #arcane-root.arcane-theme-win95 .win95-text-input::placeholder,
+#arcane-root.arcane-theme-win95 .arcane-text-input:not([data-arcane-field-inner])::placeholder,
 #arcane-root.arcane-theme-win95 .win95-command-input::placeholder {
   color: var(--w95-field-placeholder);
 }
 #arcane-root.arcane-theme-win95 .win95-text-input:focus,
+#arcane-root.arcane-theme-win95 .arcane-text-input:not([data-arcane-field-inner]):focus,
 #arcane-root.arcane-theme-win95 .win95-select-trigger:focus,
 #arcane-root.arcane-theme-win95 .win95-command-input:focus,
 #arcane-root.arcane-theme-win95 .win95-select-search:focus,
@@ -1013,6 +1016,7 @@ class Win95Css {
   font-size: 1.125rem;
 }
 #arcane-root.arcane-theme-win95 .win95-select.error .win95-select-trigger,
+#arcane-root.arcane-theme-win95 .arcane-text-input:not([data-arcane-field-inner])[aria-invalid="true"],
 #arcane-root.arcane-theme-win95 .win95-text-input[data-error="true"] {
   outline: 1px solid var(--destructive);
   outline-offset: -3px;
@@ -5967,6 +5971,31 @@ html:has(#arcane-root.arcane-theme-win95)::-webkit-scrollbar-corner {
   font-family: var(--font-sans) !important;
   outline: none !important;
   transition: none !important;
+}
+/* Fields read like the field wrapper: bold labels, large help text, and
+   labels beside a control as tall as the edit well. Legends keep the
+   groupbox caption. */
+#arcane-root.arcane-theme-win95 [data-slot="field"] {
+  --arcane-field-control-height: 2rem;
+}
+#arcane-root.arcane-theme-win95 [data-slot="field-label"] {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--w95-face-text);
+}
+#arcane-root.arcane-theme-win95 :is([data-slot="field-description"], [data-slot="field-error"]) {
+  font-size: 1.125rem;
+}
+
+/* A bare textarea carrying the shared class matches TextArea at rest. */
+#arcane-root.arcane-theme-win95 .arcane-textarea:not(.win95-textarea) {
+  width: 100%;
+  min-width: 0;
+  padding: 0.4rem 0.5rem;
+  font-size: 1.219rem;
+  line-height: 1.4;
+  caret-color: var(--w95-field-text);
 }
 /* Every edit control took the Win95 I-beam, whether or not it was editable —
    a read-only field still let you select its text. Checkboxes, radios, and the

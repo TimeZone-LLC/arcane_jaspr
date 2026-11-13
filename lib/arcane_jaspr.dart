@@ -120,6 +120,7 @@ export 'component/dialog/sonner.dart';
 
 export 'component/form/field.dart';
 export 'component/form/field_wrapper.dart';
+export 'component/form/form_field.dart';
 export 'component/form/provider.dart';
 export 'component/form/node/bool.dart';
 export 'component/form/node/color.dart';

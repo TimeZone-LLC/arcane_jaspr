@@ -2,6 +2,7 @@ import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/decoration/arcane_decoration.dart';
+import 'package:arcane_jaspr/core/dom_value.dart';
 import 'package:arcane_jaspr/core/rendering/base/style_layering.dart';
 import 'package:arcane_jaspr/core/props/disclosure_props.dart';
 
@@ -54,11 +55,20 @@ abstract class DisclosureRenderBase extends StatelessComponent {
     final (String contentPadding, String contentBorder) = contentVariant(
       variant,
     );
+    final void Function(bool open)? onOpenChange = props.onOpenChange;
 
     return Component.element(
       tag: 'details',
       classes: allClasses,
       attributes: <String, String>{if (props.open) 'open': ''},
+      events: onOpenChange == null
+          ? null
+          : <String, EventCallback>{
+              'toggle': (Object event) {
+                final bool open = domEventCurrentTargetOpen(event);
+                if (open != props.open) onOpenChange(open);
+              },
+            },
       styles: dom.Styles(
         raw: layerStyles(
           <String, String>{
@@ -77,6 +87,15 @@ abstract class DisclosureRenderBase extends StatelessComponent {
           tag: 'summary',
           classes: '$classPrefix-disclosure-summary',
           styles: dom.Styles(raw: summaryStyles(variant)),
+          events: onOpenChange == null
+              ? null
+              : <String, EventCallback>{
+                  'click': (Object event) {
+                    if (!domEventActivatesSummary(event)) return;
+                    domPreventDefault(event);
+                    onOpenChange(!props.open);
+                  },
+                },
           children: <Component>[
             dom.span(
               classes: '$classPrefix-disclosure-summary-content',

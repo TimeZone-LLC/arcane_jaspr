@@ -505,17 +505,32 @@ ArcaneDatePicker(
   ),
   DemoDefinition(
     componentType: 'field',
-    symbolName: 'ArcaneFieldWrapper',
-    sourcePath: 'lib/component/form/field_wrapper.dart',
-    code: '''ArcaneFieldWrapper(
-  fieldId: 'email',
-  labelText: 'Email',
-  description: 'We only use this for account notices.',
-  field: TextInput(
-    id: 'email',
-    placeholder: 'name@company.com',
-    onChanged: (String value) {},
-  ),
+    symbolName: 'ArcaneFormField',
+    sourcePath: 'lib/component/form/form_field.dart',
+    code: '''String email = '';
+
+ArcaneFieldGroup(
+  children: [
+    ArcaneFormField(
+      orientation: FieldOrientation.responsive,
+      invalid: email.isNotEmpty && !email.contains('@'),
+      children: [
+        ArcaneFieldLabel('Email'),
+        ArcaneFieldContent(
+          children: [
+            TextInput(
+              placeholder: 'name@company.com',
+              value: email,
+              onChanged: setEmail,
+            ),
+            ArcaneFieldDescription('We only use this for account notices.'),
+            if (email.isNotEmpty && !email.contains('@'))
+              ArcaneFieldError('Enter an address with an @.'),
+          ],
+        ),
+      ],
+    ),
+  ],
 )''',
     previewBuilder: _buildFieldDemo,
   ),
@@ -1863,17 +1878,35 @@ Widget _buildEmptyDemo(DemoStateController state) {
 }
 
 Widget _buildFieldDemo(DemoStateController state) {
-  String fieldId = 'demo-field-email-${identityHashCode(state)}';
+  final String email = state.stringValue('field-email');
+  final bool invalid = email.isNotEmpty && !email.contains('@');
   return _surface(
-    ArcaneFieldWrapper(
-      fieldId: fieldId,
-      labelText: 'Email',
-      description: 'We only use this for account notices.',
-      field: TextInput(
-        id: fieldId,
-        placeholder: 'name@company.com',
-        onChanged: (String value) {},
-      ),
+    ArcaneFieldGroup(
+      children: <Widget>[
+        ArcaneFormField(
+          controlId: 'demo-field-email-${identityHashCode(state)}',
+          orientation: FieldOrientation.responsive,
+          invalid: invalid,
+          children: <Widget>[
+            const ArcaneFieldLabel('Email'),
+            ArcaneFieldContent(
+              children: <Widget>[
+                TextInput(
+                  placeholder: 'name@company.com',
+                  value: email,
+                  onChanged: (String value) =>
+                      state.setString('field-email', value),
+                ),
+                const ArcaneFieldDescription(
+                  'We only use this for account notices.',
+                ),
+                if (invalid)
+                  const ArcaneFieldError('Enter an address with an @.'),
+              ],
+            ),
+          ],
+        ),
+      ],
     ),
   );
 }

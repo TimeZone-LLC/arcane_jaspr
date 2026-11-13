@@ -249,7 +249,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism.neucomic,
   transform: none !important;
 }
 
-#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input-wrapper > label, .neubrutalism-textarea-label, .neubrutalism-select-label, .neubrutalism-radio-group-label, .neubrutalism-date-picker > span:first-child, .neubrutalism-time-picker > span:first-child, .neubrutalism-otp-input > span:first-child, .neubrutalism-field-label, .neubrutalism-field-label-row > label, .neubrutalism-slider-label) {
+#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input-wrapper > label, .neubrutalism-textarea-label, .neubrutalism-select-label, .neubrutalism-radio-group-label, .neubrutalism-date-picker > span:first-child, .neubrutalism-time-picker > span:first-child, .neubrutalism-otp-input > span:first-child, .neubrutalism-field-label, .neubrutalism-field-label-row > label, .neubrutalism-slider-label, [data-slot="field-label"], [data-slot="field-legend"]) {
   font-family: var(--font-sans) !important;
   font-size: .75rem !important;
   font-weight: 800 !important;
@@ -259,7 +259,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism.neucomic,
   color: var(--foreground) !important;
 }
 
-#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input:where(:not([data-arcane-field-inner="true"])), .neubrutalism-text-input-container, .neubrutalism-textarea, .neubrutalism-select-trigger, .neubrutalism-native-select, .arcane-select, .neubrutalism-otp-digit, .neubrutalism-date-picker-trigger, .neubrutalism-time-picker-trigger, .neubrutalism-select-search :where(input), .neubrutalism-command-input, textarea):not([data-arcane-decorated]) {
+#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input:where(:not([data-arcane-field-inner="true"])), .arcane-text-input:where(:not([data-arcane-field-inner])), .neubrutalism-text-input-container, .neubrutalism-textarea, .neubrutalism-select-trigger, .neubrutalism-native-select, .arcane-select, .neubrutalism-otp-digit, .neubrutalism-date-picker-trigger, .neubrutalism-time-picker-trigger, .neubrutalism-select-search :where(input), .neubrutalism-command-input, textarea):not([data-arcane-decorated]) {
   border: 2px solid var(--neucomic-control-ink) !important;
   border-radius: var(--neucomic-field-radius) !important;
   background: var(--card) !important;
@@ -301,20 +301,20 @@ html.dark #arcane-root.arcane-theme-neubrutalism.neucomic,
   font-weight: 700;
 }
 
-#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input, .neubrutalism-text-input-container, .neubrutalism-textarea, .neubrutalism-select-trigger, .neubrutalism-date-picker-trigger, .neubrutalism-time-picker-trigger, .neubrutalism-otp-digit):is([data-error="true"], [aria-invalid="true"]):not([data-arcane-decorated]),
+#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input, .arcane-text-input:where(:not([data-arcane-field-inner])), .arcane-textarea, .neubrutalism-text-input-container, .neubrutalism-textarea, .neubrutalism-select-trigger, .neubrutalism-date-picker-trigger, .neubrutalism-time-picker-trigger, .neubrutalism-otp-digit):is([data-error="true"], [aria-invalid="true"]):not([data-arcane-decorated]),
 #arcane-root.arcane-theme-neubrutalism.neucomic .neubrutalism-otp-input[data-state="error"] .neubrutalism-otp-digit,
 #arcane-root.arcane-theme-neubrutalism.neucomic .neubrutalism-time-picker.error .neubrutalism-time-picker-trigger {
   border-color: var(--nb-error-foreground) !important;
 }
 
-#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input, .neubrutalism-text-input-container, .neubrutalism-textarea, .neubrutalism-select-trigger, .neubrutalism-date-picker-trigger, .neubrutalism-time-picker-trigger, .neubrutalism-otp-digit):is(:disabled, [data-disabled="true"]):not([data-arcane-decorated]) {
+#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input, .arcane-text-input:where(:not([data-arcane-field-inner])), .arcane-textarea, .neubrutalism-text-input-container, .neubrutalism-textarea, .neubrutalism-select-trigger, .neubrutalism-date-picker-trigger, .neubrutalism-time-picker-trigger, .neubrutalism-otp-digit):is(:disabled, [data-disabled="true"]):not([data-arcane-decorated]) {
   background: var(--muted) !important;
   color: var(--muted-foreground) !important;
   border-color: var(--muted-foreground) !important;
   cursor: not-allowed;
 }
 
-#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input, .neubrutalism-textarea, .neubrutalism-command-input, .neubrutalism-select-search :where(input), textarea)::placeholder {
+#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input, .arcane-text-input:where(:not([data-arcane-field-inner])), .neubrutalism-textarea, .neubrutalism-command-input, .neubrutalism-select-search :where(input), textarea)::placeholder {
   color: var(--muted-foreground) !important;
   font-weight: 400;
   opacity: 1;
@@ -767,7 +767,7 @@ html.dark #arcane-root.arcane-theme-neubrutalism.neucomic,
   outline-offset: 3px !important;
 }
 
-#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input:not([data-arcane-field-inner="true"]), .neubrutalism-textarea, .neubrutalism-select-trigger, .neubrutalism-date-picker-trigger, .neubrutalism-time-picker-trigger, .neubrutalism-otp-digit, .neubrutalism-select-search :where(input), .neubrutalism-command-input, textarea):focus,
+#arcane-root.arcane-theme-neubrutalism.neucomic :is(.neubrutalism-text-input:not([data-arcane-field-inner="true"]), .arcane-text-input:where(:not([data-arcane-field-inner])), .neubrutalism-textarea, .neubrutalism-select-trigger, .neubrutalism-date-picker-trigger, .neubrutalism-time-picker-trigger, .neubrutalism-otp-digit, .neubrutalism-select-search :where(input), .neubrutalism-command-input, textarea):focus,
 #arcane-root.arcane-theme-neubrutalism.neucomic .neubrutalism-form-select button.neubrutalism-select-trigger[data-arcane-field-control="true"]:focus,
 #arcane-root.arcane-theme-neubrutalism.neucomic [data-arcane-field-shell="true"]:focus-within:not(.arcane-native-select-shell) {
   outline: 2px solid var(--ring) !important;

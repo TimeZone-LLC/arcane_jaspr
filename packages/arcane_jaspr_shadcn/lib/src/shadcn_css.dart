@@ -1038,6 +1038,35 @@ html.dark #arcane-root.arcane-theme-shadcn :is(.arcane-button, .arcane-cycle-but
   color: var(--accent-foreground);
 }
 
+/* Resting look for any element carrying the input classes, so a hand-built
+   <input> or <textarea> matches TextInput and TextArea. Renderers still draw
+   their own controls inline; the shell's inner input stays borderless. */
+.arcane-text-input:not([data-arcane-field-inner]),
+.arcane-textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--shadcn-control-border-color, var(--shadcn-control-border));
+  border-radius: var(--radius-md);
+  background-color: var(--shadcn-input-background, transparent);
+  box-shadow: var(--shadcn-control-shadow, var(--shadow-xs));
+  color: var(--foreground);
+  font-family: var(--font-control, inherit);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  outline: none;
+}
+
+.arcane-text-input:not([data-arcane-field-inner]) {
+  display: flex;
+  height: 2.25rem;
+  padding: 0.25rem 0.75rem;
+}
+
+.arcane-textarea {
+  min-height: 4rem;
+  padding: 0.5rem 0.75rem;
+}
+
 /* v4 focus: the ring token plus a ring-coloured border. Controls that inline
    `var(--shadcn-control-shadow, ...)` pick the variables up; the rest take the
    box-shadow declared here. */

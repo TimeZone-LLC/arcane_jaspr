@@ -30,6 +30,13 @@ class NativeSelectProps {
   /// The select's accessible name when it shows no [label].
   final String? ariaLabel;
   final String? error;
+
+  /// Ids of help or messages outside the select, such as a field's
+  /// description, for `aria-describedby`.
+  final String? describedBy;
+
+  /// Marks the select invalid without an [error] message of its own.
+  final bool invalid;
   final bool fullWidth;
   final void Function(String)? onChange;
 
@@ -52,6 +59,8 @@ class NativeSelectProps {
     this.label,
     this.ariaLabel,
     this.error,
+    this.describedBy,
+    this.invalid = false,
     this.fullWidth = false,
     this.onChange,
     this.styles,
@@ -70,6 +79,8 @@ class NativeSelectProps {
     String? label,
     String? ariaLabel,
     String? error,
+    String? describedBy,
+    bool? invalid,
     bool? fullWidth,
     void Function(String)? onChange,
     ArcaneStyleData? styles,
@@ -87,6 +98,8 @@ class NativeSelectProps {
       label: label ?? this.label,
       ariaLabel: ariaLabel ?? this.ariaLabel,
       error: error ?? this.error,
+      describedBy: describedBy ?? this.describedBy,
+      invalid: invalid ?? this.invalid,
       fullWidth: fullWidth ?? this.fullWidth,
       onChange: onChange ?? this.onChange,
       styles: styles ?? this.styles,

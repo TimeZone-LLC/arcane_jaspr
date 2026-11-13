@@ -64,6 +64,10 @@ abstract class TextAreaRenderBase extends StatelessComponent {
         : props.helperText != null
         ? '$fieldId-helper'
         : null;
+    final String describedBy = <String>[
+      ?props.attributes['aria-describedby'],
+      ?descriptionId,
+    ].join(' ');
     final String resize = switch (props.resize) {
       TextAreaResize.none => 'none',
       TextAreaResize.vertical => 'vertical',
@@ -84,10 +88,11 @@ abstract class TextAreaRenderBase extends StatelessComponent {
         if (props.required) 'required': 'true',
         if (props.readOnly) 'readonly': 'true',
         if (hasError) 'aria-invalid': 'true',
-        'aria-describedby': ?descriptionId,
+        if (describedBy.isNotEmpty) 'aria-describedby': describedBy,
         if (hasError) 'data-error': 'true',
         if (props.readOnly) 'data-readonly': 'true',
-        ...props.attributes,
+        for (final MapEntry<String, String> entry in props.attributes.entries)
+          if (entry.key != 'aria-describedby') entry.key: entry.value,
       },
       styles: dom.Styles(
         raw: <String, String>{
@@ -96,7 +101,7 @@ abstract class TextAreaRenderBase extends StatelessComponent {
             isDisabled: props.disabled,
             isReadOnly: props.readOnly,
           ),
-          if (props.fullWidth) 'width': '100%',
+          'width': props.fullWidth ? '100%' : 'auto',
           'resize': resize,
           if (props.minWidth != null) 'min-width': props.minWidth!,
           if (props.maxWidth != null) 'max-width': props.maxWidth!,

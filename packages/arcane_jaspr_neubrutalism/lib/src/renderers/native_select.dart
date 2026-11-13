@@ -73,6 +73,10 @@ class _NeubrutalismNativeSelectState extends State<NeubrutalismNativeSelect> {
     final String surfaceId = '$fieldId-listbox';
     final String groupId = '$fieldId-group';
     final bool hasError = props.error != null;
+    final String describedBy = <String>[
+      ?props.describedBy,
+      if (hasError) '$fieldId-error',
+    ].join(' ');
     final NativeSelectOptionProps? selected = props.options
         .where((NativeSelectOptionProps option) => option.value == _value)
         .firstOrNull;
@@ -135,8 +139,8 @@ class _NeubrutalismNativeSelectState extends State<NeubrutalismNativeSelect> {
             'data-size': props.size.name,
             'data-disabled': '${props.disabled}',
             if (props.disabled) 'disabled': 'true',
-            if (hasError) 'aria-invalid': 'true',
-            if (hasError) 'aria-describedby': '$fieldId-error',
+            if (hasError || props.invalid) 'aria-invalid': 'true',
+            if (describedBy.isNotEmpty) 'aria-describedby': describedBy,
             ...anchorAttrs(fieldId),
             if (!props.disabled)
               ...interactionAttrs(ArcaneInteraction.togglePopover(surfaceId)),

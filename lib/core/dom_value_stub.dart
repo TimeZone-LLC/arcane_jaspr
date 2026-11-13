@@ -13,3 +13,5 @@ String domEventTargetAttribute(Object? event, String name) => '';
 void domStopPropagation(Object? event) {}
 void domPreventDefault(Object? event) {}
 double? domEventDetailNumber(Object? event, String key) => null;
+bool domEventActivatesSummary(Object? event) => false;
+bool domEventCurrentTargetOpen(Object? event) => false;

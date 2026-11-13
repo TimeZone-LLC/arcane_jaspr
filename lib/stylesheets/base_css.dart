@@ -196,6 +196,245 @@ html.light body::-webkit-scrollbar-corner {
   transform: none !important;
 }
 
+/* Field: shadcn Field, FieldGroup and FieldSet. Responsive fields follow the
+   nearest field group's width (shadcn's @md/field-group), never the viewport.
+   Themes tune the control height the label lines up with through
+   --arcane-field-control-height. */
+[data-slot="field-set"] {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+  border: 0;
+}
+
+[data-slot="field-legend"] {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: var(--font-weight-medium, 500);
+}
+
+[data-slot="field-legend"][data-variant="label"] {
+  font-size: 0.875rem;
+}
+
+[data-slot="field-group"] {
+  container: field-group / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  width: 100%;
+}
+
+[data-slot="field-group"] > [data-slot="field-group"] {
+  gap: 1rem;
+}
+
+[data-slot="field"] {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  min-width: 0;
+}
+
+[data-slot="field"][data-invalid="true"] {
+  color: var(--destructive);
+}
+
+[data-slot="field"]:is([data-orientation="vertical"], [data-orientation="responsive"]) {
+  flex-direction: column;
+}
+
+[data-slot="field"]:is([data-orientation="vertical"], [data-orientation="responsive"]) > * {
+  width: 100%;
+}
+
+[data-slot="field"][data-orientation="horizontal"] {
+  flex-direction: row;
+  align-items: center;
+}
+
+[data-slot="field"][data-orientation="horizontal"] > [data-slot="field-label"] {
+  flex: auto;
+}
+
+[data-slot="field"][data-orientation="horizontal"]:has(> [data-slot="field-content"]) {
+  align-items: flex-start;
+}
+
+[data-slot="field"][data-orientation="horizontal"]:has(> [data-slot="field-content"]) > :is([role="checkbox"], [role="radio"]) {
+  margin-top: 1px;
+}
+
+[data-slot="field"][data-orientation="horizontal"][data-label-width="true"] > [data-slot="field-label"] {
+  flex: 0 0 var(--arcane-field-label-width);
+  min-height: var(--arcane-field-control-height, 2.25rem);
+}
+
+[data-slot="field"][data-orientation="horizontal"][data-label-width="true"] > :not([data-slot="field-label"]) {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+@container field-group (min-width: 28rem) {
+  [data-slot="field"][data-orientation="responsive"] {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  [data-slot="field"][data-orientation="responsive"] > * {
+    width: auto;
+  }
+
+  [data-slot="field"][data-orientation="responsive"] > [data-slot="field-label"] {
+    flex: auto;
+  }
+
+  [data-slot="field"][data-orientation="responsive"]:has(> [data-slot="field-content"]) {
+    align-items: flex-start;
+  }
+
+  [data-slot="field"][data-orientation="responsive"]:has(> [data-slot="field-content"]) > :is([role="checkbox"], [role="radio"]) {
+    margin-top: 1px;
+  }
+
+  [data-slot="field"][data-orientation="responsive"][data-label-width="true"] > [data-slot="field-label"] {
+    flex: 0 0 var(--arcane-field-label-width);
+    min-height: var(--arcane-field-control-height, 2.25rem);
+  }
+
+  [data-slot="field"][data-orientation="responsive"][data-label-width="true"] > :not([data-slot="field-label"]) {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+}
+
+[data-slot="field-content"] {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+  line-height: 1.375;
+}
+
+[data-slot="field-label"] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium, 500);
+  line-height: 1.375;
+  overflow-wrap: anywhere;
+  user-select: none;
+}
+
+:is(label[data-slot="field-label"], [data-slot="field-label"] > label)[for] {
+  cursor: pointer;
+}
+
+[data-slot="field-label"] .arcane-field-required {
+  color: var(--destructive);
+}
+
+[data-slot="field"][data-disabled="true"] [data-slot="field-label"],
+[data-slot="field"][data-disabled="true"] [data-slot="field-label"] > label {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Choice card: a label wrapping a whole field. */
+[data-slot="field-label"]:has(> [data-slot="field"]) {
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+[data-slot="field-label"] > [data-slot="field"] {
+  padding: 1rem;
+}
+
+[data-slot="field-label"]:has([data-state="checked"], [aria-checked="true"], :checked) {
+  border-color: var(--primary);
+  background-color: color-mix(in srgb, var(--primary) 5%, transparent);
+}
+
+[data-slot="field-description"] {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-normal, 400);
+  line-height: 1.5;
+}
+
+[data-slot="field"][data-orientation="horizontal"] [data-slot="field-description"] {
+  text-wrap: balance;
+}
+
+[data-slot="field-description"]:nth-last-child(2) {
+  margin-top: -0.25rem;
+}
+
+[data-slot="field-description"]:last-child {
+  margin-top: 0;
+}
+
+[data-slot="field-legend"][data-variant="legend"] + [data-slot="field-description"] {
+  margin-top: -0.375rem;
+}
+
+[data-slot="field-description"] a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+[data-slot="field-description"] a:hover {
+  color: var(--primary);
+}
+
+[data-slot="field-error"] {
+  color: var(--destructive);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-normal, 400);
+}
+
+[data-slot="field-error"] ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-left: 1rem;
+  list-style: disc;
+}
+
+[data-slot="field-separator"] {
+  position: relative;
+  height: 1.25rem;
+  margin: -0.5rem 0;
+  font-size: 0.875rem;
+}
+
+[data-slot="field-separator"] > .arcane-field-separator-line {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background-color: var(--border);
+}
+
+[data-slot="field-separator-content"] {
+  position: relative;
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0 0.5rem;
+  background-color: var(--background);
+  color: var(--muted-foreground);
+}
+/* Field end */
+
 /* A surface nested inside any other surface becomes an open content region,
    so a card inside a card or a dialog loses its second frame. The renderer
    owns this marker, so custom classes and per-instance styles cannot restore

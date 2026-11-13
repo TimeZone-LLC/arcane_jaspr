@@ -68,6 +68,10 @@ abstract class NativeSelectRenderBase extends StatelessComponent {
 
   Component _buildField(String fieldId) {
     final bool hasError = props.error != null;
+    final String describedBy = <String>[
+      ?props.describedBy,
+      if (hasError) '$fieldId-error',
+    ].join(' ');
     final Component select = Component.element(
       tag: 'select',
       id: fieldId,
@@ -79,8 +83,8 @@ abstract class NativeSelectRenderBase extends StatelessComponent {
         'aria-label': ?props.ariaLabel,
         if (props.disabled) 'disabled': 'true',
         if (props.required) 'required': 'true',
-        if (hasError) 'aria-invalid': 'true',
-        if (hasError) 'aria-describedby': '$fieldId-error',
+        if (hasError || props.invalid) 'aria-invalid': 'true',
+        if (describedBy.isNotEmpty) 'aria-describedby': describedBy,
       },
       styles: dom.Styles(
         raw: layerStyles(selectStyles, <Map<String, String>?>[

@@ -105,3 +105,31 @@ double? domEventDetailNumber(Object? event, String key) {
   final JSAny? value = detail?.getProperty<JSAny?>(key.toJS);
   return (value as JSNumber?)?.toDartDouble;
 }
+
+/// Whether a click lands on the listening `<summary>` itself rather than on a
+/// link, button or field placed inside it.
+bool domEventActivatesSummary(Object? event) {
+  final JSObject? object = event as JSObject?;
+  final JSObject? current =
+      object?.getProperty<JSAny?>('currentTarget'.toJS) as JSObject?;
+  final JSObject? target =
+      object?.getProperty<JSAny?>('target'.toJS) as JSObject?;
+  if (current == null || target == null || !target.has('closest')) {
+    return false;
+  }
+  final JSAny? hit = target.callMethod<JSAny?>(
+    'closest'.toJS,
+    'a[href], button, input, select, textarea, label, [role="button"], summary'
+        .toJS,
+  );
+  return hit != null && (hit as JSObject).strictEquals(current).toDart;
+}
+
+/// Reads `open` from the element listening for the event (a `<details>`).
+bool domEventCurrentTargetOpen(Object? event) {
+  final JSObject? object = event as JSObject?;
+  final JSObject? current =
+      object?.getProperty<JSAny?>('currentTarget'.toJS) as JSObject?;
+  return (current?.getProperty<JSAny?>('open'.toJS) as JSBoolean?)?.toDart ??
+      false;
+}
