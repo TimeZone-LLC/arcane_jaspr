@@ -748,6 +748,10 @@ void main() {
           _tag(html, 'arcane-disclosure-content'),
           contains('padding: 0.25rem 0;'),
         );
+        expect(
+          _tag(html, 'arcane-disclosure-minimal'),
+          contains('overflow: visible'),
+        );
       },
     );
 
@@ -764,6 +768,10 @@ void main() {
       expect(
         _tag(html, 'arcane-disclosure-summary'),
         contains('padding: 0.5rem 1rem'),
+      );
+      expect(
+        _tag(html, 'arcane-disclosure-bordered'),
+        contains('overflow: hidden'),
       );
     });
   });

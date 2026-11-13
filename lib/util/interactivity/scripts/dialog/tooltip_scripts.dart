@@ -66,104 +66,193 @@ class TooltipScripts {
     arcaneTooltipHideTimers.set(tooltip, pendingHide);
   }
 
-  function bindArcaneTooltipEvents(trigger, tooltip) {
-    trigger.addEventListener('mouseenter', function() {
-      showArcaneTooltip(trigger, tooltip);
-    });
+  // One shared tooltip on <body> with delegated events: a node a renderer
+  // owns is never wrapped or moved (Jaspr cannot update a moved node).
+  var arcaneTip = {
+    element: null,
+    trigger: null,
+    own: null,
+    title: null,
+    side: 'top',
+    frame: 0,
+    hideTimer: 0
+  };
 
-    trigger.addEventListener('mouseleave', function() {
-      if (!trigger.matches(':focus-within')) {
-        hideArcaneTooltip(trigger, tooltip);
+  // The element whose tooltip the pointer or focus at [node] asks for. Like
+  // the browser, the nearest title wins; `data-no-tooltip` keeps it native.
+  function arcaneTooltipTriggerOf(node) {
+    var el = node && node.nodeType === 1 ? node : node && node.parentElement;
+    for (; el && el !== document.documentElement; el = el.parentElement) {
+      if (el === arcaneTip.trigger) return el;
+      if (el.hasAttribute('title') || el.classList.contains('arcane-tooltip-trigger')) {
+        return el.hasAttribute('data-no-tooltip') ? null : el;
       }
-    });
+    }
+    return null;
+  }
 
-    trigger.addEventListener('focusin', function() {
-      showArcaneTooltip(trigger, tooltip);
-    });
+  function arcaneTooltipElement() {
+    if (arcaneTip.element && arcaneTip.element.isConnected) return arcaneTip.element;
+    var tooltip = document.createElement('div');
+    tooltip.className = 'arcane-tooltip arcane-tooltip-shared';
+    tooltip.setAttribute('role', 'tooltip');
+    tooltip.style.cssText = 'display: none; position: fixed; top: 0; left: 0; z-index: 9999; width: max-content; max-width: min(320px, calc(100vw - 16px)); padding: 6px 12px; font-size: 12px; font-weight: 500; line-height: 1.4; color: var(--arcane-on-surface, #f8fafc); background: var(--arcane-surface, #1e1e2e); border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); white-space: normal; overflow-wrap: anywhere; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 150ms ease, visibility 150ms ease;';
+    tooltip.appendChild(document.createTextNode(''));
+    var arrow = document.createElement('div');
+    arrow.className = 'arcane-tooltip-arrow';
+    tooltip.appendChild(arrow);
+    document.body.appendChild(tooltip);
+    arcaneTip.element = tooltip;
+    return tooltip;
+  }
 
-    trigger.addEventListener('focusout', function(event) {
-      if (!trigger.contains(event.relatedTarget)) {
-        hideArcaneTooltip(trigger, tooltip);
+  // Beside the trigger on its side (flipped when that side has no room),
+  // 8px away and inside the viewport, the arrow pointing at its middle.
+  function arcaneTooltipPlace() {
+    var tooltip = arcaneTip.element;
+    var box = arcaneTip.trigger.getBoundingClientRect();
+    var gap = 8;
+    var pad = 8;
+    var width = tooltip.offsetWidth;
+    var height = tooltip.offsetHeight;
+    var viewWidth = document.documentElement.clientWidth;
+    var viewHeight = document.documentElement.clientHeight;
+    var side = arcaneTip.side;
+    if (side === 'top' && box.top - gap - height < pad && box.bottom + gap + height <= viewHeight - pad) side = 'bottom';
+    else if (side === 'bottom' && box.bottom + gap + height > viewHeight - pad && box.top - gap - height >= pad) side = 'top';
+    else if (side === 'left' && box.left - gap - width < pad) side = 'right';
+    else if (side === 'right' && box.right + gap + width > viewWidth - pad) side = 'left';
+    var across = side === 'top' || side === 'bottom';
+    var x = across ? box.left + box.width / 2 - width / 2 : side === 'left' ? box.left - gap - width : box.right + gap;
+    var y = across ? (side === 'top' ? box.top - gap - height : box.bottom + gap) : box.top + box.height / 2 - height / 2;
+    x = Math.round(Math.max(pad, Math.min(x, viewWidth - pad - width)));
+    y = Math.round(Math.max(pad, Math.min(y, viewHeight - pad - height)));
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+    var arrowAt = across
+      ? Math.max(8, Math.min(box.left + box.width / 2 - x, width - 8)) - 4
+      : Math.max(8, Math.min(box.top + box.height / 2 - y, height - 8)) - 4;
+    var edge = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' }[side];
+    tooltip.lastChild.style.cssText = 'position: absolute; width: 8px; height: 8px; background: var(--arcane-surface, #1e1e2e); transform: rotate(45deg); ' +
+      edge + ': -4px; ' + (across ? 'left: ' : 'top: ') + Math.round(arrowAt) + 'px;';
+  }
+
+  // Follows the trigger each frame; a title the renderer writes back is the
+  // new text, one it drops stays dropped.
+  function arcaneTooltipFollow() {
+    arcaneTip.frame = 0;
+    var trigger = arcaneTip.trigger;
+    if (!trigger || arcaneTip.own) return;
+    if (!trigger.isConnected || trigger.hasAttribute('data-no-tooltip')) {
+      arcaneTooltipHide();
+      return;
+    }
+    if (arcaneTip.title !== null) {
+      var title = trigger.getAttribute('title');
+      if (title === null) {
+        arcaneTip.title = null;
+        arcaneTooltipHide();
+        return;
       }
-    });
-
-    trigger.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        hideArcaneTooltip(trigger, tooltip);
+      if (title !== '') {
+        arcaneTip.title = title;
+        trigger.setAttribute('title', '');
+        arcaneTip.element.firstChild.nodeValue = title;
       }
-    });
+    }
+    arcaneTooltipPlace();
+    arcaneTip.element.style.opacity = '1';
+    arcaneTip.frame = requestAnimationFrame(arcaneTooltipFollow);
+  }
+
+  function arcaneTooltipShow(trigger) {
+    if (arcaneTip.trigger === trigger) return;
+    arcaneTooltipHide();
+    var marked = trigger.classList.contains('arcane-tooltip-trigger');
+    var own = marked ? trigger.querySelector('.arcane-tooltip') : null;
+    if (own) {
+      arcaneTip.trigger = trigger;
+      arcaneTip.own = own;
+      showArcaneTooltip(trigger, own);
+      return;
+    }
+    var text = marked ? trigger.dataset.tooltip : trigger.getAttribute('title');
+    if (!text) return;
+    var tooltip = arcaneTooltipElement();
+    // An empty title keeps the browser's own tip away until this one closes.
+    if (trigger.hasAttribute('title')) {
+      arcaneTip.title = trigger.getAttribute('title');
+      trigger.setAttribute('title', '');
+    }
+    arcaneTip.trigger = trigger;
+    arcaneTip.side = trigger.dataset.tooltipPosition || 'top';
+    clearTimeout(arcaneTip.hideTimer);
+    tooltip.firstChild.nodeValue = text;
+    tooltip.style.display = 'block';
+    tooltip.style.visibility = 'visible';
+    arcaneTooltipPlace();
+    arcaneTip.frame = requestAnimationFrame(arcaneTooltipFollow);
+  }
+
+  function arcaneTooltipHide() {
+    var trigger = arcaneTip.trigger;
+    if (!trigger) return;
+    arcaneTip.trigger = null;
+    if (arcaneTip.own) {
+      hideArcaneTooltip(trigger, arcaneTip.own);
+      arcaneTip.own = null;
+      return;
+    }
+    if (arcaneTip.frame) cancelAnimationFrame(arcaneTip.frame);
+    arcaneTip.frame = 0;
+    if (arcaneTip.title !== null) {
+      if (trigger.getAttribute('title') === '') trigger.setAttribute('title', arcaneTip.title);
+      arcaneTip.title = null;
+    }
+    var tooltip = arcaneTip.element;
+    tooltip.style.opacity = '0';
+    tooltip.style.visibility = 'hidden';
+    clearTimeout(arcaneTip.hideTimer);
+    arcaneTip.hideTimer = setTimeout(function() {
+      if (!arcaneTip.trigger || arcaneTip.own) tooltip.style.display = 'none';
+    }, 160);
   }
 
   function bindTooltips() {
-    document.querySelectorAll('.arcane-tooltip-trigger').forEach(function(trigger) {
-      if (trigger.dataset.arcaneTooltipBound) return;
-      trigger.dataset.arcaneTooltipBound = 'true';
+    if (window.arcaneTooltipsBound) return;
+    window.arcaneTooltipsBound = true;
 
-      var tooltip = trigger.querySelector('.arcane-tooltip');
-      if (!tooltip) {
-        var content = trigger.dataset.tooltip;
-        var position = trigger.dataset.tooltipPosition || 'top';
-        tooltip = createTooltipElement(content, position);
-        trigger.appendChild(tooltip);
-      }
-
-      bindArcaneTooltipEvents(trigger, tooltip);
+    // Pointers only: a tap is not a hover.
+    document.addEventListener('pointerover', function(event) {
+      if (event.pointerType === 'touch') return;
+      var trigger = arcaneTooltipTriggerOf(event.target);
+      if (trigger) arcaneTooltipShow(trigger);
+      else if (arcaneTip.trigger && !arcaneTip.trigger.contains(document.activeElement)) arcaneTooltipHide();
     });
 
-    document.querySelectorAll('[title]:not(.arcane-tooltip-trigger):not([data-no-tooltip])').forEach(function(el) {
-      if (el.dataset.arcaneTooltipBound) return;
-      if (el.dataset.noTooltip) return; // Skip elements that opt out
-      var title = el.getAttribute('title');
-      if (!title) return;
-
-      el.dataset.arcaneTooltipBound = 'true';
-      el.removeAttribute('title');
-
-      var wrapper = document.createElement('span');
-      wrapper.className = 'arcane-tooltip-trigger';
-      wrapper.style.cssText = 'position: relative; display: inline-flex;';
-      wrapper.dataset.tooltip = title;
-      wrapper.dataset.tooltipPosition = 'top';
-
-      el.parentNode.insertBefore(wrapper, el);
-      wrapper.appendChild(el);
-
-      var tooltip = createTooltipElement(title, 'top');
-      wrapper.appendChild(tooltip);
-      bindArcaneTooltipEvents(wrapper, tooltip);
+    document.addEventListener('pointerout', function(event) {
+      var trigger = arcaneTip.trigger;
+      if (!trigger || event.pointerType === 'touch') return;
+      if (event.relatedTarget && trigger.contains(event.relatedTarget)) return;
+      if (trigger.contains(document.activeElement) && document.activeElement.matches(':focus-visible')) return;
+      arcaneTooltipHide();
     });
-  }
 
-  function createTooltipElement(content, position) {
-    var tooltip = document.createElement('div');
-    tooltip.className = 'arcane-tooltip arcane-tooltip-' + position;
-    tooltip.setAttribute('role', 'tooltip');
+    document.addEventListener('focusin', function(event) {
+      var target = event.target;
+      if (!target || !target.matches || !target.matches(':focus-visible')) return;
+      var trigger = arcaneTooltipTriggerOf(target);
+      if (trigger) arcaneTooltipShow(trigger);
+    });
 
-    var positionStyles = {
-      top: 'bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-4px); margin-bottom: 8px;',
-      bottom: 'top: 100%; left: 50%; transform: translateX(-50%) translateY(4px); margin-top: 8px;',
-      left: 'right: 100%; top: 50%; transform: translateY(-50%) translateX(-4px); margin-right: 8px;',
-      right: 'left: 100%; top: 50%; transform: translateY(-50%) translateX(4px); margin-left: 8px;'
-    };
+    document.addEventListener('focusout', function(event) {
+      var trigger = arcaneTip.trigger;
+      if (trigger && trigger.contains(event.target) && !trigger.contains(event.relatedTarget)) arcaneTooltipHide();
+    });
 
-    tooltip.style.cssText = 'display: none; position: absolute; z-index: 9999; width: max-content; max-width: min(320px, calc(100vw - 16px)); padding: 6px 12px; font-size: 12px; font-weight: 500; line-height: 1.4; color: var(--arcane-on-surface, #f8fafc); background: var(--arcane-surface, #1e1e2e); border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); white-space: normal; overflow-wrap: anywhere; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 150ms ease, visibility 150ms ease, transform 150ms ease; ' + (positionStyles[position] || positionStyles.top);
-
-    tooltip.textContent = content;
-
-    var arrow = document.createElement('div');
-    arrow.className = 'arcane-tooltip-arrow';
-
-    var arrowStyles = {
-      top: 'bottom: -4px; left: 50%; margin-left: -4px;',
-      bottom: 'top: -4px; left: 50%; margin-left: -4px;',
-      left: 'right: -4px; top: 50%; margin-top: -4px;',
-      right: 'left: -4px; top: 50%; margin-top: -4px;'
-    };
-
-    arrow.style.cssText = 'position: absolute; width: 8px; height: 8px; background: var(--arcane-surface, #1e1e2e); transform: rotate(45deg); ' + (arrowStyles[position] || arrowStyles.top);
-
-    tooltip.appendChild(arrow);
-    return tooltip;
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') arcaneTooltipHide();
+    });
   }
 ''';
 }

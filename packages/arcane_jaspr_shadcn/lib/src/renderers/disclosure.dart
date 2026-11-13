@@ -23,11 +23,13 @@ class ShadcnDisclosure extends DisclosureRenderBase {
       DisclosureVariant.bordered => ('transparent', '1px solid var(--border)'),
       DisclosureVariant.filled => ('var(--card)', '1px solid var(--border)'),
     };
+    // A minimal disclosure has no box to clip to, so focus rings and the
+    // edges of full-width controls inside it stay visible.
     return <String, String>{
       'background-color': containerBg,
       'border': containerBorder,
       'border-radius': 'var(--radius)',
-      'overflow': 'hidden',
+      'overflow': variant == DisclosureVariant.minimal ? 'visible' : 'hidden',
     };
   }
 
@@ -80,8 +82,6 @@ class ShadcnDisclosure extends DisclosureRenderBase {
   (String padding, String border) contentVariant(DisclosureVariant variant) =>
       switch (variant) {
         DisclosureVariant.default_ => ('1rem', '1px solid var(--border)'),
-        // The container clips (overflow: hidden), so the last line keeps
-        // room for its descenders.
         DisclosureVariant.minimal => ('0.25rem 0', 'none'),
         DisclosureVariant.bordered => ('1rem', '1px solid var(--border)'),
         DisclosureVariant.filled => ('1rem', '1px solid var(--border)'),

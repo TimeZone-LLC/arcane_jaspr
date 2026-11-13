@@ -273,8 +273,13 @@ function openSurface(type, id, opts) {
   }
 
   nextFrame(function() {
-    if (!el.isConnected || !surfaceIsOpen(el) ||
-        ARCANE.stack[ARCANE.stack.length - 1]?.el !== el) return;
+    // A tooltip or hover card opened since (a pointer resting on another
+    // trigger) never takes focus, so it does not keep this one from it.
+    const at = ARCANE.stack.findIndex(function(entry) { return entry.el === el; });
+    const covered = ARCANE.stack.slice(at + 1).some(function(entry) {
+      return entry.type !== 'tooltip' && entry.type !== 'hovercard';
+    });
+    if (!el.isConnected || !surfaceIsOpen(el) || at < 0 || covered) return;
     el.classList.add('arcane-surface-open');
     el.classList.remove('arcane-surface-closing');
 

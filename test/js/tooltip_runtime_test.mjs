@@ -25,7 +25,20 @@ vm.runInContext(script, context);
 test('the checked-in tooltip runtime parses and exposes its shared helpers', () => {
   assert.equal(typeof context.showArcaneTooltip, 'function');
   assert.equal(typeof context.hideArcaneTooltip, 'function');
-  assert.equal(typeof context.bindArcaneTooltipEvents, 'function');
+  assert.equal(typeof context.bindTooltips, 'function');
+  assert.equal(typeof context.arcaneTooltipShow, 'function');
+  assert.equal(typeof context.arcaneTooltipHide, 'function');
+});
+
+test('titled nodes stay where their renderer put them', () => {
+  // Only the shared tooltip is built and attached; no trigger is wrapped,
+  // moved or given children.
+  assert.doesNotMatch(script, /insertBefore|replaceWith|\.before\(|\.after\(/);
+  const appends = script.match(/\b[\w.]+\.appendChild\(/g) ?? [];
+  assert.deepEqual(
+    [...new Set(appends)].sort(),
+    ['document.body.appendChild(', 'tooltip.appendChild('],
+  );
 });
 
 test('hidden tooltips leave layout and visible tooltips clamp to the viewport', () => {
