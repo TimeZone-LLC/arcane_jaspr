@@ -422,6 +422,38 @@ void main() {
       });
     }
 
+    test('light off switch track is the 3:1 control border, not --input', () {
+      final String css = const ShadcnStylesheet().componentCss;
+      final String light = _blocks(
+        css,
+        '#arcane-root.arcane-theme-shadcn',
+      ).join('\n');
+      expect(
+        light,
+        contains('--shadcn-switch-track: var(--shadcn-control-border);'),
+      );
+      expect(light, isNot(contains('--shadcn-switch-track: var(--input);')));
+      final String dark = _blocks(
+        css,
+        'html.dark #arcane-root.arcane-theme-shadcn,\n'
+        '#arcane-root.dark.arcane-theme-shadcn',
+      ).join('\n');
+      expect(
+        dark,
+        contains(
+          '--shadcn-switch-track: color-mix(in srgb, var(--input) 80%, '
+          'transparent);',
+        ),
+      );
+      expect(
+        _rule(
+          css,
+          "#arcane-root.arcane-theme-shadcn .arcane-toggle-switch[data-arcane-state='selected']",
+        ),
+        contains('--shadcn-switch-background: var(--shadcn-switch-active);'),
+      );
+    });
+
     test('pastel palettes keep their explicit surfaces', () {
       final String css = const ShadcnStylesheet(
         theme: ShadcnTheme.rose,

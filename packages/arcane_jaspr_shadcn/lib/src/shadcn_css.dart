@@ -856,10 +856,10 @@ ${_neutralSurfaces(theme)}
    over inline styles by flipping variables instead of properties. Scrims use
    the generated 50% `--overlay`. */
 #arcane-root.arcane-theme-shadcn {
-  /* Resting border for text entry, checkbox and radio controls: v4's --input
-     mixed toward the foreground until it clears 3:1 (WCAG 1.4.11) on the page
-     and card surfaces. Buttons, toggles and the switch keep --input because
-     their label or shape identifies them. */
+  /* Resting border for text entry, checkbox and radio controls, and the light
+     off switch track: v4's --input mixed toward the foreground until it clears
+     3:1 (WCAG 1.4.11) on the page and card surfaces. Buttons and toggles keep
+     --input because their label identifies them. */
   --shadcn-control-border: color-mix(in srgb, var(--input) 60%, var(--foreground));
   --shadcn-focus-ring: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
   --shadcn-focus-border: var(--ring);
@@ -867,7 +867,7 @@ ${_neutralSurfaces(theme)}
   --shadcn-item-radius: var(--radius-sm);
   --shadcn-invalid-ring: 0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent);
   --shadcn-input-background: transparent;
-  --shadcn-switch-track: var(--input);
+  --shadcn-switch-track: var(--shadcn-control-border);
   --shadcn-switch-thumb-off: var(--background);
   --shadcn-switch-thumb-on: var(--background);
 }

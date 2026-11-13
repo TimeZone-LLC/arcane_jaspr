@@ -726,7 +726,7 @@ void main() {
       expect(toast, contains('border: 1px solid var(--border)'));
       expect(toast, contains('border-radius: var(--radius-md)'));
       expect(toast, contains('box-shadow: var(--shadow-lg)'));
-      expect(toast, contains('padding: 1rem'));
+      expect(toast, contains('padding: var(--shadcn-toast-padding, 1rem)'));
       expect(toast, contains('font-size: 0.8125rem'));
       expect(_tag(html, 'arcane-toast-title'), contains('font-weight: 500'));
       _expectNoDirectionalBorder(html);
