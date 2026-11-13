@@ -117,7 +117,7 @@ abstract class AccordionRenderBase extends StatelessComponent {
                   'line-height': '1.5',
                 },
               ),
-              <Component>[Component.text(item.title)],
+              <Component>[item.customTitle ?? Component.text(item.title)],
             ),
             // Category badge and chevron container
             dom.div(

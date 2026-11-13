@@ -356,9 +356,11 @@ class ShadcnSheet extends StatelessComponent {
           ),
         dom.div(
           classes: 'arcane-sheet-panel arcane-sheet-${props.position.name}',
-          attributes: const <String, String>{
+          attributes: <String, String>{
             'role': 'dialog',
             'aria-modal': 'true',
+            if (props.header == null && props.title != null)
+              'aria-labelledby': 'sheet-title-$surfaceId',
             'data-arcane-autofocus': '',
           },
           styles: dom.Styles(raw: sheetStyles),
@@ -403,17 +405,21 @@ class ShadcnSheet extends StatelessComponent {
                   if (props.header != null)
                     props.header!
                   else ...<Component>[
-                    dom.span(
-                      classes: 'arcane-sheet-title',
-                      styles: const dom.Styles(
-                        raw: <String, String>{
-                          'font-size': '1rem',
-                          'font-weight': '600',
-                          'line-height': '1.5rem',
-                          'color': 'var(--foreground)',
-                        },
+                    _sheetTitleLine(
+                      dom.span(
+                        id: 'sheet-title-$surfaceId',
+                        classes: 'arcane-sheet-title',
+                        styles: const dom.Styles(
+                          raw: <String, String>{
+                            'font-size': '1rem',
+                            'font-weight': '600',
+                            'line-height': '1.5rem',
+                            'color': 'var(--foreground)',
+                          },
+                        ),
+                        <Component>[Component.text(props.title!)],
                       ),
-                      <Component>[Component.text(props.title!)],
+                      props.titleTrailing,
                     ),
                     if (props.description != null)
                       dom.span(
@@ -482,4 +488,20 @@ class ShadcnSheet extends StatelessComponent {
     _autoCounter++;
     return 'arcane-sheet-$_autoCounter';
   }
+}
+
+/// The sheet title alone, or on one line with [trailing] after it.
+Component _sheetTitleLine(Component title, Component? trailing) {
+  if (trailing == null) return title;
+  return dom.div(
+    classes: 'arcane-sheet-title-row',
+    styles: const dom.Styles(
+      raw: <String, String>{
+        'display': 'flex',
+        'align-items': 'center',
+        'gap': '0.25rem',
+      },
+    ),
+    <Component>[title, trailing],
+  );
 }

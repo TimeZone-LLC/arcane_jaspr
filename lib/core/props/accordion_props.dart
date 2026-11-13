@@ -9,6 +9,9 @@ class AccordionItemProps {
   final String content;
   final Widget? customContent;
 
+  /// Optional trigger row content shown in place of [title].
+  final Widget? customTitle;
+
   /// Optional category label (displayed as badge).
   final String? category;
 
@@ -19,6 +22,7 @@ class AccordionItemProps {
     required this.title,
     this.content = '',
     this.customContent,
+    this.customTitle,
     this.category,
     this.accentColor,
   });

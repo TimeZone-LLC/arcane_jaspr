@@ -83,5 +83,45 @@ void main() {
         isTrue,
       );
     });
+
+    testServer('StatCard shows its unit, footer and label limit under $name', (
+      ServerTester tester,
+    ) async {
+      final String html = await _render(
+        tester,
+        sheet,
+        const StatCard(
+          label: 'Loaded chunks',
+          value: '185',
+          unit: 'chunks',
+          labelLines: 1,
+          footer: Text('Sparkline'),
+        ),
+      );
+      expect(html, contains('>185</span>'));
+      expect(html, contains('white-space: nowrap">chunks</span>'));
+      expect(html, contains('-webkit-line-clamp: 1'));
+      expect(html, contains('title="Loaded chunks"'));
+      expect(html, contains('data-no-tooltip'));
+      expect(html, contains('Sparkline'));
+      expect(
+        html.indexOf('Sparkline'),
+        greaterThan(html.indexOf('>185</span>')),
+      );
+    });
+
+    testServer('StatCard without the options adds nothing under $name', (
+      ServerTester tester,
+    ) async {
+      final String html = await _render(
+        tester,
+        sheet,
+        const StatCard(label: 'Loaded chunks', value: '185'),
+      );
+      expect(html, isNot(contains('white-space: nowrap')));
+      expect(html, isNot(contains('-webkit-line-clamp')));
+      expect(html, isNot(contains('title="Loaded chunks"')));
+      expect(html, isNot(contains('data-no-tooltip')));
+    });
   }
 }

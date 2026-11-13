@@ -17,6 +17,9 @@ class ArcaneNativeSelect extends StatelessWidget {
   final String? name;
   final String? id;
   final String? label;
+
+  /// The select's accessible name when it shows no [label].
+  final String? ariaLabel;
   final String? error;
   final bool fullWidth;
   final void Function(String)? onChanged;
@@ -37,6 +40,7 @@ class ArcaneNativeSelect extends StatelessWidget {
     this.name,
     this.id,
     this.label,
+    this.ariaLabel,
     this.error,
     this.fullWidth = false,
     this.onChanged,
@@ -68,6 +72,7 @@ class ArcaneNativeSelect extends StatelessWidget {
         name: name,
         id: id,
         label: label,
+        ariaLabel: ariaLabel,
         error: error,
         fullWidth: fullWidth,
         onChange: onChanged,

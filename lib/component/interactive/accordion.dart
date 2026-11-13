@@ -9,6 +9,10 @@ class ArcaneAccordionItem {
   final String title;
   final String content;
   final Widget? customContent;
+
+  /// Optional trigger row content shown in place of [title] (a badge and a
+  /// time before the title). [title] stays the plain-text fallback.
+  final Widget? customTitle;
   final bool defaultOpen;
 
   /// Optional category label (displayed as badge in FAQ variant).
@@ -21,6 +25,7 @@ class ArcaneAccordionItem {
     required this.title,
     this.content = '',
     this.customContent,
+    this.customTitle,
     this.defaultOpen = false,
     this.category,
     this.accentColor,
@@ -86,6 +91,7 @@ class ArcaneAccordion extends StatelessWidget {
             title: item.title,
             content: item.content,
             customContent: item.customContent,
+            customTitle: item.customTitle,
             category: item.category,
             accentColor: item.accentColor,
           ),

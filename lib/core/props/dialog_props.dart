@@ -99,6 +99,9 @@ class SheetProps {
   final String? title;
   final String? description;
   final Widget? header;
+
+  /// Optional widget on the title's line, after the title.
+  final Widget? titleTrailing;
   final Widget? footer;
   final bool showBackdrop;
   final bool closeOnBackdropClick;
@@ -126,6 +129,7 @@ class SheetProps {
     this.title,
     this.description,
     this.header,
+    this.titleTrailing,
     this.footer,
     this.showBackdrop = true,
     this.closeOnBackdropClick = true,
@@ -149,6 +153,7 @@ class SheetProps {
     String? title,
     String? description,
     Widget? header,
+    Widget? titleTrailing,
     Widget? footer,
     bool? showBackdrop,
     bool? closeOnBackdropClick,
@@ -171,6 +176,7 @@ class SheetProps {
       title: title ?? this.title,
       description: description ?? this.description,
       header: header ?? this.header,
+      titleTrailing: titleTrailing ?? this.titleTrailing,
       footer: footer ?? this.footer,
       showBackdrop: showBackdrop ?? this.showBackdrop,
       closeOnBackdropClick: closeOnBackdropClick ?? this.closeOnBackdropClick,

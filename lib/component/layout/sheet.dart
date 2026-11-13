@@ -33,6 +33,10 @@ class ArcaneSheet extends StatelessWidget {
   final String? title;
   final String? description;
   final Widget? header;
+
+  /// Optional widget on the title's line, after the title (an info
+  /// button). Null renders the header as before.
+  final Widget? titleTrailing;
   final Widget? footer;
   final bool showBackdrop;
   final bool closeOnBackdropClick;
@@ -59,6 +63,7 @@ class ArcaneSheet extends StatelessWidget {
     this.title,
     this.description,
     this.header,
+    this.titleTrailing,
     this.footer,
     this.showBackdrop = true,
     this.closeOnBackdropClick = true,
@@ -82,6 +87,7 @@ class ArcaneSheet extends StatelessWidget {
     this.title,
     this.description,
     this.header,
+    this.titleTrailing,
     this.footer,
     this.showBackdrop = true,
     this.closeOnBackdropClick = true,
@@ -105,6 +111,7 @@ class ArcaneSheet extends StatelessWidget {
     this.title,
     this.description,
     this.header,
+    this.titleTrailing,
     this.footer,
     this.showBackdrop = true,
     this.closeOnBackdropClick = true,
@@ -128,6 +135,7 @@ class ArcaneSheet extends StatelessWidget {
     this.title,
     this.description,
     this.header,
+    this.titleTrailing,
     this.footer,
     this.showBackdrop = true,
     this.closeOnBackdropClick = true,
@@ -172,6 +180,7 @@ class ArcaneSheet extends StatelessWidget {
         title: title,
         description: description,
         header: header,
+        titleTrailing: titleTrailing,
         footer: footer,
         showBackdrop: showBackdrop,
         closeOnBackdropClick: closeOnBackdropClick,

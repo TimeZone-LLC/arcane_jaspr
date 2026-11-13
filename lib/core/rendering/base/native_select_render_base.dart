@@ -76,6 +76,7 @@ abstract class NativeSelectRenderBase extends StatelessComponent {
         'name': ?props.name,
         'data-arcane-field-control': 'true',
         'data-size': props.size.name,
+        'aria-label': ?props.ariaLabel,
         if (props.disabled) 'disabled': 'true',
         if (props.required) 'required': 'true',
         if (hasError) 'aria-invalid': 'true',

@@ -8,10 +8,19 @@ import '../decoration/arcane_decoration.dart';
 class StatCardProps {
   final String label;
   final String value;
+
+  /// Optional unit beside the value at body size.
+  final String? unit;
   final ArcaneGlyph? icon;
   final String? trend;
   final bool trendPositive;
   final String? description;
+
+  /// Optional content under the value and description.
+  final Widget? footer;
+
+  /// Optional line limit for the label (ellipsis, full text as title).
+  final int? labelLines;
 
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
@@ -22,10 +31,13 @@ class StatCardProps {
   const StatCardProps({
     required this.label,
     required this.value,
+    this.unit,
     this.icon,
     this.trend,
     this.trendPositive = true,
     this.description,
+    this.footer,
+    this.labelLines,
     this.styles,
     this.decoration,
   });

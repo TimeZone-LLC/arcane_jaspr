@@ -215,6 +215,9 @@ class ArcaneSelect extends StatelessWidget {
   final String? name;
   final String? id;
   final String? label;
+
+  /// The select's accessible name when it shows no [label].
+  final String? ariaLabel;
   final String? error;
   final void Function(String)? onChanged;
   final bool fullWidth;
@@ -236,6 +239,7 @@ class ArcaneSelect extends StatelessWidget {
     this.name,
     this.id,
     this.label,
+    this.ariaLabel,
     this.error,
     this.onChanged,
     this.fullWidth = false,
@@ -264,6 +268,7 @@ class ArcaneSelect extends StatelessWidget {
       name: name,
       id: id,
       label: label,
+      ariaLabel: ariaLabel,
       error: error,
       fullWidth: fullWidth,
       onChange: onChanged,

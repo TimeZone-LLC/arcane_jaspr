@@ -18,6 +18,9 @@ class DropdownMenuProps {
   final bool keepOpenOnAction;
   final bool initiallyOpen;
 
+  /// The trigger fills the menu's box (a full-width button).
+  final bool fullWidth;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -33,6 +36,7 @@ class DropdownMenuProps {
     this.width,
     this.keepOpenOnAction = false,
     this.initiallyOpen = false,
+    this.fullWidth = false,
     this.styles,
     this.decoration,
   });
@@ -45,6 +49,7 @@ class DropdownMenuProps {
     double? width,
     bool? keepOpenOnAction,
     bool? initiallyOpen,
+    bool? fullWidth,
     ArcaneStyleData? styles,
     ArcaneDecoration? decoration,
   }) {
@@ -56,6 +61,7 @@ class DropdownMenuProps {
       width: width ?? this.width,
       keepOpenOnAction: keepOpenOnAction ?? this.keepOpenOnAction,
       initiallyOpen: initiallyOpen ?? this.initiallyOpen,
+      fullWidth: fullWidth ?? this.fullWidth,
       styles: styles ?? this.styles,
       decoration: decoration ?? this.decoration,
     );

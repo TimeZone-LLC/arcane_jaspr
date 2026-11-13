@@ -155,6 +155,69 @@ void main() {
       });
     }
 
+    testServer('sheet is named by its title, trailing widget on its line', (
+      ServerTester tester,
+    ) async {
+      final String html = await _render(
+        tester,
+        const ArcaneSheet(
+          id: 'settings',
+          isOpen: true,
+          title: 'Settings',
+          titleTrailing: Text('Info'),
+          child: Text('Body'),
+        ),
+      );
+      expect(
+        _tag(html, 'arcane-sheet-panel'),
+        contains('aria-labelledby="sheet-title-settings"'),
+      );
+      expect(
+        _tag(html, 'arcane-sheet-title'),
+        contains('id="sheet-title-settings"'),
+      );
+      final String row = _tag(html, 'arcane-sheet-title-row');
+      expect(row, contains('display: flex'));
+      final int rowAt = html.indexOf(row);
+      expect(html.indexOf('>Settings</span>'), greaterThan(rowAt));
+      expect(
+        html.indexOf('Info'),
+        greaterThan(html.indexOf('>Settings</span>')),
+      );
+    });
+
+    testServer('sheet without a trailing widget keeps the bare title', (
+      ServerTester tester,
+    ) async {
+      final String plain = await _render(
+        tester,
+        const ArcaneSheet(
+          id: 'plain',
+          isOpen: true,
+          title: 'Settings',
+          child: Text('Body'),
+        ),
+      );
+      expect(plain, isNot(contains('arcane-sheet-title-row')));
+      expect(
+        _tag(plain, 'arcane-sheet-panel'),
+        contains('aria-labelledby="sheet-title-plain"'),
+      );
+
+      final String custom = await _render(
+        tester,
+        const ArcaneSheet(
+          id: 'custom',
+          isOpen: true,
+          title: 'Settings',
+          header: Text('Custom header'),
+          child: Text('Body'),
+        ),
+      );
+      expect(custom, isNot(contains('aria-labelledby')));
+      expect(custom, isNot(contains('sheet-title-custom')));
+    });
+
     for (final DrawerPosition position in DrawerPosition.values) {
       testServer('${position.name} drawer drops the one-sided border', (
         ServerTester tester,
@@ -283,6 +346,40 @@ void main() {
       expect(label, contains('font-size: 0.875rem'));
       expect(label, contains('font-weight: 500'));
       expect(label, isNot(contains('var(--muted-foreground)')));
+    });
+
+    testServer('dropdown menu trigger fills its box only when fullWidth', (
+      ServerTester tester,
+    ) async {
+      final RegExp root = RegExp(r'<div[^>]*data-arcane-dropdown-root[^>]*>');
+      final RegExp trigger = RegExp(r'<div[^>]*aria-haspopup="menu"[^>]*>');
+
+      final String inline = await _render(
+        tester,
+        const ArcaneDropdownMenu(
+          trigger: Button(label: 'Open'),
+          items: _menuItems,
+        ),
+      );
+      expect(
+        root.firstMatch(inline)!.group(0),
+        contains('display: inline-block'),
+      );
+      expect(
+        trigger.firstMatch(inline)!.group(0),
+        contains('display: inline-block'),
+      );
+
+      final String full = await _render(
+        tester,
+        const ArcaneDropdownMenu(
+          trigger: Button(label: 'Open', fullWidth: true),
+          items: _menuItems,
+          fullWidth: true,
+        ),
+      );
+      expect(root.firstMatch(full)!.group(0), contains('display: block'));
+      expect(trigger.firstMatch(full)!.group(0), contains('display: block'));
     });
 
     testServer('context menu items follow the item contract', (
@@ -569,6 +666,31 @@ void main() {
       expect(summary, contains('padding: 1rem 0'));
       expect(css, contains('::-webkit-details-marker'));
       expect(css, contains('rotate(180deg)'));
+    });
+
+    testServer('accordion item shows a custom title in its trigger', (
+      ServerTester tester,
+    ) async {
+      final String html = await _render(
+        tester,
+        const ArcaneAccordion(
+          items: <ArcaneAccordionItem>[
+            ArcaneAccordionItem(
+              title: 'Plain fallback',
+              customTitle: Text('Critical 12:04 Lag spike'),
+              content: 'Details.',
+            ),
+            ArcaneAccordionItem(title: 'Text title', content: 'Yes.'),
+          ],
+        ),
+      );
+      final List<String> titles = RegExp(
+        r'<span class="arcane-accordion-title"[^>]*>([\s\S]*?)</span>\s*<span class="arcane-accordion-chevron"',
+      ).allMatches(html).map((RegExpMatch m) => m.group(1)!).toList();
+      expect(titles, hasLength(2));
+      expect(titles[0], contains('Critical 12:04 Lag spike'));
+      expect(titles[0], isNot(contains('Plain fallback')));
+      expect(titles[1].trim(), 'Text title');
     });
 
     testServer('disclosure uses the same Lucide chevron', (

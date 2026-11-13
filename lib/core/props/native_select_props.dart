@@ -26,6 +26,9 @@ class NativeSelectProps {
   final String? name;
   final String? id;
   final String? label;
+
+  /// The select's accessible name when it shows no [label].
+  final String? ariaLabel;
   final String? error;
   final bool fullWidth;
   final void Function(String)? onChange;
@@ -47,6 +50,7 @@ class NativeSelectProps {
     this.name,
     this.id,
     this.label,
+    this.ariaLabel,
     this.error,
     this.fullWidth = false,
     this.onChange,
@@ -64,6 +68,7 @@ class NativeSelectProps {
     String? name,
     String? id,
     String? label,
+    String? ariaLabel,
     String? error,
     bool? fullWidth,
     void Function(String)? onChange,
@@ -80,6 +85,7 @@ class NativeSelectProps {
       name: name ?? this.name,
       id: id ?? this.id,
       label: label ?? this.label,
+      ariaLabel: ariaLabel ?? this.ariaLabel,
       error: error ?? this.error,
       fullWidth: fullWidth ?? this.fullWidth,
       onChange: onChange ?? this.onChange,

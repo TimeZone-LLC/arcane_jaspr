@@ -97,7 +97,7 @@ class ShadcnAccordion extends StatelessComponent {
               styles: const dom.Styles(
                 raw: <String, String>{'flex': '1', 'min-width': '0'},
               ),
-              <Component>[Component.text(item.title)],
+              <Component>[item.customTitle ?? Component.text(item.title)],
             ),
             dom.span(
               classes: 'arcane-accordion-chevron',

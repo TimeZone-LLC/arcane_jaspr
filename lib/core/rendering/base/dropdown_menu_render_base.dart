@@ -130,18 +130,20 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
     return dom.div(
       classes: rootClass,
       attributes: <String, String>{'data-arcane-dropdown-root': surfaceId},
-      styles: const dom.Styles(
+      styles: dom.Styles(
         raw: <String, String>{
           'position': 'relative',
-          'display': 'inline-block',
+          'display': props.fullWidth ? 'block' : 'inline-block',
         },
       ),
       <Component>[
         dom.div(
           classes: triggerClass,
           attributes: triggerAttrs,
-          styles: const dom.Styles(
-            raw: <String, String>{'display': 'inline-block'},
+          styles: dom.Styles(
+            raw: <String, String>{
+              'display': props.fullWidth ? 'block' : 'inline-block',
+            },
           ),
           <Component>[props.trigger],
         ),

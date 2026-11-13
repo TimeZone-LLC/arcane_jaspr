@@ -31,6 +31,9 @@ class ArcaneDropdownMenu extends StatelessWidget {
   final bool keepOpenOnAction;
   final bool initiallyOpen;
 
+  /// The trigger fills the menu's box (a full-width button).
+  final bool fullWidth;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -45,6 +48,7 @@ class ArcaneDropdownMenu extends StatelessWidget {
     this.width,
     this.keepOpenOnAction = false,
     this.initiallyOpen = false,
+    this.fullWidth = false,
     this.styles,
     this.decoration,
     super.key,
@@ -68,6 +72,7 @@ class ArcaneDropdownMenu extends StatelessWidget {
         width: width,
         keepOpenOnAction: keepOpenOnAction,
         initiallyOpen: initiallyOpen,
+        fullWidth: fullWidth,
         styles: styles,
         decoration: decoration,
       ),

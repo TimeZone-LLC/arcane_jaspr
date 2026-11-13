@@ -72,13 +72,25 @@ abstract class StatCardRenderBase extends StatelessComponent {
             <Component>[props.icon!],
           ),
         dom.span(
-          styles: const dom.Styles(
+          attributes: props.labelLines == null
+              ? null
+              // A native tooltip: the runtime's would wrap the label in an
+              // inline box and undo the clamp.
+              : <String, String>{'title': props.label, 'data-no-tooltip': ''},
+          styles: dom.Styles(
             raw: <String, String>{
               'font-size': '0.75rem',
               'font-weight': '500',
               'text-transform': 'uppercase',
               'letter-spacing': '0.05em',
               'color': 'var(--muted-foreground)',
+              if (props.labelLines case final int lines) ...<String, String>{
+                'display': '-webkit-box',
+                '-webkit-box-orient': 'vertical',
+                '-webkit-line-clamp': '$lines',
+                'overflow': 'hidden',
+                'overflow-wrap': 'anywhere',
+              },
             },
           ),
           <Component>[Component.text(props.label)],
@@ -103,6 +115,18 @@ abstract class StatCardRenderBase extends StatelessComponent {
               ),
               <Component>[Component.text(props.value)],
             ),
+            if (props.unit != null)
+              dom.span(
+                styles: const dom.Styles(
+                  raw: <String, String>{
+                    'font-size': '0.875rem',
+                    'font-weight': '500',
+                    'color': 'var(--muted-foreground)',
+                    'white-space': 'nowrap',
+                  },
+                ),
+                <Component>[Component.text(props.unit!)],
+              ),
             if (props.trend != null)
               dom.span(
                 styles: dom.Styles(
@@ -128,6 +152,7 @@ abstract class StatCardRenderBase extends StatelessComponent {
             ),
             <Component>[Component.text(props.description!)],
           ),
+        if (props.footer != null) props.footer!,
       ],
     );
   }

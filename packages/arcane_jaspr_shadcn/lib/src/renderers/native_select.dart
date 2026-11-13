@@ -23,6 +23,7 @@ class ShadcnNativeSelect extends NativeSelectRenderBase {
     ...super.selectStyles,
     'height': _height,
     'padding': '0.25rem 0.75rem',
+    'text-overflow': 'ellipsis',
     'font-size': '0.875rem',
     'line-height': '1.25rem',
     'background-color': 'var(--shadcn-input-background, transparent)',

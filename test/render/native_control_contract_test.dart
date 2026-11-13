@@ -178,6 +178,53 @@ void main() {
     expect(chevron, contains('aria-hidden="true"'));
   });
 
+  testServer('shadcn native select ends long text before the chevron', (
+    ServerTester tester,
+  ) async {
+    final String html = await _render(
+      tester,
+      const ArcaneSelect(
+        value: 'all',
+        options: <ArcaneSelectOption>[
+          ArcaneSelectOption(label: 'All severities', value: 'all'),
+        ],
+      ),
+    );
+    final String select = _openingTagForClass(html, 'arcane-select');
+    expect(select, contains('padding-right: 40px'));
+    expect(select, contains('text-overflow: ellipsis'));
+  });
+
+  testServer('selects without a label take an accessible name', (
+    ServerTester tester,
+  ) async {
+    final String html = await _render(
+      tester,
+      const Column(
+        children: <Widget>[
+          ArcaneSelect(
+            id: 'world',
+            ariaLabel: 'World',
+            options: <ArcaneSelectOption>[],
+          ),
+          ArcaneNativeSelect(
+            id: 'metric',
+            ariaLabel: 'Metric',
+            options: <ArcaneSelectOption>[],
+          ),
+          ArcaneSelect(id: 'plain', options: <ArcaneSelectOption>[]),
+        ],
+      ),
+    );
+    final List<String> selects = RegExp(
+      r'<select\b[^>]*>',
+    ).allMatches(html).map((RegExpMatch match) => match.group(0)!).toList();
+    expect(selects, hasLength(3));
+    expect(selects[0], contains('aria-label="World"'));
+    expect(selects[1], contains('aria-label="Metric"'));
+    expect(selects[2], isNot(contains('aria-label')));
+  });
+
   testServer('prefixed text input gives its shell the only perimeter', (
     ServerTester tester,
   ) async {
