@@ -20,6 +20,12 @@ class SelectOptionProps<T> {
   final bool disabled;
   final List<String>? searchKeywords;
 
+  /// A heading the option is listed under.
+  final String? group;
+
+  /// A picture before the label.
+  final Widget? leading;
+
   const SelectOptionProps({
     required this.value,
     required this.label,
@@ -28,6 +34,8 @@ class SelectOptionProps<T> {
     this.icon,
     this.disabled = false,
     this.searchKeywords,
+    this.group,
+    this.leading,
   });
 }
 
@@ -67,6 +75,12 @@ class SelectProps<T> {
   final String? id;
   final String? group;
   final ArcaneInteraction? onSelectAction;
+
+  /// Rows under the options (actions such as "New" or "Manage").
+  final Widget? footer;
+
+  /// The trigger button's id; defaults to `<id>-trigger`.
+  final String? triggerId;
 
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
@@ -110,6 +124,8 @@ class SelectProps<T> {
     this.id,
     this.group,
     this.onSelectAction,
+    this.footer,
+    this.triggerId,
     this.styles,
     this.decoration,
   });

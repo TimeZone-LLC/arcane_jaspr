@@ -70,7 +70,11 @@ class ToastProps {
     this.onDismiss,
     this.styles,
     this.decoration,
+    this.passThrough = false,
   });
+
+  /// Clicks pass through the toast's body; its buttons still take them.
+  final bool passThrough;
 
   ToastProps copyWith({
     String? message,
@@ -119,15 +123,30 @@ class ToastContainerProps {
   final int maxVisible;
   final double gap;
   final double offset;
+
+  /// Distance from the top or bottom edge; null uses [offset].
+  final double? edgeOffset;
   final List<ToastProps> toasts;
+
+  /// The toaster's z-index; null keeps the theme's (shadcn: above sheets).
+  final int? layer;
+
+  /// Clicks pass through toast bodies; their buttons still take them.
+  final bool passThrough;
 
   const ToastContainerProps({
     this.position = ToastPosition.bottomRight,
     this.maxVisible = 3,
     this.gap = 12,
     this.offset = 20,
+    this.edgeOffset,
     this.toasts = const [],
+    this.layer,
+    this.passThrough = false,
   });
+
+  /// The top or bottom distance in px.
+  double get edge => edgeOffset ?? offset;
 }
 
 // ============================================================================

@@ -166,13 +166,19 @@ function positionAnchored(surfaceEl, anchorEl) {
   const rect = anchorEl.getBoundingClientRect();
   const vw = window.innerWidth;
   const vh = window.innerHeight;
+  // An ancestor's data-arcane-anchor-top names an element (a page under a
+  // fixed top bar) whose top edge the surface stays below.
+  let edge = 0;
+  const holder = typeof surfaceEl.closest === 'function' ? surfaceEl.closest('[data-arcane-anchor-top]') : null;
+  const below = holder ? document.querySelector(holder.getAttribute('data-arcane-anchor-top')) : null;
+  if (below) edge = Math.max(0, below.getBoundingClientRect().top);
   let top = 0;
   let left = 0;
 
   let actualPlacement = placement;
-  if (placement === 'bottom' && rect.bottom + offset + sh > vh && rect.top - offset - sh > 0) {
+  if (placement === 'bottom' && rect.bottom + offset + sh > vh && rect.top - offset - sh > edge) {
     actualPlacement = 'top';
-  } else if (placement === 'top' && rect.top - offset - sh < 0 && rect.bottom + offset + sh < vh) {
+  } else if (placement === 'top' && rect.top - offset - sh < edge && rect.bottom + offset + sh < vh) {
     actualPlacement = 'bottom';
   } else if (placement === 'right' && rect.right + offset + sw > vw && rect.left - offset - sw > 0) {
     actualPlacement = 'left';
@@ -195,7 +201,7 @@ function positionAnchored(surfaceEl, anchorEl) {
   }
 
   if (left < 4) left = 4;
-  if (top < 4) top = 4;
+  if (top < edge + 4) top = edge + 4;
   if (left + sw > vw - 4) left = vw - sw - 4;
   if (top + sh > vh - 4) top = vh - sh - 4;
 

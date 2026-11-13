@@ -70,7 +70,7 @@ class ShadcnSelect<T> extends StatelessComponent {
 
     final String surfaceId =
         props.id ?? 'arcane-select-${identityHashCode(props)}';
-    final String triggerId = '$surfaceId-trigger';
+    final String triggerId = props.triggerId ?? '$surfaceId-trigger';
     final String groupId = props.group ?? '$surfaceId-group';
     final String groupMode = props.multiSelect ? 'multi' : 'single';
     final String groupValue = props.multiSelect
@@ -139,6 +139,7 @@ class ShadcnSelect<T> extends StatelessComponent {
               'arcane-select ${hasError ? 'error' : ''} ${props.disabled ? 'disabled' : ''}',
           attributes: <String, String>{
             'type': 'button',
+            'role': 'combobox',
             'aria-haspopup': 'listbox',
             'aria-controls': surfaceId,
             'aria-expanded': '${props.isOpen}',
@@ -425,15 +426,54 @@ class ShadcnSelect<T> extends StatelessComponent {
                       <Component>[Component.text(props.emptyMessage)],
                     )
                   else
-                    for (final SelectOptionProps<T> option in visibleOptions)
+                    for (
+                      int index = 0;
+                      index < visibleOptions.length;
+                      index++
+                    ) ...<Component>[
+                      // ShadCN SelectLabel: a group's heading.
+                      if (visibleOptions[index].group != null &&
+                          (index == 0 ||
+                              visibleOptions[index - 1].group !=
+                                  visibleOptions[index].group))
+                        dom.div(
+                          classes: 'arcane-select-label',
+                          attributes: const <String, String>{
+                            'role': 'presentation',
+                          },
+                          styles: const dom.Styles(
+                            raw: <String, String>{
+                              'padding': '0.375rem 0.5rem',
+                              'font-size': '0.75rem',
+                              'line-height': '1rem',
+                              'color': 'var(--muted-foreground)',
+                            },
+                          ),
+                          <Component>[
+                            Component.text(visibleOptions[index].group!),
+                          ],
+                        ),
                       _buildOption(
-                        option,
+                        visibleOptions[index],
                         groupId: groupId,
                         groupMode: groupMode,
                         surfaceId: surfaceId,
                         dismissAction: dismissAction,
                       ),
+                    ],
                 ],
+              ),
+            // Rows under the options, after a ShadCN SelectSeparator.
+            if (props.footer != null)
+              dom.div(
+                classes: 'arcane-select-footer',
+                styles: const dom.Styles(
+                  raw: <String, String>{
+                    'border-top': '1px solid var(--border)',
+                    'padding': '0.25rem',
+                  },
+                ),
+                <Component>[props.footer!],
               ),
           ],
         ),
@@ -586,6 +626,19 @@ class ShadcnSelect<T> extends StatelessComponent {
 
         // Icon
         if (option.icon != null) option.icon!,
+
+        // A leading picture (swatch, face).
+        if (option.leading != null)
+          dom.span(
+            attributes: const <String, String>{'aria-hidden': 'true'},
+            styles: const dom.Styles(
+              raw: <String, String>{
+                'display': 'inline-flex',
+                'flex-shrink': '0',
+              },
+            ),
+            <Component>[option.leading!],
+          ),
 
         // Label and subtitle
         dom.div(

@@ -54,6 +54,9 @@ class ArcaneToast extends StatefulWidget {
     int maxVisible = 3,
     double gap = 12,
     double offset = 20,
+    double? edgeOffset,
+    int? layer,
+    bool passThrough = false,
     Key? key,
   }) {
     return _ToastContainer(
@@ -61,6 +64,9 @@ class ArcaneToast extends StatefulWidget {
       maxVisible: maxVisible,
       gap: gap,
       offset: offset,
+      edgeOffset: edgeOffset,
+      layer: layer,
+      passThrough: passThrough,
       key: key,
     );
   }
@@ -163,12 +169,18 @@ class _ToastContainer extends StatefulWidget {
   final int maxVisible;
   final double gap;
   final double offset;
+  final double? edgeOffset;
+  final int? layer;
+  final bool passThrough;
 
   const _ToastContainer({
     this.position = ToastPosition.bottomRight,
     this.maxVisible = 3,
     this.gap = 12,
     this.offset = 20,
+    this.edgeOffset,
+    this.layer,
+    this.passThrough = false,
     super.key,
   });
 
@@ -212,6 +224,7 @@ class _ToastContainerState extends State<_ToastContainer> {
             icon: data.icon,
             id: data.id,
             onDismiss: () => ToastManager.instance.dismiss(data.id),
+            passThrough: widget.passThrough,
           ),
         )
         .toList();
@@ -222,7 +235,10 @@ class _ToastContainerState extends State<_ToastContainer> {
         maxVisible: widget.maxVisible,
         gap: widget.gap,
         offset: widget.offset,
+        edgeOffset: widget.edgeOffset,
         toasts: toastPropsList,
+        layer: widget.layer,
+        passThrough: widget.passThrough,
       ),
     );
   }

@@ -77,7 +77,7 @@ abstract class DialogRenderBase extends StatelessComponent {
         dom.div(
           classes: '$themePrefix-dialog',
           attributes: <String, String>{
-            'role': 'dialog',
+            'role': props.alert ? 'alertdialog' : 'dialog',
             'aria-modal': 'true',
             'tabindex': '-1',
             'data-arcane-autofocus': '',

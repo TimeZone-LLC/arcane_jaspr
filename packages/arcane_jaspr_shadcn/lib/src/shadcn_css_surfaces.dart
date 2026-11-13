@@ -457,6 +457,20 @@ html:has(#arcane-root.arcane-theme-shadcn) [data-arcane-toast-surface] .arcane-t
   font-weight: 500;
 }
 
+/* An item's count or state, at the end of its row; a collapsed item is its
+   icon, centred. */
+#arcane-root.arcane-theme-shadcn .arcane-sidebar .sidebar-link .sidebar-badge {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--sidebar-foreground) 70%, transparent);
+}
+
+#arcane-root.arcane-theme-shadcn .arcane-sidebar.collapsed .sidebar-tree-item > .sidebar-link {
+  justify-content: center;
+  padding: 0;
+}
+
 #arcane-root.arcane-theme-shadcn .arcane-sidebar .sidebar-tree-item > .sidebar-link:focus-visible,
 #arcane-root.arcane-theme-shadcn .arcane-sidebar .sidebar-section > .sidebar-details > .sidebar-summary:focus-visible {
   --shadcn-control-shadow: var(--shadcn-focus-ring);

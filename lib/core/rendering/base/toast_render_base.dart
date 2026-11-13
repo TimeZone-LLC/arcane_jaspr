@@ -224,34 +224,34 @@ abstract class ToastContainerRenderBase extends StatelessComponent {
   Component build(BuildContext context) {
     final Map<String, String> positionStyles = switch (props.position) {
       ToastPosition.topLeft => <String, String>{
-        'top': '${props.offset}px',
+        'top': '${props.edge}px',
         'left': '${props.offset}px',
         'align-items': 'flex-start',
       },
       ToastPosition.topCenter => <String, String>{
-        'top': '${props.offset}px',
+        'top': '${props.edge}px',
         'left': '50%',
         'transform': 'translateX(-50%)',
         'align-items': 'center',
       },
       ToastPosition.topRight => <String, String>{
-        'top': '${props.offset}px',
+        'top': '${props.edge}px',
         'right': '${props.offset}px',
         'align-items': 'flex-end',
       },
       ToastPosition.bottomLeft => <String, String>{
-        'bottom': '${props.offset}px',
+        'bottom': '${props.edge}px',
         'left': '${props.offset}px',
         'align-items': 'flex-start',
       },
       ToastPosition.bottomCenter => <String, String>{
-        'bottom': '${props.offset}px',
+        'bottom': '${props.edge}px',
         'left': '50%',
         'transform': 'translateX(-50%)',
         'align-items': 'center',
       },
       ToastPosition.bottomRight => <String, String>{
-        'bottom': '${props.offset}px',
+        'bottom': '${props.edge}px',
         'right': '${props.offset}px',
         'align-items': 'flex-end',
       },

@@ -872,6 +872,11 @@ ${_neutralSurfaces(theme)}
   --shadcn-switch-thumb-on: var(--background);
 }
 
+/* Native controls take the page's sans; browsers give them their own. */
+#arcane-root.arcane-theme-shadcn :is(button, input, select, textarea) {
+  font-family: inherit;
+}
+
 html.dark #arcane-root.arcane-theme-shadcn,
 #arcane-root.dark.arcane-theme-shadcn {
   --shadcn-control-border: color-mix(in srgb, var(--input) 72%, var(--foreground));

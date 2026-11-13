@@ -165,7 +165,7 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
 
     final String surfaceId =
         props.id ?? '$surfaceIdPrefix${identityHashCode(props)}';
-    final String triggerId = '$surfaceId-trigger';
+    final String triggerId = props.triggerId ?? '$surfaceId-trigger';
     final String groupId = props.group ?? '$surfaceId-group';
     final String groupMode = props.multiSelect ? 'multi' : 'single';
     final String groupValue = props.multiSelect
@@ -234,6 +234,7 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
           classes: '$classPrefix-select-trigger',
           attributes: <String, String>{
             'type': 'button',
+            'role': 'combobox',
             'aria-haspopup': 'listbox',
             'aria-controls': surfaceId,
             'aria-expanded': '${props.isOpen}',
@@ -442,15 +443,52 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
                       <Component>[Component.text(props.emptyMessage)],
                     )
                   else
-                    for (final SelectOptionProps<T> option in props.options)
+                    for (
+                      int index = 0;
+                      index < props.options.length;
+                      index++
+                    ) ...<Component>[
+                      if (props.options[index].group != null &&
+                          (index == 0 ||
+                              props.options[index - 1].group !=
+                                  props.options[index].group))
+                        dom.div(
+                          classes: '$classPrefix-select-group-label',
+                          attributes: const <String, String>{
+                            'role': 'presentation',
+                          },
+                          styles: const dom.Styles(
+                            raw: <String, String>{
+                              'padding': '0.375rem 0.5rem 0.25rem',
+                              'font-size': 'var(--font-size-xs)',
+                              'font-weight': '500',
+                              'color': 'var(--muted-foreground)',
+                            },
+                          ),
+                          <Component>[
+                            Component.text(props.options[index].group!),
+                          ],
+                        ),
                       _buildOption(
-                        option,
+                        props.options[index],
                         groupId: groupId,
                         groupMode: groupMode,
                         surfaceId: surfaceId,
                         dismissAction: dismissAction,
                       ),
+                    ],
                 ],
+              ),
+            if (props.footer != null)
+              dom.div(
+                classes: '$classPrefix-select-footer',
+                styles: const dom.Styles(
+                  raw: <String, String>{
+                    'border-top': '1px solid var(--border)',
+                    'padding': '0.25rem',
+                  },
+                ),
+                <Component>[props.footer!],
               ),
           ],
         ),
@@ -558,6 +596,18 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
               raw: <String, String>{'color': optionIconColor(isSelected)},
             ),
             <Component>[option.icon!],
+          ),
+
+        if (option.leading != null)
+          dom.span(
+            attributes: const <String, String>{'aria-hidden': 'true'},
+            styles: const dom.Styles(
+              raw: <String, String>{
+                'display': 'inline-flex',
+                'flex-shrink': '0',
+              },
+            ),
+            <Component>[option.leading!],
           ),
 
         // Label and subtitle

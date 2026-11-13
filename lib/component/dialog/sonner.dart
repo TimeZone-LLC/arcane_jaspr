@@ -9,11 +9,24 @@ class ArcaneSonner extends StatelessWidget {
   final double gap;
   final double offset;
 
+  /// Distance from the top or bottom edge, to clear a bar there; null uses
+  /// [offset].
+  final double? edgeOffset;
+
+  /// The toaster's z-index; null keeps the theme's.
+  final int? layer;
+
+  /// Clicks pass through toast bodies; their buttons still take them.
+  final bool passThrough;
+
   const ArcaneSonner({
     this.position = ToastPosition.bottomRight,
     this.maxVisible = 3,
     this.gap = 12,
     this.offset = 20,
+    this.edgeOffset,
+    this.layer,
+    this.passThrough = false,
     super.key,
   });
 
@@ -126,6 +139,9 @@ class ArcaneSonner extends StatelessWidget {
       maxVisible: maxVisible,
       gap: gap,
       offset: offset,
+      edgeOffset: edgeOffset,
+      layer: layer,
+      passThrough: passThrough,
     );
   }
 }

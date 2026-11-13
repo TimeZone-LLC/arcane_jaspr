@@ -14,6 +14,10 @@ class PopoverScripts {
       var trigger = container.querySelector('.arcane-floating-trigger') || container.firstElementChild;
       var popup = container.querySelector('.arcane-floating-content, .arcane-floating-tooltip, [style*="position: absolute"][style*="z-index"]');
       if (!trigger || !popup || container.dataset.arcanePopoverInteractive) return;
+      // Hover cards, tooltips and popovers rendered as runtime surfaces open
+      // through the interaction runtime and their own Dart state; binding
+      // them here as well swallowed their clicks.
+      if (popup.hasAttribute('data-arcane-surface')) return;
       container.dataset.arcanePopoverInteractive = 'true';
 
       var isClick = !popup.closest('.arcane-hovercard');

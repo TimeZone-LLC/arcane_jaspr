@@ -18,6 +18,9 @@ class DialogProps {
   final bool focusTrap;
   final bool restoreFocus;
 
+  /// A question that needs an answer (a confirmation): `role="alertdialog"`.
+  final bool alert;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -38,6 +41,7 @@ class DialogProps {
     this.escapeCloses = true,
     this.focusTrap = true,
     this.restoreFocus = true,
+    this.alert = false,
     this.styles,
     this.decoration,
   });
@@ -55,6 +59,7 @@ class DialogProps {
     bool? escapeCloses,
     bool? focusTrap,
     bool? restoreFocus,
+    bool? alert,
     ArcaneStyleData? styles,
     ArcaneDecoration? decoration,
   }) {
@@ -71,6 +76,7 @@ class DialogProps {
       escapeCloses: escapeCloses ?? this.escapeCloses,
       focusTrap: focusTrap ?? this.focusTrap,
       restoreFocus: restoreFocus ?? this.restoreFocus,
+      alert: alert ?? this.alert,
       styles: styles ?? this.styles,
       decoration: decoration ?? this.decoration,
     );

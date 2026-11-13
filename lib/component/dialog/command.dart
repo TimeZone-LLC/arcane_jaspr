@@ -23,6 +23,14 @@ class ArcaneCommand extends StatefulWidget {
   final bool focusTrap;
   final bool restoreFocus;
 
+  /// The caller filters and orders [groups] itself from [onSearch]; every
+  /// item given is shown.
+  final bool externalFilter;
+
+  /// The overlay fades and the dialog scales in as it opens; false shows
+  /// them at once.
+  final bool animate;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -42,6 +50,8 @@ class ArcaneCommand extends StatefulWidget {
     this.scrimCloses = true,
     this.focusTrap = true,
     this.restoreFocus = true,
+    this.externalFilter = false,
+    this.animate = true,
     this.styles,
     this.decoration,
     super.key,
@@ -59,7 +69,7 @@ class _ArcaneCommandState extends State<ArcaneCommand> {
   }
 
   List<CommandItem> get _filteredItems {
-    if (_searchQuery.isEmpty) return _allItems;
+    if (_searchQuery.isEmpty || widget.externalFilter) return _allItems;
 
     final query = _searchQuery.toLowerCase();
     return _allItems.where((item) {
@@ -138,6 +148,8 @@ class _ArcaneCommandState extends State<ArcaneCommand> {
         scrimCloses: widget.scrimCloses,
         focusTrap: widget.focusTrap,
         restoreFocus: widget.restoreFocus,
+        externalFilter: widget.externalFilter,
+        animate: widget.animate,
         styles: widget.styles,
         decoration: widget.decoration,
       ),

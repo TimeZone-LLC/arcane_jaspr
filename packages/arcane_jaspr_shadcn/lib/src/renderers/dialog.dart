@@ -55,7 +55,8 @@ class ShadcnDialog extends StatelessComponent {
         raw: <String, String>{
           'position': 'fixed',
           'inset': '0',
-          'z-index': '50',
+          // The sheet's layer: whichever opened later sits on top.
+          'z-index': '1100',
           'display': 'flex',
           'align-items': 'center',
           'justify-content': 'center',
@@ -81,7 +82,7 @@ class ShadcnDialog extends StatelessComponent {
         dom.div(
           classes: 'arcane-dialog',
           attributes: <String, String>{
-            'role': 'dialog',
+            'role': props.alert ? 'alertdialog' : 'dialog',
             'aria-modal': 'true',
             'tabindex': '-1',
             if (props.title != null)

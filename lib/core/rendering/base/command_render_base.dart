@@ -6,6 +6,7 @@ import 'package:arcane_jaspr/core/decoration/arcane_decoration.dart';
 import 'package:arcane_jaspr/core/interaction/interaction.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/command_props.dart';
+import 'package:arcane_jaspr/core/dom_value.dart';
 
 /// Shared structural base for themed command-palette renderers.
 ///
@@ -107,7 +108,10 @@ abstract class CommandRenderBase extends StatelessComponent {
         ...surfAttrs,
         'data-arcane-command': surfaceId,
       },
-      styles: dom.Styles(raw: overlayStyles),
+      events: props.onClose == null
+          ? null
+          : <String, EventCallback>{'arcane:close': (_) => props.onClose!()},
+      styles: dom.Styles(raw: <String, String>{...overlayStyles, if (!props.animate) 'animation': 'none'}),
       [
         dom.div(
           classes: dialogClasses,
@@ -119,6 +123,7 @@ abstract class CommandRenderBase extends StatelessComponent {
           styles: dom.Styles(
             raw: <String, String>{
               ...dialogStyles,
+              if (!props.animate) 'animation': 'none',
               ...?props.decoration?.universalStyles(),
               ...decorationStyles(props.decoration),
               ...?props.styles?.toMap(),
@@ -132,17 +137,38 @@ abstract class CommandRenderBase extends StatelessComponent {
                 dom.span(styles: dom.Styles(raw: searchIconStyles), [
                   ArcaneIcon.search(size: IconSize.md),
                 ]),
-                dom.RawText(
-                  '<input class="$inputClass" type="text" '
-                  'aria-label="Search commands" '
-                  'placeholder="${props.placeholder}" '
-                  'autofocus autocomplete="off" spellcheck="false" '
-                  'data-arcane-command-input="$surfaceId" '
-                  'data-arcane-input="command.filter:$surfaceId" '
-                  'value="${props.searchQuery}" '
-                  'style="flex:1;min-width:0;background:transparent;border:none;'
-                  '$inputStyleSuffix">',
-                ),
+                if (props.externalFilter)
+                  dom.input(
+                    classes: inputClass,
+                    type: dom.InputType.text,
+                    value: props.searchQuery,
+                    attributes: <String, String>{
+                      'aria-label': 'Search commands',
+                      'placeholder': props.placeholder,
+                      'autofocus': '',
+                      'autocomplete': 'off',
+                      'spellcheck': 'false',
+                      'data-arcane-command-input': surfaceId,
+                      'style':
+                          'flex:1;min-width:0;background:transparent;border:none;$inputStyleSuffix',
+                    },
+                    events: <String, EventCallback>{
+                      'input': (dynamic event) =>
+                          props.onSearch?.call(domEventValue(event)),
+                    },
+                  )
+                else
+                  dom.RawText(
+                    '<input class="$inputClass" type="text" '
+                    'aria-label="Search commands" '
+                    'placeholder="${props.placeholder}" '
+                    'autofocus autocomplete="off" spellcheck="false" '
+                    'data-arcane-command-input="$surfaceId" '
+                    'data-arcane-input="command.filter:$surfaceId" '
+                    'value="${props.searchQuery}" '
+                    'style="flex:1;min-width:0;background:transparent;border:none;'
+                    '$inputStyleSuffix">',
+                  ),
               ],
             ),
             dom.div(
@@ -227,6 +253,10 @@ abstract class CommandRenderBase extends StatelessComponent {
         if (!item.disabled) 'data-arcane-action': action,
         'tabindex': item.disabled ? '-1' : '0',
       },
+      events:
+          item.disabled || item.onSelect == null || props.onSelectItem == null
+          ? null
+          : <String, EventCallback>{'click': (_) => props.onSelectItem!(item)},
       styles: dom.Styles(raw: itemStyles(item)),
       [
         ?item.icon,

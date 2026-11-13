@@ -27,23 +27,64 @@ abstract class SidebarItemRenderBase extends StatelessComponent {
   @override
   Component build(BuildContext context) {
     final String linkClasses = 'sidebar-link${props.selected ? ' active' : ''}';
+    final String? title =
+        props.tooltip ?? (props.collapsed ? props.label : null);
+    final Map<String, String> attributes = <String, String>{
+      if (props.selected) 'aria-current': 'page',
+      if (props.disabled) 'aria-disabled': 'true',
+      if (props.collapsed)
+        'aria-label': props.badge == null
+            ? props.label
+            : '${props.label}, ${props.badge}',
+      'title': ?title,
+    };
+    // A plain item keeps its plain markup; the parts appear when asked for.
+    final bool plain =
+        props.icon == null && props.badge == null && !props.collapsed;
+    final List<Component> content = plain
+        ? <Component>[Component.text(props.label)]
+        : <Component>[
+            if (props.icon != null)
+              dom.span(
+                classes: 'sidebar-icon',
+                attributes: const <String, String>{'aria-hidden': 'true'},
+                <Component>[props.icon!],
+              ),
+            if (!props.collapsed)
+              dom.span(classes: 'sidebar-link-label', <Component>[
+                Component.text(props.label),
+              ]),
+            if (props.badge != null && !props.collapsed)
+              dom.span(classes: 'sidebar-badge', <Component>[
+                Component.text(props.badge!),
+              ]),
+            if (props.icon == null && props.collapsed)
+              Component.text(props.label),
+          ];
 
-    if (props.href != null) {
+    if (props.href != null && !props.disabled) {
       return dom.div(classes: 'sidebar-tree-item', <Component>[
-        dom.a(href: props.href!, classes: linkClasses, <Component>[
-          Component.text(props.label),
-        ]),
+        dom.a(
+          href: props.href!,
+          classes: linkClasses,
+          attributes: attributes,
+          content,
+        ),
       ]);
     }
 
     return dom.div(classes: 'sidebar-tree-item', <Component>[
       dom.button(
         classes: linkClasses,
-        attributes: const <String, String>{'type': 'button'},
-        events: props.onTap != null
+        attributes: <String, String>{
+          'type': 'button',
+          ...attributes,
+          if (props.disabled) 'disabled': '',
+        },
+        events: props.onTap != null && !props.disabled
             ? <String, EventCallback>{'click': (_) => props.onTap!()}
             : null,
-        <Component>[Component.text(props.label)],
+        content,
       ),
     ]);
   }

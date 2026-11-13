@@ -82,7 +82,7 @@ class ShadcnToast extends StatelessComponent {
           'box-shadow': 'var(--shadow-lg)',
           'font-size': '0.8125rem',
           'line-height': '1.5',
-          'pointer-events': 'auto',
+          'pointer-events': props.passThrough ? 'none' : 'auto',
           'transition': 'transform 400ms ease, opacity 400ms ease',
           'animation': props.isExiting
               ? 'arcane-toast-exit 200ms cubic-bezier(0.4, 0, 1, 1) forwards'
@@ -171,6 +171,7 @@ class ShadcnToast extends StatelessComponent {
                     attributes: const <String, String>{'type': 'button'},
                     styles: dom.Styles(
                       raw: <String, String>{
+                        'pointer-events': 'auto',
                         'display': 'inline-flex',
                         'align-items': 'center',
                         'height': '1.5rem',
@@ -211,6 +212,7 @@ class ShadcnToast extends StatelessComponent {
             },
             styles: const dom.Styles(
               raw: <String, String>{
+                'pointer-events': 'auto',
                 'display': 'flex',
                 'align-items': 'center',
                 'justify-content': 'center',
@@ -247,42 +249,43 @@ class ShadcnToastContainer extends StatelessComponent {
 
   Map<String, String> _getPositionStyles() {
     final offset = '${props.offset}px';
+    final edge = '${props.edge}px';
 
     return switch (props.position) {
       ToastPosition.topLeft => {
-        'top': offset,
+        'top': edge,
         'left': offset,
         'align-items': 'flex-start',
         'flex-direction': 'column',
       },
       ToastPosition.topCenter => {
-        'top': offset,
+        'top': edge,
         'left': '50%',
         'transform': 'translateX(-50%)',
         'align-items': 'center',
         'flex-direction': 'column',
       },
       ToastPosition.topRight => {
-        'top': offset,
+        'top': edge,
         'right': offset,
         'align-items': 'flex-end',
         'flex-direction': 'column',
       },
       ToastPosition.bottomLeft => {
-        'bottom': offset,
+        'bottom': edge,
         'left': offset,
         'align-items': 'flex-start',
         'flex-direction': 'column-reverse',
       },
       ToastPosition.bottomCenter => {
-        'bottom': offset,
+        'bottom': edge,
         'left': '50%',
         'transform': 'translateX(-50%)',
         'align-items': 'center',
         'flex-direction': 'column-reverse',
       },
       ToastPosition.bottomRight => {
-        'bottom': offset,
+        'bottom': edge,
         'right': offset,
         'align-items': 'flex-end',
         'flex-direction': 'column-reverse',
@@ -302,8 +305,9 @@ class ShadcnToastContainer extends StatelessComponent {
       styles: dom.Styles(
         raw: {
           'position': 'fixed',
-          // Above sheets (1100) so feedback stays visible over overlays.
-          'z-index': '1200',
+          // Above sheets (1100) so feedback stays visible over overlays,
+          // unless the app picks another layer.
+          'z-index': '${props.layer ?? 1200}',
           'display': 'flex',
           'gap': '${props.gap}px',
           'pointer-events': 'none',

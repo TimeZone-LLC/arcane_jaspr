@@ -45,6 +45,10 @@ extension IconSizeExtension on IconSize {
 /// preventing callers from composing overlapping or multi-icon marks.
 sealed class ArcaneGlyph extends StatelessWidget {
   const ArcaneGlyph({super.key});
+
+  /// The same glyph drawn at [size], for wrappers that draw every icon in a
+  /// control at one size.
+  ArcaneGlyph sized(IconSize size);
 }
 
 /// Base component for font-based icons.
@@ -59,9 +63,14 @@ final class _LucideIcon extends ArcaneGlyph {
   });
 
   @override
+  ArcaneGlyph sized(IconSize size) =>
+      _LucideIcon(codepoint: codepoint, size: size);
+
+  @override
   Widget build(BuildContext context) {
     final double px = size.pixels;
     return dom.i(
+      attributes: const <String, String>{'aria-hidden': 'true'},
       styles: dom.Styles(raw: <String, String>{
         'font-family': "'lucide', sans-serif",
         'font-style': 'normal',
@@ -95,6 +104,14 @@ final class _CustomSvgIcon extends ArcaneGlyph {
   });
 
   @override
+  ArcaneGlyph sized(IconSize size) => _CustomSvgIcon(
+        viewBox: viewBox,
+        paths: paths,
+        pathFills: pathFills,
+        size: size,
+      );
+
+  @override
   Widget build(BuildContext context) {
     final String px = size.pixels.toStringAsFixed(0);
     return Component.element(
@@ -104,6 +121,7 @@ final class _CustomSvgIcon extends ArcaneGlyph {
         'height': px,
         'viewBox': viewBox,
         'fill': 'currentColor',
+        'aria-hidden': 'true',
       },
       children: <Component>[
         for (final (int index, String path) in paths.indexed)

@@ -14,7 +14,14 @@ const start = source.indexOf('function positionAnchored(');
 const end = source.indexOf('\nfunction ', start + 1);
 assert.ok(start >= 0 && end > start, 'positionAnchored is present');
 
-const context = vm.createContext({ window: { innerWidth: 1280, innerHeight: 1000 } });
+const context = vm.createContext({
+  window: { innerWidth: 1280, innerHeight: 1000 },
+  document: {
+    querySelector(selector) {
+      return selector === '#page' ? { getBoundingClientRect: () => ({ top: 48 }) } : null;
+    },
+  },
+});
 vm.runInContext(source.slice(start, end), context);
 
 function surface(attributes, width, height) {
@@ -53,4 +60,33 @@ test('an in-flow surface that pushes its anchor is placed from the settled ancho
   assert.equal(menu.style.top, `${150 + 36 + 4}px`);
   assert.equal(menu.style.left, '400px');
   assert.equal(menu.style.width, '160px');
+});
+
+test('a surface whose anchor scrolled under a top bar stays below the named element', () => {
+  const holder = { getAttribute: (name) => (name === 'data-arcane-anchor-top' ? '#page' : null) };
+  const menu = surface({ 'data-arcane-anchor-placement': 'bottom', 'data-arcane-anchor-offset': '4' }, 160, 120);
+  menu.closest = (selector) => (selector === '[data-arcane-anchor-top]' ? holder : null);
+  const anchor = {
+    getBoundingClientRect() {
+      return { top: -80, bottom: -44, left: 400, right: 508, width: 108, height: 36 };
+    },
+  };
+
+  context.positionAnchored(menu, anchor);
+
+  assert.equal(menu.style.top, `${48 + 4}px`);
+});
+
+test('without the attribute a surface is kept 4 px inside the window', () => {
+  const menu = surface({ 'data-arcane-anchor-placement': 'bottom', 'data-arcane-anchor-offset': '4' }, 160, 120);
+  menu.closest = () => null;
+  const anchor = {
+    getBoundingClientRect() {
+      return { top: -80, bottom: -44, left: 400, right: 508, width: 108, height: 36 };
+    },
+  };
+
+  context.positionAnchored(menu, anchor);
+
+  assert.equal(menu.style.top, '4px');
 });

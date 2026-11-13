@@ -58,6 +58,14 @@ class CommandProps {
   final bool focusTrap;
   final bool restoreFocus;
 
+  /// The caller filters [groups] itself (through [onSearch]); the runtime
+  /// leaves the items as given.
+  final bool externalFilter;
+
+  /// The overlay fades and the dialog scales in as it opens; false shows
+  /// them at once.
+  final bool animate;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -80,6 +88,8 @@ class CommandProps {
     this.scrimCloses = true,
     this.focusTrap = true,
     this.restoreFocus = true,
+    this.externalFilter = false,
+    this.animate = true,
     this.styles,
     this.decoration,
   });

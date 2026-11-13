@@ -28,6 +28,13 @@ class ArcaneCombobox<T> extends StatefulWidget {
   final String? group;
   final ArcaneInteraction? onChangedAction;
 
+  /// Rows under the options (actions such as "New" or "Manage").
+  final Widget? footer;
+
+  /// The trigger button's id, so a `<label for>` can name it; defaults to
+  /// `<id>-trigger`.
+  final String? triggerId;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -52,6 +59,8 @@ class ArcaneCombobox<T> extends StatefulWidget {
     this.id,
     this.group,
     this.onChangedAction,
+    this.footer,
+    this.triggerId,
     this.styles,
     this.decoration,
     super.key,
@@ -120,6 +129,8 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
             icon: opt.icon,
             disabled: opt.disabled,
             searchKeywords: opt.keywords,
+            group: opt.group,
+            leading: opt.leading,
           ),
         )
         .toList();
@@ -133,6 +144,8 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
             icon: opt.icon,
             disabled: opt.disabled,
             searchKeywords: opt.keywords,
+            group: opt.group,
+            leading: opt.leading,
           ),
         )
         .toList();
@@ -158,6 +171,8 @@ class _ArcaneComboboxState<T> extends State<ArcaneCombobox<T>> {
         id: widget.id ?? 'combobox-${identityHashCode(this)}',
         group: widget.group,
         onSelectAction: widget.onChangedAction,
+        footer: widget.footer,
+        triggerId: widget.triggerId,
         styles: widget.styles,
         decoration: widget.decoration,
       ),
@@ -174,6 +189,13 @@ class ComboboxOption<T> {
   final bool disabled;
   final List<String>? keywords;
 
+  /// A heading the option is listed under; consecutive options with the
+  /// same group share one heading.
+  final String? group;
+
+  /// A picture before the label (a swatch, a face, an avatar).
+  final Widget? leading;
+
   const ComboboxOption({
     required this.value,
     required this.label,
@@ -181,6 +203,8 @@ class ComboboxOption<T> {
     this.icon,
     this.disabled = false,
     this.keywords,
+    this.group,
+    this.leading,
   });
 }
 

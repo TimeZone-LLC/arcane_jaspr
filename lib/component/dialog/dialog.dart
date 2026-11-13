@@ -19,6 +19,9 @@ class ArcaneDialog extends StatelessWidget {
   final bool focusTrap;
   final bool restoreFocus;
 
+  /// A question that needs an answer (a confirmation): `role="alertdialog"`.
+  final bool alert;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -39,6 +42,7 @@ class ArcaneDialog extends StatelessWidget {
     this.escapeCloses = true,
     this.focusTrap = true,
     this.restoreFocus = true,
+    this.alert = false,
     this.styles,
     this.decoration,
     super.key,
@@ -67,6 +71,7 @@ class ArcaneDialog extends StatelessWidget {
         escapeCloses: escapeCloses,
         focusTrap: focusTrap,
         restoreFocus: restoreFocus,
+        alert: alert,
         styles: styles,
         decoration: decoration,
       ),
