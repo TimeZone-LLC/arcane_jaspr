@@ -26,6 +26,10 @@ class Button extends StatelessWidget {
   final bool disabled;
   final bool loading;
   final bool fullWidth;
+
+  /// Cuts a label too long for the button with an ellipsis; the full label
+  /// shows on hover.
+  final bool truncate;
   final Map<String, String>? attributes;
   final String? id;
 
@@ -54,6 +58,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.attributes,
     this.id,
     this.type = ButtonType.button,
@@ -73,6 +78,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.attributes,
     this.id,
     this.type = ButtonType.button,
@@ -92,6 +98,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.attributes,
     this.id,
     this.type = ButtonType.button,
@@ -111,6 +118,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.attributes,
     this.id,
     this.type = ButtonType.button,
@@ -130,6 +138,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.attributes,
     this.id,
     this.type = ButtonType.button,
@@ -149,6 +158,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.attributes,
     this.id,
     this.type = ButtonType.button,
@@ -168,6 +178,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.attributes,
     this.id,
     this.type = ButtonType.button,
@@ -187,6 +198,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.attributes,
     this.id,
     this.type = ButtonType.button,
@@ -206,6 +218,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.attributes,
     this.id,
     this.type = ButtonType.button,
@@ -225,6 +238,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.attributes,
     this.id,
     this.type = ButtonType.button,
@@ -248,6 +262,7 @@ class Button extends StatelessWidget {
         disabled: disabled,
         loading: loading,
         fullWidth: fullWidth,
+        truncate: truncate,
         id: id,
         attributes: attributes,
         href: href,

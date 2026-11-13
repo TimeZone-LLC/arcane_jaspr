@@ -49,6 +49,10 @@ abstract class ButtonRenderBase extends StatelessComponent {
         ...variantStyles(props.variant),
         ...sizeStyles(props.size),
         if (props.fullWidth) 'width': '100%',
+        if (props.truncate) ...<String, String>{
+          'min-width': '0',
+          'max-width': '100%',
+        },
       },
       <Map<String, String>?>[
         props.decoration?.universalStyles(),
@@ -71,7 +75,28 @@ abstract class ButtonRenderBase extends StatelessComponent {
     }
 
     if (props.label != null) {
-      children.add(Component.text(props.label!));
+      children.add(
+        props.truncate
+            // A bare text node cannot be cut, so the label gets a span that
+            // can shrink. A native title, not the runtime's tooltip wrapper,
+            // keeps the span in the button's flex row.
+            ? dom.span(
+                attributes: <String, String>{
+                  'title': props.label!,
+                  'data-no-tooltip': '',
+                },
+                styles: const dom.Styles(
+                  raw: <String, String>{
+                    'min-width': '0',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis',
+                    'white-space': 'nowrap',
+                  },
+                ),
+                <Component>[Component.text(props.label!)],
+              )
+            : Component.text(props.label!),
+      );
     }
 
     if (!props.loading &&

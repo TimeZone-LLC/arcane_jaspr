@@ -61,6 +61,10 @@ class ButtonProps {
   final bool disabled;
   final bool loading;
   final bool fullWidth;
+
+  /// Cuts a label too long for the button with an ellipsis; the full label
+  /// shows on hover.
+  final bool truncate;
   final String? id;
   final Map<String, String>? attributes;
   final String? href;
@@ -84,6 +88,7 @@ class ButtonProps {
     this.disabled = false,
     this.loading = false,
     this.fullWidth = false,
+    this.truncate = false,
     this.id,
     this.attributes,
     this.href,
@@ -103,6 +108,7 @@ class ButtonProps {
     bool? disabled,
     bool? loading,
     bool? fullWidth,
+    bool? truncate,
     String? id,
     Map<String, String>? attributes,
     String? href,
@@ -121,6 +127,7 @@ class ButtonProps {
       disabled: disabled ?? this.disabled,
       loading: loading ?? this.loading,
       fullWidth: fullWidth ?? this.fullWidth,
+      truncate: truncate ?? this.truncate,
       id: id ?? this.id,
       attributes: attributes ?? this.attributes,
       href: href ?? this.href,
