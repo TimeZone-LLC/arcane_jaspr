@@ -69,6 +69,9 @@ class CommandProps {
   /// The plain Command's 2.25rem search row instead of the dialog's 3rem.
   final bool compact;
 
+  /// The footer row of key hints; false leaves it out.
+  final bool keyHints;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -94,6 +97,7 @@ class CommandProps {
     this.externalFilter = false,
     this.animate = true,
     this.compact = false,
+    this.keyHints = true,
     this.styles,
     this.decoration,
   });
@@ -113,6 +117,10 @@ class CommandProps {
     bool? scrimCloses,
     bool? focusTrap,
     bool? restoreFocus,
+    bool? externalFilter,
+    bool? animate,
+    bool? compact,
+    bool? keyHints,
     ArcaneStyleData? styles,
     ArcaneDecoration? decoration,
   }) {
@@ -131,6 +139,10 @@ class CommandProps {
       scrimCloses: scrimCloses ?? this.scrimCloses,
       focusTrap: focusTrap ?? this.focusTrap,
       restoreFocus: restoreFocus ?? this.restoreFocus,
+      externalFilter: externalFilter ?? this.externalFilter,
+      animate: animate ?? this.animate,
+      compact: compact ?? this.compact,
+      keyHints: keyHints ?? this.keyHints,
       styles: styles ?? this.styles,
       decoration: decoration ?? this.decoration,
     );

@@ -111,7 +111,12 @@ abstract class CommandRenderBase extends StatelessComponent {
       events: props.onClose == null
           ? null
           : <String, EventCallback>{'arcane:close': (_) => props.onClose!()},
-      styles: dom.Styles(raw: <String, String>{...overlayStyles, if (!props.animate) 'animation': 'none'}),
+      styles: dom.Styles(
+        raw: <String, String>{
+          ...overlayStyles,
+          if (!props.animate) 'animation': 'none',
+        },
+      ),
       [
         dom.div(
           classes: dialogClasses,
@@ -195,7 +200,8 @@ abstract class CommandRenderBase extends StatelessComponent {
                   _buildGroup(group, surfaceId),
               ],
             ),
-            dom.div(styles: dom.Styles(raw: footerStyles), buildKeyHints()),
+            if (props.keyHints)
+              dom.div(styles: dom.Styles(raw: footerStyles), buildKeyHints()),
           ],
         ),
       ],

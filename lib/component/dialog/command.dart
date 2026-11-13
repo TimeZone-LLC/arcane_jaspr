@@ -35,6 +35,10 @@ class ArcaneCommand extends StatefulWidget {
   /// one, for a palette beside regular-size controls.
   final bool compact;
 
+  /// The footer row of key hints (Enter, Up/Down, esc). False ends the
+  /// dialog at the list, as shadcn's CommandDialog does.
+  final bool keyHints;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -57,6 +61,7 @@ class ArcaneCommand extends StatefulWidget {
     this.externalFilter = false,
     this.animate = true,
     this.compact = false,
+    this.keyHints = true,
     this.styles,
     this.decoration,
     super.key,
@@ -156,6 +161,7 @@ class _ArcaneCommandState extends State<ArcaneCommand> {
         externalFilter: widget.externalFilter,
         animate: widget.animate,
         compact: widget.compact,
+        keyHints: widget.keyHints,
         styles: widget.styles,
         decoration: widget.decoration,
       ),

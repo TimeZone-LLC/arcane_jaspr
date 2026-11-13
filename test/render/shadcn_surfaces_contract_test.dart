@@ -533,6 +533,26 @@ void main() {
 
     // The runtime splits an action on whitespace, so a row must name its verb
     // and arguments apart for `nav.go` and `surface.close` to run at all.
+    testServer('command dialog leaves out the key hints when asked', (
+      ServerTester tester,
+    ) async {
+      const List<CommandGroup> groups = <CommandGroup>[
+        CommandGroup(items: <CommandItem>[CommandItem(label: 'Calendar')]),
+      ];
+      final String stock = await _render(
+        tester,
+        const ArcaneCommand(isOpen: true, groups: groups),
+      );
+      expect(stock, contains('Navigate'));
+      final String plain = await _render(
+        tester,
+        const ArcaneCommand(isOpen: true, keyHints: false, groups: groups),
+      );
+      expect(plain, contains('Calendar'));
+      expect(plain, isNot(contains('Navigate')));
+      expect(plain, isNot(contains('border-top: 1px solid var(--border)')));
+    });
+
     testServer('rows encode runtime navigation and close actions', (
       ServerTester tester,
     ) async {
