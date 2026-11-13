@@ -291,6 +291,8 @@ abstract class SliderRenderBase extends StatelessComponent {
       'aria-valuemin': props.min.toString(),
       'aria-valuemax': props.max.toString(),
       'aria-valuenow': ariaValueNow.toString(),
+      if (kind == 'value' && props.ariaValueText != null)
+        'aria-valuetext': props.ariaValueText!,
       ..._thumbAriaLabel(kind),
     };
 

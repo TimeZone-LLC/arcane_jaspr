@@ -20,6 +20,10 @@ class ArcaneSlider extends StatelessWidget {
   /// Names the thumb for assistive technology without drawing [label].
   final String? ariaLabel;
 
+  /// The value thumb's `aria-valuetext`, for a value that reads better as
+  /// text (a time, say). Update it from [onChanged]; range thumbs ignore it.
+  final String? ariaValueText;
+
   /// Draws the min and max under the track when there is no label or value.
   final bool showBounds;
   final bool showValue;
@@ -51,6 +55,7 @@ class ArcaneSlider extends StatelessWidget {
     this.step,
     this.label,
     this.ariaLabel,
+    this.ariaValueText,
     this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
@@ -79,6 +84,7 @@ class ArcaneSlider extends StatelessWidget {
     this.step,
     this.label,
     this.ariaLabel,
+    this.ariaValueText,
     this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
@@ -107,6 +113,7 @@ class ArcaneSlider extends StatelessWidget {
     this.step,
     this.label,
     this.ariaLabel,
+    this.ariaValueText,
     this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
@@ -134,6 +141,7 @@ class ArcaneSlider extends StatelessWidget {
     this.step,
     this.label,
     this.ariaLabel,
+    this.ariaValueText,
     this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
@@ -161,6 +169,7 @@ class ArcaneSlider extends StatelessWidget {
     this.step,
     this.label,
     this.ariaLabel,
+    this.ariaValueText,
     this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
@@ -188,6 +197,7 @@ class ArcaneSlider extends StatelessWidget {
     this.step,
     this.label,
     this.ariaLabel,
+    this.ariaValueText,
     this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
@@ -218,6 +228,7 @@ class ArcaneSlider extends StatelessWidget {
         step: step,
         label: label,
         ariaLabel: ariaLabel,
+        ariaValueText: ariaValueText,
         showBounds: showBounds,
         showValue: showValue,
         valuePrefix: valuePrefix,

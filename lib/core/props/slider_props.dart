@@ -21,6 +21,10 @@ class SliderProps {
   /// Names the thumb without drawing [label].
   final String? ariaLabel;
 
+  /// The value thumb's `aria-valuetext`, for a value that reads better as
+  /// text (a time, say). Update it from `onChanged`; range thumbs ignore it.
+  final String? ariaValueText;
+
   /// Draws the min and max under the track when there is no label or value.
   final bool showBounds;
   final bool showValue;
@@ -53,6 +57,7 @@ class SliderProps {
     this.step,
     this.label,
     this.ariaLabel,
+    this.ariaValueText,
     this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
@@ -81,6 +86,7 @@ class SliderProps {
     this.step,
     this.label,
     this.ariaLabel,
+    this.ariaValueText,
     this.showBounds = true,
     this.showValue = true,
     this.valuePrefix,
@@ -108,6 +114,7 @@ class SliderProps {
     double? step,
     String? label,
     String? ariaLabel,
+    String? ariaValueText,
     bool? showBounds,
     bool? showValue,
     String? valuePrefix,
@@ -134,6 +141,7 @@ class SliderProps {
       step: step ?? this.step,
       label: label ?? this.label,
       ariaLabel: ariaLabel ?? this.ariaLabel,
+      ariaValueText: ariaValueText ?? this.ariaValueText,
       showBounds: showBounds ?? this.showBounds,
       showValue: showValue ?? this.showValue,
       valuePrefix: valuePrefix ?? this.valuePrefix,
