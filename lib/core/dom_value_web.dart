@@ -40,6 +40,21 @@ bool domEventRelatedTargetIsInside(Object? event) {
   return current.callMethod<JSBoolean>('contains'.toJS, related).toDart;
 }
 
+/// Whether a focus event's target shows keyboard focus (`:focus-visible`).
+/// The focus a pointer click leaves on a button does not.
+bool domEventTargetFocusVisible(Object? event) {
+  final JSObject? object = event as JSObject?;
+  final JSAny? target = object?.getProperty<JSAny?>('target'.toJS);
+  if (target == null || !(target as JSObject).has('matches')) return true;
+  try {
+    return target
+        .callMethod<JSBoolean>('matches'.toJS, ':focus-visible'.toJS)
+        .toDart;
+  } catch (_) {
+    return true;
+  }
+}
+
 /// Whether a keyboard event is still confirming an input-method composition.
 bool domEventIsComposing(Object? event) {
   final JSObject? object = event as JSObject?;

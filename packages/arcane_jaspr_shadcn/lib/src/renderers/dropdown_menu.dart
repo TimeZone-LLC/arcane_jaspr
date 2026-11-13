@@ -10,8 +10,11 @@ import 'package:arcane_jaspr/core/rendering/base/dropdown_menu_render_base.dart'
 /// Reference: https://ui.shadcn.com/docs/components/dropdown-menu
 ///
 /// ShadCN DropdownMenuContent:
-/// - z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1
+/// - z-50 max-h-(--radix-dropdown-menu-content-available-height) min-w-[8rem]
+///   overflow-x-hidden overflow-y-auto rounded-md border bg-popover p-1
 ///   text-popover-foreground shadow-md
+/// - Out of the flow and as wide as its content, like Radix's portal, but
+///   never wider than the viewport less a 1rem gutter on each side.
 ///
 /// ShadCN DropdownMenuItem:
 /// - relative flex cursor-default select-none items-center gap-2 rounded-sm
@@ -70,17 +73,19 @@ class ShadcnDropdownMenu extends DropdownMenuRenderBase {
 
   @override
   Map<String, String> menuStyles(DropdownMenuProps props) => <String, String>{
+    'position': 'absolute',
     'z-index': '50',
     if (props.width != null)
       'width': '${props.width}px'
-    else
-      'min-width': '8rem',
+    else ...<String, String>{'width': 'max-content', 'min-width': '8rem'},
+    'max-width': 'calc(100vw - 2rem)',
     'padding': '0.25rem',
     'background-color': 'var(--popover)',
     'border': '1px solid var(--border)',
     'border-radius': 'var(--radius-md)',
     'box-shadow': 'var(--shadcn-surface-shadow)',
-    'overflow': 'hidden',
+    'overflow-x': 'hidden',
+    'overflow-y': 'auto',
     'color': 'var(--popover-foreground)',
     'animation': 'arcane-dropdown-fade var(--transition)',
   };

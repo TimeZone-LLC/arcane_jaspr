@@ -99,10 +99,17 @@ abstract class FloatingRenderBase extends StatelessComponent {
       events: <String, EventCallback>{
         if (useHoverEvents) 'mouseenter': (_) => props.onMouseEnter?.call(),
         if (useHoverEvents) 'mouseleave': (_) => props.onMouseLeave?.call(),
+        // Keyboard focus opens a hover surface; the focus a pointer click
+        // leaves does not.
         if (useHoverEvents)
           'focusin': (event) {
-            if (!domEventRelatedTargetIsInside(event)) props.onFocus?.call();
+            if (!domEventRelatedTargetIsInside(event) &&
+                domEventTargetFocusVisible(event)) {
+              props.onFocus?.call();
+            }
           },
+        if (useHoverEvents && props.onPress != null)
+          'pointerdown': (_) => props.onPress!.call(),
         if (useHoverEvents)
           'focusout': (event) {
             if (!domEventRelatedTargetIsInside(event)) props.onBlur?.call();

@@ -54,6 +54,11 @@ abstract class ToggleGroupRenderBase extends StatelessComponent {
   /// the variant/selection styles, exactly as the theme assembles them).
   Map<String, String> itemStyles(bool isSelected, bool isDisabled);
 
+  /// Styles for the item at [index] of [count], merged after [itemStyles]
+  /// (a joined group squares its inner corners). Default: none.
+  Map<String, String> itemPositionStyles(int index, int count) =>
+      const <String, String>{};
+
   @override
   Component build(BuildContext context) {
     final String groupId = props.id ?? 'toggle-${identityHashCode(props)}';
@@ -128,7 +133,12 @@ abstract class ToggleGroupRenderBase extends StatelessComponent {
       classes:
           '$itemBaseClass ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}',
       attributes: attrs,
-      styles: dom.Styles(raw: itemStyles(isSelected, isDisabled)),
+      styles: dom.Styles(
+        raw: <String, String>{
+          ...itemStyles(isSelected, isDisabled),
+          ...itemPositionStyles(props.items.indexOf(item), props.items.length),
+        },
+      ),
       events: isDisabled
           ? null
           : <String, EventCallback>{

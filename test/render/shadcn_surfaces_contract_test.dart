@@ -264,7 +264,7 @@ void main() {
   });
 
   group('floating surfaces', () {
-    testServer('text tooltips are flat primary chips', (
+    testServer('text tooltips are flat foreground chips', (
       ServerTester tester,
     ) async {
       final String html = await _render(
@@ -276,8 +276,9 @@ void main() {
       );
       final String tooltip = _tag(html, 'arcane-floating-content');
       expect(tooltip, contains('arcane-floating-tooltip'));
-      expect(tooltip, contains('background-color: var(--primary)'));
-      expect(tooltip, contains('color: var(--primary-foreground)'));
+      expect(tooltip, contains('background-color: var(--foreground)'));
+      expect(tooltip, contains('color: var(--background)'));
+      expect(tooltip, isNot(contains('var(--primary)')));
       expect(tooltip, contains('border: 0'));
       expect(tooltip, contains('box-shadow: none'));
       expect(tooltip, contains('padding: 0.375rem 0.75rem'));
@@ -321,6 +322,11 @@ void main() {
       );
       final String menu = _tag(html, 'arcane-dropdown-menu');
       expect(menu, contains('min-width: 8rem'));
+      // As wide as the content, out of the flow, scrolling when tall.
+      expect(menu, contains('position: absolute'));
+      expect(menu, contains('width: max-content'));
+      expect(menu, contains('max-width: calc(100vw - 2rem)'));
+      expect(menu, contains('overflow-y: auto'));
       expect(menu, contains('border-radius: var(--radius-md)'));
       expect(menu, contains('box-shadow: var(--shadcn-surface-shadow)'));
       expect(menu, contains('z-index: 50'));
@@ -724,6 +730,59 @@ void main() {
       expect(toast, contains('font-size: 0.8125rem'));
       expect(_tag(html, 'arcane-toast-title'), contains('font-weight: 500'));
       _expectNoDirectionalBorder(html);
+      // The info icon takes the text colour, as Sonner draws it.
+      expect(html, isNot(contains('var(--info)')));
+      expect(html, contains('color: currentColor'));
+    });
+  });
+
+  group('toggle group', () {
+    testServer('a joined group squares its inner corners and has no gap', (
+      ServerTester tester,
+    ) async {
+      final String html = await _render(
+        tester,
+        const ArcaneToggleGroup(
+          joined: true,
+          variant: ToggleGroupVariant.outline,
+          value: 'a',
+          items: <ToggleGroupItem>[
+            ToggleGroupItem(value: 'a', child: Text('Simple')),
+            ToggleGroupItem(value: 'b', child: Text('Middle')),
+            ToggleGroupItem(value: 'c', child: Text('Advanced')),
+          ],
+        ),
+      );
+      final String group = _tag(html, 'arcane-toggle-group');
+      expect(group, contains('gap: 0'));
+      expect(group, contains('data-joined="true"'));
+      final List<String> items = _tags(html, 'arcane-toggle-group-item');
+      expect(items, hasLength(3));
+      expect(items[0], isNot(contains('margin-inline-start')));
+      expect(items[0], contains('border-start-end-radius: 0'));
+      expect(items[0], isNot(contains('border-start-start-radius: 0')));
+      expect(items[1], contains('margin-inline-start: -1px'));
+      expect(items[1], contains('border-start-start-radius: 0'));
+      expect(items[1], contains('border-end-end-radius: 0'));
+      expect(items[2], contains('border-start-start-radius: 0'));
+      expect(items[2], isNot(contains('border-start-end-radius: 0')));
+    });
+
+    testServer('a group stands apart unless joined', (
+      ServerTester tester,
+    ) async {
+      final String html = await _render(
+        tester,
+        const ArcaneToggleGroup(
+          items: <ToggleGroupItem>[
+            ToggleGroupItem(value: 'a', child: Text('A')),
+            ToggleGroupItem(value: 'b', child: Text('B')),
+          ],
+        ),
+      );
+      expect(_tag(html, 'arcane-toggle-group'), contains('gap: 0.25rem'));
+      expect(html, isNot(contains('data-joined')));
+      expect(html, isNot(contains('margin-inline-start')));
     });
   });
 

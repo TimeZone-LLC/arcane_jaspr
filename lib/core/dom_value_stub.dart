@@ -5,6 +5,7 @@ bool domCheckedValue(Object? target) => false;
 int domSelectedIndex(Object? target) => 0;
 String domEventKey(Object? event) => '';
 bool domEventRelatedTargetIsInside(Object? event) => false;
+bool domEventTargetFocusVisible(Object? event) => true;
 bool domEventIsComposing(Object? event) => false;
 String domEventValue(Object? event) => '';
 String domOtpInputValue(Object? event) => '';

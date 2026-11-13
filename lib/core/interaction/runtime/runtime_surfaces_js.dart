@@ -135,7 +135,11 @@ function positionAnchored(surfaceEl, anchorEl) {
   const offset = parseInt(
     surfaceEl.getAttribute('data-arcane-anchor-offset') || '8', 10
   );
-  const sw = surfaceEl.offsetWidth;
+  // offsetWidth rounds to the nearest pixel; a border-box surface pinned at a
+  // width rounded down wraps its widest line, so round its width up.
+  const style = typeof window.getComputedStyle === 'function' ? window.getComputedStyle(surfaceEl) : null;
+  const fit = style && style.boxSizing === 'border-box' ? Math.ceil(parseFloat(style.width)) : NaN;
+  const sw = isNaN(fit) ? surfaceEl.offsetWidth : Math.max(surfaceEl.offsetWidth, fit);
   const sh = surfaceEl.offsetHeight;
 
   if (!surfaceEl._arcaneAnchorInlineStyle) {

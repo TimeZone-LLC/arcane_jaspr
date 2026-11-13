@@ -7,7 +7,10 @@ import 'package:arcane_jaspr/core/rendering/base/toggle_group_render_base.dart';
 /// Items follow the v4 Toggle recipe (`h-9 px-2 min-w-9 rounded-md text-sm
 /// font-medium`, outline adds `border-input shadow-xs`). Hover and the "on"
 /// fill come from the theme CSS through the `--shadcn-item-*` variables, keyed
-/// on the runtime-maintained `data-arcane-state`.
+/// on the runtime-maintained `data-arcane-state`. A joined group is the
+/// current ToggleGroup (`spacing={0}`): no gap, inner corners square
+/// (`rounded-none first:rounded-l-md last:rounded-r-md`) and neighbouring
+/// outline borders drawn once.
 class ShadcnToggleGroup extends ToggleGroupRenderBase {
   const ShadcnToggleGroup(super.props, {super.key});
 
@@ -18,19 +21,39 @@ class ShadcnToggleGroup extends ToggleGroupRenderBase {
   String get itemBaseClass => 'arcane-toggle-group-item';
 
   @override
-  Map<String, String> get containerStyles => const <String, String>{
+  Map<String, String> get containerStyles => <String, String>{
     'display': 'inline-flex',
     'align-items': 'center',
     'justify-content': 'center',
     'border-radius': 'var(--radius-md)',
     'background-color': 'transparent',
-    'gap': '0.25rem',
+    'gap': props.joined ? '0' : '0.25rem',
   };
 
   @override
   Map<String, String> extraRootAttrs() => <String, String>{
     'data-variant': _variant,
+    if (props.joined) 'data-joined': 'true',
   };
+
+  /// Logical corners, so the first item is rounded on the start side in
+  /// either direction.
+  @override
+  Map<String, String> itemPositionStyles(int index, int count) {
+    if (!props.joined || count < 2) return const <String, String>{};
+    return <String, String>{
+      'position': 'relative',
+      if (index > 0) ...<String, String>{
+        'margin-inline-start': '-1px',
+        'border-start-start-radius': '0',
+        'border-end-start-radius': '0',
+      },
+      if (index < count - 1) ...<String, String>{
+        'border-start-end-radius': '0',
+        'border-end-end-radius': '0',
+      },
+    };
+  }
 
   @override
   Map<String, String> extraItemAttrs(bool isSelected, bool isDisabled) =>

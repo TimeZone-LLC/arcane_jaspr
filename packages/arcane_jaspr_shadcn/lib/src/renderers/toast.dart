@@ -9,7 +9,9 @@ import 'package:arcane_jaspr/core/theme_provider.dart';
 /// Outputs the Sonner toast shadcn/ui v4 ships: a 356px popover surface with
 /// `p-4 gap-1.5 rounded-md border shadow-lg` and 13px text, a 16px status
 /// icon, a medium-weight title over a muted description, and a 20px framed
-/// dismiss control. There is no progress strip.
+/// dismiss control (`--shadcn-toast-close-size` sets another size). There is
+/// no progress strip. The info icon is drawn in the text colour, as Sonner
+/// draws its icons; the other statuses keep their colour.
 ///
 /// Reference: https://ui.shadcn.com/docs/components/sonner
 class ShadcnToast extends StatelessComponent {
@@ -43,7 +45,7 @@ class ShadcnToast extends StatelessComponent {
       ToastVariant.success => 'var(--success)',
       ToastVariant.error => 'var(--destructive)',
       ToastVariant.warning => 'var(--warning)',
-      ToastVariant.info => 'var(--info)',
+      ToastVariant.info => 'currentColor',
       ToastVariant.loading => 'var(--muted-foreground)',
     };
   }
@@ -216,8 +218,8 @@ class ShadcnToast extends StatelessComponent {
                 'display': 'flex',
                 'align-items': 'center',
                 'justify-content': 'center',
-                'width': '20px',
-                'height': '20px',
+                'width': 'var(--shadcn-toast-close-size, 20px)',
+                'height': 'var(--shadcn-toast-close-size, 20px)',
                 'padding': '0',
                 'flex-shrink': '0',
                 'border': '1px solid var(--border)',

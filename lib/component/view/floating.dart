@@ -37,6 +37,10 @@ class ArcaneHoverCard extends StatefulWidget {
   final bool closeOnOutsideClick;
   final bool closeOnEscape;
 
+  /// A pointer press on the trigger closes the surface, and it stays closed
+  /// until the pointer leaves (Radix tooltips). On for tooltips.
+  final bool closeOnPress;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -59,6 +63,7 @@ class ArcaneHoverCard extends StatefulWidget {
     this.maxWidth,
     this.closeOnOutsideClick = true,
     this.closeOnEscape = true,
+    this.closeOnPress = false,
     this.styles,
     this.decoration,
     super.key,
@@ -86,7 +91,8 @@ class ArcaneHoverCard extends StatefulWidget {
        openDelay = 0,
        closeDelay = 0,
        closeOnOutsideClick = true,
-       closeOnEscape = true;
+       closeOnEscape = true,
+       closeOnPress = true;
 
   /// Creates a tooltip with custom component content.
   const ArcaneHoverCard.tooltipCustom({
@@ -108,7 +114,8 @@ class ArcaneHoverCard extends StatefulWidget {
        openDelay = 0,
        closeDelay = 0,
        closeOnOutsideClick = true,
-       closeOnEscape = true;
+       closeOnEscape = true,
+       closeOnPress = true;
 
   /// Creates a click-triggered popover with rich content.
   ///
@@ -130,6 +137,7 @@ class ArcaneHoverCard extends StatefulWidget {
     super.key,
   }) : textContent = null,
        triggerType = FloatingTrigger.click,
+       closeOnPress = false,
        openDelay = 0,
        closeDelay = 0,
        maxWidth = null;
@@ -156,7 +164,8 @@ class ArcaneHoverCard extends StatefulWidget {
        triggerType = FloatingTrigger.hover,
        maxWidth = null,
        closeOnOutsideClick = true,
-       closeOnEscape = true;
+       closeOnEscape = true,
+       closeOnPress = false;
 
   @override
   State<ArcaneHoverCard> createState() => _ArcaneHoverCardState();
@@ -166,6 +175,9 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
   bool _internalIsOpen = false;
   bool _hovered = false;
   bool _focused = false;
+
+  /// Pressed since the pointer came in: stays closed until it leaves.
+  bool _pressed = false;
   Timer? _openTimer;
   Timer? _closeTimer;
 
@@ -231,12 +243,20 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
 
   void _handleMouseEnter() {
     _hovered = true;
-    _startOpenTimer();
+    if (!_pressed) _startOpenTimer();
   }
 
   void _handleMouseLeave() {
     _hovered = false;
+    _pressed = false;
     if (!_focused) _startCloseTimer();
+  }
+
+  void _handlePress() {
+    _pressed = true;
+    _focused = false;
+    _cancelTimers();
+    _close();
   }
 
   void _handleFocus() {
@@ -278,6 +298,7 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
         onMouseLeave: _handleMouseLeave,
         onFocus: _handleFocus,
         onBlur: _handleBlur,
+        onPress: widget.closeOnPress ? _handlePress : null,
         onOpenChange: _handleOpenChange,
         showArrow: widget.showArrow,
         offset: widget.offset,

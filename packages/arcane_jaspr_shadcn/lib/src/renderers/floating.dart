@@ -3,7 +3,7 @@ import 'package:arcane_jaspr/core/rendering/base/floating_render_base.dart';
 /// ShadCN Floating renderer.
 ///
 /// Unified component for tooltip, popover, and hovercard patterns. Plain-text
-/// tooltips follow the v4 Tooltip (`bg-primary text-primary-foreground
+/// tooltips follow the v4 Tooltip (`bg-foreground text-background
 /// px-3 py-1.5 text-xs rounded-md text-balance`, no border or shadow); rich
 /// content keeps the v4 Popover surface (`bg-popover border p-4 shadow-md`).
 ///
@@ -48,8 +48,8 @@ class ShadcnFloating extends FloatingRenderBase {
     } else ...<String, String>{
       'width': 'max-content',
       'max-width': maxWidth != null ? 'min(${maxWidth}px, 20rem)' : '20rem',
-      'background-color': 'var(--primary)',
-      'color': 'var(--primary-foreground)',
+      'background-color': 'var(--foreground)',
+      'color': 'var(--background)',
       'border': '0',
       'border-radius': 'var(--radius-sm)',
       'box-shadow': 'none',
@@ -57,7 +57,7 @@ class ShadcnFloating extends FloatingRenderBase {
       'font-size': '0.75rem',
       'line-height': '1rem',
       'text-wrap': 'balance',
-      '--shadcn-floating-fill': 'var(--primary)',
+      '--shadcn-floating-fill': 'var(--foreground)',
       '--shadcn-floating-edge': 'transparent',
     },
   };

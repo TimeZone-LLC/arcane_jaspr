@@ -37,6 +37,10 @@ class ToggleGroupProps {
   final void Function(Set<String>)? onMultiChanged;
   final ArcaneInteraction? onChangeAction;
 
+  /// The items form one segmented control (no gap, inner corners square)
+  /// where the theme draws one; otherwise they stand apart.
+  final bool joined;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -55,6 +59,7 @@ class ToggleGroupProps {
     this.onChanged,
     this.onMultiChanged,
     this.onChangeAction,
+    this.joined = false,
     this.styles,
     this.decoration,
   });

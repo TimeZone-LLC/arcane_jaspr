@@ -1180,6 +1180,12 @@ html.dark #arcane-root.arcane-theme-shadcn .arcane-select:hover:not(:disabled),
   --shadcn-item-foreground: var(--accent-foreground);
 }
 
+/* Joined items overlap their borders; the focused one draws its ring on top. */
+#arcane-root.arcane-theme-shadcn
+  .arcane-toggle-group[data-joined='true'] > .arcane-toggle-group-item:focus-visible {
+  z-index: 1;
+}
+
 #arcane-root.arcane-theme-shadcn .arcane-checkbox[data-arcane-state='selected'] {
   --shadcn-checkbox-background: var(--shadcn-checkbox-fill);
   --shadcn-checkbox-border: var(--shadcn-checkbox-fill);

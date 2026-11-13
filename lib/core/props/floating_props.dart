@@ -66,6 +66,9 @@ class FloatingProps {
   final void Function()? onFocus;
   final void Function()? onBlur;
 
+  /// Called when a pointer presses the trigger (for hover mode).
+  final void Function()? onPress;
+
   /// Whether to show an arrow pointing to trigger.
   final bool showArrow;
 
@@ -108,6 +111,7 @@ class FloatingProps {
     this.onMouseLeave,
     this.onFocus,
     this.onBlur,
+    this.onPress,
     this.showArrow = true,
     this.offset = 8,
     this.openDelay = 0,
@@ -136,6 +140,7 @@ class FloatingProps {
     void Function()? onMouseLeave,
     void Function()? onFocus,
     void Function()? onBlur,
+    void Function()? onPress,
     bool? showArrow,
     int? offset,
     int? openDelay,
@@ -160,6 +165,7 @@ class FloatingProps {
       onMouseLeave: onMouseLeave ?? this.onMouseLeave,
       onFocus: onFocus ?? this.onFocus,
       onBlur: onBlur ?? this.onBlur,
+      onPress: onPress ?? this.onPress,
       showArrow: showArrow ?? this.showArrow,
       offset: offset ?? this.offset,
       openDelay: openDelay ?? this.openDelay,

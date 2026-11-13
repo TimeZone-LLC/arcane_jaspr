@@ -90,3 +90,23 @@ test('without the attribute a surface is kept 4 px inside the window', () => {
 
   assert.equal(menu.style.top, '4px');
 });
+
+test('a border-box surface is pinned at its width rounded up, not down', () => {
+  const sizing = { boxSizing: 'border-box', width: '216.4px' };
+  const measured = vm.createContext({
+    window: { innerWidth: 1280, innerHeight: 1000, getComputedStyle: () => sizing },
+    document: { querySelector: () => null },
+  });
+  vm.runInContext(source.slice(start, end), measured);
+  const menu = surface({ 'data-arcane-anchor-placement': 'bottom', 'data-arcane-anchor-offset': '4' }, 216, 120);
+  const anchor = {
+    getBoundingClientRect() {
+      return { top: 0, bottom: 36, left: 400, right: 508, width: 108, height: 36 };
+    },
+  };
+
+  measured.positionAnchored(menu, anchor);
+
+  assert.equal(menu.style.width, '217px');
+  assert.equal(menu.style.minWidth, '217px');
+});

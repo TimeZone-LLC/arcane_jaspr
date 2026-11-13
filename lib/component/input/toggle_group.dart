@@ -47,6 +47,10 @@ class ArcaneToggleGroup extends StatelessWidget {
   final ToggleGroupSize size;
   final bool disabled;
 
+  /// The items form one segmented control (shadcn's ToggleGroup without
+  /// spacing) instead of standing apart.
+  final bool joined;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -62,6 +66,7 @@ class ArcaneToggleGroup extends StatelessWidget {
     this.variant = ToggleGroupVariant.defaultVariant,
     this.size = ToggleGroupSize.md,
     this.disabled = false,
+    this.joined = false,
     this.styles,
     this.decoration,
     super.key,
@@ -78,6 +83,7 @@ class ArcaneToggleGroup extends StatelessWidget {
     this.variant = ToggleGroupVariant.defaultVariant,
     this.size = ToggleGroupSize.md,
     this.disabled = false,
+    this.joined = false,
     this.styles,
     this.decoration,
     super.key,
@@ -124,6 +130,7 @@ class ArcaneToggleGroup extends StatelessWidget {
         onChanged: onChanged,
         onMultiChanged: onMultiChanged,
         onChangeAction: onChangeAction,
+        joined: joined,
         styles: styles,
         decoration: decoration,
       ),
