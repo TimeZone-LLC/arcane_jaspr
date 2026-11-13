@@ -64,7 +64,10 @@ class Win95ToggleSwitch extends ToggleSwitchRenderBase {
   ) {
     return dom.label(
       classes: 'win95-toggle-wrapper',
-      attributes: <String, String>{...rootAttrs, 'for': '${props.id}-control'},
+      attributes: <String, String>{
+        ...rootAttrs,
+        'for': props.controlId ?? '${props.id}-control',
+      },
       children,
     );
   }

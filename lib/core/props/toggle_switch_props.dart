@@ -21,6 +21,16 @@ class ToggleSwitchProps {
   final String? group;
   final String? itemValue;
 
+  /// The switch element's own id, so a `<label for>` reaches it. Set inside
+  /// an `ArcaneFormField`; null leaves the element without an id.
+  final String? controlId;
+
+  /// Ids of help or messages outside the switch, for `aria-describedby`.
+  final String? describedBy;
+
+  /// Marks the switch invalid.
+  final bool invalid;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -41,6 +51,9 @@ class ToggleSwitchProps {
     this.labelLeft = false,
     this.group,
     this.itemValue,
+    this.controlId,
+    this.describedBy,
+    this.invalid = false,
     this.styles,
     this.decoration,
   });
@@ -58,6 +71,9 @@ class ToggleSwitchProps {
     bool? labelLeft,
     String? group,
     String? itemValue,
+    String? controlId,
+    String? describedBy,
+    bool? invalid,
     ArcaneStyleData? styles,
     ArcaneDecoration? decoration,
   }) {
@@ -74,6 +90,9 @@ class ToggleSwitchProps {
       labelLeft: labelLeft ?? this.labelLeft,
       group: group ?? this.group,
       itemValue: itemValue ?? this.itemValue,
+      controlId: controlId ?? this.controlId,
+      describedBy: describedBy ?? this.describedBy,
+      invalid: invalid ?? this.invalid,
       styles: styles ?? this.styles,
       decoration: decoration ?? this.decoration,
     );

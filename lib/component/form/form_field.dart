@@ -275,14 +275,21 @@ class ArcaneFieldLabel extends StatelessWidget {
 
 /// A heading styled like [ArcaneFieldLabel] for a field that labels no
 /// single control, such as a choice card or a read-only value.
+///
+/// [trailing] widgets sit on the title line after the text, as on
+/// [ArcaneFieldLabel].
 class ArcaneFieldTitle extends StatelessWidget {
   final String? text;
   final Widget? child;
+  final bool required;
+  final List<Widget> trailing;
   final List<String>? classes;
   final ArcaneStyleData? styles;
 
   const ArcaneFieldTitle(
     String this.text, {
+    this.required = false,
+    this.trailing = const <Widget>[],
     this.classes,
     this.styles,
     super.key,
@@ -290,6 +297,8 @@ class ArcaneFieldTitle extends StatelessWidget {
 
   const ArcaneFieldTitle.child(
     Widget this.child, {
+    this.required = false,
+    this.trailing = const <Widget>[],
     this.classes,
     this.styles,
     super.key,
@@ -300,7 +309,16 @@ class ArcaneFieldTitle extends StatelessWidget {
     classes: cx(<String?>['arcane-field-title', ...?classes]),
     attributes: const <String, String>{'data-slot': 'field-label'},
     styles: _styles(const <String, String>{}, styles),
-    <Widget>[child ?? Component.text(text!)],
+    <Widget>[
+      child ?? Component.text(text!),
+      if (required)
+        const dom.span(
+          classes: 'arcane-field-required',
+          attributes: <String, String>{'aria-hidden': 'true'},
+          <Widget>[Component.text('*')],
+        ),
+      ...trailing,
+    ],
   );
 }
 

@@ -37,7 +37,7 @@ ArcaneFieldGroup(
 
 `ArcaneFieldLabel` renders a `<label for>` pointing at the field's `controlId`. Leave `controlId` out and the field generates one.
 
-`TextInput`, `TextArea` and `ArcaneSelect` inside a field take that id on their own. They also link every `ArcaneFieldDescription` and `ArcaneFieldError` through `aria-describedby`, and set `aria-invalid` when the field is `invalid`. Put descriptions and errors directly in the field or in its `ArcaneFieldContent`, so the field can find them.
+`TextInput`, `TextArea`, `ArcaneSelect` and `ArcaneToggleSwitch` inside a field take that id on their own. They also link every `ArcaneFieldDescription` and `ArcaneFieldError` through `aria-describedby`, and set `aria-invalid` when the field is `invalid`. Put descriptions and errors directly in the field or in its `ArcaneFieldContent`, so the field can find them.
 
 Any other control reads the same values from `ArcaneFieldScope.maybeOf(context)`: `controlId`, `describedBy`, `invalid` and `disabled`.
 
@@ -50,11 +50,25 @@ ArcaneFieldLabel(
 )
 ```
 
-Use `ArcaneFieldTitle` for a heading that labels no single control, such as a group of choices.
+Use `ArcaneFieldTitle` for a heading that labels no single control, such as a group of choices. It takes `required` and `trailing` like the label.
 
 ## Orientation
 
-`FieldOrientation.vertical` (the default) puts the label above the control. `horizontal` puts it beside the control, which suits switches and checkboxes. `responsive` puts it beside the control once the enclosing `ArcaneFieldGroup` is at least 28rem wide and above it when the group is narrower. It is a container query on the group, so a form inside a narrow sheet stacks even on a wide screen.
+`FieldOrientation.vertical` (the default) puts the label above the control. `horizontal` puts it beside the control, which suits switches and checkboxes.
+
+```dart
+ArcaneFormField(
+  controlId: 'glow',
+  orientation: FieldOrientation.horizontal,
+  children: [
+    ArcaneFieldContent(children: [
+      ArcaneFieldLabel('Glow'),
+      ArcaneFieldDescription('Outlines the text.'),
+    ]),
+    ArcaneToggleSwitch(value: glow, onChanged: setGlow),
+  ],
+)
+``` `responsive` puts it beside the control once the enclosing `ArcaneFieldGroup` is at least 28rem wide and above it when the group is narrower. It is a container query on the group, so a form inside a narrow sheet stacks even on a wide screen.
 
 Beside the control, the label takes the room it needs. Pass `labelWidth` for a fixed label column, so the controls of a long form line up:
 

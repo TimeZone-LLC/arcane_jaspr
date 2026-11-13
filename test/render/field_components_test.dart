@@ -163,6 +163,86 @@ void main() {
         expect(html, contains('data-orientation="horizontal"'));
       });
 
+      testServer('labels a switch by the field id and links its help', (
+        ServerTester tester,
+      ) async {
+        final String html = await _render(
+          tester,
+          theme,
+          const ArcaneFormField(
+            controlId: 'glow',
+            orientation: FieldOrientation.horizontal,
+            invalid: true,
+            disabled: true,
+            children: <Widget>[
+              ArcaneFieldContent(
+                children: <Widget>[
+                  ArcaneFieldLabel('Glow'),
+                  ArcaneFieldDescription('Outlines the text.'),
+                ],
+              ),
+              ArcaneToggleSwitch(value: true, ariaLabel: 'Glow'),
+            ],
+          ),
+        );
+        final String control = _tag(html, 'role="switch"');
+        expect(_attribute(control, 'id'), 'glow');
+        expect(_attribute(control, 'aria-describedby'), 'glow-description');
+        expect(_attribute(control, 'aria-invalid'), 'true');
+        expect(_attribute(control, 'disabled'), isNotNull);
+        expect(
+          _attribute(_tag(html, 'data-slot="field-label"'), 'for'),
+          'glow',
+        );
+      });
+
+      testServer('leaves a switch outside a field without an element id', (
+        ServerTester tester,
+      ) async {
+        final String html = await _render(
+          tester,
+          theme,
+          const ArcaneToggleSwitch(
+            id: 'loose',
+            value: false,
+            ariaLabel: 'Loose',
+          ),
+        );
+        final String control = _tag(html, 'role="switch"');
+        // Win95 names its own button `<id>-control`; no theme moves the
+        // switch's id onto the element outside a field.
+        expect(_attribute(control, 'id'), isNot('loose'));
+        expect(control, isNot(contains('aria-describedby')));
+      });
+
+      testServer('puts a required mark and trailing widgets on a title', (
+        ServerTester tester,
+      ) async {
+        final String html = await _render(
+          tester,
+          theme,
+          const ArcaneFormField(
+            children: <Widget>[
+              ArcaneFieldTitle(
+                'Blend',
+                required: true,
+                trailing: <Widget>[Text('Reset blend')],
+              ),
+            ],
+          ),
+        );
+        final String title = RegExp(
+          r'<div\b[^>]*arcane-field-title[^>]*>.*?</div>',
+          dotAll: true,
+        ).firstMatch(html)!.group(0)!;
+        expect(title, contains('arcane-field-required'));
+        expect(title, contains('Reset blend'));
+        expect(
+          title.indexOf('arcane-field-required'),
+          lessThan(title.indexOf('Reset blend')),
+        );
+      });
+
       testServer('numbers repeated messages and lists every one', (
         ServerTester tester,
       ) async {
@@ -337,6 +417,20 @@ void main() {
       expect(
         responsive,
         contains('[data-slot="field"][data-orientation="responsive"]'),
+      );
+    });
+
+    test('only a choice card lights up for a checked choice', () {
+      final RegExp highlight = RegExp(
+        r'([^{}]*)\{\s*border-color: var\(--primary\);\s*background-color: '
+        r'color-mix\(in srgb, var\(--primary\) 5%',
+      );
+      final RegExpMatch? rule = highlight.firstMatch(css);
+      expect(rule, isNotNull);
+      // A checked control on a plain label line (trailing) must not tint it.
+      expect(
+        rule!.group(1)!.trim(),
+        startsWith('[data-slot="field-label"]:has(> [data-slot="field"])'),
       );
     });
 

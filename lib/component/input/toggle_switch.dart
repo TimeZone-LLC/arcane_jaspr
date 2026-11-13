@@ -18,8 +18,13 @@ export '../../core/props/toggle_switch_props.dart'
 import '../../core/decoration/arcane_decoration.dart';
 import '../../core/theme_provider.dart';
 import '../../util/style_types/arcane_style_data.dart';
+import '../form/form_field.dart' show ArcaneFieldScope;
 
 /// A toggle switch component.
+///
+/// Inside an [ArcaneFormField] it takes the field's control id (on the
+/// switch itself, so the field label reaches it), its description and error
+/// links, and its invalid and disabled flags.
 class ArcaneToggleSwitch extends StatelessWidget {
   final String? id;
   final bool value;
@@ -129,13 +134,17 @@ class ArcaneToggleSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String resolvedId = id ?? _autoId();
+    final ArcaneFieldScope? field = ArcaneFieldScope.maybeOf(context);
+    final String resolvedId = id ?? field?.controlId ?? _autoId();
     return context.renderers.toggleSwitch(
       ToggleSwitchProps(
         id: resolvedId,
+        controlId: field == null ? null : resolvedId,
+        describedBy: field?.describedBy,
+        invalid: field?.invalid ?? false,
         value: value,
         onChanged: onChanged,
-        disabled: disabled,
+        disabled: disabled || (field?.disabled ?? false),
         size: size,
         color: color,
         label: label,

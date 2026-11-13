@@ -357,7 +357,7 @@ html.light body::-webkit-scrollbar-corner {
   padding: 1rem;
 }
 
-[data-slot="field-label"]:has([data-state="checked"], [aria-checked="true"], :checked) {
+[data-slot="field-label"]:has(> [data-slot="field"]):has([data-state="checked"], [aria-checked="true"], :checked) {
   border-color: var(--primary);
   background-color: color-mix(in srgb, var(--primary) 5%, transparent);
 }
