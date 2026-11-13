@@ -709,6 +709,43 @@ void main() {
       expect(html, isNot(contains('▼')));
       expect(html, contains(_chevronDown));
     });
+
+    testServer(
+      'minimal disclosure lines up with its content and keeps its last line',
+      (ServerTester tester) async {
+        final String html = await _render(
+          tester,
+          const ArcaneDisclosure.minimal(
+            summary: Text('Details'),
+            child: Text('Body'),
+          ),
+        );
+        expect(
+          _tag(html, 'arcane-disclosure-summary'),
+          contains('padding: 0.5rem 0;'),
+        );
+        expect(
+          _tag(html, 'arcane-disclosure-content'),
+          contains('padding: 0.25rem 0;'),
+        );
+      },
+    );
+
+    testServer('boxed disclosure keeps its summary inset', (
+      ServerTester tester,
+    ) async {
+      final String html = await _render(
+        tester,
+        const ArcaneDisclosure.bordered(
+          summary: Text('Details'),
+          child: Text('Body'),
+        ),
+      );
+      expect(
+        _tag(html, 'arcane-disclosure-summary'),
+        contains('padding: 0.5rem 1rem'),
+      );
+    });
   });
 
   group('toast', () {

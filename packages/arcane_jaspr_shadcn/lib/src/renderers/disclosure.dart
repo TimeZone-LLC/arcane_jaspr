@@ -39,12 +39,16 @@ class ShadcnDisclosure extends DisclosureRenderBase {
       DisclosureVariant.bordered => 'transparent',
       DisclosureVariant.filled => 'var(--muted)',
     };
+    // A minimal disclosure has no box, so its summary starts where its
+    // content does.
     return <String, String>{
       'display': 'flex',
       'align-items': 'center',
       'justify-content': 'space-between',
       'gap': 'var(--space-4)',
-      'padding': '0.5rem 1rem',
+      'padding': variant == DisclosureVariant.minimal
+          ? '0.5rem 0'
+          : '0.5rem 1rem',
       'background-color': summaryBg,
       'cursor': 'pointer',
       'outline': 'none',
@@ -76,7 +80,9 @@ class ShadcnDisclosure extends DisclosureRenderBase {
   (String padding, String border) contentVariant(DisclosureVariant variant) =>
       switch (variant) {
         DisclosureVariant.default_ => ('1rem', '1px solid var(--border)'),
-        DisclosureVariant.minimal => ('0.25rem 0 0 0', 'none'),
+        // The container clips (overflow: hidden), so the last line keeps
+        // room for its descenders.
+        DisclosureVariant.minimal => ('0.25rem 0', 'none'),
         DisclosureVariant.bordered => ('1rem', '1px solid var(--border)'),
         DisclosureVariant.filled => ('1rem', '1px solid var(--border)'),
       };
