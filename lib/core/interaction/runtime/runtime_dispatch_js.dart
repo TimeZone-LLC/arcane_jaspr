@@ -449,7 +449,10 @@ function handleMenuKey(e) {
 
   if ((e.key === 'Enter' || e.key === ' ') && active) {
     e.preventDefault();
-    active.click();
+    // The focused button inside a trigger takes the click, so a trigger in a
+    // summary or label does not open or check that too.
+    const control = trigger && target !== trigger && target.matches('button, a[href]') ? target : active;
+    control.click();
     return true;
   }
 
