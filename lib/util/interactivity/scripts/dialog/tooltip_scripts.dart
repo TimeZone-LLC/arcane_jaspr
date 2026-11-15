@@ -146,7 +146,7 @@ class TooltipScripts {
       right: 'left: 100%; top: 50%; transform: translateY(-50%) translateX(4px); margin-left: 8px;'
     };
 
-    tooltip.style.cssText = 'display: none; position: absolute; z-index: 9999; width: max-content; max-width: min(320px, calc(100vw - 16px)); padding: 6px 12px; font-size: 12px; font-weight: 500; line-height: 1.4; color: var(--arcane-on-surface, #f8fafc); background: var(--arcane-surface, #1e1e2e); border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); white-space: normal; overflow-wrap: anywhere; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 150ms ease, visibility 150ms ease, transform 150ms ease; ' + (positionStyles[position] || positionStyles.top);
+    tooltip.style.cssText = 'display: none; position: absolute; z-index: 9999; width: max-content; max-width: min(320px, calc(100vw - 16px)); padding: 6px 12px; font-size: 12px; font-weight: 500; line-height: 1.4; color: var(--arcane-on-surface, #f8fafc); background: var(--arcane-surface, #1e1e2e); border-radius: var(--radius-sm); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); white-space: normal; overflow-wrap: anywhere; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 150ms ease, visibility 150ms ease, transform 150ms ease; ' + (positionStyles[position] || positionStyles.top);
 
     tooltip.textContent = content;
 

@@ -6,6 +6,9 @@ class RadiusConfig {
 
   const RadiusConfig() : xs = '4px', sm = '6px', md = '8px';
 
+  /// One radius for every rounded element.
+  const RadiusConfig.uniform(String value) : xs = value, sm = value, md = value;
+
   /// Tight radii for dense, technical interfaces.
   const RadiusConfig.dense() : xs = '2px', sm = '4px', md = '4px';
 

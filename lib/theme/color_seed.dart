@@ -24,6 +24,10 @@ class ThemeSeed {
   /// If null, derived from foreground at low opacity.
   final int? border;
 
+  /// Focus ring color.
+  /// If null, derived from [primary].
+  final int? ring;
+
   /// Error/destructive action color.
   final int destructive;
 
@@ -46,6 +50,7 @@ class ThemeSeed {
     this.secondary,
     this.accent,
     this.border,
+    this.ring,
     this.destructive = 0xFFef4444,
     this.success = 0xFF22c55e,
     this.warning = 0xFFf59e0b,
@@ -71,6 +76,7 @@ class ThemeSeed {
       secondary: null, // Re-derive for dark
       accent: null, // Re-derive for dark
       border: null, // Re-derive for dark
+      ring: ring,
       destructive: destructive ?? 0xFF7f1d1d,
       success: success ?? 0xFF166534,
       warning: warning ?? 0xFF92400e,
@@ -86,6 +92,7 @@ class ThemeSeed {
     int? secondary,
     int? accent,
     int? border,
+    int? ring,
     int? destructive,
     int? success,
     int? warning,
@@ -98,6 +105,7 @@ class ThemeSeed {
       secondary: secondary ?? this.secondary,
       accent: accent ?? this.accent,
       border: border ?? this.border,
+      ring: ring ?? this.ring,
       destructive: destructive ?? this.destructive,
       success: success ?? this.success,
       warning: warning ?? this.warning,

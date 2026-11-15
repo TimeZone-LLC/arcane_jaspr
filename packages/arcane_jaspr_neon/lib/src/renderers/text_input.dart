@@ -9,7 +9,7 @@ class NeonTextInput extends TextInputRenderBase {
   String get classPrefix => 'neon';
 
   @override
-  String get wrapperGap => '0.625rem';
+  String get wrapperGap => 'var(--control-label-gap)';
 
   @override
   bool get borderlessInputReflectsState => true;
@@ -17,9 +17,24 @@ class NeonTextInput extends TextInputRenderBase {
   @override
   (String, String, String, String) sizeValues(ComponentSize size) =>
       switch (size) {
-        ComponentSize.sm => ('32px', '0.625rem', '0.375rem', '0.8125rem'),
-        ComponentSize.md => ('40px', '0.75rem', '0.5rem', '0.875rem'),
-        ComponentSize.lg => ('48px', '1rem', '0.75rem', '1rem'),
+        ComponentSize.sm => (
+          'var(--control-height-sm)',
+          'var(--control-padding-x)',
+          '0',
+          'var(--control-font-size)',
+        ),
+        ComponentSize.md => (
+          'var(--control-height-md)',
+          'var(--control-padding-x)',
+          '0',
+          'var(--control-font-size)',
+        ),
+        ComponentSize.lg => (
+          'var(--control-height-lg)',
+          'var(--control-padding-x)',
+          '0',
+          'var(--control-font-size)',
+        ),
       };
 
   @override
@@ -76,7 +91,7 @@ class NeonTextInput extends TextInputRenderBase {
   Map<String, String> prefixStyles() => const <String, String>{
     'display': 'flex',
     'align-items': 'center',
-    'padding-inline-start': '0.75rem',
+    'padding-inline-start': 'var(--control-padding-x)',
     'color': 'var(--muted-foreground)',
   };
 
@@ -84,7 +99,7 @@ class NeonTextInput extends TextInputRenderBase {
   Map<String, String> suffixStyles() => const <String, String>{
     'display': 'flex',
     'align-items': 'center',
-    'padding-inline-end': '0.75rem',
+    'padding-inline-end': 'var(--control-padding-x)',
     'color': 'var(--muted-foreground)',
   };
 }

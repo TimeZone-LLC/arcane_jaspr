@@ -115,6 +115,6 @@ const String arcaneProseStyles = '''
 .prose img {
   max-width: 100%;
   height: auto;
-  border-radius: var(--arcane-radius-md);
+  border-radius: var(--radius);
 }
 ''';

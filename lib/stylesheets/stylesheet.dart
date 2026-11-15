@@ -27,6 +27,10 @@ abstract class ArcaneStylesheet {
 
   RadiusConfig get radius => const RadiusConfig();
 
+  ControlConfig get controls => const ControlConfig();
+
+  MotionConfig get motion => const MotionConfig();
+
   String get fontFaces => '';
 
   String get componentCss => '';
@@ -44,6 +48,8 @@ abstract class ArcaneStylesheet {
     darkSeed: darkSeed,
     fonts: fonts,
     radius: radius,
+    controls: controls,
+    motion: motion,
     componentCss: () => componentCss,
   );
 

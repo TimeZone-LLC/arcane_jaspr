@@ -3,7 +3,6 @@ import 'package:arcane_jaspr/flutter.dart';
 import '../html/div.dart';
 import '../html/arcane_link.dart';
 import '../typography/text.dart';
-import '../../util/arcane.dart';
 import '../../util/style_types/index.dart';
 
 /// Represents a heading entry for the table of contents.
@@ -94,6 +93,7 @@ class ArcaneToc extends StatelessWidget {
   Widget build(BuildContext context) {
     return ArcaneDiv(
       classes: [classPrefix],
+      attributes: <String, String>{'role': 'navigation', 'aria-label': title},
       styles: const ArcaneStyleData(
         padding: PaddingPreset.md,
         borderRadius: Radius.md,
@@ -104,15 +104,10 @@ class ArcaneToc extends StatelessWidget {
         // Title
         ArcaneDiv(
           classes: ['$classPrefix-title'],
+          // Type comes from the `.toc-title` rule so a theme can set it.
           styles: const ArcaneStyleData(
-            fontSize: FontSize.xs,
-            fontWeight: FontWeight.bold,
             margin: MarginPreset.bottomMd,
-            textTransform: TextTransform.uppercase,
-            letterSpacing: LetterSpacing.wide,
             textColor: TextColor.onSurfaceVariant,
-            padding: PaddingPreset.bottomMd,
-            border: BorderPreset.subtle,
           ),
           children: [Text(title)],
         ),
@@ -165,12 +160,13 @@ class ArcaneToc extends StatelessWidget {
           href: '#${entry.id}',
           classes: ['$classPrefix-link'],
           styles: const ArcaneStyleData(
-            display: Display.block,
+            display: Display.flex,
+            alignItems: AlignItems.center,
             padding: PaddingPreset.sm,
             textColor: TextColor.mutedForeground,
             fontSize: FontSize.sm,
             textDecoration: TextDecoration.none,
-            borderRadius: Radius.sm,
+            borderRadius: Radius.md,
             transition: Transition.allFast,
           ),
           child: Text(entry.text),
@@ -191,6 +187,14 @@ const String arcaneTocTreeLinesCss = '''
    TABLE OF CONTENTS - Tree Line Styles
    Clean tree view with subtle connecting lines
    ============================================ */
+
+/* Title type lives here, not inline, so themes and sites can set it. */
+.toc-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
 
 /* Scrollbar styling for TOC container */
 .kb-toc,
@@ -325,10 +329,11 @@ const String arcaneTocTreeLinesCss = '''
   text-decoration: none;
   font-size: 0.8125rem;
   line-height: 1.3;
-  display: block;
+  display: flex;
+  align-items: center;
   margin-left: 0.125rem;
   padding: 0.5rem 0.75rem 0.5rem 0.625rem !important;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   transition: color 0.15s ease, background 0.15s ease;
 }
 

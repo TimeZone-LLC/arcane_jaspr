@@ -6,7 +6,7 @@ const String arcaneCalloutStyles = '''
 .callout {
   margin: 1rem 0;
   padding: 1rem;
-  border-radius: var(--arcane-radius-md);
+  border-radius: var(--radius);
   border: 1px solid var(--border);
 }
 

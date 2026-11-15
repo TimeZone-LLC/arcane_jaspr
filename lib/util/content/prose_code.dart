@@ -8,78 +8,51 @@ const String arcaneProseCodeStyles = '''
    Syntax highlighting for code
    ============================================ */
 .prose pre {
-  background-color: oklch(0.97 0 0);
+  background-color: var(--code-background);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 16px 20px;
   overflow-x: auto;
   margin: 1.5rem 0;
   position: relative;
 }
 
-/* Dark mode code blocks */
-.dark .prose pre {
-  background-color: oklch(0.145 0 0);
-}
-
 .prose code {
   font-family: var(--font-mono);
   font-size: 13px;
   line-height: 1.7;
-  color: #c9d1d9;
 }
 
-/* Light mode code text */
-:not(.dark) .prose code {
-  color: #24292f;
+/* Syntax colors are variables set per mode inside :where(), which has no
+   specificity, so a theme or site restyles any token or the block background
+   with a plain `.prose { --code-*: ... }` rule in either mode.
+   Light values are GitHub Light, dark values GitHub Dark. */
+:where(.prose) {
+  --code-background: oklch(0.97 0 0);
+  --code-text: #24292f;
+  --code-keyword: #cf222e;
+  --code-string: #0a3069;
+  --code-number: #0550ae;
+  --code-function: #8250df;
+  --code-comment: #6e7781;
+  --code-variable: #953800;
+  --code-class: #116329;
 }
 
-/* Vibrant syntax highlighting - Dark mode (GitHub Dark inspired) */
-.dark .prose pre code {
-  color: #c9d1d9;
+:where(.dark .prose) {
+  --code-background: oklch(0.145 0 0);
+  --code-text: #c9d1d9;
+  --code-keyword: #ff7b72;
+  --code-string: #a5d6ff;
+  --code-number: #79c0ff;
+  --code-function: #d2a8ff;
+  --code-comment: #8b949e;
+  --code-variable: #ffa657;
+  --code-class: #7ee787;
 }
 
-.dark .prose .hljs-keyword,
-.dark .prose .hljs-selector-tag,
-.dark .prose .hljs-literal,
-.dark .prose .hljs-section,
-.dark .prose .hljs-link {
-  color: #ff7b72;
-}
-
-.dark .prose .hljs-string,
-.dark .prose .hljs-attr {
-  color: #a5d6ff;
-}
-
-.dark .prose .hljs-number,
-.dark .prose .hljs-type {
-  color: #79c0ff;
-}
-
-.dark .prose .hljs-function,
-.dark .prose .hljs-title {
-  color: #d2a8ff;
-}
-
-.dark .prose .hljs-comment {
-  color: #8b949e;
-  font-style: italic;
-}
-
-.dark .prose .hljs-variable,
-.dark .prose .hljs-params {
-  color: #ffa657;
-}
-
-.dark .prose .hljs-class,
-.dark .prose .hljs-built_in {
-  color: #7ee787;
-}
-
-/* Vibrant syntax highlighting - Light mode (GitHub Light inspired) */
 .prose pre code {
-  color: #24292f;
+  color: var(--code-text);
 }
 
 .prose .hljs-keyword,
@@ -87,53 +60,47 @@ const String arcaneProseCodeStyles = '''
 .prose .hljs-literal,
 .prose .hljs-section,
 .prose .hljs-link {
-  color: #cf222e;
+  color: var(--code-keyword);
 }
 
 .prose .hljs-string,
 .prose .hljs-attr {
-  color: #0a3069;
+  color: var(--code-string);
 }
 
 .prose .hljs-number,
 .prose .hljs-type {
-  color: #0550ae;
+  color: var(--code-number);
 }
 
 .prose .hljs-function,
 .prose .hljs-title {
-  color: #8250df;
+  color: var(--code-function);
 }
 
 .prose .hljs-comment {
-  color: #6e7781;
+  color: var(--code-comment);
   font-style: italic;
 }
 
 .prose .hljs-variable,
 .prose .hljs-params {
-  color: #953800;
+  color: var(--code-variable);
 }
 
 .prose .hljs-class,
 .prose .hljs-built_in {
-  color: #116329;
+  color: var(--code-class);
 }
 
-/* Inline code - Light mode (default) */
+/* Inline code follows the theme tokens, so it reads in either mode. */
 .prose :not(pre) > code {
-  background-color: rgba(175, 184, 193, 0.3);
-  color: #1f2328;
+  background-color: var(--muted);
+  color: var(--foreground);
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   font-size: 0.875em;
   font-weight: 500;
-}
-
-/* Inline code - Dark mode */
-.dark .prose :not(pre) > code {
-  background-color: rgba(110, 118, 129, 0.4);
-  color: #e6edf3;
 }
 ''';
 
@@ -151,7 +118,7 @@ const String arcaneCodeCopyButtonStyles = '''
   padding: 6px 10px;
   background: var(--muted);
   border: 1px solid var(--border);
-  border-radius: var(--arcane-radius-sm);
+  border-radius: var(--radius);
   color: var(--muted-foreground);
   font-size: 12px;
   cursor: pointer;

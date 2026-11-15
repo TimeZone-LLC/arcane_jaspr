@@ -55,7 +55,7 @@ html.dark #arcane-root.arcane-theme-neon,
 }
 
 #arcane-root.arcane-theme-neon :focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 
@@ -69,7 +69,7 @@ html.dark #arcane-root.arcane-theme-neon,
   font-family: inherit;
   font-weight: 600;
   line-height: 1.25;
-  min-height: 2.5rem;
+  min-height: var(--control-height-md);
   box-sizing: border-box;
   white-space: nowrap;
   border: 1px solid transparent;
@@ -78,36 +78,35 @@ html.dark #arcane-root.arcane-theme-neon,
   text-decoration: none;
   transition: background var(--transition), border-color var(--transition),
     color var(--transition);
-  padding: 0.5rem 1rem;
-  font-size: var(--font-size-sm);
+  padding: 0 var(--control-padding-x);
+  font-size: var(--control-font-size);
 }
 
 #arcane-root.arcane-theme-neon .neon-button[data-size="sm"] {
-  min-height: 2rem;
-  padding: 0.375rem 0.75rem;
+  min-height: var(--control-height-sm);
   font-size: var(--font-size-xs);
 }
 #arcane-root.arcane-theme-neon .neon-button[data-size="lg"] {
-  min-height: 3rem;
-  padding: 0.625rem 1.25rem;
+  min-height: var(--control-height-lg);
+  padding: 0 calc(var(--control-padding-x) * 1.5);
   font-size: var(--font-size-base);
 }
 #arcane-root.arcane-theme-neon .neon-button[data-size="iconSm"] {
-  min-height: 2rem;
-  padding: 0.375rem;
-  width: 2rem;
-  height: 2rem;
+  min-height: var(--control-height-sm);
+  padding: 0;
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
 }
 #arcane-root.arcane-theme-neon .neon-button[data-size="iconMd"] {
-  padding: 0.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  padding: 0;
+  width: var(--control-height-md);
+  height: var(--control-height-md);
 }
 #arcane-root.arcane-theme-neon .neon-button[data-size="iconLg"] {
-  min-height: 3rem;
-  padding: 0.625rem;
-  width: 3rem;
-  height: 3rem;
+  min-height: var(--control-height-lg);
+  padding: 0;
+  width: var(--control-height-lg);
+  height: var(--control-height-lg);
 }
 
 #arcane-root.arcane-theme-neon .neon-button[data-variant="primary"] {
@@ -355,14 +354,15 @@ html.dark #arcane-root.arcane-theme-neon,
 #arcane-root.arcane-theme-neon .neon-otp-digit {
   width: 100%;
   min-width: 0;
-  min-height: 2.5rem;
+  min-height: var(--control-height-md);
   box-sizing: border-box;
   background: var(--input);
   border: 1px solid var(--neon-control-border);
-  border-radius: var(--radius-md);
-  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  padding: 0 var(--control-padding-x);
   color: var(--foreground);
   font: inherit;
+  font-size: var(--control-font-size);
   transition: border-color var(--transition);
 }
 #arcane-root.arcane-theme-neon .neon-otp-digit {
@@ -377,6 +377,16 @@ html.dark #arcane-root.arcane-theme-neon,
   color: var(--muted-foreground);
   opacity: 1;
 }
+#arcane-root.arcane-theme-neon .neon-text-input:hover:where(:not(:disabled)),
+#arcane-root.arcane-theme-neon .neon-textarea:hover:where(:not(:disabled)),
+#arcane-root.arcane-theme-neon .neon-command-input:hover:where(:not(:disabled)),
+#arcane-root.arcane-theme-neon .neon-otp-digit:hover:where(:not(:disabled)),
+#arcane-root.arcane-theme-neon .neon-select-trigger:hover {
+  border-color: var(--ring);
+}
+#arcane-root.arcane-theme-neon .neon-select-trigger:active {
+  background: var(--secondary);
+}
 #arcane-root.arcane-theme-neon .neon-text-input:focus,
 #arcane-root.arcane-theme-neon .neon-textarea:focus,
 #arcane-root.arcane-theme-neon .neon-select-trigger:focus,
@@ -386,6 +396,16 @@ html.dark #arcane-root.arcane-theme-neon,
   outline: none;
   border-color: var(--primary);
   box-shadow: none;
+}
+/* A border color alone is too faint a focus signal: controls get the same ring as everything else. */
+#arcane-root.arcane-theme-neon .neon-text-input:focus-visible,
+#arcane-root.arcane-theme-neon .neon-textarea:focus-visible,
+#arcane-root.arcane-theme-neon .neon-select-trigger:focus-visible,
+#arcane-root.arcane-theme-neon .neon-command-input:focus-visible,
+#arcane-root.arcane-theme-neon .neon-select-search input:focus-visible,
+#arcane-root.arcane-theme-neon .neon-otp-digit:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 #arcane-root.arcane-theme-neon .neon-text-input-wrapper,
 #arcane-root.arcane-theme-neon .neon-textarea-wrapper {
@@ -563,7 +583,7 @@ html.dark #arcane-root.arcane-theme-neon,
 #arcane-root.arcane-theme-neon .neon-radio-option:has(input:focus-visible) .neon-radio-circle,
 #arcane-root.arcane-theme-neon .neon-radio-card:has(input:focus-visible),
 #arcane-root.arcane-theme-neon .neon-radio-button:has(input:focus-visible) {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 #arcane-root.arcane-theme-neon .neon-radio-card,
@@ -950,7 +970,8 @@ html.dark #arcane-root.arcane-theme-neon,
 #arcane-root.arcane-theme-neon .kb-topbar-link {
   position: relative;
   height: auto;
-  padding: 0.125rem 0;
+  min-height: 2.75rem;
+  padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -978,7 +999,7 @@ html.dark #arcane-root.arcane-theme-neon,
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -0.7rem;
+  bottom: 0;
   height: 2px;
   background: transparent;
 }
@@ -1017,13 +1038,13 @@ html.dark #arcane-root.arcane-theme-neon,
   margin: 0 0 0.5rem;
   padding: 0.625rem;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   background: var(--card);
   box-shadow: none;
 }
 
 #arcane-root.arcane-theme-neon .sidebar-nav {
-  padding: 0.375rem 0.125rem 0.625rem !important;
+  padding: 0.375rem 0.125rem 0.625rem;
   gap: 0.375rem !important;
 }
 
@@ -1053,8 +1074,9 @@ html.dark #arcane-root.arcane-theme-neon,
 #arcane-root.arcane-theme-neon .kb-theme-toggle,
 #arcane-root.arcane-theme-neon .kb-stylesheet-select,
 #arcane-root.arcane-theme-neon .kb-palette-select,
-#arcane-root.arcane-theme-neon .kb-hamburger {
-  height: 2.125rem;
+#arcane-root.arcane-theme-neon .kb-hamburger,
+#arcane-root.arcane-theme-neon .copy-code-btn {
+  height: var(--control-height-md);
   border: 1px solid var(--border);
   background: var(--background);
   border-radius: var(--radius);
@@ -1063,8 +1085,9 @@ html.dark #arcane-root.arcane-theme-neon,
 
 #arcane-root.arcane-theme-neon .kb-topbar-github,
 #arcane-root.arcane-theme-neon .kb-theme-toggle,
-#arcane-root.arcane-theme-neon .kb-hamburger {
-  width: 2.125rem;
+#arcane-root.arcane-theme-neon .kb-hamburger,
+#arcane-root.arcane-theme-neon .copy-code-btn {
+  width: var(--control-height-md);
 }
 
 #arcane-root.arcane-theme-neon .kb-topbar .kb-hamburger {
@@ -1081,14 +1104,15 @@ html.dark #arcane-root.arcane-theme-neon,
 #arcane-root.arcane-theme-neon .kb-theme-toggle:hover,
 #arcane-root.arcane-theme-neon .kb-stylesheet-select:hover,
 #arcane-root.arcane-theme-neon .kb-palette-select:hover,
-#arcane-root.arcane-theme-neon .kb-hamburger:hover {
+#arcane-root.arcane-theme-neon .kb-hamburger:hover,
+#arcane-root.arcane-theme-neon .copy-code-btn:hover {
   background: rgba(var(--primary-rgb), 0.12);
   border-color: var(--border);
 }
 
 #arcane-root.arcane-theme-neon .kb-search-input,
 #arcane-root.arcane-theme-neon .sidebar-search input {
-  height: 2.125rem;
+  height: var(--control-height-md);
   border-color: var(--border);
   background: var(--background);
   border-radius: var(--radius);
@@ -1096,15 +1120,15 @@ html.dark #arcane-root.arcane-theme-neon,
 
 #arcane-root.arcane-theme-neon .kb-search-input:focus,
 #arcane-root.arcane-theme-neon .sidebar-search input:focus {
-  border-color: var(--primary);
+  border-color: var(--ring);
   background: var(--background);
-  outline: 2px solid var(--primary);
-  outline-offset: 1px;
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 #arcane-root.arcane-theme-neon .search-results {
   border-color: var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   box-shadow: var(--neon-overlay-shadow);
 }
 
@@ -1114,7 +1138,7 @@ html.dark #arcane-root.arcane-theme-neon,
 }
 
 #arcane-root.arcane-theme-neon .sidebar-tab {
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: var(--radius);
 }
 
 #arcane-root.arcane-theme-neon .sidebar-tab.active {
@@ -1123,7 +1147,7 @@ html.dark #arcane-root.arcane-theme-neon,
 
 #arcane-root.arcane-theme-neon .sidebar-summary,
 #arcane-root.arcane-theme-neon .sidebar-link {
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: var(--radius);
   color: color-mix(in srgb, var(--foreground) 78%, var(--muted-foreground));
   outline: 1px solid transparent;
   outline-offset: -1px;
@@ -1170,13 +1194,11 @@ html.dark #arcane-root.arcane-theme-neon,
 }
 
 #arcane-root.arcane-theme-neon .kb-toc-panel .toc-title {
-  border-bottom: 0 !important;
-  padding-bottom: 0.125rem;
   margin-bottom: 0.5rem;
 }
 
 #arcane-root.arcane-theme-neon .toc-content a {
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: var(--radius);
   background: transparent;
 }
 
@@ -1200,6 +1222,12 @@ html.dark #arcane-root.arcane-theme-neon,
   margin: 0 auto !important;
   gap: clamp(1.75rem, 3vw, 3rem) !important;
   padding: clamp(1.75rem, 3vw, 3rem) clamp(1.5rem, 4vw, 3.5rem) !important;
+}
+
+/* The footer shares the content column's width and side padding. */
+#arcane-root.arcane-theme-neon .kb-footer-inner {
+  max-width: var(--container-2xl, 90rem);
+  padding: 2rem clamp(1.5rem, 4vw, 3.5rem);
 }
 
 @media (min-width: 1201px) {
@@ -1305,8 +1333,9 @@ html.dark #arcane-root.arcane-theme-neon,
   top: 5rem !important;
   align-self: flex-start !important;
   width: 100% !important;
-  max-height: none !important;
-  overflow: visible !important;
+  max-height: calc(100vh - 6rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 @media (max-width: 1200px) {
@@ -1331,6 +1360,10 @@ html.dark #arcane-root.arcane-theme-neon,
 
   #arcane-root.arcane-theme-neon .kb-content-area {
     padding: 1.25rem !important;
+  }
+
+  #arcane-root.arcane-theme-neon .kb-footer-inner {
+    padding: 1.5rem 1.25rem;
   }
 }
 
