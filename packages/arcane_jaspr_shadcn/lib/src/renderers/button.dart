@@ -3,6 +3,7 @@ import 'package:arcane_jaspr/core/props/button_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/button_render_base.dart';
 
 import 'package:arcane_jaspr_shadcn/src/renderers/decoration_styles.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// ShadCN v4 buttons: 36px default height, `rounded-md`, `shadow-xs`.
 ///
@@ -52,31 +53,31 @@ class ShadcnButton extends ButtonRenderBase {
   @override
   Map<String, String> sizeStyles(ButtonSize size) => switch (size) {
     ButtonSize.sm => <String, String>{
-      'height': '2rem',
+      'height': shadcnControlHeightSm,
       'padding': '0 0.75rem',
       'gap': '0.375rem',
     },
     ButtonSize.md => <String, String>{
-      'height': '2.25rem',
+      'height': shadcnControlHeightMd,
       'padding': '0.5rem 1rem',
     },
     ButtonSize.lg => <String, String>{
-      'height': '2.5rem',
+      'height': shadcnControlHeightLg,
       'padding': '0 1.5rem',
     },
     ButtonSize.iconSm => <String, String>{
-      'height': '2rem',
-      'width': '2rem',
+      'height': shadcnControlHeightSm,
+      'width': shadcnControlHeightSm,
       'padding': '0',
     },
     ButtonSize.iconMd => <String, String>{
-      'height': '2.25rem',
-      'width': '2.25rem',
+      'height': shadcnControlHeightMd,
+      'width': shadcnControlHeightMd,
       'padding': '0',
     },
     ButtonSize.iconLg => <String, String>{
-      'height': '2.5rem',
-      'width': '2.5rem',
+      'height': shadcnControlHeightLg,
+      'width': shadcnControlHeightLg,
       'padding': '0',
     },
   };

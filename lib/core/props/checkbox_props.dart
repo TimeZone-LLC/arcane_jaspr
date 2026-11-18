@@ -19,6 +19,9 @@ class CheckboxProps {
   final String? group;
   final String? value;
 
+  /// The box's accessible name when it shows no [label].
+  final String? ariaLabel;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -37,6 +40,7 @@ class CheckboxProps {
     this.onChanged,
     this.group,
     this.value,
+    this.ariaLabel,
     this.styles,
     this.decoration,
   });
@@ -52,6 +56,7 @@ class CheckboxProps {
     void Function(bool)? onChanged,
     String? group,
     String? value,
+    String? ariaLabel,
     ArcaneStyleData? styles,
     ArcaneDecoration? decoration,
   }) {
@@ -66,6 +71,7 @@ class CheckboxProps {
       onChanged: onChanged ?? this.onChanged,
       group: group ?? this.group,
       value: value ?? this.value,
+      ariaLabel: ariaLabel ?? this.ariaLabel,
       styles: styles ?? this.styles,
       decoration: decoration ?? this.decoration,
     );

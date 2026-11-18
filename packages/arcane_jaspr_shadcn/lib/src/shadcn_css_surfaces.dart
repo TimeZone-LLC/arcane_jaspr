@@ -287,10 +287,59 @@ html.dark #arcane-root.arcane-theme-shadcn
   transform: rotate(180deg);
 }
 
-/* The disclosure frame clips overflow, so its ring sits inside the summary. */
+/* Disclosure summaries take the button ring. A framed disclosure clips
+   overflow, so there the ring sits inside the summary. */
+#arcane-root.arcane-theme-shadcn .arcane-disclosure-summary {
+  box-sizing: border-box;
+  min-height: var(--shadcn-hit-min, 0px);
+  outline: none;
+}
+
 #arcane-root.arcane-theme-shadcn .arcane-disclosure-summary:focus-visible {
-  outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
-  outline-offset: -3px;
+  outline: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadcn-focus-ring);
+}
+
+#arcane-root.arcane-theme-shadcn
+  .arcane-disclosure:not(.arcane-disclosure-minimal) > .arcane-disclosure-summary:focus-visible {
+  border-radius: 0;
+  box-shadow: inset var(--shadcn-focus-ring);
+}
+
+/* The touch layout, for a page whose <html> carries data-arcane-touch: on
+   phones and touch screens every control is 44px tall and the small ones
+   take taps over 44px. */
+@media (max-width: 760px), (pointer: coarse) {
+  html[data-arcane-touch] {
+    --shadcn-control-h: 2.75rem;
+    --shadcn-control-h-sm: 2.75rem;
+    --shadcn-control-h-lg: 2.75rem;
+    --shadcn-hit-min: 2.75rem;
+  }
+}
+
+/* Small controls (and any element marked data-arcane-hit) keep their look
+   and take taps over --shadcn-hit-min. */
+#arcane-root.arcane-theme-shadcn :is(.arcane-checkbox, .arcane-radio-circle, .arcane-tab, .arcane-tab-bar-item, .arcane-breadcrumb-link, [data-arcane-hit]) {
+  position: relative;
+}
+
+#arcane-root.arcane-theme-shadcn :is(.arcane-toggle-switch, .arcane-checkbox, .arcane-radio-circle, .arcane-dialog-close, .arcane-sheet-close, .arcane-drawer-close, .arcane-tab, .arcane-tab-bar-item, .arcane-breadcrumb-link, [data-arcane-hit])::after,
+html:has(#arcane-root.arcane-theme-shadcn) [data-arcane-toast-surface] .arcane-toast-close::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, var(--shadcn-hit-min, 0px));
+  height: max(100%, var(--shadcn-hit-min, 0px));
+  transform: translate(-50%, -50%);
+}
+
+/* A breadcrumb row is as tall as the touch size, so its links' tap areas
+   stay off the title under it. */
+#arcane-root.arcane-theme-shadcn .arcane-breadcrumb-list {
+  min-height: var(--shadcn-hit-min, 0px);
 }
 
 /* Toast dismiss and action controls. */
@@ -375,8 +424,9 @@ html:has(#arcane-root.arcane-theme-shadcn) [data-arcane-toast-surface] .arcane-t
 
 /* Sidebar. The shared sidebar bases emit links, section headers and submenu
    summaries without inline styles; v4 SidebarMenuButton is `h-8 rounded-md
-   px-2 text-sm` with a `--sidebar-accent` hover and active fill. Background
-   is !important to clear the core `aside a:hover` rule. */
+   px-2 text-sm` with a `--sidebar-accent` hover and active fill, as tall as
+   the small control token (the docs sidebar's taller links do not apply).
+   Background is !important to clear the core `aside a:hover` rule. */
 #arcane-root.arcane-theme-shadcn .arcane-sidebar > .sidebar-header {
   display: flex;
   flex-direction: column;
@@ -425,7 +475,8 @@ html:has(#arcane-root.arcane-theme-shadcn) [data-arcane-toast-surface] .arcane-t
   gap: 0.5rem;
   box-sizing: border-box;
   width: 100%;
-  height: 2rem;
+  height: var(--shadcn-control-h-sm, 2rem);
+  min-height: 0;
   padding: 0 0.5rem;
   border: 0;
   border-radius: var(--radius-sm);

@@ -41,6 +41,9 @@ class ToggleGroupProps {
   /// where the theme draws one; otherwise they stand apart.
   final bool joined;
 
+  /// The group's accessible name, for a group with no visible label.
+  final String? ariaLabel;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -60,6 +63,7 @@ class ToggleGroupProps {
     this.onMultiChanged,
     this.onChangeAction,
     this.joined = false,
+    this.ariaLabel,
     this.styles,
     this.decoration,
   });

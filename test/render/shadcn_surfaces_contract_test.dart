@@ -613,12 +613,12 @@ void main() {
       );
       final String list = _tag(html, 'arcane-tabs-list');
       expect(list, contains('box-sizing: border-box'));
-      expect(list, contains('height: 2.25rem'));
+      expect(list, contains('height: var(--shadcn-control-h, 2.25rem)'));
       expect(list, contains('padding: 3px'));
-      expect(list, contains('border-radius: var(--radius-md)'));
+      expect(list, contains('border-radius: calc(var(--radius-md) + 2px)'));
       for (final String tab in _tags(html, 'arcane-tab')) {
         expect(tab, contains('box-sizing: border-box'));
-        expect(tab, contains('border-radius: var(--radius-sm)'));
+        expect(tab, contains('border-radius: var(--radius-md)'));
         expect(tab, contains('height: calc(100% - 1px)'));
         expect(
           tab,
@@ -658,7 +658,7 @@ void main() {
       );
       final String bar = _tag(html, 'arcane-tab-bar');
       expect(bar, contains('box-sizing: border-box'));
-      expect(bar, contains('height: 2.25rem'));
+      expect(bar, contains('height: var(--shadcn-control-h, 2.25rem)'));
       expect(bar, contains('width: 100%'));
       expect(bar, contains('padding: 3px'));
       final List<String> items = _tags(html, 'arcane-tab-bar-item');

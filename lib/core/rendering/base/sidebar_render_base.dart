@@ -37,6 +37,7 @@ abstract class SidebarItemRenderBase extends StatelessComponent {
             ? props.label
             : '${props.label}, ${props.badge}',
       'title': ?title,
+      if (!props.tabStop) 'tabindex': '-1',
     };
     // A plain item keeps its plain markup; the parts appear when asked for.
     final bool plain =

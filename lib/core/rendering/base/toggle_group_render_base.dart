@@ -77,6 +77,7 @@ abstract class ToggleGroupRenderBase extends StatelessComponent {
             : encodeArcaneAction(props.onChangeAction!),
       ),
       'role': 'group',
+      'aria-label': ?props.ariaLabel,
       ...extraRootAttrs(),
     };
 
@@ -85,9 +86,7 @@ abstract class ToggleGroupRenderBase extends StatelessComponent {
       attributes: rootAttrs,
       styles: dom.Styles(
         raw: layerStyles(
-          <String, String>{
-            ...containerStyles,
-          },
+          <String, String>{...containerStyles},
           <Map<String, String>?>[
             props.decoration?.universalStyles(),
             decorationStyles(props.decoration),

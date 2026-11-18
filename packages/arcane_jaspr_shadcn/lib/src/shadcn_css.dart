@@ -1416,6 +1416,11 @@ html.dark #arcane-root.arcane-theme-shadcn .arcane-select:hover:not(:disabled),
   box-shadow: none !important;
 }
 
+/* A nested card a person can open keeps its focus ring. */
+#arcane-root.arcane-theme-shadcn .arcane-card .arcane-card.clickable:not([data-arcane-decorated]):focus-visible {
+  box-shadow: var(--shadcn-focus-ring) !important;
+}
+
 /* Code blocks */
 .prose pre {
   background: var(--muted);

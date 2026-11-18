@@ -42,7 +42,7 @@ class ShadcnDisclosure extends DisclosureRenderBase {
       DisclosureVariant.filled => 'var(--muted)',
     };
     // A minimal disclosure has no box, so its summary starts where its
-    // content does.
+    // content does. The focus ring comes from the stylesheet.
     return <String, String>{
       'display': 'flex',
       'align-items': 'center',
@@ -53,7 +53,6 @@ class ShadcnDisclosure extends DisclosureRenderBase {
           : '0.5rem 1rem',
       'background-color': summaryBg,
       'cursor': 'pointer',
-      'outline': 'none',
       'transition':
           'background-color var(--transition), color var(--transition)',
       'list-style': 'none',

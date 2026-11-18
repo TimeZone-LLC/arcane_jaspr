@@ -31,6 +31,9 @@ class ArcaneCheckbox extends StatelessWidget {
   final String? value;
   final void Function(bool)? onChanged;
 
+  /// The box's accessible name when it shows no [label] (a row's pick box).
+  final String? ariaLabel;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -48,6 +51,7 @@ class ArcaneCheckbox extends StatelessWidget {
     this.group,
     this.value,
     this.onChanged,
+    this.ariaLabel,
     this.styles,
     this.decoration,
     super.key,
@@ -63,6 +67,7 @@ class ArcaneCheckbox extends StatelessWidget {
     this.group,
     this.value,
     this.onChanged,
+    this.ariaLabel,
     this.styles,
     this.decoration,
     super.key,
@@ -78,6 +83,7 @@ class ArcaneCheckbox extends StatelessWidget {
     this.group,
     this.value,
     this.onChanged,
+    this.ariaLabel,
     this.styles,
     this.decoration,
     super.key,
@@ -93,6 +99,7 @@ class ArcaneCheckbox extends StatelessWidget {
     this.group,
     this.value,
     this.onChanged,
+    this.ariaLabel,
     this.styles,
     this.decoration,
     super.key,
@@ -108,6 +115,7 @@ class ArcaneCheckbox extends StatelessWidget {
     this.group,
     this.value,
     this.onChanged,
+    this.ariaLabel,
     this.styles,
     this.decoration,
     super.key,
@@ -134,6 +142,7 @@ class ArcaneCheckbox extends StatelessWidget {
         onChanged: onChanged,
         group: group,
         value: value,
+        ariaLabel: ariaLabel,
         styles: styles,
         decoration: decoration,
       ),

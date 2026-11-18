@@ -90,6 +90,10 @@ class FloatingProps {
   /// Whether pressing Escape should close the floating content.
   final bool closeOnEscape;
 
+  /// Open without the pointer in it (opened by keyboard focus): clicks pass
+  /// through to what it covers, except on its own links and controls.
+  final bool passThrough;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -119,6 +123,7 @@ class FloatingProps {
     this.maxWidth,
     this.closeOnOutsideClick = true,
     this.closeOnEscape = true,
+    this.passThrough = false,
     this.styles,
     this.decoration,
   });
@@ -148,6 +153,7 @@ class FloatingProps {
     double? maxWidth,
     bool? closeOnOutsideClick,
     bool? closeOnEscape,
+    bool? passThrough,
     ArcaneStyleData? styles,
     ArcaneDecoration? decoration,
   }) {
@@ -173,6 +179,7 @@ class FloatingProps {
       maxWidth: maxWidth ?? this.maxWidth,
       closeOnOutsideClick: closeOnOutsideClick ?? this.closeOnOutsideClick,
       closeOnEscape: closeOnEscape ?? this.closeOnEscape,
+      passThrough: passThrough ?? this.passThrough,
       styles: styles ?? this.styles,
       decoration: decoration ?? this.decoration,
     );

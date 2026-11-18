@@ -178,15 +178,32 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
 
   /// Pressed since the pointer came in: stays closed until it leaves.
   bool _pressed = false;
+
+  /// The pointer is in the card or its trigger, or left it under
+  /// closeDelay ago. A card open without it lets clicks through.
+  bool _pointerIn = false;
   Timer? _openTimer;
   Timer? _closeTimer;
+  Timer? _releaseTimer;
 
   bool get _isOpen => widget.isOpen ?? _internalIsOpen;
 
   @override
   void dispose() {
     _cancelTimers();
+    _releaseTimer?.cancel();
     super.dispose();
+  }
+
+  void _setPointerIn(bool value) {
+    _releaseTimer?.cancel();
+    _releaseTimer = null;
+    if (_pointerIn == value) return;
+    if (_isOpen) {
+      setState(() => _pointerIn = value);
+    } else {
+      _pointerIn = value;
+    }
   }
 
   void _cancelTimers() {
@@ -243,12 +260,20 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
 
   void _handleMouseEnter() {
     _hovered = true;
+    _setPointerIn(true);
     if (!_pressed) _startOpenTimer();
   }
 
   void _handleMouseLeave() {
     _hovered = false;
     _pressed = false;
+    // Once the pointer has not come back across the gap, a card that focus
+    // keeps open stops taking clicks meant for what it covers.
+    _releaseTimer?.cancel();
+    _releaseTimer = Timer(
+      Duration(milliseconds: widget.closeDelay),
+      () => _setPointerIn(false),
+    );
     if (!_focused) _startCloseTimer();
   }
 
@@ -300,6 +325,10 @@ class _ArcaneHoverCardState extends State<ArcaneHoverCard> {
         onBlur: _handleBlur,
         onPress: widget.closeOnPress ? _handlePress : null,
         onOpenChange: _handleOpenChange,
+        passThrough:
+            widget.triggerType == FloatingTrigger.hover &&
+            _isOpen &&
+            !_pointerIn,
         showArrow: widget.showArrow,
         offset: widget.offset,
         maxWidth: widget.maxWidth ?? (isTextTooltip ? 250 : null),

@@ -14,6 +14,8 @@ import 'runtime_dispatch_js.dart';
 
 const String _runtimeBaseCss = r'''
 [data-arcane-surface][hidden] { display: none !important; }
+[data-arcane-pass-through] { pointer-events: none; }
+[data-arcane-pass-through] :is(a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])) { pointer-events: auto; }
 [data-arcane-overlay-open] { overflow: hidden; }
 [data-arcane-toast-surface] {
   position: fixed;

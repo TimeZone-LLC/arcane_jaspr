@@ -1,5 +1,6 @@
 import 'package:arcane_jaspr/core/props/toggle_group_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/toggle_group_render_base.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// ShadCN-style toggle group component.
 /// Reference: https://ui.shadcn.com/docs/components/toggle-group
@@ -67,9 +68,9 @@ class ShadcnToggleGroup extends ToggleGroupRenderBase {
   @override
   Map<String, String> itemStyles(bool isSelected, bool isDisabled) {
     final (String height, String paddingX) = switch (props.size) {
-      ToggleGroupSizeVariant.sm => ('2rem', '0.375rem'),
-      ToggleGroupSizeVariant.md => ('2.25rem', '0.5rem'),
-      ToggleGroupSizeVariant.lg => ('2.5rem', '0.625rem'),
+      ToggleGroupSizeVariant.sm => (shadcnControlHeightSm, '0.375rem'),
+      ToggleGroupSizeVariant.md => (shadcnControlHeightMd, '0.5rem'),
+      ToggleGroupSizeVariant.lg => (shadcnControlHeightLg, '0.625rem'),
     };
     final bool outline = props.variant == ToggleGroupVariantStyle.outline;
 

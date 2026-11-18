@@ -7,9 +7,9 @@ class ShadcnNativeSelect extends NativeSelectRenderBase {
   const ShadcnNativeSelect(super.props, {super.key});
 
   String get _height => switch (props.size) {
-    ComponentSize.sm => '2rem',
-    ComponentSize.md => '2.25rem',
-    ComponentSize.lg => '2.5rem',
+    ComponentSize.sm => shadcnControlHeightSm,
+    ComponentSize.md => shadcnControlHeightMd,
+    ComponentSize.lg => shadcnControlHeightLg,
   };
 
   @override

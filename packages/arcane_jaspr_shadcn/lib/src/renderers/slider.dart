@@ -34,12 +34,24 @@ class ShadcnSlider extends SliderRenderBase {
   Map<String, String> thumbStateAttrs() => const <String, String>{};
 
   // (trackHeight, thumbSize, hitAreaHeight). ShadCN v4 default: h-1.5 track,
-  // size-4 thumb.
+  // size-4 thumb. The track's tap area grows to the touch hit size.
   @override
   (String, String, String) sizeMetrics(ComponentSize size) => switch (size) {
-    ComponentSize.sm => ('4px', '14px', '20px'),
-    ComponentSize.md => ('6px', '16px', '24px'),
-    ComponentSize.lg => ('8px', '20px', '32px'),
+    ComponentSize.sm => (
+      '4px',
+      '14px',
+      'max(20px, var(--shadcn-hit-min, 0px))',
+    ),
+    ComponentSize.md => (
+      '6px',
+      '16px',
+      'max(24px, var(--shadcn-hit-min, 0px))',
+    ),
+    ComponentSize.lg => (
+      '8px',
+      '20px',
+      'max(32px, var(--shadcn-hit-min, 0px))',
+    ),
   };
 
   @override

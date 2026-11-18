@@ -71,6 +71,8 @@ abstract class CheckboxRenderBase extends StatelessComponent {
         'aria-checked': '${props.checked}',
         'aria-disabled': '${props.disabled}',
         if (props.label != null) 'aria-labelledby': '${props.id}-label',
+        if (props.label == null && props.ariaLabel != null)
+          'aria-label': props.ariaLabel!,
         if (props.description != null)
           'aria-describedby': '${props.id}-description',
         'tabindex': props.disabled ? '-1' : '0',

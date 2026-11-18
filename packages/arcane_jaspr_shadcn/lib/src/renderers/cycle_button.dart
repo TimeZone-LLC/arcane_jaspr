@@ -18,6 +18,7 @@ import 'package:jaspr/dom.dart'
 import 'package:arcane_jaspr/core/props/cycle_button_props.dart';
 import 'package:arcane_jaspr/core/interaction/interaction.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// Shared v4 button/toggle heights: sm h-8, default h-9, lg h-10.
 Map<String, String> _shadcnSizeStyles(
@@ -25,34 +26,34 @@ Map<String, String> _shadcnSizeStyles(
   required bool toggle,
 }) => switch (size) {
   CycleButtonSize.small => <String, String>{
-    'height': '2rem',
-    'min-width': '2rem',
+    'height': shadcnControlHeightSm,
+    'min-width': shadcnControlHeightSm,
     'padding': toggle ? '0 0.375rem' : '0 0.75rem',
     'gap': '0.375rem',
   },
   CycleButtonSize.medium => <String, String>{
-    'height': '2.25rem',
-    'min-width': '2.25rem',
+    'height': shadcnControlHeightMd,
+    'min-width': shadcnControlHeightMd,
     'padding': toggle ? '0 0.5rem' : '0 1rem',
   },
   CycleButtonSize.large => <String, String>{
-    'height': '2.5rem',
-    'min-width': '2.5rem',
+    'height': shadcnControlHeightLg,
+    'min-width': shadcnControlHeightLg,
     'padding': toggle ? '0 0.625rem' : '0 1.5rem',
   },
   CycleButtonSize.icon => <String, String>{
-    'height': '2.25rem',
-    'width': '2.25rem',
+    'height': shadcnControlHeightMd,
+    'width': shadcnControlHeightMd,
     'padding': '0',
   },
   CycleButtonSize.iconSmall => <String, String>{
-    'height': '2rem',
-    'width': '2rem',
+    'height': shadcnControlHeightSm,
+    'width': shadcnControlHeightSm,
     'padding': '0',
   },
   CycleButtonSize.iconLarge => <String, String>{
-    'height': '2.5rem',
-    'width': '2.5rem',
+    'height': shadcnControlHeightLg,
+    'width': shadcnControlHeightLg,
     'padding': '0',
   },
 };

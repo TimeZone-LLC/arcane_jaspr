@@ -60,9 +60,9 @@ void main() {
         ),
       );
       final String height = switch (size) {
-        ComponentSize.sm => '2rem',
-        ComponentSize.md => '2.25rem',
-        ComponentSize.lg => '2.5rem',
+        ComponentSize.sm => 'var(--shadcn-control-h-sm, 2rem)',
+        ComponentSize.md => 'var(--shadcn-control-h, 2.25rem)',
+        ComponentSize.lg => 'var(--shadcn-control-h-lg, 2.5rem)',
       };
       final List<String> controls = RegExp(
         r'<(?:input|select)\b[^>]*>',

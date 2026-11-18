@@ -2,20 +2,23 @@ import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/props/tabs_props.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// v4 TabsList: `bg-muted text-muted-foreground inline-flex h-9 w-fit
 /// items-center justify-center rounded-lg p-[3px]`. Tailwind's preflight makes
-/// every box border-box, so the list and triggers state it themselves.
+/// every box border-box, so the list and triggers state it themselves. The
+/// height is the default control height's token; `rounded-lg` is two pixels
+/// rounder than the triggers' `rounded-md`, as v4's radius scale has it.
 Map<String, String> _listStyles({required bool fill}) => <String, String>{
   'display': 'inline-flex',
   'box-sizing': 'border-box',
-  'height': '2.25rem',
+  'height': shadcnControlHeightMd,
   'width': fill ? '100%' : 'fit-content',
   'align-items': 'center',
   'justify-content': 'center',
   'gap': '0.25rem',
   'padding': '3px',
-  'border-radius': 'var(--radius-md)',
+  'border-radius': 'calc(var(--radius-md) + 2px)',
   'background-color': 'var(--muted)',
   'color': 'var(--muted-foreground)',
 };
@@ -38,7 +41,7 @@ Map<String, String> _triggerStyles({
   'white-space': 'nowrap',
   'padding': '0.25rem 0.5rem',
   'border': '1px solid var(--shadcn-control-border-color, transparent)',
-  'border-radius': 'var(--radius-sm)',
+  'border-radius': 'var(--radius-md)',
   'font-size': '0.875rem',
   'line-height': '1.25rem',
   'font-weight': '500',

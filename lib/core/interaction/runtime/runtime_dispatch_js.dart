@@ -309,6 +309,7 @@ function onDocumentKeyDown(e) {
   if (e.defaultPrevented) return;
   if (handleListboxKey(e)) return;
   if (handleMenuKey(e)) return;
+  if (handleRovingKey(e)) return;
   if (e.key === 'Escape') {
     if (ARCANE.stack.length > 0) {
       const top = ARCANE.stack[ARCANE.stack.length - 1];
@@ -348,6 +349,36 @@ function onDocumentKeyDown(e) {
   if (keyTarget) {
     runActions(keyTarget.getAttribute('data-arcane-keydown'), { trigger: keyTarget, event: e });
   }
+}
+
+// A box marked data-arcane-roving is one tab stop: its current link or
+// button keeps tabindex 0, and the arrows, Home and End move between the
+// rest ("horizontal" uses Left and Right, anything else Up and Down).
+// data-arcane-roving-items narrows the items to a selector.
+function handleRovingKey(e) {
+  const target = e.target;
+  if (!target || !target.closest || e.isComposing || e.ctrlKey || e.altKey || e.metaKey) return false;
+  if (target.matches('input, textarea, select, [contenteditable="true"]')) return false;
+  const box = target.closest('[data-arcane-roving]');
+  if (!box) return false;
+  const horizontal = box.getAttribute('data-arcane-roving') === 'horizontal';
+  const forward = horizontal ? 'ArrowRight' : 'ArrowDown';
+  const backward = horizontal ? 'ArrowLeft' : 'ArrowUp';
+  if ([forward, backward, 'Home', 'End'].indexOf(e.key) < 0) return false;
+  const selector = box.getAttribute('data-arcane-roving-items') || 'a[href], button';
+  const items = Array.prototype.filter.call(box.querySelectorAll(selector), function(item) {
+    return !item.disabled && item.getAttribute('aria-disabled') !== 'true' && item.getClientRects().length > 0;
+  });
+  const current = items.indexOf(target.closest(selector));
+  if (current < 0 || !items.length) return false;
+  let next = current;
+  if (e.key === 'Home') next = 0;
+  else if (e.key === 'End') next = items.length - 1;
+  else if (e.key === forward) next = Math.min(items.length - 1, current + 1);
+  else next = Math.max(0, current - 1);
+  e.preventDefault();
+  items[next].focus();
+  return true;
 }
 
 function handleListboxKey(e) {

@@ -30,9 +30,24 @@ class ShadcnTextInput extends TextInputRenderBase {
   @override
   (String, String, String, String) sizeValues(ComponentSize size) =>
       switch (size) {
-        ComponentSize.sm => ('2rem', '0.75rem', '0.25rem', '0.875rem'),
-        ComponentSize.md => ('2.25rem', '0.75rem', '0.25rem', '0.875rem'),
-        ComponentSize.lg => ('2.5rem', '0.75rem', '0.25rem', '0.875rem'),
+        ComponentSize.sm => (
+          shadcnControlHeightSm,
+          '0.75rem',
+          '0.25rem',
+          '0.875rem',
+        ),
+        ComponentSize.md => (
+          shadcnControlHeightMd,
+          '0.75rem',
+          '0.25rem',
+          '0.875rem',
+        ),
+        ComponentSize.lg => (
+          shadcnControlHeightLg,
+          '0.75rem',
+          '0.25rem',
+          '0.875rem',
+        ),
       };
 
   static String _border(bool hasError) => hasError

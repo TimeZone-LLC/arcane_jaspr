@@ -560,12 +560,12 @@ void main() {
         ),
       );
       final Map<ButtonSize, String> heights = <ButtonSize, String>{
-        ButtonSize.sm: 'height: 2rem',
-        ButtonSize.md: 'height: 2.25rem',
-        ButtonSize.lg: 'height: 2.5rem',
-        ButtonSize.iconSm: 'height: 2rem',
-        ButtonSize.iconMd: 'height: 2.25rem',
-        ButtonSize.iconLg: 'height: 2.5rem',
+        ButtonSize.sm: 'height: var(--shadcn-control-h-sm, 2rem)',
+        ButtonSize.md: 'height: var(--shadcn-control-h, 2.25rem)',
+        ButtonSize.lg: 'height: var(--shadcn-control-h-lg, 2.5rem)',
+        ButtonSize.iconSm: 'height: var(--shadcn-control-h-sm, 2rem)',
+        ButtonSize.iconMd: 'height: var(--shadcn-control-h, 2.25rem)',
+        ButtonSize.iconLg: 'height: var(--shadcn-control-h-lg, 2.5rem)',
       };
       for (final MapEntry<ButtonSize, String> entry in heights.entries) {
         final String tag = _tagForId(html, 'button-${entry.key.name}');
@@ -581,7 +581,10 @@ void main() {
       }
       expect(_tagForId(html, 'button-sm'), contains('padding: 0 0.75rem'));
       expect(_tagForId(html, 'button-lg'), contains('padding: 0 1.5rem'));
-      expect(_tagForId(html, 'button-iconMd'), contains('width: 2.25rem'));
+      expect(
+        _tagForId(html, 'button-iconMd'),
+        contains('width: var(--shadcn-control-h, 2.25rem)'),
+      );
       expect(
         _tagForId(html, 'button-ghost'),
         contains('box-shadow: var(--shadcn-control-shadow, none)'),
@@ -606,7 +609,7 @@ void main() {
         ),
       );
       final String input = _tagForId(html, 'plain');
-      expect(input, contains('height: 2.25rem'));
+      expect(input, contains('height: var(--shadcn-control-h, 2.25rem)'));
       expect(input, contains('padding: 0.25rem 0.75rem'));
       expect(input, contains('font-size: 0.875rem'));
       expect(input, contains('border-radius: var(--radius-md)'));
@@ -677,7 +680,7 @@ void main() {
         ),
       );
       final String trigger = _tagForClass(html, 'arcane-select');
-      expect(trigger, contains('height: 2.25rem'));
+      expect(trigger, contains('height: var(--shadcn-control-h, 2.25rem)'));
       expect(trigger, contains('padding: 0.25rem 0.75rem'));
       expect(trigger, contains('font-size: 0.875rem'));
       expect(trigger, contains('border-radius: var(--radius-md)'));
@@ -731,7 +734,7 @@ void main() {
         ),
       );
       final String select = _tagForId(html, 'native');
-      expect(select, contains('height: 2.25rem'));
+      expect(select, contains('height: var(--shadcn-control-h, 2.25rem)'));
       expect(select, contains('font-size: 0.875rem'));
       expect(select, contains('border-radius: var(--radius-md)'));
       expect(
@@ -905,7 +908,7 @@ void main() {
         ),
       );
       final String item = _tagForClass(html, 'arcane-toggle-group-item');
-      expect(item, contains('height: 2.25rem'));
+      expect(item, contains('height: var(--shadcn-control-h, 2.25rem)'));
       expect(item, contains('border-radius: var(--radius-md)'));
       expect(
         item,
@@ -924,11 +927,11 @@ void main() {
       );
       expect(digit, contains('border-radius: var(--radius-md)'));
       final String cycle = _tagForId(html, 'cycle');
-      expect(cycle, contains('height: 2.25rem'));
+      expect(cycle, contains('height: var(--shadcn-control-h, 2.25rem)'));
       expect(cycle, contains('data-variant="outline"'));
       expect(cycle, isNot(contains('background-color:')));
       final String toggle = _tagForId(html, 'bold');
-      expect(toggle, contains('height: 2.25rem'));
+      expect(toggle, contains('height: var(--shadcn-control-h, 2.25rem)'));
       expect(
         toggle,
         contains(

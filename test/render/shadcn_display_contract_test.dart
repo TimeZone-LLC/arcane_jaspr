@@ -594,7 +594,7 @@ void main() {
       );
 
       final String date = _tagWithClass(html, 'arcane-date-picker-trigger');
-      expect(date, contains('height: 36px'));
+      expect(date, contains('height: 2.25rem'));
       expect(date, contains('border-radius: var(--radius-md)'));
       expect(
         date,
@@ -612,7 +612,7 @@ void main() {
       );
 
       final String time = _tagWithClass(html, 'arcane-time-picker-trigger');
-      expect(time, contains('height: 36px'));
+      expect(time, contains('height: 2.25rem'));
       expect(time, contains('border-radius: var(--radius-md)'));
       expect(
         time,

@@ -16,9 +16,9 @@ class ShadcnSelect<T> extends StatelessComponent {
 
   /// SelectTrigger `data-[size=sm]:h-8`, default `h-9`; large is `h-10`.
   String get _triggerHeight => switch (props.size) {
-    ComponentSize.sm => '2rem',
-    ComponentSize.md => '2.25rem',
-    ComponentSize.lg => '2.5rem',
+    ComponentSize.sm => shadcnControlHeightSm,
+    ComponentSize.md => shadcnControlHeightMd,
+    ComponentSize.lg => shadcnControlHeightLg,
   };
 
   bool get _hasSelection {

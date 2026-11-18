@@ -187,6 +187,7 @@ abstract class FloatingRenderBase extends StatelessComponent {
       attributes: <String, String>{
         'role': surfaceKind == 'hovercard' ? 'tooltip' : 'dialog',
         ...surfAttrs,
+        if (props.passThrough) 'data-arcane-pass-through': '',
         if (alignment.containsKey('transform') &&
             !overrideStyles.containsKey('transform'))
           'data-arcane-anchor-transform': alignment['transform']!,

@@ -16,6 +16,10 @@ class SidebarItemProps {
   final bool collapsed;
   final String? tooltip;
 
+  /// Whether Tab stops on the item. A sidebar with one stop (the current
+  /// item) passes false for the others; the arrows reach them.
+  final bool tabStop;
+
   const SidebarItemProps({
     required this.label,
     this.icon,
@@ -26,6 +30,7 @@ class SidebarItemProps {
     this.badge,
     this.collapsed = false,
     this.tooltip,
+    this.tabStop = true,
   });
 }
 

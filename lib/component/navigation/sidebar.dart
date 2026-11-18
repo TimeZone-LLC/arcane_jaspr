@@ -128,6 +128,11 @@ class ArcaneSidebarItem extends StatelessWidget {
   final bool collapsed;
   final String? tooltip;
 
+  /// Whether Tab stops on the item. In a sidebar wrapped in
+  /// `data-arcane-roving`, only the current item is a stop and the arrow
+  /// keys move between the rest.
+  final bool tabStop;
+
   const ArcaneSidebarItem({
     required this.label,
     this.icon,
@@ -138,6 +143,7 @@ class ArcaneSidebarItem extends StatelessWidget {
     this.badge,
     this.collapsed = false,
     this.tooltip,
+    this.tabStop = true,
     super.key,
   });
 
@@ -154,6 +160,7 @@ class ArcaneSidebarItem extends StatelessWidget {
         badge: badge,
         collapsed: collapsed,
         tooltip: tooltip,
+        tabStop: tabStop,
       ),
     );
   }

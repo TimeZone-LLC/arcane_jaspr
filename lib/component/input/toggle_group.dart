@@ -51,6 +51,9 @@ class ArcaneToggleGroup extends StatelessWidget {
   /// spacing) instead of standing apart.
   final bool joined;
 
+  /// The group's accessible name, for a group with no visible label.
+  final String? ariaLabel;
+
   /// Literal, theme-permeable style override (always applied, wins over theme).
   final ArcaneStyleData? styles;
 
@@ -67,6 +70,7 @@ class ArcaneToggleGroup extends StatelessWidget {
     this.size = ToggleGroupSize.md,
     this.disabled = false,
     this.joined = false,
+    this.ariaLabel,
     this.styles,
     this.decoration,
     super.key,
@@ -84,6 +88,7 @@ class ArcaneToggleGroup extends StatelessWidget {
     this.size = ToggleGroupSize.md,
     this.disabled = false,
     this.joined = false,
+    this.ariaLabel,
     this.styles,
     this.decoration,
     super.key,
@@ -131,6 +136,7 @@ class ArcaneToggleGroup extends StatelessWidget {
         onMultiChanged: onMultiChanged,
         onChangeAction: onChangeAction,
         joined: joined,
+        ariaLabel: ariaLabel,
         styles: styles,
         decoration: decoration,
       ),
