@@ -9,6 +9,7 @@ export '../../core/props/field_wrapper_props.dart';
 /// Wrapper for form fields providing consistent styling and layout.
 class ArcaneFieldWrapper extends StatelessWidget {
   final Widget field;
+  final String? fieldId;
   final String? labelText;
   final String? description;
   final String? icon;
@@ -26,6 +27,7 @@ class ArcaneFieldWrapper extends StatelessWidget {
 
   const ArcaneFieldWrapper({
     required this.field,
+    this.fieldId,
     this.labelText,
     this.description,
     this.icon,
@@ -44,6 +46,7 @@ class ArcaneFieldWrapper extends StatelessWidget {
     return context.renderers.fieldWrapper(
       FieldWrapperProps(
         field: field,
+        fieldId: fieldId,
         labelText: labelText,
         description: description,
         icon: icon,

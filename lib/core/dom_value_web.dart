@@ -31,6 +31,15 @@ String domEventKey(Object? event) {
   return (v as JSString?)?.toDart ?? '';
 }
 
+bool domEventRelatedTargetIsInside(Object? event) {
+  final JSObject? object = event as JSObject?;
+  final JSObject? current =
+      object?.getProperty<JSAny?>('currentTarget'.toJS) as JSObject?;
+  final JSAny? related = object?.getProperty<JSAny?>('relatedTarget'.toJS);
+  if (current == null || related == null) return false;
+  return current.callMethod<JSBoolean>('contains'.toJS, related).toDart;
+}
+
 /// Whether a keyboard event is still confirming an input-method composition.
 bool domEventIsComposing(Object? event) {
   final JSObject? object = event as JSObject?;
@@ -45,6 +54,12 @@ String domEventValue(Object? event) {
   final JSObject? ev = event as JSObject?;
   final JSAny? target = ev?.getProperty<JSAny?>('target'.toJS);
   return domInputValue(target);
+}
+
+String domOtpInputValue(Object? event) {
+  final JSObject? object = event as JSObject?;
+  final JSAny? value = object?.getProperty<JSAny?>('_arcaneOtpValue'.toJS);
+  return (value as JSString?)?.toDart ?? domEventValue(event);
 }
 
 /// Read an attribute from the DOM event target (web).

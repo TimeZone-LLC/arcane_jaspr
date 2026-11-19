@@ -6,6 +6,7 @@ import 'package:arcane_jaspr/core/dom_value.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/text_input_props.dart';
 import 'package:arcane_jaspr/core/rendering/field_identity.dart';
+import 'package:arcane_jaspr/core/rendering/base/control_label_styles.dart';
 
 /// Shared structural base for themed text-input renderers.
 ///
@@ -30,6 +31,8 @@ abstract class TextInputRenderBase extends StatelessComponent {
 
   /// `gap` applied to the column wrapper.
   String get wrapperGap;
+
+  Map<String, String> get labelStyles => arcaneControlLabelStyles;
 
   /// Whether the borderless inner input (inside the prefix/suffix container)
   /// emits `data-disabled`/`data-error` attributes.
@@ -201,14 +204,7 @@ abstract class TextInputRenderBase extends StatelessComponent {
           Component.element(
             tag: 'label',
             attributes: <String, String>{'for': fieldId},
-            styles: const dom.Styles(
-              raw: <String, String>{
-                'font-size': 'var(--font-size-sm)',
-                'font-weight': 'var(--font-weight-medium)',
-                'line-height': '1',
-                'color': 'var(--foreground)',
-              },
-            ),
+            styles: dom.Styles(raw: labelStyles),
             children: <Component>[
               Component.text(props.label!),
               if (props.required)

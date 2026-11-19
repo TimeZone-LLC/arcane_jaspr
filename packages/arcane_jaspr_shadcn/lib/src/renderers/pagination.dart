@@ -51,6 +51,7 @@ class ShadcnPagination extends StatelessComponent {
         raw: <String, String>{
           'display': 'flex',
           'width': '100%',
+          'min-width': '0',
           'justify-content': 'center',
         },
       ),
@@ -61,6 +62,10 @@ class ShadcnPagination extends StatelessComponent {
             raw: <String, String>{
               'display': 'flex',
               'flex-direction': 'row',
+              'flex-wrap': 'wrap',
+              'justify-content': 'center',
+              'max-width': '100%',
+              'min-width': '0',
               'align-items': 'center',
               'gap': '0.25rem',
               'list-style': 'none',

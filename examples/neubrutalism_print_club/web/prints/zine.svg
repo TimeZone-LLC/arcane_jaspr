@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" role="img" aria-labelledby="title desc">
+  <title id="title">Small zine, big ideas</title>
+  <desc id="desc">A folded cream zine on lavender paper, printed with large black Big Ideas lettering and a yellow paper-cut star.</desc>
+  <rect width="600" height="360" fill="#B8A9FA"/>
+  <g transform="translate(301 179) rotate(-8)">
+    <path d="m-180-87 164-16 170 32 15 187L4 82l-171 21Z" fill="#000"/>
+    <path d="m-189-100 174-17L159-85V102L-15 69l-174 18Z" fill="#FFFDF5" stroke="#000" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M-15-117V69" fill="none" stroke="#000" stroke-width="3"/>
+    <path d="m-15-117 14 18V52l-14 17Z" fill="#000" opacity=".12"/>
+    <g fill="#000" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900">
+      <text x="-173" y="-10" font-size="83" letter-spacing="-6" textLength="145" lengthAdjust="spacingAndGlyphs">BIG</text>
+      <text x="7" y="12" font-size="49" letter-spacing="-3" textLength="136" lengthAdjust="spacingAndGlyphs">IDEAS</text>
+    </g>
+    <path d="m-111 4 9 17 19-7-7 20 18 11-21 3-3 21-12-18-20 8 8-20-18-12 21-3Z" fill="#FFD23F" stroke="#000" stroke-width="3"/>
+    <g fill="none" stroke="#000" stroke-width="3">
+      <path d="m9 37 129 23M9 49l97 17"/>
+      <path d="m13-63 31 6 18 29-31-6Zm31 6 33-12 19 29-34 12Z"/>
+    </g>
+    <text x="-173" y="-77" fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700" letter-spacing="1.5">A LITTLE PUBLICATION</text>
+    <text x="132" y="87" fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700" text-anchor="end">01 / PRINT CLUB</text>
+  </g>
+  <path d="m69 92 20 7M83 63l13 16M107 52l5 19m392 210 20 7m-31 11 10 17" fill="none" stroke="#000" stroke-width="3" stroke-linecap="square"/>
+</svg>

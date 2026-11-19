@@ -4,6 +4,8 @@ import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/props/slot_counter_props.dart';
+import 'package:arcane_jaspr_neubrutalism/src/motion/neubrutalism_motion_stub.dart'
+    if (dart.library.js_interop) 'package:arcane_jaspr_neubrutalism/src/motion/neubrutalism_motion_web.dart';
 
 /// Neubrutalism Slot Counter renderer (stateful with animation).
 class NeubrutalismSlotCounter extends StatefulComponent {
@@ -12,7 +14,8 @@ class NeubrutalismSlotCounter extends StatefulComponent {
   const NeubrutalismSlotCounter(this.props, {super.key});
 
   @override
-  State<NeubrutalismSlotCounter> createState() => _NeubrutalismSlotCounterState();
+  State<NeubrutalismSlotCounter> createState() =>
+      _NeubrutalismSlotCounterState();
 }
 
 class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
@@ -23,10 +26,12 @@ class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
   Timer? _spinTimer;
   Timer? _pauseTimer;
   int _spinCount = 0;
+  late final NeubrutalismMotionObserver _motion;
 
   @override
   void initState() {
     super.initState();
+    _motion = NeubrutalismMotionObserver(_onMotionChanged);
     if (component.props.fixedValue != null) {
       _currentValue = component.props.fixedValue!;
       _targetValue = component.props.fixedValue!;
@@ -40,10 +45,55 @@ class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
   }
 
   @override
+  void didUpdateComponent(NeubrutalismSlotCounter oldComponent) {
+    super.didUpdateComponent(oldComponent);
+    final SlotCounterProps previous = oldComponent.props;
+    final SlotCounterProps next = component.props;
+    if (previous.fixedValue == next.fixedValue &&
+        previous.autoStart == next.autoStart &&
+        previous.minValue == next.minValue &&
+        previous.maxValue == next.maxValue &&
+        previous.basePauseSeconds == next.basePauseSeconds &&
+        previous.randomPauseSeconds == next.randomPauseSeconds &&
+        previous.spinDurationMs == next.spinDurationMs &&
+        previous.spinIntervalMs == next.spinIntervalMs) {
+      return;
+    }
+    _cancelTimers();
+    _currentValue =
+        next.fixedValue ?? _targetValue.clamp(next.minValue, next.maxValue);
+    _targetValue = _currentValue;
+    _isSpinning = false;
+    _scheduleNextSpin();
+  }
+
+  @override
   void dispose() {
+    _cancelTimers();
+    _motion.dispose();
+    super.dispose();
+  }
+
+  void _cancelTimers() {
     _spinTimer?.cancel();
     _pauseTimer?.cancel();
-    super.dispose();
+    _spinTimer = null;
+    _pauseTimer = null;
+  }
+
+  void _onMotionChanged(bool allowed) {
+    _cancelTimers();
+    if (!allowed) {
+      if (_isSpinning && mounted) {
+        setState(() {
+          _currentValue = _targetValue;
+          _isSpinning = false;
+        });
+        component.props.onValueChange?.call(_currentValue);
+      }
+      return;
+    }
+    _scheduleNextSpin();
   }
 
   int _generateRandomValue() {
@@ -54,9 +104,14 @@ class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
   }
 
   void _scheduleNextSpin() {
-    if (component.props.fixedValue != null) return;
+    if (!mounted ||
+        component.props.fixedValue != null ||
+        !component.props.autoStart ||
+        !_motion.canAnimate) {
+      return;
+    }
 
-    final pauseMs =
+    final int pauseMs =
         (component.props.basePauseSeconds * 1000) +
         (_random.nextInt(component.props.randomPauseSeconds + 1) * 1000);
 
@@ -66,9 +121,10 @@ class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
   }
 
   void _startSpinning() {
+    if (!mounted || !_motion.canAnimate) return;
     _targetValue = _generateRandomValue();
     _spinCount = 0;
-    final totalSpinUpdates =
+    final int totalSpinUpdates =
         component.props.spinDurationMs ~/ component.props.spinIntervalMs;
 
     setState(() {
@@ -77,7 +133,7 @@ class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
 
     _spinTimer = Timer.periodic(
       Duration(milliseconds: component.props.spinIntervalMs),
-      (timer) {
+      (Timer timer) {
         _spinCount++;
 
         if (_spinCount >= totalSpinUpdates) {
@@ -89,12 +145,15 @@ class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
           component.props.onValueChange?.call(_currentValue);
           _scheduleNextSpin();
         } else {
-          final progress = _spinCount / totalSpinUpdates;
+          final double progress = _spinCount / totalSpinUpdates;
 
           if (progress > 0.8) {
-            final diff = (_targetValue - _currentValue).abs();
-            final maxDelta = (diff * (1 - progress) * 2).toInt().clamp(1, 500);
-            final newValue =
+            final int diff = (_targetValue - _currentValue).abs();
+            final int maxDelta = (diff * (1 - progress) * 2).toInt().clamp(
+              1,
+              500,
+            );
+            final int newValue =
                 _targetValue + _random.nextInt(maxDelta * 2 + 1) - maxDelta;
             setState(() {
               _currentValue = newValue.clamp(
@@ -139,7 +198,7 @@ class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
       case SlotCounterColor.primary:
         return 'var(--foreground)';
       case SlotCounterColor.accent:
-        return 'var(--nb-accent, var(--primary))';
+        return 'var(--foreground)';
       case SlotCounterColor.muted:
         return 'var(--muted-foreground)';
       case SlotCounterColor.success:
@@ -153,10 +212,14 @@ class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
 
   @override
   Component build(BuildContext context) {
-    final displayValue = _formatValue(_currentValue);
+    final String displayValue = _formatValue(_currentValue);
 
     return dom.div(
       classes: 'neubrutalism-slot-counter',
+      attributes: <String, String>{
+        'data-fixed': '${component.props.fixedValue != null}',
+        'data-state': _isSpinning ? 'spinning' : 'idle',
+      },
       styles: dom.Styles(
         raw: {
           'display': 'inline-flex',
@@ -194,6 +257,8 @@ class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
               ),
             // Value
             dom.span(
+              key: ValueKey<int?>(component.props.fixedValue),
+              classes: 'neubrutalism-slot-counter-value',
               styles: dom.Styles(
                 raw: {
                   'font-size': _getFontSize(component.props.valueSize),
@@ -224,12 +289,14 @@ class _NeubrutalismSlotCounterState extends State<NeubrutalismSlotCounter> {
           dom.div(
             styles: dom.Styles(
               raw: {
-                'font-family': 'var(--font-heading)',
-                'font-size': _getFontSize(component.props.labelSize),
-                'font-weight': 'var(--font-weight-semibold)',
+                'font-family': 'var(--font-sans)',
+                'font-size': component.props.labelSize == SlotCounterSize.xs
+                    ? '0.8125rem'
+                    : _getFontSize(component.props.labelSize),
+                'font-weight': '700',
                 'color': _getColor(component.props.labelColor),
                 'text-transform': 'uppercase',
-                'letter-spacing': '0.12em',
+                'letter-spacing': '0.04em',
               },
             ),
             [Component.text(component.props.label!)],

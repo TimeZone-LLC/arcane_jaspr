@@ -37,7 +37,7 @@ class AsciiText extends StatelessComponent {
     final double milliseconds = duration.inMicroseconds / 1000;
     final double characterDuration = milliseconds.clamp(
       0,
-      motion == AsciiTextMotion.typewriter ? 1 : 110,
+      motion == AsciiTextMotion.typewriter ? 1 : 240,
     );
     final double interval = letters.length == 1
         ? 0
@@ -46,6 +46,7 @@ class AsciiText extends StatelessComponent {
     final List<Component> content = <Component>[];
     const String glyphs = '+/=:._';
     for (int index = 0; index < letters.length; index++) {
+      final bool whitespace = letters[index].trim().isEmpty;
       content.add(
         dom.span(
           <Component>[
@@ -55,7 +56,15 @@ class AsciiText extends StatelessComponent {
           ],
           classes: 'ascii-text-char',
           attributes: <String, String>{
-            'data-glyph': glyphs[index % glyphs.length],
+            if (motion == AsciiTextMotion.decode) ...<String, String>{
+              'data-glyph': whitespace ? ' ' : glyphs[index % glyphs.length],
+              'data-glyph-next': whitespace
+                  ? ' '
+                  : glyphs[(index + 2) % glyphs.length],
+              'data-glyph-last': whitespace
+                  ? ' '
+                  : glyphs[(index + 4) % glyphs.length],
+            },
           },
           styles: dom.Styles(
             raw: <String, String>{
@@ -99,7 +108,7 @@ class AsciiText extends StatelessComponent {
             styles: dom.Styles(
               raw: <String, String>{
                 'animation-delay':
-                    '${(start + duration.inMilliseconds).toStringAsFixed(2)}ms',
+                    '${(start + milliseconds).toStringAsFixed(2)}ms',
               },
             ),
           ),

@@ -90,7 +90,7 @@ class NeubrutalismAlertDialog extends AlertDialogRenderBase {
         'color': 'var(--nb-ink, #000)',
         'background': 'var(--nb-accent, var(--primary))',
         'border': 'var(--nb-border-thick, 3px) solid var(--nb-line, #000)',
-        'border-radius': '0',
+        'border-radius': 'var(--nb-radius-tight, 0)',
         'box-shadow':
             'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
       },

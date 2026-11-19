@@ -77,8 +77,9 @@ const String arcaneProseStyles = '''
 }
 
 .prose blockquote {
-  border-left: 4px solid var(--border);
-  padding-left: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
   margin: 1rem 0;
   font-style: italic;
   color: var(--muted-foreground);
@@ -115,6 +116,6 @@ const String arcaneProseStyles = '''
 .prose img {
   max-width: 100%;
   height: auto;
-  border-radius: var(--arcane-radius-md);
+  border-radius: var(--radius);
 }
 ''';

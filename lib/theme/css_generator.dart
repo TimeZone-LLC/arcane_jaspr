@@ -1,4 +1,6 @@
+import 'control_config.dart';
 import 'font_config.dart';
+import 'motion_config.dart';
 import 'palette.dart';
 import 'palette_generator.dart';
 import 'radius_config.dart';
@@ -15,6 +17,8 @@ abstract class CssGenerator {
     String selector = ':root',
     FontConfig fonts = const FontConfig(),
     RadiusConfig radius = const RadiusConfig(),
+    ControlConfig controls = const ControlConfig(),
+    MotionConfig motion = const MotionConfig(),
     bool includeStatic = true,
   }) {
     final StringBuffer buffer = StringBuffer();
@@ -139,6 +143,15 @@ abstract class CssGenerator {
       buffer.writeln('  --radius-md: ${radius.md};');
       buffer.writeln();
 
+      // Form controls and buttons
+      buffer.writeln('  --control-height-sm: ${controls.heightSm};');
+      buffer.writeln('  --control-height-md: ${controls.heightMd};');
+      buffer.writeln('  --control-height-lg: ${controls.heightLg};');
+      buffer.writeln('  --control-padding-x: ${controls.paddingX};');
+      buffer.writeln('  --control-font-size: ${controls.fontSize};');
+      buffer.writeln('  --control-label-gap: ${controls.labelGap};');
+      buffer.writeln();
+
       // Spacing scale
       buffer.writeln('  --space-0: 0;');
       buffer.writeln('  --space-px: 1px;');
@@ -184,10 +197,10 @@ abstract class CssGenerator {
       buffer.writeln();
 
       // Transitions
-      buffer.writeln('  --transition-fast: 100ms ease;');
-      buffer.writeln('  --transition: 150ms ease;');
-      buffer.writeln('  --transition-slow: 200ms ease;');
-      buffer.writeln('  --transition-slower: 300ms ease;');
+      buffer.writeln('  --transition-fast: ${motion.fast};');
+      buffer.writeln('  --transition: ${motion.base};');
+      buffer.writeln('  --transition-slow: ${motion.slow};');
+      buffer.writeln('  --transition-slower: ${motion.slower};');
       buffer.writeln();
 
       buffer.writeln('  --arcane-background: var(--background);');
@@ -354,6 +367,8 @@ abstract class CssGenerator {
     required ThemePalette dark,
     FontConfig fonts = const FontConfig(),
     RadiusConfig radius = const RadiusConfig(),
+    ControlConfig controls = const ControlConfig(),
+    MotionConfig motion = const MotionConfig(),
   }) {
     final StringBuffer buffer = StringBuffer();
 
@@ -367,6 +382,8 @@ abstract class CssGenerator {
         selector: ':root, html.light, .light',
         fonts: fonts,
         radius: radius,
+        controls: controls,
+        motion: motion,
         includeStatic: true,
       ),
     );

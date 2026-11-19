@@ -4,7 +4,7 @@ import 'package:arcane_jaspr/core/rendering/base/text_input_render_base.dart';
 class NeubrutalismTextInput extends TextInputRenderBase {
   const NeubrutalismTextInput(super.props, {super.key});
 
-  static const String _surface = 'var(--nb-paper, var(--card))';
+  static const String _surface = 'var(--nb-control-paper, var(--card))';
 
   @override
   String get classPrefix => 'neubrutalism';
@@ -61,7 +61,7 @@ class NeubrutalismTextInput extends TextInputRenderBase {
   Map<String, String> containerStyles(bool hasError) {
     final String borderColor = hasError
         ? 'var(--destructive)'
-        : 'var(--nb-ink, #000)';
+        : 'var(--nb-control-line, var(--nb-line, #000))';
     return <String, String>{
       'display': 'flex',
       'align-items': 'center',
@@ -69,7 +69,7 @@ class NeubrutalismTextInput extends TextInputRenderBase {
       'border': 'var(--nb-border-base, 3px) solid $borderColor',
       'background-color': _surface,
       'box-shadow':
-          'var(--nb-shadow-xs, 2px 2px 0 0 var(--nb-shadow-color, #000))',
+          'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))',
       'transition':
           'transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 120ms cubic-bezier(0.2, 0.8, 0.2, 1)',
     };

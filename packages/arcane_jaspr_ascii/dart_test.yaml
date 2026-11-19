@@ -1,0 +1,7 @@
+# Concurrent browser suites hide tabs and pause visibility-dependent motion.
+concurrency: 1
+
+override_platforms:
+  chrome:
+    settings:
+      arguments: --force-prefers-no-reduced-motion

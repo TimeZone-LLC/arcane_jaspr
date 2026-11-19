@@ -355,7 +355,14 @@ List<(String, Widget)> componentCases() => <(String, Widget)>[
   ),
   ('DialogEmail', DialogEmail(title: 'Email', onConfirm: (String _) {})),
   ('DialogText', DialogText(title: 'Text', onConfirm: (String _) {})),
-  ('DialogTime', DialogTime(title: 'Time', onConfirm: (TimeOfDay? _) {})),
+  (
+    'DialogTime',
+    DialogTime(
+      title: 'Time',
+      value: const TimeOfDay(hour: 10, minute: 30),
+      onConfirm: (TimeOfDay? _) {},
+    ),
+  ),
   ('ArcanePopover', ArcanePopover(trigger: _child, content: _child)),
   ('ArcaneToast', const ArcaneToast(message: 'Saved')),
   ('ArcaneTooltip', ArcaneTooltip(text: 'tip', child: _child)),

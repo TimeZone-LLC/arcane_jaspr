@@ -120,7 +120,7 @@ void main() {
     final String input = RegExp(
       r'<input id="search"[^>]*>',
     ).firstMatch(response.body)!.group(0)!;
-    expect(input, contains('height: 32px'));
+    expect(input, contains('height: var(--control-height-sm)'));
     expect(input, contains('data-arcane-field-inner="true"'));
     expect(response.body, contains('data-arcane-field-shell="true"'));
     expect(response.body, contains('1px solid var(--neon-control-border)'));

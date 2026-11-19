@@ -3,6 +3,7 @@ import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/props/time_picker_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/time_picker_render_base.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// ShadCN Time Picker renderer.
 class ShadcnTimePicker extends TimePickerRenderBase {
@@ -11,16 +12,16 @@ class ShadcnTimePicker extends TimePickerRenderBase {
   @override
   Map<String, String> get sizeStyles => switch (props.size) {
     ComponentSize.sm => const <String, String>{
-      'height': '32px',
+      'height': '2rem',
       'fontSize': '0.875rem',
     },
     ComponentSize.md => const <String, String>{
-      'height': '36px',
+      'height': '2.25rem',
       'fontSize': '0.875rem',
     },
     ComponentSize.lg => const <String, String>{
-      'height': '40px',
-      'fontSize': '1rem',
+      'height': '2.5rem',
+      'fontSize': '0.875rem',
     },
   };
 
@@ -36,15 +37,11 @@ class ShadcnTimePicker extends TimePickerRenderBase {
     'position': 'relative',
     'display': 'flex',
     'flex-direction': 'column',
-    'gap': 'var(--space-1)',
+    'gap': 'var(--space-2)',
   };
 
   @override
-  Map<String, String> get labelStyles => const <String, String>{
-    'font-size': 'var(--font-size-sm)',
-    'font-weight': 'var(--font-weight-medium)',
-    'color': 'var(--foreground)',
-  };
+  Map<String, String> get labelStyles => shadcnFieldLabelStyles;
 
   @override
   String get triggerClasses =>
@@ -76,6 +73,8 @@ class ShadcnTimePicker extends TimePickerRenderBase {
     'border-radius': 'var(--radius-md)',
     'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
     'font-size': fontSize,
+    'font-family': 'var(--font-control, inherit)',
+    'line-height': '1.25rem',
     'color':
         'var(--shadcn-item-foreground, ${hasValue ? 'var(--foreground)' : 'var(--muted-foreground)'})',
     'cursor': props.disabled ? 'not-allowed' : 'pointer',

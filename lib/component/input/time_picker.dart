@@ -1,8 +1,8 @@
 import 'package:arcane_jaspr/core/theme_provider.dart';
 import 'package:arcane_jaspr/flutter.dart';
 
-import '../../core/decoration/arcane_decoration.dart';
-import '../../util/style_types/arcane_style_data.dart';
+import 'package:arcane_jaspr/core/decoration/arcane_decoration.dart';
+import 'package:arcane_jaspr/util/style_types/arcane_style_data.dart';
 
 export 'package:arcane_jaspr/core/props/time_picker_props.dart';
 
@@ -50,6 +50,7 @@ class ArcaneTimePicker extends StatefulWidget {
 }
 
 class _ArcaneTimePickerState extends State<ArcaneTimePicker> {
+  late final String _generatedId = 'timepicker-${identityHashCode(this)}';
   bool _isOpen = false;
   late TimeOfDay _workingTime;
 
@@ -161,8 +162,7 @@ class _ArcaneTimePickerState extends State<ArcaneTimePicker> {
 
   @override
   Widget build(BuildContext context) {
-    final String resolvedId =
-        widget.id ?? 'timepicker-${identityHashCode(widget)}';
+    final String resolvedId = widget.id ?? _generatedId;
     return context.renderers.timePicker(
       TimePickerProps(
         id: resolvedId,

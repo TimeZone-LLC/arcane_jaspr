@@ -20,7 +20,9 @@ class NeubrutalismOtpInput extends OtpInputRenderBase {
   Map<String, String> get rootStyles => const <String, String>{
     'display': 'flex',
     'flex-direction': 'column',
+    'min-width': '0',
     'gap': '10px',
+    'max-width': '100%',
   };
 
   @override
@@ -40,12 +42,13 @@ class NeubrutalismOtpInput extends OtpInputRenderBase {
   Map<String, String> get digitsRowStyles => const <String, String>{
     'display': 'flex',
     'align-items': 'center',
-    'gap': '10px',
+    'gap': 'clamp(4px, 1vw, 10px)',
+    'max-width': '100%',
   };
 
   @override
   Map<String, String> get separatorStyles => const <String, String>{
-    'color': 'var(--nb-accent, var(--primary))',
+    'color': 'var(--muted-foreground)',
     'font-size': 'var(--font-size-lg)',
     'font-weight': '700',
     'margin': '0 4px',
@@ -90,6 +93,9 @@ class NeubrutalismOtpInput extends OtpInputRenderBase {
   ) => <String, String>{
     'width': size,
     'height': size,
+    'min-width': '0',
+    'flex': '0 1 $size',
+    'padding': '0',
     'font-family': 'var(--font-heading)',
     'font-size': fontSize,
     'text-align': 'center',
@@ -103,7 +109,7 @@ class NeubrutalismOtpInput extends OtpInputRenderBase {
         'var(--nb-border-thick, 3px) solid ${hasError ? 'var(--destructive)' : 'var(--nb-line, #000)'}',
     'transition':
         'transform var(--nb-transition, 120ms ease), box-shadow var(--nb-transition, 120ms ease), background var(--nb-transition, 120ms ease)',
-    'caret-color': 'var(--nb-line, #000)',
+    'caret-color': 'currentColor',
     'box-shadow': isFilled(i, digits)
         ? 'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))'
         : 'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',

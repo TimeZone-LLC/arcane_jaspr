@@ -1,4 +1,5 @@
 import 'package:jaspr/jaspr.dart';
+import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/props/toast_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/toast_render_base.dart';
@@ -30,17 +31,24 @@ class NeubrutalismToast extends ToastRenderBase {
     'gap': '0.75rem',
     'width': '360px',
     'max-width': '100%',
+    'box-sizing': 'border-box',
+    'overflow-wrap': 'anywhere',
     'padding': '1rem 1.25rem',
     'background': 'var(--nb-paper, var(--card))',
     'border': 'var(--nb-border-thick, 4px) solid $accentVar',
     'border-radius': 'var(--nb-radius-soft, 4px)',
-    'box-shadow': 'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
+    'box-shadow':
+        'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
     'transition':
         'opacity var(--nb-transition, 120ms ease), transform var(--nb-transition, 120ms ease), box-shadow var(--nb-transition, 120ms ease)',
   };
 
   @override
   Map<String, String> actionStyles() => <String, String>{
+    'max-width': '100%',
+    'min-height': '44px',
+    'box-sizing': 'border-box',
+    'white-space': 'normal',
     'margin-top': '0.5rem',
     'padding': '0.5rem 0.875rem',
     'font-family': 'var(--font-heading)',
@@ -56,20 +64,22 @@ class NeubrutalismToast extends ToastRenderBase {
         : 'var(--nb-on-accent, #000)',
     'border': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
     'border-radius': 'var(--nb-radius-soft, 4px)',
-    'box-shadow': 'var(--nb-shadow-xs, 2px 2px 0 0 var(--nb-shadow-color, #000))',
+    'box-shadow':
+        'var(--nb-shadow-xs, 2px 2px 0 0 var(--nb-shadow-color, #000))',
     'cursor': 'pointer',
     'transition':
         'transform var(--nb-transition, 120ms ease), box-shadow var(--nb-transition, 120ms ease)',
   };
 
   @override
-  String get dismissClasses => 'neubrutalism-toast-dismiss neubrutalism-toast-close';
+  String get dismissClasses =>
+      'neubrutalism-toast-dismiss neubrutalism-toast-close';
 
   @override
   Map<String, String> get dismissStyles => const <String, String>{
     'flex-shrink': '0',
-    'width': '28px',
-    'height': '28px',
+    'width': '44px',
+    'height': '44px',
     'display': 'flex',
     'align-items': 'center',
     'justify-content': 'center',
@@ -90,6 +100,17 @@ class NeubrutalismToastContainer extends ToastContainerRenderBase {
 
   @override
   String get classPrefix => 'neubrutalism';
+
+  @override
+  Component build(BuildContext context) => dom.div(
+    styles: dom.Styles(
+      raw: <String, String>{
+        'display': 'contents',
+        '--nb-toast-offset': '${props.offset}px',
+      },
+    ),
+    <Component>[super.build(context)],
+  );
 
   @override
   Component buildToast(ToastProps toast) => NeubrutalismToast(toast);

@@ -2,6 +2,8 @@ import 'package:jaspr/jaspr.dart';
 import 'package:jaspr/dom.dart' as dom;
 
 import 'package:arcane_jaspr/core/decoration/arcane_decoration.dart';
+import 'package:arcane_jaspr/core/dom_value.dart';
+import 'package:arcane_jaspr/core/interaction/interaction.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/floating_props.dart';
 
@@ -74,7 +76,8 @@ abstract class FloatingRenderBase extends StatelessComponent {
 
     final Map<String, String> triggerWrapperAttrs = <String, String>{
       'data-arcane-anchor-id': anchorId,
-      if (useClickEvents) 'data-arcane-action': 'surface.toggle:$surfaceId',
+      if (useClickEvents)
+        ...interactionAttrs(ArcaneInteraction.togglePopover(surfaceId)),
       if (useHoverEvents) ...<String, String>{
         'data-arcane-mouseenter': 'surface.hoverOpen:$surfaceId',
         'data-arcane-mouseleave': 'surface.hoverClose:$surfaceId',
@@ -96,6 +99,22 @@ abstract class FloatingRenderBase extends StatelessComponent {
       events: <String, EventCallback>{
         if (useHoverEvents) 'mouseenter': (_) => props.onMouseEnter?.call(),
         if (useHoverEvents) 'mouseleave': (_) => props.onMouseLeave?.call(),
+        if (useHoverEvents)
+          'focusin': (event) {
+            if (!domEventRelatedTargetIsInside(event)) props.onFocus?.call();
+          },
+        if (useHoverEvents)
+          'focusout': (event) {
+            if (!domEventRelatedTargetIsInside(event)) props.onBlur?.call();
+          },
+        if (useHoverEvents && isOpen && props.closeOnEscape)
+          'keydown': (event) {
+            if (domEventKey(event) == 'Escape') {
+              event.preventDefault();
+              event.stopPropagation();
+              props.onOpenChange?.call(false);
+            }
+          },
       },
       <Component>[
         dom.div(
@@ -104,7 +123,11 @@ abstract class FloatingRenderBase extends StatelessComponent {
             raw: <String, String>{'display': 'inline-block'},
           ),
           events: <String, EventCallback>{
-            if (useClickEvents) 'click': (_) => props.onToggle?.call(),
+            if (useClickEvents && props.onToggle != null)
+              'click': (event) {
+                event.stopPropagation();
+                props.onToggle!.call();
+              },
           },
           <Component>[props.trigger],
         ),
@@ -131,6 +154,11 @@ abstract class FloatingRenderBase extends StatelessComponent {
     ) = _getPositionStylesForPanel();
     final bool hasRichContent = props.content != null;
     final double? maxWidth = props.maxWidth;
+    final Map<String, String> overrideStyles = <String, String>{
+      ...?props.decoration?.universalStyles(),
+      ...decorationStyles(props.decoration),
+      ...?props.styles?.toMap(),
+    };
 
     final Map<String, String> surfAttrs = surfaceAttrs(
       surface: surfaceKind,
@@ -139,8 +167,8 @@ abstract class FloatingRenderBase extends StatelessComponent {
       dismissible: props.closeOnOutsideClick,
       escapeCloses: props.closeOnEscape,
       focusTrap: false,
-      scrimCloses: false,
-      restoreFocus: true,
+      scrimCloses: props.closeOnOutsideClick,
+      restoreFocus: surfaceKind != 'hovercard',
       anchorId: anchorId,
       anchorPlacement: _anchorPlacement,
       anchorAlign: _anchorAlign,
@@ -152,6 +180,12 @@ abstract class FloatingRenderBase extends StatelessComponent {
       attributes: <String, String>{
         'role': surfaceKind == 'hovercard' ? 'tooltip' : 'dialog',
         ...surfAttrs,
+        if (alignment.containsKey('transform') &&
+            !overrideStyles.containsKey('transform'))
+          'data-arcane-anchor-transform': alignment['transform']!,
+      },
+      events: <String, EventCallback>{
+        'arcane:close': (_) => props.onOpenChange?.call(false),
       },
       styles: dom.Styles(
         raw: <String, String>{
@@ -162,9 +196,7 @@ abstract class FloatingRenderBase extends StatelessComponent {
             hasRichContent: hasRichContent,
             maxWidth: maxWidth,
           ),
-          ...?props.decoration?.universalStyles(),
-          ...decorationStyles(props.decoration),
-          ...?props.styles?.toMap(),
+          ...overrideStyles,
         },
       ),
       <Component>[

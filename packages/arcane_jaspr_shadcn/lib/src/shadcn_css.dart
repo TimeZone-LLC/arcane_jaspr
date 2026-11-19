@@ -173,13 +173,13 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
   height: 3.5rem;
   min-height: 3.5rem;
   padding: 0 1.5rem;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 #arcane-root.arcane-theme-shadcn .kb-topbar-left,
 #arcane-root.arcane-theme-shadcn .kb-topbar-right {
   min-width: 0;
-  gap: 0.875rem;
+  gap: 0.5rem;
 }
 
 #arcane-root.arcane-theme-shadcn .kb-topbar-left {
@@ -187,7 +187,7 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 }
 
 #arcane-root.arcane-theme-shadcn .kb-topbar-right {
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -205,6 +205,8 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 }
 
 #arcane-root.arcane-theme-shadcn .kb-topbar-brand {
+  min-width: 0;
+  min-height: 2.25rem;
   height: auto;
   padding: 0;
   gap: 0;
@@ -215,7 +217,7 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
   box-shadow: none;
   font-size: 0.875rem;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.25;
   text-decoration: none;
 }
 
@@ -224,6 +226,9 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 }
 
 #arcane-root.arcane-theme-shadcn .kb-topbar-brand-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--foreground);
 }
 
@@ -288,17 +293,6 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
   min-height: 0 !important;
 }
 
-/* Docs knowledge-base sidebar (rendered directly under .kb-scaffold, not the
-   arcane scaffold). Pin it directly below the 3.5rem sticky topbar and let it
-   scroll on its own instead of forcing the whole page to scroll. The inline
-   --kb-sidebar-rail-top (56px) otherwise double-counts the topbar height,
-   leaving a gap above the nav. */
-#arcane-root.arcane-theme-shadcn .shadcn-kb-sidebar {
-  top: 3.5rem;
-  max-height: calc(100vh - 3.5rem);
-  overflow-y: auto;
-}
-
 #arcane-root.arcane-theme-shadcn .sidebar-header {
   margin: 0 0 0.5rem;
   padding: 0.625rem;
@@ -308,7 +302,7 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 }
 
 #arcane-root.arcane-theme-shadcn .sidebar-nav {
-  padding: 0.375rem 0.125rem 0.625rem !important;
+  padding: 0.375rem 0.5rem 0.625rem !important;
   gap: 0.375rem !important;
 }
 
@@ -336,7 +330,8 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 #arcane-root.arcane-theme-shadcn .kb-stylesheet-select,
 #arcane-root.arcane-theme-shadcn .kb-palette-select,
 #arcane-root.arcane-theme-shadcn .kb-hamburger {
-  height: 2.125rem;
+  height: 2.25rem;
+  flex-shrink: 0;
   border: 1px solid var(--shadcn-hairline);
   background: var(--background);
   border-radius: var(--radius);
@@ -346,7 +341,8 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 #arcane-root.arcane-theme-shadcn .kb-topbar-github,
 #arcane-root.arcane-theme-shadcn .kb-theme-toggle,
 #arcane-root.arcane-theme-shadcn .kb-hamburger {
-  width: 2.125rem;
+  width: 2.25rem;
+  padding: 0;
 }
 
 #arcane-root.arcane-theme-shadcn .kb-topbar .kb-hamburger {
@@ -354,6 +350,24 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 }
 
 @media (max-width: 900px) {
+  #arcane-root.arcane-theme-shadcn .kb-topbar-inner {
+    padding-inline: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  #arcane-root.arcane-theme-shadcn .kb-topbar-brand {
+    min-height: 2.75rem;
+  }
+
+  #arcane-root.arcane-theme-shadcn :is(.kb-topbar-github, .kb-theme-toggle, .kb-hamburger) {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  #arcane-root.arcane-theme-shadcn :is(.kb-stylesheet-select, .kb-palette-select) {
+    height: 2.75rem;
+  }
+
   #arcane-root.arcane-theme-shadcn .kb-topbar .kb-hamburger {
     display: inline-flex !important;
   }
@@ -370,10 +384,16 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 
 #arcane-root.arcane-theme-shadcn .kb-search-input,
 #arcane-root.arcane-theme-shadcn .sidebar-search input {
-  height: 2.125rem;
+  height: 2.25rem;
   border-color: var(--shadcn-hairline);
   background: var(--background);
   border-radius: var(--radius);
+}
+
+@media (max-width: 900px) {
+  #arcane-root.arcane-theme-shadcn .kb-search-input {
+    height: 2.75rem;
+  }
 }
 
 #arcane-root.arcane-theme-shadcn .kb-search-input:focus,
@@ -404,10 +424,34 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 
 #arcane-root.arcane-theme-shadcn .sidebar-summary,
 #arcane-root.arcane-theme-shadcn .sidebar-link {
+  min-height: 2.25rem;
+  line-height: 1.5;
   border-radius: calc(var(--radius) - 2px);
   color: color-mix(in srgb, var(--foreground) 78%, var(--muted-foreground));
   outline: 1px solid transparent;
   outline-offset: -1px;
+}
+
+#arcane-root.arcane-theme-shadcn .sidebar-link {
+  display: flex;
+  align-items: flex-start;
+  padding-block: 0.5rem;
+}
+
+#arcane-root.arcane-theme-shadcn .sidebar-link-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#arcane-root.arcane-theme-shadcn .sidebar-link .sidebar-icon {
+  margin-top: 0.125rem;
+}
+
+@media (max-width: 900px) {
+  #arcane-root.arcane-theme-shadcn :is(.sidebar-summary, .sidebar-link) {
+    min-height: 2.75rem;
+    padding-block: 0.75rem;
+  }
 }
 
 #arcane-root.arcane-theme-shadcn .sidebar-summary:hover,
@@ -441,7 +485,7 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 }
 
 #arcane-root.arcane-theme-shadcn .kb-toc-panel .toc {
-  padding: 0.125rem 0 0;
+  padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -450,8 +494,9 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
 
 #arcane-root.arcane-theme-shadcn .kb-toc-panel .toc-title {
   border-bottom: 0 !important;
-  padding-bottom: 0.125rem;
-  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+  line-height: 1.5;
 }
 
 #arcane-root.arcane-theme-shadcn .toc-content a {
@@ -598,8 +643,12 @@ html:has(#arcane-root.arcane-theme-shadcn) body::-webkit-scrollbar-thumb:hover,
   top: 5rem !important;
   align-self: flex-start !important;
   width: 100% !important;
-  max-height: none !important;
-  overflow: visible !important;
+  max-height: calc(100vh - 8rem) !important;
+  max-height: calc(100dvh - 8rem) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
 }
 
 @media (max-width: 1200px) {

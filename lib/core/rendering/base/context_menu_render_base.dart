@@ -89,21 +89,21 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
 
     return dom.div(
       classes: '$themePrefix-context-menu-trigger',
-      attributes: <String, String>{
-        'data-arcane-context-trigger': surfaceId,
-      },
+      attributes: <String, String>{'data-arcane-context-trigger': surfaceId},
       styles: const dom.Styles(raw: {'display': 'contents'}),
       [
         props.trigger,
         dom.div(
           classes: '$themePrefix-context-menu$popoverSuffix',
           attributes: menuAttrs,
-          styles: dom.Styles(raw: <String, String>{
-            ...menuStyles,
-            ...?props.decoration?.universalStyles(),
-            ...decorationStyles(props.decoration),
-            ...?props.styles?.toMap(),
-          }),
+          styles: dom.Styles(
+            raw: <String, String>{
+              ...menuStyles,
+              ...?props.decoration?.universalStyles(),
+              ...decorationStyles(props.decoration),
+              ...?props.styles?.toMap(),
+            },
+          ),
           [for (final item in props.items) _buildMenuItem(item, surfaceId)],
         ),
       ],
@@ -142,8 +142,8 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
     final Map<String, String> actionAttrs = item.disabled
         ? const <String, String>{}
         : itemAction != null
-            ? interactionAttrs(itemAction)
-            : const <String, String>{};
+        ? interactionAttrs(itemAction)
+        : const <String, String>{};
 
     return dom.div(
       classes:
@@ -164,7 +164,11 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
           ? <String, EventCallback>{'click': (_) => item.onSelect!()}
           : null,
       [
-        if (item.icon != null) item.icon!,
+        if (item.icon != null)
+          dom.span(
+            attributes: const <String, String>{'aria-hidden': 'true'},
+            <Component>[item.icon!],
+          ),
         dom.span(
           styles: dom.Styles(
             raw: {
@@ -195,11 +199,11 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
     final Map<String, String> actionAttrs = item.disabled
         ? const <String, String>{}
         : itemAction != null
-            ? mergeAttrs(<Map<String, String>>[
-                interactionAttrs(itemAction),
-                <String, String>{'data-arcane-keep-open': 'true'},
-              ])
-            : const <String, String>{};
+        ? mergeAttrs(<Map<String, String>>[
+            interactionAttrs(itemAction),
+            <String, String>{'data-arcane-keep-open': 'true'},
+          ])
+        : const <String, String>{};
     return dom.div(
       classes: '$themePrefix-context-menu-item checkbox',
       attributes: mergeAttrs(<Map<String, String>>[
@@ -216,13 +220,16 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
       ]),
       styles: dom.Styles(raw: selectableStyles(item.disabled)),
       events: item.onChanged != null && !item.disabled && itemAction == null
-          ? <String, EventCallback>{'click': (_) => item.onChanged!(!item.checked)}
+          ? <String, EventCallback>{
+              'click': (_) => item.onChanged!(!item.checked),
+            }
           : null,
       [
         // Checkbox indicator
         if (item.checked)
           dom.span(
             classes: 'arcane-menu-indicator',
+            attributes: const <String, String>{'aria-hidden': 'true'},
             styles: dom.Styles(
               raw: {
                 'position': 'absolute',
@@ -232,7 +239,11 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
             ),
             [ArcaneIcon.check(size: IconSize.xs)],
           ),
-        if (item.icon != null) item.icon!,
+        if (item.icon != null)
+          dom.span(
+            attributes: const <String, String>{'aria-hidden': 'true'},
+            <Component>[item.icon!],
+          ),
         dom.span(styles: const dom.Styles(raw: {'flex': '1'}), [
           Component.text(item.label),
         ]),
@@ -257,8 +268,8 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
     final Map<String, String> actionAttrs = item.disabled
         ? const <String, String>{}
         : itemAction != null
-            ? interactionAttrs(itemAction)
-            : const <String, String>{};
+        ? interactionAttrs(itemAction)
+        : const <String, String>{};
     final Map<String, String> groupItem = groupItemAttrs(
       groupId: item.group,
       value: item.value,
@@ -287,6 +298,7 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
         if (item.selected)
           dom.span(
             classes: 'arcane-menu-indicator',
+            attributes: const <String, String>{'aria-hidden': 'true'},
             styles: dom.Styles(
               raw: {
                 'position': 'absolute',
@@ -296,7 +308,11 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
             ),
             [ArcaneIcon.dot(size: IconSize.sm)],
           ),
-        if (item.icon != null) item.icon!,
+        if (item.icon != null)
+          dom.span(
+            attributes: const <String, String>{'aria-hidden': 'true'},
+            <Component>[item.icon!],
+          ),
         dom.span(styles: const dom.Styles(raw: {'flex': '1'}), [
           Component.text(item.label),
         ]),
@@ -332,11 +348,13 @@ abstract class ContextMenuRenderBase extends StatelessComponent {
       attributes: triggerAttrs,
       styles: dom.Styles(raw: submenuTriggerStyles(item.disabled)),
       [
-        if (item.icon != null) item.icon!,
-        dom.span(
-          styles: dom.Styles(
-            raw: {'flex': '1', 'color': labelTextColor},
+        if (item.icon != null)
+          dom.span(
+            attributes: const <String, String>{'aria-hidden': 'true'},
+            <Component>[item.icon!],
           ),
+        dom.span(
+          styles: dom.Styles(raw: {'flex': '1', 'color': labelTextColor}),
           [Component.text(item.label)],
         ),
         dom.span(

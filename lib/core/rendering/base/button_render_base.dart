@@ -142,10 +142,14 @@ abstract class ButtonRenderBase extends StatelessComponent {
     );
   }
 
+  // A flex box centres the glyph; as an inline box it would sit on the text baseline, off-centre.
   Component _semanticIcon() => dom.span(
     attributes: <String, String>{
       'data-arcane-semantic-icon': props.iconPosition.name,
     },
+    styles: const dom.Styles(
+      raw: <String, String>{'display': 'inline-flex', 'align-items': 'center'},
+    ),
     <Component>[props.icon!],
   );
 }

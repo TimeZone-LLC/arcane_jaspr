@@ -23,8 +23,10 @@
 library;
 
 export 'color_seed.dart';
+export 'control_config.dart';
 export 'css_generator.dart';
 export 'font_config.dart';
+export 'motion_config.dart';
 export 'palette.dart';
 export 'palette_generator.dart';
 export 'radius_config.dart';

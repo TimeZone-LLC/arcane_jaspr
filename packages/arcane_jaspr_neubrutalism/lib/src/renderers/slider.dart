@@ -131,7 +131,7 @@ class NeubrutalismSlider extends SliderRenderBase {
     'height': thumbSize,
     'background': 'var(--nb-accent, var(--primary))',
     'border': 'var(--nb-border-thick, 3px) solid var(--nb-line, #000)',
-    'border-radius': '0',
+    'border-radius': 'var(--nb-radius-tight, 0)',
     'box-shadow':
         'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))',
     'transition': 'left 0.1s ease-out',

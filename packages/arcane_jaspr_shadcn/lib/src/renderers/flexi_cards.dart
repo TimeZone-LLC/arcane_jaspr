@@ -37,8 +37,11 @@ class _ShadcnFlexiCardsState extends State<ShadcnFlexiCards> {
         raw: {
           'display': 'flex',
           'flex-direction': 'row',
+          'flex-wrap': 'wrap',
           'gap': component.props.gap,
           'width': '100%',
+          'max-width': '100%',
+          'min-width': '0',
           'align-items': 'stretch',
         },
       ),
@@ -215,10 +218,14 @@ class _ShadcnFlexiCardsState extends State<ShadcnFlexiCards> {
     final bool interactive = item.onTap != null || item.href != null;
     final Map<String, String> cardStyles = {
       // Only use flex if not using locked width
-      if (!useLockedWidth) 'flex': '$flexValue',
+      if (!useLockedWidth)
+        'flex': '$flexValue 1 ${component.props.minCardWidth}',
       'width': ?cardWidth,
       'height': ?cardHeight,
-      'min-width': component.props.minCardWidth,
+      'min-width': 'min(100%, ${component.props.minCardWidth})',
+      'max-width': '100%',
+      'box-sizing': 'border-box',
+      'overflow-wrap': 'anywhere',
       'display': 'flex',
       'flex-direction': 'column',
       'padding': '1.5rem',
@@ -302,8 +309,11 @@ class ShadcnFlexiCardsSimple extends StatelessComponent {
         raw: {
           'display': 'flex',
           'flex-direction': 'row',
+          'flex-wrap': 'wrap',
           'gap': props.gap,
           'width': '100%',
+          'max-width': '100%',
+          'min-width': '0',
         },
       ),
       [for (final item in props.items) _buildCard(item)],
@@ -316,8 +326,11 @@ class ShadcnFlexiCardsSimple extends StatelessComponent {
       attributes: const <String, String>{'data-arcane-surface': 'flexi-card'},
       styles: const dom.Styles(
         raw: {
-          'flex': '1',
-          'min-width': '200px',
+          'flex': '1 1 200px',
+          'min-width': 'min(100%, 200px)',
+          'max-width': '100%',
+          'box-sizing': 'border-box',
+          'overflow-wrap': 'anywhere',
           'display': 'flex',
           'flex-direction': 'column',
           'padding': '1.5rem',

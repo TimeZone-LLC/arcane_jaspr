@@ -8,6 +8,7 @@ import 'runtime_command_js.dart';
 import 'runtime_cycle_js.dart';
 import 'runtime_calendar_js.dart';
 import 'runtime_time_js.dart';
+import 'runtime_otp_js.dart';
 import 'runtime_form_theme_js.dart';
 import 'runtime_dispatch_js.dart';
 
@@ -64,7 +65,7 @@ const String _runtimeBaseCss = r'''
 }
 [data-arcane-calendar] .arcane-calendar-weekdays {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 0.25rem;
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -72,15 +73,15 @@ const String _runtimeBaseCss = r'''
   text-align: center;
 }
 [data-arcane-calendar][data-arcane-show-week-numbers="true"] .arcane-calendar-weekdays {
-  grid-template-columns: 2rem repeat(7, 1fr);
+  grid-template-columns: 2rem repeat(7, minmax(0, 1fr));
 }
 [data-arcane-calendar] .arcane-calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 0.25rem;
 }
 [data-arcane-calendar][data-arcane-show-week-numbers="true"] .arcane-calendar-grid {
-  grid-template-columns: 2rem repeat(7, 1fr);
+  grid-template-columns: 2rem repeat(7, minmax(0, 1fr));
 }
 [data-arcane-calendar] .arcane-calendar-weeknum {
   text-align: center;
@@ -93,7 +94,7 @@ const String _runtimeBaseCss = r'''
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-width: 2.25rem;
+  min-width: 0;
   min-height: 2.25rem;
   aspect-ratio: 1 / 1;
   background: transparent;
@@ -182,6 +183,7 @@ String buildArcaneInteractivityRuntime({bool minify = false}) {
   buffer.writeln(runtimeCycleJs);
   buffer.writeln(runtimeCalendarJs);
   buffer.writeln(runtimeTimeJs);
+  buffer.writeln(runtimeOtpJs);
   buffer.writeln(runtimeFormJs);
   buffer.writeln(runtimeThemeJs);
   buffer.writeln(runtimeToastJs);

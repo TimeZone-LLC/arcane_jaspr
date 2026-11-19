@@ -44,6 +44,9 @@ class ArcaneMap extends StatelessWidget {
   /// Custom SVG URL (overrides default asset path).
   final String? svgUrl;
 
+  /// Accessible name for the map image; defaults to the map type.
+  final String? label;
+
   const ArcaneMap({
     this.type = MapType.world,
     this.locations = const [],
@@ -55,6 +58,7 @@ class ArcaneMap extends StatelessWidget {
     this.height,
     this.debugMode = false,
     this.svgUrl,
+    this.label,
     super.key,
   });
 
@@ -81,6 +85,7 @@ class ArcaneMap extends StatelessWidget {
       styles: dom.Styles(
         raw: {
           'display': 'flex',
+          'background': style.backgroundColor,
           'justify-content': 'center',
           'align-items': 'center',
           'width': '100%',
@@ -103,18 +108,28 @@ class ArcaneMap extends StatelessWidget {
             },
           ),
           [
-            // SVG Map as image - fills the aspect-ratio container
-            dom.img(
-              src: mapUrl,
-              attributes: {'alt': 'Map'},
-              styles: const dom.Styles(
-                raw: {
+            // Land drawn from the map SVG as a mask so style.regionFill paints it.
+            dom.div(
+              attributes: <String, String>{
+                'role': 'img',
+                'aria-label':
+                    label ??
+                    (type == MapType.world ? 'World map' : 'United States map'),
+              },
+              styles: dom.Styles(
+                raw: <String, String>{
                   'width': '100%',
                   'height': '100%',
-                  'display': 'block',
-                  'border-radius': '8px',
+                  'background-color': style.regionFill,
+                  'mask-image': 'url("$mapUrl")',
+                  '-webkit-mask-image': 'url("$mapUrl")',
+                  'mask-size': '100% 100%',
+                  '-webkit-mask-size': '100% 100%',
+                  'mask-repeat': 'no-repeat',
+                  '-webkit-mask-repeat': 'no-repeat',
                 },
               ),
+              const <Widget>[],
             ),
             // Pins container
             dom.div(

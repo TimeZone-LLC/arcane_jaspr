@@ -111,6 +111,8 @@ class ShadcnCircularProgress extends CircularProgressRenderBase {
   Map<String, String> rootStyles(CircularProgressProps props) {
     final String actualSize = props.size ?? '80px';
     return <String, String>{
+      '--arcane-circular-progress-size': actualSize,
+      '--arcane-circular-progress-angle': '${props.value.clamp(0.0, 1.0) * 360}deg',
       'position': 'relative',
       'width': actualSize,
       'height': actualSize,
@@ -131,7 +133,7 @@ class ShadcnCircularProgress extends CircularProgressRenderBase {
       'height': '100%',
       'border-radius': '50%',
       'background':
-          'conic-gradient($fillColor 0deg ${props.value * 360}deg, $trackColor ${props.value * 360}deg 360deg)',
+          'conic-gradient($fillColor 0deg ${props.value.clamp(0.0, 1.0) * 360}deg, $trackColor ${props.value.clamp(0.0, 1.0) * 360}deg 360deg)',
       'mask':
           'radial-gradient(farthest-side, transparent calc(100% - $actualStroke), #fff calc(100% - $actualStroke))',
       '-webkit-mask':

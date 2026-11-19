@@ -24,14 +24,15 @@ double _contrast(int first, int second) {
 }
 
 Map<String, int> _palette(String css, String selector) {
-  final String block = RegExp(
+  final Iterable<RegExpMatch> blocks = RegExp(
     '${RegExp.escape(selector)} \\{([^}]+)\\}',
-  ).allMatches(css).last.group(1)!;
+  ).allMatches(css);
   return <String, int>{
-    for (final RegExpMatch match in RegExp(
-      r'--([a-z-]+): #([0-9a-f]{6});',
-    ).allMatches(block))
-      match.group(1)!: int.parse(match.group(2)!, radix: 16),
+    for (final RegExpMatch block in blocks)
+      for (final RegExpMatch match in RegExp(
+        r'--([a-z-]+): #([0-9a-f]{6});',
+      ).allMatches(block.group(1)!))
+        match.group(1)!: int.parse(match.group(2)!, radix: 16),
   };
 }
 
@@ -50,7 +51,10 @@ void main() {
     );
     final DocumentResponse response = await tester.request('/');
     expect(response.statusCode, 200);
-    expect(response.body, contains('grid-template-columns: repeat(7, 1fr)'));
+    expect(
+      response.body,
+      contains('grid-template-columns: repeat(7, minmax(0, 1fr))'),
+    );
     expect(
       RegExp('class="arcane-calendar-day ').allMatches(response.body),
       hasLength(42),
@@ -139,6 +143,12 @@ void main() {
     expect(response.body, contains('>e\u0301</span>'));
     expect(response.body, isNot(contains('><ok>')));
     expect(response.body, contains('ascii-text-cursor'));
+    expect(response.body, contains('data-glyph-next="="'));
+    expect(response.body, contains('data-glyph-last="."'));
+    expect(
+      response.body,
+      contains('data-glyph=" " data-glyph-next=" " data-glyph-last=" "'),
+    );
   });
 
   testServer('zero duration and disabled motion render text directly', (

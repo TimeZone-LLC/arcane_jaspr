@@ -65,6 +65,9 @@ class ArcanePagination extends StatelessWidget {
        showPageCount = true;
 
   List<int?> _getPageNumbers() {
+    if (totalPages <= 5 + 2 * siblingCount) {
+      return List<int?>.generate(totalPages, (int index) => index + 1);
+    }
     final List<int?> pages = [];
     final int leftSiblingIndex = (currentPage - siblingCount).clamp(
       1,

@@ -1,4 +1,5 @@
 import 'package:arcane_jaspr/core/rendering/base/text_area_render_base.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// ShadCN v4 textarea renderer.
 ///
@@ -17,12 +18,7 @@ class ShadcnTextArea extends TextAreaRenderBase {
   String get wrapperGap => 'var(--space-2)';
 
   @override
-  Map<String, String> labelStyles() => const <String, String>{
-    'font-size': '0.875rem',
-    'font-weight': '500',
-    'line-height': '1',
-    'color': 'var(--foreground)',
-  };
+  Map<String, String> labelStyles() => shadcnFieldLabelStyles;
 
   @override
   Map<String, String> textAreaStyles({
@@ -33,8 +29,8 @@ class ShadcnTextArea extends TextAreaRenderBase {
     'min-height': '4rem',
     'padding': '0.5rem 0.75rem',
     'font-size': '0.875rem',
-    'font-family': 'inherit',
-    'line-height': '1.5',
+    'font-family': 'var(--font-control, inherit)',
+    'line-height': '1.25rem',
     'background-color': isReadOnly
         ? 'var(--muted)'
         : 'var(--shadcn-input-background, transparent)',

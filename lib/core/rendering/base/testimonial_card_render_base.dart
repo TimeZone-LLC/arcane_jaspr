@@ -56,8 +56,12 @@ abstract class TestimonialCardRenderBase extends StatelessComponent {
 
     return dom.div(
       classes: cssClass,
-      attributes: const <String, String>{
+      attributes: <String, String>{
         'data-arcane-surface': 'testimonial-card',
+        if (props.decoration != null ||
+            props.styles != null ||
+            props.showAccentBorder)
+          'data-arcane-decorated': '',
       },
       styles: dom.Styles(raw: rootStyles),
       <Component>[
@@ -73,6 +77,7 @@ abstract class TestimonialCardRenderBase extends StatelessComponent {
           <Component>[
             if (props.showQuotes)
               dom.span(
+                classes: '$cssClass-quote',
                 styles: dom.Styles(
                   raw: <String, String>{
                     'font-family': 'var(--font-heading)',
@@ -100,6 +105,7 @@ abstract class TestimonialCardRenderBase extends StatelessComponent {
         // Rating row.
         if (props.rating != null)
           dom.div(
+            classes: '$cssClass-rating',
             styles: const dom.Styles(
               raw: <String, String>{
                 'display': 'flex',
@@ -274,9 +280,16 @@ abstract class RatingStarsSimpleRenderBase extends StatelessComponent {
   @override
   Component build(BuildContext context) {
     final int filled = props.rating.round().clamp(0, props.maxStars);
+    final bool interactive = props.interactive && props.onRatingChanged != null;
 
     return dom.div(
       classes: cssClass,
+      attributes: <String, String>{
+        'role': interactive ? 'group' : 'img',
+        'aria-label': interactive
+            ? 'Rating'
+            : '$filled out of ${props.maxStars} stars',
+      },
       styles: dom.Styles(
         raw: <String, String>{
           'display': 'inline-flex',
@@ -289,17 +302,44 @@ abstract class RatingStarsSimpleRenderBase extends StatelessComponent {
       ),
       <Component>[
         for (int i = 0; i < props.maxStars; i++)
-          dom.span(
-            styles: dom.Styles(
-              raw: <String, String>{if (props.interactive) 'cursor': 'pointer'},
+          if (interactive)
+            dom.button(
+              type: dom.ButtonType.button,
+              classes: '$cssClass-star',
+              attributes: <String, String>{
+                'aria-label': 'Rate ${i + 1} out of ${props.maxStars}',
+                'aria-pressed': '${i + 1 == filled}',
+              },
+              styles: const dom.Styles(
+                raw: <String, String>{
+                  'appearance': 'none',
+                  'background': 'transparent',
+                  'border': '0',
+                  'border-radius': 'var(--radius-sm, 4px)',
+                  'color': 'inherit',
+                  'font': 'inherit',
+                  'line-height': 'inherit',
+                  'padding': '0',
+                  'min-width': '44px',
+                  'min-height': '44px',
+                  'cursor': 'pointer',
+                },
+              ),
+              events: <String, EventCallback>{
+                'click': (_) => props.onRatingChanged!(i + 1),
+              },
+              <Component>[
+                dom.span(
+                  attributes: const <String, String>{'aria-hidden': 'true'},
+                  <Component>[Component.text(i < filled ? '★' : '☆')],
+                ),
+              ],
+            )
+          else
+            dom.span(
+              attributes: const <String, String>{'aria-hidden': 'true'},
+              <Component>[Component.text(i < filled ? '★' : '☆')],
             ),
-            events: props.interactive && props.onRatingChanged != null
-                ? <String, EventCallback>{
-                    'click': (_) => props.onRatingChanged!(i + 1),
-                  }
-                : null,
-            <Component>[Component.text(i < filled ? '★' : '☆')],
-          ),
       ],
     );
   }

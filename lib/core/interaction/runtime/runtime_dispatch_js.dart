@@ -307,6 +307,7 @@ function onDocumentContextMenu(e) {
 
 function onDocumentKeyDown(e) {
   if (e.defaultPrevented) return;
+  if (handleListboxKey(e)) return;
   if (handleMenuKey(e)) return;
   if (e.key === 'Escape') {
     if (ARCANE.stack.length > 0) {
@@ -347,6 +348,91 @@ function onDocumentKeyDown(e) {
   if (keyTarget) {
     runActions(keyTarget.getAttribute('data-arcane-keydown'), { trigger: keyTarget, event: e });
   }
+}
+
+function handleListboxKey(e) {
+  const target = e.target;
+  if (!target || !target.closest || e.isComposing || e.ctrlKey || e.altKey || e.metaKey) return false;
+  if (target.matches('input, textarea, [contenteditable="true"]')) return false;
+  const trigger = target.closest('[aria-haspopup="listbox"][aria-controls]');
+  const surface = trigger
+    ? document.getElementById(trigger.getAttribute('aria-controls'))
+    : target.closest('[role="listbox"][data-arcane-surface]');
+  if (!surface || surface.getAttribute('role') !== 'listbox' ||
+      !surface.hasAttribute('data-arcane-surface') ||
+      (trigger && (trigger.disabled || trigger.getAttribute('aria-disabled') === 'true'))) return false;
+  const type = surfaceType(surface);
+  const id = surfaceId(surface);
+  if (e.key === 'Tab' && surfaceIsOpen(surface)) {
+    const anchor = document.querySelector('[aria-controls="' + cssEscape(id) + '"][aria-haspopup="listbox"]');
+    if (anchor) anchor.focus({ preventScroll: true });
+    surface._arcanePrevFocus = null;
+    closeSurface(type, id, { immediate: true });
+    return false;
+  }
+  if (e.key === 'Enter' || e.key === ' ') {
+    if (trigger) {
+      e.preventDefault();
+      surface._arcaneTypeahead = '';
+      trigger.click();
+      return true;
+    }
+    const option = target.closest('[role="option"]');
+    if (option && !option.disabled && option.getAttribute('aria-disabled') !== 'true') {
+      e.preventDefault();
+      option.click();
+      return true;
+    }
+    return false;
+  }
+  const directional = ['ArrowDown', 'ArrowUp', 'Home', 'End'].indexOf(e.key) >= 0;
+  const printable = e.key.length === 1 && e.key !== ' ';
+  if (!directional && !printable) return false;
+  if (directional) surface._arcaneTypeahead = '';
+  const items = Array.prototype.slice.call(surface.querySelectorAll(
+    '[role="option"]:not([disabled]):not([hidden]):not([aria-disabled="true"]):not([data-arcane-disabled="true"])'
+  ));
+  if (!items.length) return false;
+  const current = items.indexOf(target.closest('[role="option"]'));
+  let next = current;
+  if (e.key === 'Home') next = 0;
+  else if (e.key === 'End') next = items.length - 1;
+  else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    if (trigger) {
+      next = items.findIndex(function(item) { return item.getAttribute('aria-selected') === 'true'; });
+      if (next < 0) next = e.key === 'ArrowUp' ? items.length - 1 : 0;
+    } else {
+      next = (current + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+    }
+  } else {
+    const now = Date.now();
+    const previous = surfaceIsOpen(surface) && now - (surface._arcaneTypeaheadAt || 0) < 700
+      ? (surface._arcaneTypeahead || '') : '';
+    const query = previous + e.key.toLocaleLowerCase();
+    surface._arcaneTypeahead = query;
+    surface._arcaneTypeaheadAt = now;
+    const repeated = Array.from(query).every(function(character) { return character === query[0]; });
+    const prefix = repeated ? query[0] : query;
+    for (let step = repeated ? 1 : 0; step <= items.length; step++) {
+      const index = (Math.max(current, 0) + step) % items.length;
+      const label = (items[index].getAttribute('data-label') || items[index].textContent || '').trim().toLocaleLowerCase();
+      if (label.startsWith(prefix)) { next = index; break; }
+    }
+  }
+  if (next < 0) return false;
+  e.preventDefault();
+  const focusOption = function() {
+    if (!surfaceIsOpen(surface)) return;
+    items[next].focus({ preventScroll: true });
+    items[next].scrollIntoView({ block: 'nearest' });
+  };
+  if (!surfaceIsOpen(surface)) {
+    openSurface(type, id, { trigger: trigger });
+    nextFrame(focusOption);
+  } else {
+    focusOption();
+  }
+  return true;
 }
 
 function handleMenuKey(e) {
@@ -609,6 +695,78 @@ function bindNativeInputs() {
   }, true);
 }
 
+function setSelectText(element, value) {
+  if (element.firstChild && element.childNodes.length === 1 && element.firstChild.nodeType === 3) {
+    element.firstChild.nodeValue = value;
+  } else {
+    element.textContent = value;
+  }
+}
+
+function syncStyledSelect(surface) {
+  const triggerId = surface.getAttribute('data-arcane-select-trigger');
+  if (!triggerId) return;
+  const backing = document.querySelector('select[data-arcane-select-backing="' + cssEscape(triggerId) + '"]');
+  const trigger = document.getElementById(triggerId);
+  if (!backing || !trigger) return;
+  const value = surface.getAttribute('data-arcane-group-value') || '';
+  backing.value = value;
+  const label = trigger.querySelector('[data-arcane-select-label]');
+  const selected = backing.selectedOptions[0];
+  if (label) setSelectText(label, selected ? selected.label : surface.getAttribute('data-arcane-select-placeholder'));
+  if (backing.validity.valid && backing.getAttribute('data-arcane-select-has-error') !== 'true') {
+    trigger.removeAttribute('aria-invalid');
+    trigger.removeAttribute('aria-describedby');
+    const error = document.getElementById(triggerId + '-error');
+    if (error) { error.hidden = true; setSelectText(error, ''); }
+  }
+}
+
+function bindStyledSelects() {
+  document.addEventListener('arcane:change', function(e) {
+    const surface = e.target;
+    if (surface && surface.hasAttribute && surface.hasAttribute('data-arcane-select-trigger')) {
+      syncStyledSelect(surface);
+    }
+  }, true);
+  document.addEventListener('invalid', function(e) {
+    const backing = e.target;
+    if (!backing || !backing.matches('select[data-arcane-select-backing]')) return;
+    e.preventDefault();
+    const triggerId = backing.getAttribute('data-arcane-select-backing');
+    const trigger = document.getElementById(triggerId);
+    if (!trigger) return;
+    trigger.setAttribute('aria-invalid', 'true');
+    const error = document.getElementById(triggerId + '-error');
+    if (error) {
+      if (backing.getAttribute('data-arcane-select-has-error') !== 'true') setSelectText(error, backing.validationMessage);
+      error.hidden = false;
+      trigger.setAttribute('aria-describedby', error.id);
+    }
+    trigger.focus();
+  }, true);
+  document.addEventListener('reset', function(e) {
+    const form = e.target;
+    setTimeout(function() {
+      if (e.defaultPrevented) return;
+      const controls = document.querySelectorAll('select[data-arcane-select-backing]');
+      for (let i = 0; i < controls.length; i++) {
+        const backing = controls[i];
+        if (backing.form !== form) continue;
+        const groupId = backing.getAttribute('data-arcane-group');
+        const surface = groupRoot(groupId);
+        if (!surface) continue;
+        const value = backing.getAttribute('data-arcane-select-default') || '';
+        surface.setAttribute('data-arcane-group-value', value);
+        syncGroupItems(groupId, value ? [value] : []);
+        syncStyledSelect(surface);
+        closeSurface(surfaceType(surface), surfaceId(surface), { immediate: true });
+        fireEvent(surface, 'arcane:reset', {});
+      }
+    }, 0);
+  }, true);
+}
+
 function bindOutsideTabs() {
   document.addEventListener('click', function(e) {
     const tab = findClosest(e.target, '[data-arcane-tab][data-arcane-tabs-group]');
@@ -654,6 +812,8 @@ function bindContextMenus() {
     surface.style.top = e.clientY + 'px';
     surface.style.left = e.clientX + 'px';
     openSurface('context-menu', targetId, { trigger: trigger, skipAnchorListener: true });
+    surface.style.left = Math.max(4, Math.min(e.clientX, window.innerWidth - surface.offsetWidth - 4)) + 'px';
+    surface.style.top = Math.max(4, Math.min(e.clientY, window.innerHeight - surface.offsetHeight - 4)) + 'px';
   }, true);
 }
 
@@ -686,6 +846,7 @@ function arcaneInit() {
 
   bindGroupItemClicks();
   bindNativeInputs();
+  bindStyledSelects();
   bindOutsideTabs();
   bindAccordions();
   bindContextMenus();
@@ -694,6 +855,7 @@ function arcaneInit() {
   bindCommandKeyboard();
   bindCalendars();
   bindTimePickers();
+  bindOtpInputs();
   hydrateInitialState();
 
   fireEvent(document, 'arcane:ready', {});

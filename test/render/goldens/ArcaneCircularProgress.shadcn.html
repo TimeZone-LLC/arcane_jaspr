@@ -1,8 +1,8 @@
 
-    <div class="arcane-circular-progress" style="position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" data-arcane-intrinsic-shape="circular-progress">
+    <div class="arcane-circular-progress" style="--arcane-circular-progress-size: 80px; --arcane-circular-progress-angle: 180.0deg; position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" data-arcane-intrinsic-shape="circular-progress">
       <div style="position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(var(--primary) 0deg 180.0deg, var(--muted) 180.0deg 360deg); mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #fff calc(100% - 8px)); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #fff calc(100% - 8px))" data-arcane-intrinsic-shape="circular-progress-ring"></div>
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
-        <span style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--foreground)">50%</span>
+      <div class="arcane-circular-progress-center" style="display: flex; flex-direction: column; align-items: center; justify-content: center">
+        <span class="arcane-circular-progress-percentage" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--foreground)">50%</span>
       </div>
     </div>
   

@@ -7,6 +7,7 @@ import 'package:arcane_jaspr/core/dom_value.dart';
 import 'package:arcane_jaspr/core/interaction/interaction.dart';
 import 'package:arcane_jaspr/core/interaction/interaction_attrs.dart';
 import 'package:arcane_jaspr/core/props/select_props.dart';
+import 'package:arcane_jaspr/core/rendering/base/control_label_styles.dart';
 
 /// Shared structural base for the Win95, Neon and Neubrutalism select
 /// renderers.
@@ -146,9 +147,21 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
       String fontSize,
       String padding,
     ) = switch (props.size) {
-      ComponentSize.sm => ('40px', '0.8125rem', '0.625rem 1rem'),
-      ComponentSize.md => ('48px', '0.875rem', '0.75rem 1.25rem'),
-      ComponentSize.lg => ('56px', '1rem', '1rem 1.5rem'),
+      ComponentSize.sm => (
+        'var(--control-height-sm)',
+        'var(--control-font-size)',
+        '0 var(--control-padding-x)',
+      ),
+      ComponentSize.md => (
+        'var(--control-height-md)',
+        'var(--control-font-size)',
+        '0 var(--control-padding-x)',
+      ),
+      ComponentSize.lg => (
+        'var(--control-height-lg)',
+        'var(--control-font-size)',
+        '0 var(--control-padding-x)',
+      ),
     };
 
     final String displayText = _getDisplayText();
@@ -204,14 +217,8 @@ abstract class SelectRenderBase<T> extends StatelessComponent {
             classes: '$classPrefix-select-label',
             styles: const dom.Styles(
               raw: <String, String>{
-                'display': 'block',
-                'font-family': 'var(--font-heading)',
-                'font-size': '0.75rem',
-                'font-weight': '600',
-                'letter-spacing': '0.08em',
-                'text-transform': 'uppercase',
-                'color': 'var(--muted-foreground)',
-                'margin-bottom': '0.625rem',
+                ...arcaneControlLabelStyles,
+                'margin-bottom': 'var(--control-label-gap)',
               },
             ),
             <Component>[

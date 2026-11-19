@@ -149,12 +149,14 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
           id: surfaceId,
           classes: menuClass,
           attributes: menuAttrs,
-          styles: dom.Styles(raw: <String, String>{
-            ...menuStyles(props),
-            ...?props.decoration?.universalStyles(),
-            ...decorationStyles(props.decoration),
-            ...?props.styles?.toMap(),
-          }),
+          styles: dom.Styles(
+            raw: <String, String>{
+              ...menuStyles(props),
+              ...?props.decoration?.universalStyles(),
+              ...decorationStyles(props.decoration),
+              ...?props.styles?.toMap(),
+            },
+          ),
           <Component>[
             for (final ArcaneMenuItem item in props.items)
               buildMenuItem(item, surfaceId),
@@ -211,6 +213,7 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
     final List<Component> content = <Component>[
       if (item.icon != null)
         dom.span(
+          attributes: const <String, String>{'aria-hidden': 'true'},
           styles: dom.Styles(
             raw: <String, String>{
               'flex-shrink': '0',
@@ -356,6 +359,7 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
         if (item.checked)
           dom.span(
             classes: 'arcane-menu-indicator',
+            attributes: const <String, String>{'aria-hidden': 'true'},
             styles: dom.Styles(
               raw: <String, String>{
                 'position': 'absolute',
@@ -365,7 +369,11 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
             ),
             <Component>[ArcaneIcon.check(size: IconSize.xs)],
           ),
-        if (item.icon != null) item.icon!,
+        if (item.icon != null)
+          dom.span(
+            attributes: const <String, String>{'aria-hidden': 'true'},
+            <Component>[item.icon!],
+          ),
         dom.span(
           styles: const dom.Styles(raw: <String, String>{'flex': '1'}),
           <Component>[Component.text(item.label)],
@@ -432,14 +440,13 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
         },
       ),
       events: item.onChanged != null && !item.disabled && itemAction == null
-          ? <String, EventCallback>{
-              'click': (_) => item.onChanged!(item.value),
-            }
+          ? <String, EventCallback>{'click': (_) => item.onChanged!(item.value)}
           : null,
       <Component>[
         if (item.selected)
           dom.span(
             classes: 'arcane-menu-indicator',
+            attributes: const <String, String>{'aria-hidden': 'true'},
             styles: dom.Styles(
               raw: <String, String>{
                 'position': 'absolute',
@@ -449,7 +456,11 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
             ),
             <Component>[ArcaneIcon.dot(size: IconSize.sm)],
           ),
-        if (item.icon != null) item.icon!,
+        if (item.icon != null)
+          dom.span(
+            attributes: const <String, String>{'aria-hidden': 'true'},
+            <Component>[item.icon!],
+          ),
         dom.span(
           styles: const dom.Styles(raw: <String, String>{'flex': '1'}),
           <Component>[Component.text(item.label)],
@@ -502,7 +513,11 @@ abstract class DropdownMenuRenderBase extends StatelessComponent {
         },
       ),
       <Component>[
-        if (item.icon != null) item.icon!,
+        if (item.icon != null)
+          dom.span(
+            attributes: const <String, String>{'aria-hidden': 'true'},
+            <Component>[item.icon!],
+          ),
         dom.span(
           styles: const dom.Styles(raw: <String, String>{'flex': '1'}),
           <Component>[Component.text(item.label)],

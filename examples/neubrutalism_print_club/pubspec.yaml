@@ -1,0 +1,17 @@
+name: neubrutalism_print_club
+description: A working Print Club showcase for Arcane Jaspr Neubrutalism.
+publish_to: none
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+dependencies:
+  jaspr: 0.23.2
+  web: ^1.1.1
+  arcane_jaspr:
+    path: ../..
+  arcane_jaspr_neubrutalism:
+    path: ../../packages/arcane_jaspr_neubrutalism
+dev_dependencies:
+  lints: ^6.1.0
+dependency_overrides:
+  arcane_jaspr:
+    path: ../..

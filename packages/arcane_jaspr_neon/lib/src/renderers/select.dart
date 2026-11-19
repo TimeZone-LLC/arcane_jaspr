@@ -34,13 +34,13 @@ class NeonSelect<T> extends SelectRenderBase<T> {
     'height': height,
     'padding': padding,
     'background': 'var(--input)',
-    'border': '1px solid $borderColor',
-    'border-radius': 'var(--radius-md)',
+    // Border and outline come from neon_css (base, error, hover, focus ring); inline values would
+    // override those states.
+    'border-radius': 'var(--radius-sm)',
     'color': triggerColor,
     'font': 'inherit',
     'font-size': fontSize,
     'cursor': props.disabled ? 'not-allowed' : 'pointer',
-    'outline': 'none',
     'box-shadow': 'none',
     if (props.disabled) 'opacity': '0.5',
   };
@@ -72,11 +72,10 @@ class NeonSelect<T> extends SelectRenderBase<T> {
   Map<String, String> get searchInputStyles => const <String, String>{
     'box-sizing': 'border-box',
     'width': '100%',
-    'height': '2.5rem',
-    'padding': '0.5rem 0.75rem',
+    'height': 'var(--control-height-md)',
+    'padding': '0 var(--control-padding-x)',
     'border': '1px solid var(--neon-control-border)',
     'border-radius': 'var(--radius-sm)',
-    'outline': 'none',
     'background': 'var(--input)',
     'box-shadow': 'none',
     'color': 'var(--foreground)',

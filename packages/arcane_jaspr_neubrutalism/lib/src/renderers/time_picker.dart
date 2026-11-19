@@ -41,13 +41,14 @@ class NeubrutalismTimePicker extends TimePickerRenderBase {
     'display': 'flex',
     'flex-direction': 'column',
     'gap': 'var(--space-2)',
+    'min-width': '0',
   };
 
   @override
   Map<String, String> get labelStyles => const <String, String>{
-    'font-family': 'var(--font-heading)',
-    'font-size': '0.75rem',
-    'font-weight': '600',
+    'font-family': 'var(--font-sans)',
+    'font-size': '0.8125rem',
+    'font-weight': '700',
     'letter-spacing': '0.08em',
     'text-transform': 'uppercase',
     'color': 'var(--muted-foreground)',
@@ -93,7 +94,7 @@ class NeubrutalismTimePicker extends TimePickerRenderBase {
     'box-shadow': props.isOpen
         ? 'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))'
         : 'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
-    'transform': props.isOpen ? 'translate(2px, 2px)' : 'translate(0, 0)',
+    'transform': 'none',
     'text-align': 'left',
     if (props.disabled) 'opacity': '0.5',
   };
@@ -125,16 +126,20 @@ class NeubrutalismTimePicker extends TimePickerRenderBase {
     'position': 'absolute',
     'top': '100%',
     'left': '0',
-    'margin-top': '0.5rem',
     'z-index': '50',
-    'padding': '1.25rem',
-    'min-width': '300px',
+    'box-sizing': 'border-box',
+    'padding': '0.75rem',
+    'width': 'min(100%, 320px)',
+    'min-width': '0',
+    'max-width': 'calc(100vw - 24px)',
+    'max-height': 'calc(100dvh - 24px)',
+    'overflow': 'auto',
   };
 
   @override
   Map<String, String> get columnsRowStyles => const <String, String>{
     'display': 'flex',
-    'gap': '1.25rem',
+    'gap': '0.5rem',
   };
 
   @override
@@ -142,14 +147,16 @@ class NeubrutalismTimePicker extends TimePickerRenderBase {
     'display': 'flex',
     'flex-direction': 'column',
     'gap': 'var(--space-2)',
+    'flex': '1 1 0',
+    'min-width': '0',
   };
 
   @override
   Map<String, String> get columnLabelStyles => const <String, String>{
-    'font-family': 'var(--font-heading)',
-    'font-size': '0.6875rem',
-    'font-weight': '600',
-    'letter-spacing': '0.12em',
+    'font-family': 'var(--font-sans)',
+    'font-size': '0.8125rem',
+    'font-weight': '700',
+    'letter-spacing': '0.02em',
     'color': 'var(--muted-foreground)',
     'text-transform': 'uppercase',
     'margin-bottom': '0.5rem',
@@ -159,6 +166,9 @@ class NeubrutalismTimePicker extends TimePickerRenderBase {
   Map<String, String> get columnScrollStyles => const <String, String>{
     'max-height': '220px',
     'overflow-y': 'auto',
+    'overscroll-behavior': 'contain',
+    'scroll-padding-block': '4px',
+    'padding': '4px',
     'display': 'flex',
     'flex-direction': 'column',
     'gap': '4px',
@@ -168,52 +178,60 @@ class NeubrutalismTimePicker extends TimePickerRenderBase {
   String get optionClass => 'neubrutalism-time-picker-option';
 
   @override
-  Map<String, String> optionButtonStyles({required bool selected}) =>
-      <String, String>{
-        'padding': '0.375rem 0.875rem',
-        'border':
-            'var(--nb-border-thick, 3px) solid ${selected ? 'var(--nb-line, #000)' : 'transparent'}',
-        'background': selected ? 'var(--nb-accent, var(--primary))' : 'transparent',
-        'color': selected ? 'var(--nb-ink, #000)' : 'var(--foreground)',
-        'cursor': 'pointer',
-        'font-weight': selected ? '700' : '500',
-        'font-size': 'var(--font-size-sm)',
-        'font-variant-numeric': 'tabular-nums',
-        'text-align': 'center',
-        'min-width': '52px',
-        'box-shadow': selected
-            ? 'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))'
-            : 'none',
-        'transition':
-            'background var(--nb-transition, 120ms ease), color var(--nb-transition, 120ms ease)',
-      };
+  Map<String, String> optionButtonStyles({
+    required bool selected,
+  }) => <String, String>{
+    'padding': '0.375rem',
+    'min-height': '44px',
+    'flex-shrink': '0',
+    'border':
+        'var(--nb-border-thick, 3px) solid ${selected ? 'var(--nb-line, #000)' : 'transparent'}',
+    'background': selected ? 'var(--nb-accent, var(--primary))' : 'transparent',
+    'color': selected ? 'var(--nb-ink, #000)' : 'var(--foreground)',
+    'cursor': 'pointer',
+    'font-weight': selected ? '700' : '500',
+    'font-size': 'var(--font-size-sm)',
+    'font-family': 'var(--font-sans)',
+    'font-variant-numeric': 'tabular-nums',
+    'text-align': 'center',
+    'min-width': '0',
+    'box-shadow': selected
+        ? 'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))'
+        : 'none',
+    'transition':
+        'background var(--nb-transition, 120ms ease), color var(--nb-transition, 120ms ease)',
+  };
 
   @override
-  Map<String, String> amPmButtonStyles({required bool selected}) =>
-      <String, String>{
-        'padding': '0.5rem 1rem',
-        'border':
-            'var(--nb-border-thick, 3px) solid ${selected ? 'var(--nb-line, #000)' : 'transparent'}',
-        'background': selected ? 'var(--nb-accent, var(--primary))' : 'transparent',
-        'color': selected ? 'var(--nb-ink, #000)' : 'var(--foreground)',
-        'cursor': 'pointer',
-        'font-size': 'var(--font-size-sm)',
-        'font-weight': '700',
-        'letter-spacing': '0.04em',
-        'box-shadow': selected
-            ? 'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))'
-            : 'none',
-        'transition':
-            'background var(--nb-transition, 120ms ease), color var(--nb-transition, 120ms ease)',
-      };
+  Map<String, String> amPmButtonStyles({
+    required bool selected,
+  }) => <String, String>{
+    'padding': '0.5rem 0.375rem',
+    'min-height': '44px',
+    'border':
+        'var(--nb-border-thick, 3px) solid ${selected ? 'var(--nb-line, #000)' : 'transparent'}',
+    'background': selected ? 'var(--nb-accent, var(--primary))' : 'transparent',
+    'color': selected ? 'var(--nb-ink, #000)' : 'var(--foreground)',
+    'cursor': 'pointer',
+    'font-size': 'var(--font-size-sm)',
+    'font-family': 'var(--font-sans)',
+    'font-weight': '700',
+    'letter-spacing': '0.04em',
+    'box-shadow': selected
+        ? 'var(--nb-shadow-sm, 3px 3px 0 0 var(--nb-shadow-color, #000))'
+        : 'none',
+    'transition':
+        'background var(--nb-transition, 120ms ease), color var(--nb-transition, 120ms ease)',
+  };
 
   @override
   Map<String, String> get actionsRowStyles => const <String, String>{
     'display': 'flex',
     'justify-content': 'flex-end',
     'gap': '0.75rem',
-    'margin-top': '1.25rem',
-    'padding-top': '1.25rem',
+    'flex-wrap': 'wrap',
+    'margin-top': '0.75rem',
+    'padding-top': '0.75rem',
     'border-top': 'var(--nb-border-thin, 2px) solid var(--nb-line, #000)',
   };
 
@@ -226,16 +244,20 @@ class NeubrutalismTimePicker extends TimePickerRenderBase {
     return dom.button(
       type: dom.ButtonType.button,
       classes: 'neubrutalism-button',
-      attributes: <String, String>{'data-variant': primary ? 'primary' : 'ghost'},
+      attributes: <String, String>{
+        'data-variant': primary ? 'primary' : 'ghost',
+      },
       styles: dom.Styles(
         raw: primary
             ? const <String, String>{
                 'padding': '0.5rem 1rem',
+                'min-height': '44px',
                 'cursor': 'pointer',
                 'font-size': 'var(--font-size-sm)',
               }
             : const <String, String>{
                 'padding': '0.5rem 1rem',
+                'min-height': '44px',
                 'background': 'transparent',
                 'color': 'var(--foreground)',
                 'cursor': 'pointer',

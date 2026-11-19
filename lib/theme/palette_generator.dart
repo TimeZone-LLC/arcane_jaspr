@@ -140,7 +140,7 @@ abstract class PaletteGenerator {
       // Borders
       border: border,
       input: isDark ? darken(border, 0.03) : border,
-      ring: isDark ? lighten(primary, 0.2) : primary,
+      ring: seed.ring ?? (isDark ? lighten(primary, 0.2) : primary),
 
       // Overlays
       overlay: 0x80000000, // 50% black

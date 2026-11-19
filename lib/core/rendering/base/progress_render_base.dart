@@ -157,6 +157,7 @@ abstract class CircularProgressRenderBase extends StatelessComponent {
         'aria-valuemax': '100',
         'aria-valuenow': '$percentage',
         'data-arcane-intrinsic-shape': 'circular-progress',
+        if (props.label != null) 'aria-label': props.label!,
       },
       styles: dom.Styles(raw: rootStyles(props)),
       <Component>[
@@ -178,6 +179,7 @@ abstract class CircularProgressRenderBase extends StatelessComponent {
         // Center content.
         if (showCenter(props))
           dom.div(
+            classes: '$rootClass-center',
             styles: const dom.Styles(
               raw: <String, String>{
                 'display': 'flex',
@@ -188,13 +190,17 @@ abstract class CircularProgressRenderBase extends StatelessComponent {
             ),
             <Component>[
               if (props.showPercentage)
-                dom.span(styles: dom.Styles(raw: percentStyles), <Component>[
-                  Component.text('$percentage%'),
-                ]),
+                dom.span(
+                  classes: '$rootClass-percentage',
+                  styles: dom.Styles(raw: percentStyles),
+                  <Component>[Component.text('$percentage%')],
+                ),
               if (props.label != null)
-                dom.span(styles: dom.Styles(raw: labelStyles), <Component>[
-                  Component.text(props.label!),
-                ]),
+                dom.span(
+                  classes: '$rootClass-label',
+                  styles: dom.Styles(raw: labelStyles),
+                  <Component>[Component.text(props.label!)],
+                ),
             ],
           ),
       ],

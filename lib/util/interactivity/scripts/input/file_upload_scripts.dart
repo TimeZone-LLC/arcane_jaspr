@@ -31,7 +31,7 @@ class FileUploadScripts {
                        (file.size / (1024 * 1024)).toFixed(1) + ' MB';
 
             var item = document.createElement('div');
-            item.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 8px; background: var(--arcane-surface-variant); border-radius: 4px; font-size: 0.875rem;';
+            item.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 8px; background: var(--arcane-surface-variant); border-radius: var(--radius-sm); font-size: 0.875rem;';
             item.innerHTML = '<span>' + file.name + '</span><span style="color: var(--arcane-muted);">' + size + '</span>';
             fileList.appendChild(item);
           }

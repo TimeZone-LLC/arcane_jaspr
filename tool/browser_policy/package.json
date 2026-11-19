@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "audit": "node runner.mjs"
+    "audit": "node runner.mjs",
+    "test:layout": "node ascii-layout.test.mjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

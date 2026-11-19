@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" role="img" aria-labelledby="title desc">
+  <title id="title">Two inks, one idea</title>
+  <desc id="desc">Overlapping yellow and coral circles form a black overprint, with cutout shapes and small printer's registration marks.</desc>
+  <defs>
+    <clipPath id="overprint"><circle cx="235" cy="180" r="119"/></clipPath>
+  </defs>
+  <rect width="600" height="360" fill="#FFFDF5"/>
+  <circle cx="235" cy="180" r="119" fill="#FFD23F"/>
+  <circle cx="365" cy="180" r="119" fill="#FF6B6B"/>
+  <circle cx="365" cy="180" r="119" fill="#000" clip-path="url(#overprint)"/>
+  <path d="M166 122h75v19h-75zm0 32h75v19h-75z" fill="#FFFDF5"/>
+  <path d="M373 212a37 37 0 0 0 74 0Z" fill="#FFFDF5"/>
+  <circle cx="407" cy="124" r="14" fill="#000"/>
+  <g fill="none" stroke="#000" stroke-width="2">
+    <path d="M44 60h22M55 49v22M534 60h22m-11-11v22M44 300h22m-11-11v22M534 300h22m-11-11v22"/>
+    <circle cx="55" cy="60" r="6"/>
+    <circle cx="545" cy="300" r="6"/>
+  </g>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="2">
+    <text x="115" y="34">TWO INKS.</text>
+    <text x="484" y="334" text-anchor="end">ONE GOOD IDEA.</text>
+  </g>
+</svg>

@@ -1,5 +1,6 @@
 import 'package:arcane_jaspr/core/props/otp_input_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/otp_input_render_base.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// ShadCN-style OTP input component.
 /// Reference: https://ui.shadcn.com/docs/components/input-otp
@@ -27,12 +28,7 @@ class ShadcnOtpInput extends OtpInputRenderBase {
   };
 
   @override
-  Map<String, String> get labelStyles => const <String, String>{
-    'font-size': '0.875rem',
-    'font-weight': '500',
-    'line-height': '1',
-    'color': 'var(--foreground)',
-  };
+  Map<String, String> get labelStyles => shadcnFieldLabelStyles;
 
   @override
   String get digitsRowClass => 'arcane-otp-digits';
@@ -58,7 +54,7 @@ class ShadcnOtpInput extends OtpInputRenderBase {
   (String, String) sizeStyles(OtpInputSizeVariant size) => switch (size) {
     OtpInputSizeVariant.sm => ('2rem', '0.875rem'),
     OtpInputSizeVariant.md => ('2.25rem', '0.875rem'),
-    OtpInputSizeVariant.lg => ('2.5rem', '1rem'),
+    OtpInputSizeVariant.lg => ('2.5rem', '0.875rem'),
   };
 
   @override
@@ -92,6 +88,8 @@ class ShadcnOtpInput extends OtpInputRenderBase {
     'width': size,
     'height': size,
     'font-size': fontSize,
+    'font-family': 'var(--font-control, inherit)',
+    'line-height': '1.25rem',
     'box-sizing': 'border-box',
     'padding': '0',
     'text-align': 'center',

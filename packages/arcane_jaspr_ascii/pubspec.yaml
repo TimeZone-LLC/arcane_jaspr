@@ -12,6 +12,7 @@ dependencies:
   arcane_jaspr_shadcn: ^6.0.0
   characters: ^1.4.0
   jaspr: '>=0.23.1 <1.0.0'
+  web: ^1.1.1
 
 dev_dependencies:
   jaspr_test: '>=0.23.1 <1.0.0'

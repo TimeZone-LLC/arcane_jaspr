@@ -45,7 +45,7 @@ const String arcaneSidebarTreeStyles = '''
   gap: 0.25rem;
   padding: 0.25rem;
   background: var(--muted);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
 }
 
 .sidebar-tab {
@@ -56,7 +56,7 @@ const String arcaneSidebarTreeStyles = '''
   color: var(--muted-foreground);
   text-decoration: none;
   text-align: center;
-  border-radius: calc(var(--radius-md) - 2px);
+  border-radius: var(--radius);
   transition: color 0.15s ease, background 0.15s ease;
 }
 
@@ -89,7 +89,7 @@ const String arcaneSidebarTreeStyles = '''
   color: var(--foreground);
   background: var(--muted);
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   outline: none;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
@@ -121,7 +121,7 @@ const String arcaneSidebarTreeStyles = '''
   justify-content: center;
   background: var(--muted);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   color: var(--muted-foreground);
   cursor: pointer;
   transition: color 0.15s ease, background 0.15s ease;
@@ -132,11 +132,12 @@ const String arcaneSidebarTreeStyles = '''
   background: color-mix(in srgb, var(--muted) 150%, transparent);
 }
 
-/* Show/hide icons based on theme */
+/* Show/hide icons based on theme. Light is the base case: `:not(.dark)`
+   would match any ancestor, so it cannot express "outside dark mode". */
+.theme-icon-dark { display: block; }
+.theme-icon-light { display: none; }
 .dark .theme-icon-dark { display: none; }
 .dark .theme-icon-light { display: block; }
-:not(.dark) .theme-icon-dark { display: block; }
-:not(.dark) .theme-icon-light { display: none; }
 
 /* ============================================
    SIDEBAR SECTIONS - ShadCN Visual Styles
@@ -156,7 +157,7 @@ const String arcaneSidebarTreeStyles = '''
   color: var(--foreground);
   background: transparent;
   border: none;
-  border-radius: var(--radius-md, 6px);
+  border-radius: var(--radius);
   transition: all 0.2s ease;
 }
 
@@ -306,14 +307,17 @@ const String arcaneSidebarTreeStyles = '''
   margin-top: 0;
 }
 
-/* Navigation link styling */
+/* Navigation link styling. Flex centers the label when a theme sets a
+   minimum row height. */
 .sidebar-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.375rem 0.625rem;
   font-size: 0.8125rem;
   color: var(--muted-foreground);
   text-decoration: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   transition: color 0.15s ease, background 0.15s ease;
 }
 
@@ -353,7 +357,7 @@ const String arcaneSidebarTreeStyles = '''
   letter-spacing: 0.025em;
   color: var(--muted-foreground);
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   transition: color 0.15s ease, background 0.15s ease;
   user-select: none;
 }

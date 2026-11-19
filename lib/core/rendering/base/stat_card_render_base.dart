@@ -50,8 +50,10 @@ abstract class StatCardRenderBase extends StatelessComponent {
 
     return dom.div(
       classes: cssClass,
-      attributes: const <String, String>{
+      attributes: <String, String>{
         'data-arcane-surface': 'stat-card',
+        if (props.decoration != null || props.styles != null)
+          'data-arcane-decorated': '',
       },
       styles: dom.Styles(raw: rootStyles),
       <Component>[

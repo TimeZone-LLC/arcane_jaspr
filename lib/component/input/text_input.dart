@@ -1,8 +1,5 @@
 import 'package:arcane_jaspr/flutter.dart';
-import 'package:jaspr/jaspr.dart' as jaspr;
-import 'package:jaspr/dom.dart' as dom;
-import '../../core/dom_value.dart';
-import 'package:arcane_jaspr/core/rendering/field_identity.dart';
+import 'package:arcane_jaspr/core/rendering/base/native_select_render_base.dart';
 
 export '../../core/props/text_input_props.dart'
     show ComponentSize, TextInputVariant, TextInputType;
@@ -13,7 +10,6 @@ import '../../core/rendering/base/text_area_render_base.dart';
 import '../../core/theme_provider.dart';
 import '../../core/decoration/arcane_decoration.dart';
 import '../../util/style_types/arcane_style_data.dart';
-import '../view/icon.dart';
 
 /// A styled text input component.
 class TextInput extends StatelessWidget {
@@ -244,190 +240,35 @@ class ArcaneSelect extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) =>
-      FieldIdentity(id: id, builder: _buildField);
-
-  Widget _buildField(String fieldId) {
-    final bool hasError = error != null;
-
-    final Map<String, String> sizeStyles = switch (size) {
-      ComponentSize.sm => {
-        'height': '36px',
-        'padding': '0 12px',
-        'font-size': '14px',
-      },
-      ComponentSize.md => {
-        'height': '40px',
-        'padding': '8px 12px',
-        'font-size': '16px',
-      },
-      ComponentSize.lg => {
-        'height': '44px',
-        'padding': '0 16px',
-        'font-size': '16px',
-      },
-    };
-
-    final Widget selectElement = jaspr.Component.element(
-      tag: 'select',
-      id: fieldId,
-      classes: 'arcane-select',
-      attributes: {
-        'name': ?name,
-        'data-arcane-field-control': 'true',
-        // Lets a theme key its own height table on the size (the inline px
-        // table above is the modern one).
-        'data-size': size.name,
-        if (disabled) 'disabled': 'true',
-        if (required) 'required': 'true',
-        if (hasError) 'aria-invalid': 'true',
-        if (hasError) 'aria-describedby': '$fieldId-error',
-      },
-      styles: dom.Styles(
-        raw: {
-          ...sizeStyles,
-          'display': 'block',
-          'max-width': '100%',
-          'padding-right': '40px',
-          'font-family': 'inherit',
-          'background-color': 'var(--background)',
-          'border': hasError
-              ? '1px solid var(--destructive)'
-              : '1px solid var(--input)',
-          'border-radius': 'var(--radius-sm)',
-          'color': 'var(--foreground)',
-          'transition':
-              'color 150ms ease, border-color 150ms ease, box-shadow 150ms ease',
-          'cursor': 'pointer',
-          'appearance': 'none',
-          '-webkit-appearance': 'none',
-          if (fullWidth) 'width': '100%',
-          if (disabled) 'opacity': '0.5',
-          if (disabled) 'cursor': 'not-allowed',
-          ...?decoration?.universalStyles(),
-          ...?styles?.toMap(),
-        },
-      ),
-      events: {
-        if (onChanged != null)
-          'change': (e) {
-            onChanged!(domInputValue(e.target));
-          },
-      },
-      children: [
-        if (placeholder != null)
-          jaspr.Component.element(
-            tag: 'option',
-            attributes: <String, String>{
-              'value': '',
-              'disabled': 'true',
-              if (value == null || value!.isEmpty) 'selected': 'true',
-            },
-            children: [jaspr.Component.text(placeholder!)],
-          ),
-        for (final opt in options)
-          jaspr.Component.element(
-            tag: 'option',
-            attributes: {
-              'value': opt.value,
-              if (opt.disabled) 'disabled': 'true',
-              if (value == opt.value) 'selected': 'true',
-            },
-            children: [jaspr.Component.text(opt.label)],
-          ),
-      ],
-    );
-
-    // The chevron is positioned against the shell, so the shell must stay the
-    // width of the select: a flex or grid parent would otherwise stretch it
-    // and leave the glyph floating past the control's edge.
-    final Widget selectShell = dom.div(
-      classes: 'arcane-native-select-shell',
-      attributes: const <String, String>{'data-arcane-field-shell': 'true'},
-      styles: dom.Styles(
-        raw: <String, String>{
-          'position': 'relative',
-          'display': fullWidth ? 'block' : 'inline-block',
-          if (fullWidth) 'width': '100%',
-          if (!fullWidth) 'width': 'fit-content',
-          if (!fullWidth) 'max-width': '100%',
-        },
-      ),
-      <Widget>[
-        selectElement,
-        dom.span(
-          classes: 'arcane-native-select-chevron',
-          attributes: const <String, String>{'aria-hidden': 'true'},
-          styles: const dom.Styles(
-            raw: <String, String>{
-              'position': 'absolute',
-              'right': '14px',
-              'top': '50%',
-              'display': 'inline-flex',
-              'align-items': 'center',
-              'justify-content': 'center',
-              'color': 'var(--muted-foreground)',
-              'pointer-events': 'none',
-              'transform': 'translateY(-50%)',
-            },
-          ),
-          <Widget>[ArcaneIcon.chevronDown(size: IconSize.sm)],
-        ),
-      ],
-    );
-
-    if (label != null || error != null) {
-      return dom.div(
-        classes: 'arcane-select-wrapper',
-        styles: dom.Styles(
-          raw: {
-            'display': 'flex',
-            'flex-direction': 'column',
-            'gap': '0.25rem',
-            if (fullWidth) 'width': '100%',
-          },
-        ),
-        [
-          if (label != null)
-            jaspr.Component.element(
-              tag: 'label',
-              attributes: <String, String>{'for': fieldId},
-              styles: const dom.Styles(
-                raw: {
-                  'font-size': '1rem',
-                  'font-weight': '500',
-                  'color': 'var(--foreground)',
-                },
-              ),
-              children: [
-                jaspr.Component.text(label!),
-                if (required)
-                  const dom.span(
-                    styles: dom.Styles(
-                      raw: {
-                        'color': 'var(--destructive)',
-                        'margin-left': '0.25rem',
-                      },
-                    ),
-                    [jaspr.Component.text('*')],
-                  ),
-              ],
+  Widget build(BuildContext context) {
+    final NativeSelectProps props = NativeSelectProps(
+      options: options
+          .map(
+            (ArcaneSelectOption option) => NativeSelectOptionProps(
+              label: option.label,
+              value: option.value,
+              disabled: option.disabled,
             ),
-          selectShell,
-          if (error != null)
-            dom.span(
-              id: '$fieldId-error',
-              classes: 'arcane-select-error',
-              styles: const dom.Styles(
-                raw: {'font-size': '0.875rem', 'color': 'var(--destructive)'},
-              ),
-              [jaspr.Component.text(error!)],
-            ),
-        ],
-      );
-    }
-
-    return selectShell;
+          )
+          .toList(),
+      value: value,
+      placeholder: placeholder,
+      size: size,
+      disabled: disabled,
+      required: required,
+      name: name,
+      id: id,
+      label: label,
+      error: error,
+      fullWidth: fullWidth,
+      onChange: onChanged,
+      styles: styles,
+      decoration: decoration,
+    );
+    final ArcaneThemeProvider? theme = ArcaneThemeProvider.of(context);
+    return theme == null
+        ? DefaultNativeSelectRenderer(props)
+        : theme.renderers.nativeSelect(props);
   }
 }
 

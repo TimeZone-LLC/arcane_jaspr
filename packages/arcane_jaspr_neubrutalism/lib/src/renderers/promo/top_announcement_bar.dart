@@ -57,7 +57,7 @@ class NeubrutalismTopAnnouncementBar extends StatelessComponent {
               'padding': '0.25rem',
               'background': 'transparent',
               'border': '0',
-              'border-radius': '0',
+              'border-radius': 'var(--nb-radius-tight, 0)',
               'color': 'var(--muted-foreground)',
               'cursor': 'pointer',
             },

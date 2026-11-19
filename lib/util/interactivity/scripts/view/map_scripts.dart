@@ -207,7 +207,7 @@ class MapScripts {
     tooltip.style.cssText = 'position: fixed; z-index: 9999; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 150ms ease;';
 
     var inner = document.createElement('div');
-    inner.style.cssText = 'background: var(--popover); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.32); padding: 10px 14px;';
+    inner.style.cssText = 'background: var(--popover); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: 0 4px 12px rgba(0,0,0,0.32); padding: 10px 14px;';
 
     var latDiv = document.createElement('div');
     latDiv.className = 'coord-lat';

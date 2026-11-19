@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" role="img" aria-labelledby="title desc">
+  <title id="title">Make some thing</title>
+  <desc id="desc">An oversized black and cream typographic screenprint on coral, reading Make Some Thing.</desc>
+  <rect width="600" height="360" fill="#FF6B6B"/>
+  <path d="m19 127 564-20 7 125-564 20Z" fill="#000"/>
+  <g font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" letter-spacing="-6">
+    <text x="48" y="118" fill="#000" font-size="124" textLength="496" lengthAdjust="spacingAndGlyphs">MAKE</text>
+    <text x="47" y="229" fill="#FFFDF5" font-size="124" textLength="498" lengthAdjust="spacingAndGlyphs" transform="rotate(-2 300 180)">SOME</text>
+    <text x="47" y="337" fill="#000" font-size="124" textLength="500" lengthAdjust="spacingAndGlyphs">THING</text>
+  </g>
+  <path d="m545 38 7 14 16-6-5 16 14 8-17 3-2 17-9-14-15 6 6-16-14-9 17-2Z" fill="#FFFDF5"/>
+</svg>

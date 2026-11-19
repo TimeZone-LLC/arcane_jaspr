@@ -2,6 +2,7 @@
 library;
 
 import 'package:arcane_jaspr/arcane_jaspr.dart';
+import 'package:arcane_jaspr_neubrutalism/arcane_jaspr_neubrutalism.dart';
 import 'package:arcane_jaspr_shadcn/arcane_jaspr_shadcn.dart';
 import 'package:arcane_jaspr_win95/arcane_jaspr_win95.dart';
 import 'package:jaspr/dom.dart' as dom;
@@ -10,6 +11,7 @@ import 'package:jaspr_test/client_test.dart';
 import 'package:web/web.dart' as web;
 
 const List<(String, ArcaneStylesheet)> _themes = <(String, ArcaneStylesheet)>[
+  ('neubrutalism', NeubrutalismStylesheet()),
   ('shadcn', ShadcnStylesheet()),
   ('win95', Win95Stylesheet()),
 ];

@@ -1,5 +1,6 @@
 import 'package:arcane_jaspr/core/props/text_input_props.dart';
 import 'package:arcane_jaspr/core/rendering/base/text_input_render_base.dart';
+import 'package:arcane_jaspr_shadcn/src/renderers/field_styles.dart';
 
 /// ShadCN v4 text input renderer.
 ///
@@ -21,12 +22,15 @@ class ShadcnTextInput extends TextInputRenderBase {
   String get wrapperGap => 'var(--space-2)';
 
   @override
+  Map<String, String> get labelStyles => shadcnFieldLabelStyles;
+
+  @override
   bool get borderlessInputReflectsState => true;
 
   @override
   (String, String, String, String) sizeValues(ComponentSize size) =>
       switch (size) {
-        ComponentSize.sm => ('2rem', '0.625rem', '0.25rem', '0.875rem'),
+        ComponentSize.sm => ('2rem', '0.75rem', '0.25rem', '0.875rem'),
         ComponentSize.md => ('2.25rem', '0.75rem', '0.25rem', '0.875rem'),
         ComponentSize.lg => ('2.5rem', '0.75rem', '0.25rem', '0.875rem'),
       };
@@ -54,8 +58,8 @@ class ShadcnTextInput extends TextInputRenderBase {
     'box-shadow': 'var(--shadcn-control-shadow, var(--shadow-xs))',
     'padding': '$paddingY $paddingX',
     'font-size': fontSize,
-    'font-family': 'inherit',
-    'line-height': '1.5',
+    'font-family': 'var(--font-control, inherit)',
+    'line-height': '1.25rem',
     'color': 'var(--foreground)',
     'outline': 'none',
     if (isDisabled) 'cursor': 'not-allowed',
@@ -94,8 +98,11 @@ class ShadcnTextInput extends TextInputRenderBase {
     'border': 'none',
     'background': 'transparent',
     'padding': '$paddingY $paddingX',
+    if (props.prefix != null) 'padding-left': '0.5rem',
+    if (props.suffix != null) 'padding-right': '0.5rem',
     'font-size': fontSize,
-    'font-family': 'inherit',
+    'font-family': 'var(--font-control, inherit)',
+    'line-height': '1.25rem',
     'color': 'var(--foreground)',
     'outline': 'none',
     if (isDisabled) 'cursor': 'not-allowed',

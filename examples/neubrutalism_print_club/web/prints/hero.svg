@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 540" role="img" aria-labelledby="title desc">
+  <title id="title">Ink, paper, play</title>
+  <desc id="desc">A yellow Print Club poster with oversized black lettering, a coral circle, and offset lavender print shapes.</desc>
+  <rect width="600" height="540" fill="#FFD23F"/>
+  <path d="M600 0H448a122 122 0 0 0 0 244h152Z" fill="#FF6B6B"/>
+  <path d="m0 339 178-36 30 146L0 491Z" fill="#B8A9FA"/>
+  <path d="m466 353 68-22 24 68-69 24Z" fill="#FFFDF5"/>
+  <g fill="#000" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900">
+    <text x="27" y="181" font-size="176" letter-spacing="-10" textLength="316" lengthAdjust="spacingAndGlyphs">INK</text>
+    <text x="26" y="317" font-size="144" letter-spacing="-9" textLength="545" lengthAdjust="spacingAndGlyphs">PAPER</text>
+    <text x="27" y="459" font-size="151" letter-spacing="-8" textLength="383" lengthAdjust="spacingAndGlyphs">PLAY</text>
+  </g>
+  <g transform="translate(475 126) rotate(13)" fill="#000">
+    <path d="M-17-61H17V-17H61V17H17V61H-17V17H-61V-17H-17Z"/>
+  </g>
+  <g transform="translate(492 433) rotate(-12)">
+    <path d="m0-66 15 38 36-26-12 42 43 9-39 20 28 35-43-9-8 43-21-38-34 28 8-43-44-7 39-22-28-34 44 8Z" fill="#000"/>
+    <circle r="17" fill="#FFD23F"/>
+  </g>
+  <g fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" letter-spacing="1.8">
+    <text x="34" y="32">PRINT CLUB / STUDIO EDITION</text>
+    <text x="34" y="514">MAKE SOMETHING WITH YOUR HANDS.</text>
+  </g>
+  <path d="M520 503h45m-9-9 9 9-9 9" fill="none" stroke="#000" stroke-width="3"/>
+</svg>

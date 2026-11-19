@@ -96,9 +96,6 @@ abstract class DialogRenderBase extends StatelessComponent {
               ...?props.styles?.toMap(),
             },
           ),
-          events: <String, EventCallback>{
-            'click': (event) => event.stopPropagation(),
-          },
           <Component>[
             if (props.showCloseButton)
               dom.button(

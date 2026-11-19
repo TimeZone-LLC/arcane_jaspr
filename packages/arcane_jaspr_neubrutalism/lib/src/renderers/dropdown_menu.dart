@@ -66,11 +66,10 @@ class NeubrutalismDropdownMenu extends DropdownMenuRenderBase {
     'overflow': 'hidden',
     'background': 'var(--nb-paper, var(--card))',
     'border': 'var(--nb-border-thick, 3px) solid var(--nb-line, #000)',
-    'border-radius': '0',
+    'border-radius': 'var(--nb-radius-soft, 0)',
     'box-shadow':
         'var(--nb-shadow-md, 5px 5px 0 0 var(--nb-shadow-color, #000))',
     'color': 'var(--foreground)',
-    'animation': 'arcane-dropdown-fade 0.16s ease-out',
   };
 
   @override
